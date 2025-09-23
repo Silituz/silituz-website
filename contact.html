@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kontakt – SILITUZ</title>
+  <meta name="description" content="Kontakt zu Silituz: Schreibe mir direkt über das Formular oder via Social Media." />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="text-slate-800 antialiased">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <a href="index.html" class="flex items-center gap-3 font-black tracking-wide text-xl">
+          <span class="inline-block w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-400 to-cyan-500 ring-2 ring-emerald-500/30"></span>
+          <span class="flex flex-col leading-tight">
+            <span>SILITUZ</span>
+            <span class="text-xs font-normal text-slate-500">KI • Musik • Anime</span>
+          </span>
+        </a>
+        <button id="snakeBtn" class="inline-flex items-center gap-2 justify-center text-slate-900 hover:text-emerald-600 text-base md:text-lg font-semibold">
+          <span class="text-2xl leading-none">🐍</span><span>Menü</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Kontakt -->
+  <section class="py-16 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12">
+      <!-- Form -->
+      <div>
+        <p class="text-emerald-600 font-semibold tracking-wide">Kontakt</p>
+        <h1 class="mt-2 text-3xl sm:text-4xl font-extrabold">Schreib mir</h1>
+        <form name="contact" method="POST" data-netlify="true" class="mt-8 space-y-4">
+          <input type="hidden" name="form-name" value="contact" />
+          <div>
+            <label class="block text-sm font-medium">Name *</label>
+            <input class="mt-1 w-full rounded-lg border-slate-300 focus:border-emerald-500 focus:ring-emerald-500" type="text" name="name" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Email *</label>
+            <input class="mt-1 w-full rounded-lg border-slate-300 focus:border-emerald-500 focus:ring-emerald-500" type="email" name="email" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Nachricht *</label>
+            <textarea class="mt-1 w-full min-h-[140px] rounded-lg border-slate-300 focus:border-emerald-500 focus:ring-emerald-500" name="message" required></textarea>
+          </div>
+          <button class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700">Senden</button>
+        </form>
+      </div>
+
+      <!-- Info -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow">
+        <h2 class="text-xl font-bold">Weitere Wege</h2>
+        <p class="text-slate-600 mt-2">Du kannst mich auch über meine Social-Media-Kanäle erreichen – alle findest du auf der <a href="socials.html" class="text-emerald-700 font-semibold hover:underline">Socials-Seite</a>.</p>
+        <div class="mt-6">
+          <p class="font-semibold">Öffnungszeiten</p>
+          <ul class="mt-2 grid grid-cols-2 gap-x-6 text-sm text-slate-600">
+            <li>Montag</li><li>9:00 – 22:00</li>
+            <li>Dienstag</li><li>9:00 – 22:00</li>
+            <li>Mittwoch</li><li>9:00 – 22:00</li>
+            <li>Donnerstag</li><li>9:00 – 22:00</li>
+            <li>Freitag</li><li>9:00 – 22:00</li>
+            <li>Samstag</li><li>9:00 – 18:00</li>
+            <li>Sonntag</li><li>9:00 – 12:00</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-600">
+      © <span id="y"></span> Silituz. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Slide-out RIGHT Menu -->
+  <div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity z-40"></div>
+  <aside id="sideMenu" class="fixed right-0 top-0 h-full w-72 max-w-[80%] bg-white shadow-2xl translate-x-full transition-transform z-50">
+    <div class="h-16 px-4 flex items-center justify-between border-b">
+      <div class="font-extrabold">SILITUZ</div>
+      <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Menü schließen">✕</button>
+    </div>
+    <nav class="p-4 space-y-2 text-slate-800">
+      <a href="about.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Über</a>
+      <a href="services.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Dienstleistungen</a>
+      <a href="projects.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Projekte</a>
+      <a href="gallery.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Galerie</a>
+      <a href="socials.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Socials</a>
+      <a href="contact.html" class="block px-3 py-2 rounded-lg bg-slate-100 font-semibold">Kontakt</a>
+    </nav>
+  </aside>
+
+  <script>
+    document.getElementById('y').textContent=new Date().getFullYear();
+    const snakeBtn=document.getElementById('snakeBtn');
+    const sideMenu=document.getElementById('sideMenu');
+    const sideOverlay=document.getElementById('sideOverlay');
+    const sideClose=document.getElementById('sideClose');
+    function openMenu(){
+      sideMenu.classList.remove('translate-x-full');
+      sideOverlay.classList.remove('pointer-events-none');
+      requestAnimationFrame(()=>{ sideOverlay.classList.add('opacity-100'); sideOverlay.classList.remove('opacity-0'); });
+    }
+    function closeMenu(){
+      sideMenu.classList.add('translate-x-full');
+      sideOverlay.classList.add('pointer-events-none');
+      sideOverlay.classList.remove('opacity-100');
+      sideOverlay.classList.add('opacity-0');
+    }
+    snakeBtn && snakeBtn.addEventListener('click', openMenu);
+    sideClose && sideClose.addEventListener('click', closeMenu);
+    sideOverlay && sideOverlay.addEventListener('click', closeMenu);
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
+  </script>
+</body>
+</html>
