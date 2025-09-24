@@ -6,10 +6,31 @@
   <title>Start – SILITUZ</title>
   <meta name="description" content="Startseite von Silituz: KI • Musik • Anime." />
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome für Social-Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    .glass { backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
-    .brand-card { transition: transform .15s ease, box-shadow .15s ease; }
-    .brand-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,.12); }
+    .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
+    .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
+    .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);}
+    /* Footer Styles */
+    .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
+    .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+    .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
+    .footer-left .logo{height:40px; width:auto;}
+    .brand-texts{display:flex; flex-direction:column; line-height:1.2;}
+    .brand-title{font-size:1.2rem; font-weight:800; color:#111;}
+    .brand-sub{font-size:.85rem; color:#666;}
+    .footer-center small{font-size:.9rem; color:#555;}
+    .footer-right{display:flex; align-items:center; gap:12px;}
+    .footer-right .icon{font-size:22px; color:#888; transition:color .3s ease;}
+    .footer-right .more{font-size:.9rem; font-weight:600; color:#555; text-decoration:none; padding:6px 10px; border:1px solid #ccc; border-radius:6px; transition:all .3s ease;}
+    .footer-right .more:hover{background:#f5f5f5; border-color:#999;}
+    /* Hover-Farben */
+    .footer-right .icon.tiktok:hover{color:#000;}
+    .footer-right .icon.youtube:hover{color:#FF0000;}
+    .footer-right .icon.instagram:hover{color:#E1306C;}
+    .footer-right .icon.spotify:hover{color:#1DB954;}
+    .footer-right .icon.apple:hover{color:#FA57C1;}
   </style>
 </head>
 <body class="text-slate-800 antialiased">
@@ -25,7 +46,7 @@
             <span class="text-xs font-normal text-slate-500">KI • Musik • Anime</span>
           </span>
         </a>
-        <button id="snakeBtn" class="inline-flex items-center gap-2 justify-center text-slate-900 hover:text-emerald-600 text-base md:text-lg font-semibold">
+        <button id="snakeBtn" class="inline-flex items-center gap-2 justify-center text-slate-900 hover:text-emerald-600 text-base md:text-lg font-semibold" aria-controls="sideMenu" aria-expanded="false">
           <span class="text-2xl leading-none">🐍</span><span>Menü</span>
         </button>
       </div>
@@ -33,197 +54,90 @@
   </header>
 
   <!-- Hero Section -->
-<section class="relative h-[545px] w-full flex items-center overflow-hidden">
-  <!-- Hintergrundbild -->
-  <div class="absolute inset-0 bg-[url('assets/images/welcome-head.svg')] bg-cover bg-center"></div>
-  <!-- Overlay -->
-  <div class="absolute inset-0 bg-black/50"></div>
-
-  <!-- Inhalt (links ausgerichtet) -->
-  <div class="relative z-10 w-full">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="max-w-2xl">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-white">Willkommen bei Silituz</h1>
-        <p class="mt-3 text-lg md:text-xl text-slate-200">KI • Musik • Anime</p>
-
-        <div class="mt-6 flex flex-wrap gap-4">
-          <!-- Über mich -->
-          <a href="about.html"
-             class="hover-wobble inline-flex items-center justify-center rounded-lg bg-white/95 text-slate-900 px-5 py-2.5 font-semibold transition-colors hover:bg-emerald-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
-            Über mich
-          </a>
-
-          <!-- Socials -->
-          <a href="socials.html"
-             class="hover-wobble inline-flex items-center justify-center rounded-lg bg-white/95 text-slate-900 px-5 py-2.5 font-semibold transition-colors hover:bg-emerald-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
-            Socials
-          </a>
+  <section class="relative h-[545px] w-full flex items-center overflow-hidden">
+    <div class="absolute inset-0 bg-[url('assets/images/welcome-head.svg')] bg-cover bg-center"></div>
+    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="relative z-10 w-full">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl">
+          <h1 class="text-4xl md:text-5xl font-extrabold text-white">Willkommen bei Silituz</h1>
+          <p class="mt-3 text-lg md:text-xl text-slate-200">KI • Musik • Anime</p>
+          <div class="mt-6 flex flex-wrap gap-4">
+            <a href="about.html" class="hover-wobble inline-flex items-center justify-center rounded-lg bg-white/95 text-slate-900 px-5 py-2.5 font-semibold transition-colors hover:bg-emerald-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">Über mich</a>
+            <a href="socials.html" class="hover-wobble inline-flex items-center justify-center rounded-lg bg-white/95 text-slate-900 px-5 py-2.5 font-semibold transition-colors hover:bg-emerald-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">Socials</a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- kleine Hover-Wackel-Animation -->
-<style>
-@keyframes wobble {
-  0%   { transform: translateX(0) rotate(0); }
-  25%  { transform: translateX(-2px) rotate(-1.5deg); }
-  50%  { transform: translateX(2px) rotate(1.5deg); }
-  75%  { transform: translateX(-1px) rotate(-0.75deg); }
-  100% { transform: translateX(0) rotate(0); }
-}
-.hover-wobble:hover { animation: wobble 0.35s ease-in-out; }
-</style>
+  <!-- kleine Hover-Wackel-Animation -->
+  <style>
+    @keyframes wobble{0%{transform:translateX(0) rotate(0);}25%{transform:translateX(-2px) rotate(-1.5deg);}50%{transform:translateX(2px) rotate(1.5deg);}75%{transform:translateX(-1px) rotate(-0.75deg);}100%{transform:translateX(0) rotate(0);}}
+    .hover-wobble:hover{animation:wobble .35s ease-in-out;}
+  </style>
 
-
- <!-- Kacheln-Bereich -->
-<section class="py-16">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-      
-      <!-- Kachel 1 -->
-      <a href="gallery.html" class="group relative flex flex-col items-center text-center rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-        <img src="assets/images/kachel 1.svg" alt="Kachel 1"
-             class="w-[400px] h-[400px] object-cover" />
-        <div class="p-4">
-          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">KI-Bilder</h3>
-          <p class="mt-1 text-sm text-slate-500">Kreative Kunstwerke aus KI.</p>
-        </div>
-      </a>
-
-      <!-- Kachel 2 -->
-      <a href="gallery.html" class="group relative flex flex-col items-center text-center rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-        <img src="assets/images/kachel 2.svg" alt="Kachel 2"
-             class="w-[400px] h-[400px] object-cover" />
-        <div class="p-4">
-          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Anime-Edits</h3>
-          <p class="mt-1 text-sm text-slate-500">Stylische Anime-Schnittkunst.</p>
-        </div>
-      </a>
-
-      <!-- Kachel 3 -->
-      <a href="gallery.html" class="group relative flex flex-col items-center text-center rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-        <img src="assets/images/kachel 3.svg" alt="Kachel 3"
-             class="w-[400px] h-[400px] object-cover" />
-        <div class="p-4">
-          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Musikproduktion</h3>
-          <p class="mt-1 text-sm text-slate-500">Beats & Songs mit KI und Herz.</p>
-        </div>
-      </a>
-
+  <!-- Kacheln -->
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+        <a href="gallery.html" class="group relative flex flex-col items-center text-center rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+          <img src="assets/images/kachel 1.svg" class="w-[400px] h-[400px] object-cover" alt="Kachel 1" />
+          <div class="p-4"><h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">KI-Bilder</h3><p class="mt-1 text-sm text-slate-500">Kreative Kunstwerke aus KI.</p></div>
+        </a>
+        <a href="gallery.html" class="group relative flex flex-col items-center text-center rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+          <img src="assets/images/kachel 2.svg" class="w-[400px] h-[400px] object-cover" alt="Kachel 2" />
+          <div class="p-4"><h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Anime-Edits</h3><p class="mt-1 text-sm text-slate-500">Stylische Anime-Schnittkunst.</p></div>
+        </a>
+        <a href="gallery.html" class="group relative flex flex-col items-center text-center rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+          <img src="assets/images/kachel 3.svg" class="w-[400px] h-[400px] object-cover" alt="Kachel 3" />
+          <div class="p-4"><h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Musikproduktion</h3><p class="mt-1 text-sm text-slate-500">Beats & Songs mit KI und Herz.</p></div>
+        </a>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
   <!-- Footer -->
-<footer class="site-footer">
-  <div class="footer-inner">
-    
-    <!-- Links: Logo + Name (wie im Header) -->
-   <div class="footer-left">
-      <a href="/" class="footer-brand">
-        <img src="/assets/logo-silituz.svg" alt="Silituz Logo" class="logo">
-        <div class="brand-texts">
-          <span class="brand-title">SILITUZ</span>
-          <span class="brand-sub">KI • Musik • Anime</span>
-        </div>
-      </a>
+  <footer class="site-footer">
+    <div class="footer-inner">
+
+      <!-- LINKS: exakt wie im Header -->
+      <div class="footer-left">
+        <a href="index.html" class="footer-brand">
+          <img src="assets/images/logo.svg" alt="Silituz Logo" class="logo">
+          <div class="brand-texts">
+            <span class="brand-title">SILITUZ</span>
+            <span class="brand-sub">KI • Musik • Anime</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- MITTE: dynamisches Jahr -->
+      <div class="footer-center">
+        <small>© <span id="y"></span> Silituz – Alle Rechte vorbehalten</small>
+      </div>
+
+      <!-- RECHTS: Socials -->
+      <nav class="footer-right" aria-label="Social Media">
+        <a class="icon tiktok" href="https://www.tiktok.com/@silituz" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        <a class="icon youtube" href="https://www.youtube.com/@silituz" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a class="icon instagram" href="https://www.instagram.com/silituz" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a class="icon spotify" href="https://open.spotify.com/intl-de/artist/0l3OqhrDQ7No2fPCIP0i5h?si=fCqRF9TEQI6j0XVDN44K1g&nd=1&dlsi=102bc6c3b9914294" target="_blank" rel="noopener" aria-label="Spotify"><i class="fab fa-spotify"></i></a>
+        <!-- Apple Music: NOTE (kein Apfel) -->
+        <a class="icon apple" href="https://music.apple.com/de/artist/silituz/1815637787" target="_blank" rel="noopener" aria-label="Apple Music">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+            <path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/>
+          </svg>
+        </a>
+        <a class="more" href="socials.html">Mehr</a>
+      </nav>
+
     </div>
-    
-    <!-- Mitte: Copyright -->
-    <div class="footer-center">
-      <small>© 2025 Silituz – Alle Rechte vorbehalten</small>
-    </div>
-
-    <!-- Rechts: Socials -->
-   <nav class="footer-right" aria-label="Social Media">
-  <a class="icon tiktok" href="https://www.tiktok.com/@silituz" target="_blank" rel="noopener" aria-label="TikTok">
-    <i class="fab fa-tiktok"></i>
-  </a>
-  <a class="icon youtube" href="https://www.youtube.com/@silituz" target="_blank" rel="noopener" aria-label="YouTube">
-    <i class="fab fa-youtube"></i>
-  </a>
-  <a class="icon instagram" href="https://www.instagram.com/silituz" target="_blank" rel="noopener" aria-label="Instagram">
-    <i class="fab fa-instagram"></i>
-  </a>
-  <a class="icon spotify" href="https://open.spotify.com/intl-de/artist/0l3OqhrDQ7No2fPCIP0i5h?si=fCqRF9TEQI6j0XVDN44K1g&nd=1&dlsi=102bc6c3b9914294" target="_blank" rel="noopener" aria-label="Spotify">
-    <i class="fab fa-spotify"></i>
-  </a>
-  <!-- Apple Music als Note statt Apfel -->
-  <a class="icon apple" href="https://music.apple.com/de/artist/silituz/1815637787" target="_blank" rel="noopener" aria-label="Apple Music">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-      <path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/>
-    </svg>
-  </a>
-  <a class="more" href="/socials">Mehr</a>
-</nav>
-  </div>
-</footer>
-
-<!-- Font Awesome für die Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-.site-footer {
-  background:#fff; /* weiß wie der Rest der Seite */
-  color:#333;
-  border-top:1px solid #ddd;
-}
-.footer-inner {
-  max-width:1200px;
-  margin:0 auto;
-  padding:20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  flex-wrap:wrap;
-}
-.logo {
-  height:40px;
-  width:auto;
-}
-.footer-center small {
-  font-size:0.9rem;
-  color:#555;
-}
-.footer-right {
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-.footer-right .icon {
-  font-size:22px;
-  color:#888; /* neutrale graue Umrisse */
-  transition:color .3s ease;
-}
-.footer-right .more {
-  font-size:0.9rem;
-  font-weight:600;
-  color:#555;
-  text-decoration:none;
-  padding:6px 10px;
-  border:1px solid #ccc;
-  border-radius:6px;
-  transition:all .3s ease;
-}
-.footer-right .more:hover {
-  background:#f5f5f5;
-  border-color:#999;
-}
-
-/* Hover-Farben für Social Icons */
-.footer-right .icon.tiktok:hover { color:#000000; }
-.footer-right .icon.youtube:hover { color:#FF0000; }
-.footer-right .icon.instagram:hover { color:#E1306C; }
-.footer-right .icon.spotify:hover { color:#1DB954; }
-.footer-right .icon.apple:hover { color:#FA57C1; }
-</style>
-
+  </footer>
 
   <!-- Slide-out RIGHT Menu -->
   <div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity z-40"></div>
-  <aside id="sideMenu" class="fixed right-0 top-0 h-full w-72 max-w-[80%] bg-white shadow-2xl translate-x-full transition-transform z-50">
+  <aside id="sideMenu" class="fixed right-0 top-0 h-full w-72 max-w-[80%] bg-white shadow-2xl translate-x-full transition-transform z-50" aria-hidden="true">
     <div class="h-16 px-4 flex items-center justify-between border-b">
       <div class="font-extrabold">SILITUZ</div>
       <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Menü schließen">✕</button>
@@ -238,37 +152,41 @@
     </nav>
   </aside>
 
+  <!-- JS -->
   <script>
-    document.getElementById('y').textContent=new Date().getFullYear();
-    const snakeBtn=document.getElementById('snakeBtn');
-    const sideMenu=document.getElementById('sideMenu');
-    const sideOverlay=document.getElementById('sideOverlay');
-    const sideClose=document.getElementById('sideClose');
+    // Jahr setzen (failsafe)
+    const yEl = document.getElementById('y');
+    if (yEl) yEl.textContent = new Date().getFullYear();
+
+    // Menü-Logik (nur Header / Side-Menu)
+    const snakeBtn = document.getElementById('snakeBtn');
+    const sideMenu = document.getElementById('sideMenu');
+    const sideOverlay = document.getElementById('sideOverlay');
+    const sideClose = document.getElementById('sideClose');
+
     function openMenu(){
       sideMenu.classList.remove('translate-x-full');
       sideOverlay.classList.remove('pointer-events-none');
-      requestAnimationFrame(()=>{ sideOverlay.classList.add('opacity-100'); sideOverlay.classList.remove('opacity-0'); });
+      requestAnimationFrame(()=>{
+        sideOverlay.classList.add('opacity-100');
+        sideOverlay.classList.remove('opacity-0');
+      });
+      snakeBtn?.setAttribute('aria-expanded','true');
+      sideMenu.setAttribute('aria-hidden','false');
     }
     function closeMenu(){
       sideMenu.classList.add('translate-x-full');
       sideOverlay.classList.add('pointer-events-none');
       sideOverlay.classList.remove('opacity-100');
       sideOverlay.classList.add('opacity-0');
+      snakeBtn?.setAttribute('aria-expanded','false');
+      sideMenu.setAttribute('aria-hidden','true');
     }
-    snakeBtn && snakeBtn.addEventListener('click', openMenu);
-    sideClose && sideClose.addEventListener('click', closeMenu);
-    sideOverlay && sideOverlay.addEventListener('click', closeMenu);
+
+    snakeBtn?.addEventListener('click', openMenu);
+    sideClose?.addEventListener('click', closeMenu);
+    sideOverlay?.addEventListener('click', closeMenu);
     window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
