@@ -1,11 +1,11 @@
 <!-- ==========================
 FILE: contact.html
-Purpose: Contact page with spam-safe email display, Netlify Forms, honeypot + Lemin Gamification CAPTCHA
+Purpose: Contact page with spam-safe email display, Netlify Forms, Honeypot + Lemin Gamification CAPTCHA
 Notes:
 - Uses Tailwind via CDN. Wenn du Tailwind bereits bundlest, entferne den CDN-Tag.
 - Netlify Forms: data-netlify="true" + hidden form-name input.
 - Lemin Captcha: Serverseitige Prüfung via Netlify Function (/.netlify/functions/lemin-verify). In Netlify ENV: LEMIN_PRIVATE_KEY setzen.
-- Optional: action="/success.html" aktivieren für Danke-Redirect.
+- Optional: action="/success.html" aktivieren (aktuell auskommentiert, nur Hinweis)
 ========================== -->
 <!doctype html>
 <html lang="de">
@@ -20,20 +20,48 @@ Notes:
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-[Inter]">
+  <!-- Hintergrund wie andere Seiten -->
+  <div aria-hidden="true" class="fixed inset-0 -z-10 pointer-events-none bg-[radial-gradient(ellipse_at_top_left,rgba(16,185,129,0.16),transparent_40%),radial-gradient(ellipse_at_bottom_right,rgba(59,130,246,0.14),transparent_45%)]"></div>
+
+  <!-- Header + Desktop Nav + Mobile Drawer -->
   <header class="border-b border-slate-800/60 backdrop-blur supports-[backdrop-filter]:bg-slate-900/50 sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
       <a href="/" class="flex items-center gap-2 font-semibold tracking-tight">
-        <span class="text-emerald-400">🐍</span>
-        <span>Silituz</span>
+        <span class="text-emerald-400 text-xl">🐍</span>
+        <span class="text-base md:text-lg">Silituz</span>
       </a>
       <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a class="hover:text-emerald-400" href="/about.html">Über</a>
+        <a class="hover:text-emerald-400" href="/gallery.html">Gallery</a>
+        <a class="hover:text-emerald-400" href="/socials.html">Socials</a>
+        <a class="text-emerald-400" aria-current="page" href="/contact.html">Kontakt</a>
+      </nav>
+      <!-- Mobile menu button -->
+      <button id="menuOpen" class="md:hidden inline-flex items-center justify-center rounded-xl border border-slate-800 bg-slate-900/50 p-2 hover:border-emerald-500" aria-controls="mobileMenu" aria-expanded="false" aria-label="Menü öffnen">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+      </button>
+    </div>
+  </header>
+  <!-- Slide-in Mobile Menu -->
+  <aside id="mobileMenu" class="fixed inset-y-0 right-0 z-50 w-72 translate-x-full transition-transform duration-300 bg-slate-950/95 backdrop-blur border-l border-slate-800">
+    <div class="h-full flex flex-col">
+      <div class="flex items-center justify-between px-4 py-4 border-b border-slate-800">
+        <div class="flex items-center gap-2 font-semibold">
+          <span class="text-emerald-400">🐍</span><span>Silituz</span>
+        </div>
+        <button id="menuClose" class="inline-flex items-center justify-center rounded-lg border border-slate-800 p-2 hover:border-emerald-500" aria-label="Menü schließen">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M6.75 6.75l10.5 10.5m0-10.5L6.75 17.25"/></svg>
+        </button>
+      </div>
+      <nav class="p-4 flex flex-col gap-3 text-sm">
+        <a class="hover:text-emerald-400" href="/">Start</a>
         <a class="hover:text-emerald-400" href="/about.html">Über</a>
         <a class="hover:text-emerald-400" href="/gallery.html">Gallery</a>
         <a class="hover:text-emerald-400" href="/socials.html">Socials</a>
         <a class="text-emerald-400" href="/contact.html">Kontakt</a>
       </nav>
     </div>
-  </header>
+  </aside>
 
   <main class="max-w-3xl mx-auto px-4 py-12">
     <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Kontakt</h1>
@@ -52,9 +80,9 @@ Notes:
         method="POST"
         data-netlify="true"
         data-netlify-honeypot="bot-field"
-        class="space-y-5"
-        <!-- action="/success.html" --
-      
+        class="space-y-5">
+        <!-- action="/success.html" -->
+
         <!-- Required hidden input for Netlify form name -->
         <input type="hidden" name="form-name" value="contact" />
         <!-- Honeypot field (hidden from humans) -->
@@ -121,9 +149,12 @@ Notes:
     </section>
   </main>
 
+  <!-- Footer mit Logo + Name wie andere Seiten -->
   <footer class="mt-16 border-t border-slate-800/60">
     <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-400 flex items-center justify-between">
-      <p>© <span id="year"></span> Silituz</p>
+      <a href="/" class="flex items-center gap-2 font-semibold">
+        <span class="text-emerald-400">🐍</span><span>Silituz</span>
+      </a>
       <nav class="flex items-center gap-4">
         <a class="hover:text-emerald-400" href="/impressum.html">Impressum</a>
         <a class="hover:text-emerald-400" href="/datenschutz.html">Datenschutz</a>
@@ -132,21 +163,30 @@ Notes:
   </footer>
 
   <script>
-    // Jahr ausgeben
-    document.getElementById('year').textContent = new Date().getFullYear();
+    // Mailto-Fallback
+    (function(){
+      const mailtoBtn = document.getElementById('mailtoBtn');
+      if (mailtoBtn) {
+        mailtoBtn.addEventListener('click', () => {
+          const addr = 'info@silituz.de';
+          window.location.href = `mailto:${addr}?subject=Kontakt%20über%20silituz.de`;
+        });
+      }
+    })();
 
-    // Spam-safe mailto (echte Adresse erst beim Klick)
-    const mailName = 'info';
-    const mailDomain = 'silituz.de';
-    const mailtoBtn = document.getElementById('mailtoBtn');
-    if (mailtoBtn) {
-      mailtoBtn.addEventListener('click', () => {
-        const addr = `${mailName}@${mailDomain}`;
-        window.location.href = `mailto:${addr}?subject=Kontakt%20über%20silituz.de`;
-      });
-    }
+    // Mobile menu toggle
+    (function(){
+      const menu = document.getElementById('mobileMenu');
+      const openBtn = document.getElementById('menuOpen');
+      const closeBtn = document.getElementById('menuClose');
+      function open(){ menu.classList.remove('translate-x-full'); openBtn?.setAttribute('aria-expanded','true'); }
+      function close(){ menu.classList.add('translate-x-full'); openBtn?.setAttribute('aria-expanded','false'); }
+      openBtn?.addEventListener('click', open);
+      closeBtn?.addEventListener('click', close);
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
+    })();
 
-    // E-Mail Validierung (zusätzlich zu type="email")
+    // E-Mail Validierung (zusätzlich zu type="email") + Lemin-Verify (unverändert)
     (function(){
       const emailInput = document.getElementById('email');
       const emailError = document.getElementById('emailError');
@@ -162,7 +202,6 @@ Notes:
       }
       emailInput.addEventListener('input', ()=>{ clearEmailError(); emailInput.setCustomValidity(''); });
 
-      // Basistest (leer/Format)
       function isBasicValidEmail(v){
         const basic = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
         return basic.test(v);
@@ -208,7 +247,7 @@ Notes:
             setLoading(false);
             return false;
           }
-          // Hidden fields anhängen (optional für Auswertung)
+          // Hidden fields anhängen (optional)
           form.insertAdjacentHTML('beforeend', `<input type="hidden" name="lemin_challenge_id" value="${v.challenge_id}">`);
           form.insertAdjacentHTML('beforeend', `<input type="hidden" name="lemin_answer" value="${v.answer}">`);
           return true;
@@ -221,7 +260,6 @@ Notes:
 
       form.addEventListener('submit', async (e)=>{
         const v = emailInput.value.trim();
-        // Browser-Check + Zusatz
         if(!emailInput.checkValidity() || !isBasicValidEmail(v)){
           e.preventDefault();
           showEmailError('Bitte gib eine gültige E-Mail-Adresse ein.');
@@ -230,7 +268,6 @@ Notes:
         }
         emailInput.setCustomValidity('');
 
-        // Lemin prüfen (nur einmal)
         if(form.dataset.leminVerified === '1') return; // bereits verifiziert
         e.preventDefault();
         const ok = await verifyLemin();
@@ -245,5 +282,3 @@ Notes:
   </script>
 </body>
 </html>
-
-
