@@ -6,12 +6,11 @@
   <title>Über mich – SILITUZ</title>
   <meta name="description" content="Über Silituz: Kreativität zwischen Bildern, Musik und kleinen KI-Generatoren." />
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome für Social-Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body class="text-slate-800 antialiased">
 
-  <!-- HEADER (aus index.html übernommen) -->
+  <!-- Header (wie index) -->
   <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
@@ -29,7 +28,7 @@
     </div>
   </header>
 
-  <!-- SLIDE-OUT MENÜ (aus index.html übernommen) -->
+  <!-- Slide-out RIGHT Menu (wie index) -->
   <div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity z-40"></div>
   <aside id="sideMenu" class="fixed right-0 top-0 h-full w-72 max-w-[80%] bg-white shadow-2xl translate-x-full transition-transform z-50" aria-hidden="true">
     <div class="h-16 px-4 flex items-center justify-between border-b">
@@ -49,56 +48,58 @@
     </nav>
   </aside>
 
-  <!-- MAIN: Dein eigener Über-mich-Inhalt (keine Kopie der Startseite) -->
-  <main>
-    <!-- Intro-Block: schlicht & eigenständig -->
-    <section class="py-14">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-4xl md:text-5xl font-extrabold">Über mich</h1>
-        <p class="mt-4 text-lg text-slate-700">
-          Ich liebe es, Ideen zum Leben zu erwecken – mit Bildern, Musik und kleinen Generatoren. 
-          Auf dieser Seite teile ich meine Projekte, Experimente und das, was mich kreativ antreibt.
+  <!-- Über mich: links Text, rechts Bild -->
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-10 items-center">
+      <!-- Links: Text -->
+      <div>
+        <p class="text-emerald-600 font-semibold tracking-wide">Kreative Visionen</p>
+        <h1 class="mt-2 text-3xl sm:text-4xl font-extrabold">Über Silituz</h1>
+        <p class="mt-4 text-lg text-slate-600">
+          Ich liebe es, Ideen zum Leben zu erwecken – mit Bildern, Musik und kleinen Generatoren.
+          Hier teile ich meine Projekte, Experimente und den Spaß am Erschaffen.
+        </p>
+        <p class="mt-3 text-slate-600">
+          Anime inspiriert meinen Stil, KI erweitert meine Möglichkeiten – so entstehen Illustrationen,
+          Videos und Songs, die beides verbinden.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="gallery.html" class="inline-flex items-center justify-center rounded-lg bg-emerald-600 text-white px-5 py-2.5 font-semibold hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">Zur Galerie</a>
+          <a href="music.html" class="inline-flex items-center justify-center rounded-lg bg-white border border-emerald-600 text-emerald-700 px-5 py-2.5 font-semibold hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">Meine Musik</a>
+        </div>
+      </div>
+
+      <!-- Rechts: Bild (ersetze die Datei durch dein eigenes Artwork) -->
+      <div class="aspect-[4/5] md:aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-lg">
+        <img src="assets/images/about-right.png" alt="Über mich – Illustration" class="w-full h-full object-cover" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Darunter: Was mich inspiriert & Was ich mache -->
+  <section class="pb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-8">
+      <!-- Was mich inspiriert -->
+      <div class="p-6 rounded-xl border border-slate-200 bg-white">
+        <h2 class="text-xl font-bold text-slate-800">Was mich inspiriert</h2>
+        <p class="mt-3 text-slate-700 text-sm leading-relaxed">
+          Anime, Musik und neue Technologien. Ich mag klare Linien, ausdrucksstarke Augen und eine freundliche,
+          moderne Ästhetik – und probiere gern aus, was mit KI alles möglich ist.
         </p>
       </div>
-    </section>
-
-    <!-- Persönlicher Abschnitt (Anime/Antrieb etc.) -->
-    <section class="pb-6">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid md:grid-cols-2 gap-8">
-          <div class="p-6 rounded-xl border border-slate-200 bg-white">
-            <h2 class="text-xl font-bold text-slate-800">Was mich inspiriert</h2>
-            <p class="mt-3 text-slate-700 text-sm leading-relaxed">
-              Anime, Musik und neue Technologien haben mich schon immer fasziniert. 
-              Mit KI kann ich Stile verbinden, Ideen schneller ausprobieren und Dinge erschaffen, die vorher nur in meinem Kopf existierten.
-            </p>
-          </div>
-          <div class="p-6 rounded-xl border border-slate-200 bg-white">
-            <h2 class="text-xl font-bold text-slate-800">Was ich mache</h2>
-            <ul class="mt-3 text-slate-700 text-sm leading-relaxed list-disc pl-5">
-              <li>Bilder erstellen, Videos erstellen & schneiden</li>
-              <li>Musik & Lyrics erstellen</li>
-              <li>Kleine Generatoren programmieren und die Möglichkeiten der KI erkunden</li>
-            </ul>
-          </div>
-        </div>
+      <!-- Was ich mache -->
+      <div class="p-6 rounded-xl border border-slate-200 bg-white">
+        <h2 class="text-xl font-bold text-slate-800">Was ich mache</h2>
+        <ul class="mt-3 text-slate-700 text-sm leading-relaxed list-disc pl-5">
+          <li>Bilder erstellen, Videos erstellen & schneiden</li>
+          <li>Musik & Lyrics erstellen</li>
+          <li>Kleine Generatoren programmieren und die Möglichkeiten der KI erkunden</li>
+        </ul>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Optionaler Call-to-Action (verlinkt auf deine Bereiche) -->
-    <section class="py-12">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <p class="text-lg text-slate-700">Wenn du magst, schau in meine Bereiche rein:</p>
-        <div class="mt-5 flex flex-wrap justify-center gap-4">
-          <a href="gallery.html" class="inline-flex items-center justify-center rounded-lg bg-emerald-600 text-white px-5 py-2.5 font-semibold hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">Bilder / Galerie</a>
-          <a href="music.html" class="inline-flex items-center justify-center rounded-lg bg-white border border-emerald-600 text-emerald-700 px-5 py-2.5 font-semibold hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">Meine Musik</a>
-          <a href="generators.html" class="inline-flex items-center justify-center rounded-lg bg-white border border-emerald-600 text-emerald-700 px-5 py-2.5 font-semibold hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">Generatoren &amp; mehr</a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- FOOTER (aus index.html übernommen) -->
+  <!-- Footer (wie index) -->
   <footer class="site-footer bg-white border-t border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
       <a href="index.html" class="flex items-center gap-3">
@@ -108,15 +109,13 @@
           <span class="text-xs font-normal text-slate-500">KI • Musik • Anime</span>
         </span>
       </a>
-      <div class="text-center text-sm text-slate-600">
-        © <span id="y"></span> Silituz – Alle Rechte vorbehalten
-      </div>
+      <div class="text-center text-sm text-slate-600">© <span id="y"></span> Silituz – Alle Rechte vorbehalten</div>
       <nav class="flex items-center gap-4" aria-label="Social Media">
         <a class="icon tiktok" href="https://www.tiktok.com/@silituz" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok text-xl"></i></a>
         <a class="icon youtube" href="https://www.youtube.com/@silituz" target="_blank" aria-label="YouTube"><i class="fab fa-youtube text-xl"></i></a>
         <a class="icon instagram" href="https://www.instagram.com/silituz" target="_blank" aria-label="Instagram"><i class="fab fa-instagram text-xl"></i></a>
         <a class="icon spotify" href="https://open.spotify.com/intl-de/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank" aria-label="Spotify"><i class="fab fa-spotify text-xl"></i></a>
-        <!-- Apple Music: Note (kein Apfel) -->
+        <!-- Apple Music Note -->
         <a class="icon apple" href="https://music.apple.com/de/artist/silituz/1815637787" target="_blank" aria-label="Apple Music">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/></svg>
         </a>
@@ -125,12 +124,12 @@
     </div>
   </footer>
 
-  <!-- JS (Menü + Jahr wie auf index.html) -->
+  <!-- JS (Menü + Jahr wie index) -->
   <script>
     // Jahr
     const yEl = document.getElementById('y'); if (yEl) yEl.textContent = new Date().getFullYear();
 
-    // Menü-Logik
+    // Menü
     const snakeBtn = document.getElementById('snakeBtn');
     const sideMenu = document.getElementById('sideMenu');
     const sideOverlay = document.getElementById('sideOverlay');
@@ -139,10 +138,7 @@
     function openMenu(){
       sideMenu.classList.remove('translate-x-full');
       sideOverlay.classList.remove('pointer-events-none');
-      requestAnimationFrame(()=>{
-        sideOverlay.classList.add('opacity-100');
-        sideOverlay.classList.remove('opacity-0');
-      });
+      requestAnimationFrame(()=>{ sideOverlay.classList.add('opacity-100'); sideOverlay.classList.remove('opacity-0'); });
       snakeBtn?.setAttribute('aria-expanded','true');
       sideMenu.setAttribute('aria-hidden','false');
     }
