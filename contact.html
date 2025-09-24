@@ -1,133 +1,99 @@
-<!DOCTYPE html>
+<!-- ==========================
+FILE: contact.html
+Purpose: Contact page with spam-safe email display, Netlify Forms, honeypot + reCAPTCHA (v2) ready
+Notes:
+- Uses Tailwind via CDN for simplicity. If you already bundle Tailwind, remove the CDN tag below.
+- Netlify Forms: Works out of the box with data-netlify="true" + hidden form-name input.
+- CAPTCHA: Option A (Netlify reCAPTCHA): <div data-netlify-recaptcha="true"></div> — no keys in HTML. Enable in Netlify UI.
+- CAPTCHA: Option B (Google reCAPTCHA v2 checkbox): uncomment the widget + script and insert your SITE_KEY.
+- Emails are shown as `info [at] silituz.de` and decoded at runtime to avoid scraper bots.
+========================== -->
+<!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kontakt – SILITUZ</title>
-  <meta name="description" content="Kontaktiere Silituz: KI • Musik • Anime." />
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kontakt – Silituz</title>
+<meta name="description" content="Kontaktiere Silituz – KI, Musik, Anime. Sende mir eine Nachricht." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="text-slate-800 antialiased">
+<body class="bg-slate-950 text-slate-100 font-[Inter]">
+<header class="border-b border-slate-800/60 backdrop-blur supports-[backdrop-filter]:bg-slate-900/50 sticky top-0 z-40">
+<div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+<a href="/" class="flex items-center gap-2 font-semibold tracking-tight">
+<span class="text-emerald-400">🐍</span>
+<span>Silituz</span>
+</a>
+<nav class="hidden md:flex items-center gap-6 text-sm">
+<a class="hover:text-emerald-400" href="/about.html">Über</a>
+<a class="hover:text-emerald-400" href="/gallery.html">Gallery</a>
+<a class="hover:text-emerald-400" href="/socials.html">Socials</a>
+<a class="text-emerald-400" href="/contact.html">Kontakt</a>
+</nav>
+</div>
+</header>
 
-  <!-- Header -->
-  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex h-16 items-center justify-between">
-        <a href="index.html" class="flex items-center gap-3 font-black tracking-wide text-xl">
-          <img src="assets/images/logo.svg" alt="SILITUZ Logo" class="h-10 w-10" />
-          <span class="flex flex-col leading-tight">
-            <span>SILITUZ</span>
-            <span class="text-xs font-normal text-slate-500">KI • Musik • Anime</span>
-          </span>
-        </a>
-        <button id="snakeBtn" class="inline-flex items-center gap-2 justify-center text-slate-900 hover:text-emerald-600 text-base md:text-lg font-semibold">
-          <span class="text-2xl leading-none">🐍</span><span>Menü</span>
-        </button>
-      </div>
-    </div>
-  </header>
 
-  <!-- Kontaktformular -->
-  <section class="py-16 bg-slate-50">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12">
-      <div>
-        <p class="text-emerald-600 font-semibold tracking-wide">Bleib in Verbindung</p>
-        <h1 class="mt-2 text-3xl sm:text-4xl font-extrabold">Kontakt</h1>
-        <p class="mt-4 text-slate-600">Hast du Fragen, Ideen oder ein Projekt im Kopf? Schreib mir!</p>
+<main class="max-w-3xl mx-auto px-4 py-12">
+<h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Kontakt</h1>
+<p class="mt-3 text-slate-300">Du kannst mir jederzeit schreiben. Für allgemeine Anfragen nutze bitte das Formular oder sende eine E‑Mail an
+<span class="font-semibold" id="safe-mail-visible">info [at] silituz.de</span>.
+</p>
 
-        <form name="contact" method="POST" data-netlify="true" class="mt-8 space-y-4">
-          <input type="hidden" name="form-name" value="contact" />
-          <div>
-            <label class="block text-sm font-medium">Name *</label>
-            <input type="text" name="name" required class="mt-1 w-full rounded-lg border-slate-300 focus:border-emerald-500 focus:ring-emerald-500" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium">Email *</label>
-            <input type="email" name="email" required class="mt-1 w-full rounded-lg border-slate-300 focus:border-emerald-500 focus:ring-emerald-500" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium">Telefon</label>
-            <input type="text" name="phone" class="mt-1 w-full rounded-lg border-slate-300 focus:border-emerald-500 focus:ring-emerald-500" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium">Nachricht *</label>
-            <textarea name="message" required class="mt-1 w-full min-h-[140px] rounded-lg border-slate-300 focus:border-emerald-500 focus:ring-emerald-500"></textarea>
-          </div>
-          <label class="flex items-center gap-3 text-sm">
-            <input type="checkbox" class="rounded border-slate-300" required>
-            <span>Ich erlaube die Speicherung meiner Angaben zur Kontaktaufnahme.</span>
-          </label>
-          <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700">Senden</button>
-        </form>
-      </div>
 
-      <!-- Placeholder rechte Seite -->
-      <div class="rounded-2xl border border-slate-200 overflow-hidden">
-        <div class="h-[420px] w-full bg-[linear-gradient(45deg,#f0f9ff,#ecfeff)] flex items-center justify-center">
-          <div class="text-center px-8">
-            <p class="font-bold text-slate-700">Hier könnte eine Karte oder ein Embed stehen.</p>
-            <p class="text-slate-500 mt-1 text-sm">Z. B. Google Maps, ein YouTube-Video oder ein Bild.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<!-- Contact Card -->
+<section class="mt-8 bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl">
+<h2 class="text-xl font-bold mb-4">Nachricht senden</h2>
 
-  <!-- Footer -->
-  <footer class="py-14">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-10 items-start">
-      <div class="flex items-center gap-4">
-        <img src="assets/images/logo.svg" alt="SILITUZ Logo" class="h-14 w-14" />
-        <div>
-          <p class="font-black text-lg">SILITUZ</p>
-          <p class="text-slate-500">KI • Musik • Anime</p>
-        </div>
-      </div>
-      <div class="text-sm text-slate-600">
-        © <span id="y"></span> Silituz. All rights reserved.
-      </div>
-    </div>
-  </footer>
 
-  <!-- Slide-out RIGHT Menu -->
-  <div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity z-40"></div>
-  <aside id="sideMenu" class="fixed right-0 top-0 h-full w-72 max-w-[80%] bg-white shadow-2xl translate-x-full transition-transform z-50">
-    <div class="h-16 px-4 flex items-center justify-between border-b">
-      <div class="font-extrabold">SILITUZ</div>
-      <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Menü schließen">✕</button>
-    </div>
-    <nav class="p-4 space-y-2 text-slate-800">
-      <a href="about.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Über</a>
-      <a href="services.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Dienstleistungen</a>
-      <a href="projects.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Projekte</a>
-      <a href="gallery.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Galerie</a>
-      <a href="socials.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Socials</a>
-      <a href="contact.html" class="block px-3 py-2 rounded-lg bg-slate-100 font-semibold">Kontakt</a>
-    </nav>
-  </aside>
+<!-- Netlify Form: Option A (recommended) -->
+<form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" class="space-y-5">
+<!-- Required hidden input for Netlify form name -->
+<input type="hidden" name="form-name" value="contact" />
+<!-- Honeypot field (hidden from humans) -->
+<p class="hidden">
+<label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+</p>
 
-  <script>
-    document.getElementById('y').textContent=new Date().getFullYear();
-    const snakeBtn=document.getElementById('snakeBtn');
-    const sideMenu=document.getElementById('sideMenu');
-    const sideOverlay=document.getElementById('sideOverlay');
-    const sideClose=document.getElementById('sideClose');
-    function openMenu(){
-      sideMenu.classList.remove('translate-x-full');
-      sideOverlay.classList.remove('pointer-events-none');
-      requestAnimationFrame(()=>{ sideOverlay.classList.add('opacity-100'); sideOverlay.classList.remove('opacity-0'); });
-    }
-    function closeMenu(){
-      sideMenu.classList.add('translate-x-full');
-      sideOverlay.classList.add('pointer-events-none');
-      sideOverlay.classList.remove('opacity-100');
-      sideOverlay.classList.add('opacity-0');
-    }
-    snakeBtn && snakeBtn.addEventListener('click', openMenu);
-    sideClose && sideClose.addEventListener('click', closeMenu);
-    sideOverlay && sideOverlay.addEventListener('click', closeMenu);
-    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
-  </script>
-</body>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label for="name" class="block text-sm mb-1">Name</label>
+<input id="name" name="name" type="text" required autocomplete="name" class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
+</div>
+<div>
+<label for="email" class="block text-sm mb-1">E‑Mail</label>
+<input id="email" name="email" type="email" required autocomplete="email" class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
+</div>
+</div>
+
+
+<div>
+<label for="subject" class="block text-sm mb-1">Betreff</label>
+<input id="subject" name="subject" type="text" required class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
+</div>
+
+
+<div>
+<label for="message" class="block text-sm mb-1">Nachricht</label>
+<textarea id="message" name="message" rows="6" required class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+</div>
+
+
+<div class="flex items-start gap-3">
+<input id="privacy" name="privacy" type="checkbox" required class="mt-1 h-4 w-4 rounded border-slate-700" />
+<label for="privacy" class="text-sm text-slate-300">Ich habe die <a href="/datenschutz.html" class="underline hover:text-emerald-400">Datenschutzhinweise</a> zur Kenntnis genommen.</label>
+</div>
+
+
+<!-- CAPTCHA (choose ONE of the options below) -->
+<!-- Option A: Netlify reCAPTCHA (no site key needed) -->
+<div data-netlify-recaptcha="true" class="mt-1"></div>
+
+
+<!-- Option B: Google reCAPTCHA v2 (Checkbox) – uncomment if NOT using Netlify widget above
+<div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
 </html>
-
