@@ -32,19 +32,50 @@
     </div>
   </header>
 
-  <!-- Hero -->
-  <section class="relative h-[545px] w-full flex items-center justify-center overflow-hidden">
-    <div class="absolute inset-0 bg-[url('assets/images/welcome-head.svg')] bg-cover bg-center"></div>
-    <div class="absolute inset-0 bg-black/50"></div>
-    <div class="relative z-10 text-center text-white max-w-2xl px-4">
-      <h1 class="text-4xl md:text-5xl font-extrabold">Willkommen bei Silituz</h1>
-      <p class="mt-3 text-lg md:text-xl text-slate-200">KI • Musik • Anime</p>
-      <div class="mt-6 flex flex-wrap justify-center gap-4">
-        <a href="about.html" class="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 font-semibold hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">Über mich</a>
-        <a href="contact.html" class="inline-flex items-center justify-center rounded-lg bg-white/90 text-slate-900 px-5 py-2.5 font-semibold hover:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">Kontakt aufnehmen</a>
+  <!-- Hero Section -->
+<section class="relative h-[545px] w-full flex items-center overflow-hidden">
+  <!-- Hintergrundbild -->
+  <div class="absolute inset-0 bg-[url('assets/images/welcome-head.svg')] bg-cover bg-center"></div>
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-black/50"></div>
+
+  <!-- Inhalt (links ausgerichtet) -->
+  <div class="relative z-10 w-full">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white">Willkommen bei Silituz</h1>
+        <p class="mt-3 text-lg md:text-xl text-slate-200">KI • Musik • Anime</p>
+
+        <div class="mt-6 flex flex-wrap gap-4">
+          <!-- Über mich -->
+          <a href="about.html"
+             class="hover-wobble inline-flex items-center justify-center rounded-lg bg-white/95 text-slate-900 px-5 py-2.5 font-semibold transition-colors hover:bg-emerald-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            Über mich
+          </a>
+
+          <!-- Socials -->
+          <a href="socials.html"
+             class="hover-wobble inline-flex items-center justify-center rounded-lg bg-white/95 text-slate-900 px-5 py-2.5 font-semibold transition-colors hover:bg-emerald-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            Socials
+          </a>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<!-- kleine Hover-Wackel-Animation -->
+<style>
+@keyframes wobble {
+  0%   { transform: translateX(0) rotate(0); }
+  25%  { transform: translateX(-2px) rotate(-1.5deg); }
+  50%  { transform: translateX(2px) rotate(1.5deg); }
+  75%  { transform: translateX(-1px) rotate(-0.75deg); }
+  100% { transform: translateX(0) rotate(0); }
+}
+.hover-wobble:hover { animation: wobble 0.35s ease-in-out; }
+</style>
+
 
   <!-- Teaser-Kacheln -->
   <section class="py-16">
@@ -138,4 +169,5 @@
   </script>
 </body>
 </html>
+
 
