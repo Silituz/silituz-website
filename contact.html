@@ -1,89 +1,247 @@
 <!-- ==========================
 FILE: contact.html
-Purpose: Contact page with spam-safe email display, Netlify Forms, honeypot + reCAPTCHA (v2) ready
+Purpose: Contact page with spam-safe email display, Netlify Forms, honeypot + Lemin Gamification CAPTCHA
 Notes:
-- Uses Tailwind via CDN for simplicity. If you already bundle Tailwind, remove the CDN tag below.
-- Netlify Forms: Works out of the box with data-netlify="true" + hidden form-name input.
-- CAPTCHA: Option A (Netlify reCAPTCHA): <div data-netlify-recaptcha="true"></div> — no keys in HTML. Enable in Netlify UI.
-- CAPTCHA: Option B (Google reCAPTCHA v2 checkbox): uncomment the widget + script and insert your SITE_KEY.
-- Emails are shown as `info [at] silituz.de` and decoded at runtime to avoid scraper bots.
+- Uses Tailwind via CDN. Wenn du Tailwind bereits bundlest, entferne den CDN-Tag.
+- Netlify Forms: data-netlify="true" + hidden form-name input.
+- Lemin Captcha: Serverseitige Prüfung via Netlify Function (/.netlify/functions/lemin-verify). In Netlify ENV: LEMIN_PRIVATE_KEY setzen.
+- Optional: action="/success.html" aktivieren für Danke-Redirect.
 ========================== -->
 <!doctype html>
 <html lang="de">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Kontakt – Silituz</title>
-<meta name="description" content="Kontaktiere Silituz – KI, Musik, Anime. Sende mir eine Nachricht." />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kontakt – Silituz</title>
+  <meta name="description" content="Kontaktiere Silituz – KI, Musik, Anime. Sende mir eine Nachricht." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-[Inter]">
-<header class="border-b border-slate-800/60 backdrop-blur supports-[backdrop-filter]:bg-slate-900/50 sticky top-0 z-40">
-<div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-<a href="/" class="flex items-center gap-2 font-semibold tracking-tight">
-<span class="text-emerald-400">🐍</span>
-<span>Silituz</span>
-</a>
-<nav class="hidden md:flex items-center gap-6 text-sm">
-<a class="hover:text-emerald-400" href="/about.html">Über</a>
-<a class="hover:text-emerald-400" href="/gallery.html">Gallery</a>
-<a class="hover:text-emerald-400" href="/socials.html">Socials</a>
-<a class="text-emerald-400" href="/contact.html">Kontakt</a>
-</nav>
-</div>
-</header>
+  <header class="border-b border-slate-800/60 backdrop-blur supports-[backdrop-filter]:bg-slate-900/50 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 font-semibold tracking-tight">
+        <span class="text-emerald-400">🐍</span>
+        <span>Silituz</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a class="hover:text-emerald-400" href="/about.html">Über</a>
+        <a class="hover:text-emerald-400" href="/gallery.html">Gallery</a>
+        <a class="hover:text-emerald-400" href="/socials.html">Socials</a>
+        <a class="text-emerald-400" href="/contact.html">Kontakt</a>
+      </nav>
+    </div>
+  </header>
 
+  <main class="max-w-3xl mx-auto px-4 py-12">
+    <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Kontakt</h1>
+    <p class="mt-3 text-slate-300">
+      Du kannst mir jederzeit schreiben. Für allgemeine Anfragen nutze bitte das Formular oder sende eine E-Mail an
+      <span class="font-semibold" id="safe-mail-visible">info [at] silituz.de</span>.
+    </p>
 
-<main class="max-w-3xl mx-auto px-4 py-12">
-<h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Kontakt</h1>
-<p class="mt-3 text-slate-300">Du kannst mir jederzeit schreiben. Für allgemeine Anfragen nutze bitte das Formular oder sende eine E‑Mail an
-<span class="font-semibold" id="safe-mail-visible">info [at] silituz.de</span>.
-</p>
+    <!-- Contact Card -->
+    <section class="mt-8 bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl">
+      <h2 class="text-xl font-bold mb-4">Nachricht senden</h2>
 
+      <!-- Netlify Form -->
+      <form
+        name="contact"
+        method="POST"
+        data-netlify="true"
+        data-netlify-honeypot="bot-field"
+        class="space-y-5"
+        <!-- action="/success.html" -->
+      >
+        <!-- Required hidden input for Netlify form name -->
+        <input type="hidden" name="form-name" value="contact" />
+        <!-- Honeypot field (hidden from humans) -->
+        <p class="hidden">
+          <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+        </p>
 
-<!-- Contact Card -->
-<section class="mt-8 bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl">
-<h2 class="text-xl font-bold mb-4">Nachricht senden</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="name" class="block text-sm mb-1">Name</label>
+            <input id="name" name="name" type="text" required autocomplete="name"
+                   class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+          <div>
+            <label for="email" class="block text-sm mb-1">E-Mail</label>
+            <input id="email" name="email" type="email" required inputmode="email" autocomplete="email"
+                   aria-describedby="emailError"
+                   class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
+            <p id="emailError" class="mt-1 text-sm text-rose-400 hidden"></p>
+          </div>
+        </div>
 
+        <div>
+          <label for="subject" class="block text-sm mb-1">Betreff</label>
+          <input id="subject" name="subject" type="text" required
+                 class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
+        </div>
 
-<!-- Netlify Form: Option A (recommended) -->
-<form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" class="space-y-5">
-<!-- Required hidden input for Netlify form name -->
-<input type="hidden" name="form-name" value="contact" />
-<!-- Honeypot field (hidden from humans) -->
-<p class="hidden">
-<label>Don’t fill this out if you're human: <input name="bot-field" /></label>
-</p>
+        <div>
+          <label for="message" class="block text-sm mb-1">Nachricht</label>
+          <textarea id="message" name="message" rows="6" required
+                    class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+        </div>
 
+        <div class="flex items-start gap-3">
+          <input id="privacy" name="privacy" type="checkbox" required class="mt-1 h-4 w-4 rounded border-slate-700" />
+          <label for="privacy" class="text-sm text-slate-300">
+            Ich habe die <a href="/datenschutz.html" class="underline hover:text-emerald-400">Datenschutzhinweise</a> zur Kenntnis genommen.
+          </label>
+        </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<div>
-<label for="name" class="block text-sm mb-1">Name</label>
-<input id="name" name="name" type="text" required autocomplete="name" class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
-</div>
-<div>
-<label for="email" class="block text-sm mb-1">E‑Mail</label>
-<input id=\"email\" name=\"email\" type=\"email\" required inputmode=\"email\" autocomplete=\"email\" pattern=\"[^\s@]+@[^\s@]+\.[^\s@]{2,}\" aria-describedby=\"emailError\" class=\"w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500\" />
-<p id=\"emailError\" class=\"mt-1 text-sm text-rose-400 hidden\"></p>
-</div>
-</div>
+        <!-- 🐍 Serpent Shield 🛡️ (Lemin Gamification CAPTCHA) -->
+        <h3 class="text-xl font-bold flex items-center gap-2 justify-center mb-2">🐍 Serpent Shield 🛡️</h3>
+        <div id="lemin-cropped-captcha" class="mt-1"></div>
+        <script src="https://api.leminnow.com/captcha/v1/cropped/CROPPED_cab783a_6bcfeac197564b0f81b752767f94377a/js"></script>
+        <p id="captchaError" class="mt-2 text-sm text-rose-400 hidden"></p>
 
+        <div class="pt-2">
+          <button type="submit"
+                  id="submitBtn"
+                  class="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 font-semibold text-slate-900 hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            Abschicken
+          </button>
+          <p class="text-xs text-slate-400 mt-2">
+            Hinweis: E-Mail-Adressen werden auf der Seite absichtlich als <code>[at]</code> angezeigt, um Spam zu reduzieren.
+          </p>
+        </div>
+      </form>
 
-<div>
-<label for="subject" class="block text-sm mb-1">Betreff</label>
-<input id="subject" name="subject" type="text" required class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
-</div>
+      <!-- Mailto-Fallback (keine Klartext-Mail im HTML) -->
+      <div class="mt-8 text-sm text-slate-400">
+        <button id="mailtoBtn" class="underline hover:text-emerald-400">Alternativ per E-Mail senden</button>
+      </div>
+    </section>
+  </main>
 
+  <footer class="mt-16 border-t border-slate-800/60">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-400 flex items-center justify-between">
+      <p>© <span id="year"></span> Silituz</p>
+      <nav class="flex items-center gap-4">
+        <a class="hover:text-emerald-400" href="/impressum.html">Impressum</a>
+        <a class="hover:text-emerald-400" href="/datenschutz.html">Datenschutz</a>
+      </nav>
+    </div>
+  </footer>
 
-<div>
-<label for="message" class="block text-sm mb-1">Nachricht</label>
-<textarea id="message" name="message" rows="6" required class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
-</div>
+  <script>
+    // Jahr ausgeben
+    document.getElementById('year').textContent = new Date().getFullYear();
 
+    // Spam-safe mailto (echte Adresse erst beim Klick)
+    const mailName = 'info';
+    const mailDomain = 'silituz.de';
+    const mailtoBtn = document.getElementById('mailtoBtn');
+    if (mailtoBtn) {
+      mailtoBtn.addEventListener('click', () => {
+        const addr = `${mailName}@${mailDomain}`;
+        window.location.href = `mailto:${addr}?subject=Kontakt%20über%20silituz.de`;
+      });
+    }
 
-<div class="flex items-start gap-3">
-<input id="privacy" name="privacy" type="checkbox" required class="mt-1 h-4 w-4 rounded border-slate-700" />
-<label for="privacy" class="text-sm text-slate-300">Ich habe die <a href="/datenschutz.html" class="underline hover:text-emerald-400">Datenschutzhinweise</a> zur Kenntnis genommen.</label>
+    // E-Mail Validierung (zusätzlich zu type="email")
+    (function(){
+      const emailInput = document.getElementById('email');
+      const emailError = document.getElementById('emailError');
+      function showEmailError(msg){
+        emailInput.setAttribute('aria-invalid','true');
+        emailError.textContent = msg;
+        emailError.classList.remove('hidden');
+      }
+      function clearEmailError(){
+        emailInput.removeAttribute('aria-invalid');
+        emailError.textContent = '';
+        emailError.classList.add('hidden');
+      }
+      emailInput.addEventListener('input', ()=>{ clearEmailError(); emailInput.setCustomValidity(''); });
+
+      // Basistest (leer/Format)
+      function isBasicValidEmail(v){
+        const basic = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+        return basic.test(v);
+      }
+
+      const form = document.forms['contact'];
+      const captchaError = document.getElementById('captchaError');
+      const submitBtn = document.getElementById('submitBtn');
+      function showCaptchaError(msg){
+        if(!captchaError) return alert(msg);
+        captchaError.textContent = msg;
+        captchaError.classList.remove('hidden');
+      }
+      function clearCaptchaError(){
+        if(!captchaError) return;
+        captchaError.textContent = '';
+        captchaError.classList.add('hidden');
+      }
+      function setLoading(loading){
+        if(!submitBtn) return;
+        submitBtn.disabled = loading;
+        submitBtn.textContent = loading ? 'Prüfe…' : 'Abschicken';
+      }
+
+      async function verifyLemin(){
+        clearCaptchaError();
+        const api = window.leminCroppedCaptcha?.getCaptcha?.();
+        const v = api?.getCaptchaValue?.();
+        if(!v || !v.answer || !v.challenge_id){
+          showCaptchaError('Bitte löse das Puzzle, um fortzufahren.');
+          return false;
+        }
+        try{
+          setLoading(true);
+          const res = await fetch('/.netlify/functions/lemin-verify', {
+            method: 'POST',
+            headers: { 'Content-Type':'application/json' },
+            body: JSON.stringify({ challenge_id: v.challenge_id, answer: v.answer })
+          });
+          const data = await res.json();
+          if(!data.ok){
+            showCaptchaError('Captcha ungültig oder abgelaufen. Bitte erneut versuchen.');
+            setLoading(false);
+            return false;
+          }
+          // Hidden fields anhängen (optional für Auswertung)
+          form.insertAdjacentHTML('beforeend', `<input type="hidden" name="lemin_challenge_id" value="${v.challenge_id}">`);
+          form.insertAdjacentHTML('beforeend', `<input type="hidden" name="lemin_answer" value="${v.answer}">`);
+          return true;
+        }catch(err){
+          showCaptchaError('Captcha-Verifizierung fehlgeschlagen. Bitte später erneut versuchen.');
+          setLoading(false);
+          return false;
+        }
+      }
+
+      form.addEventListener('submit', async (e)=>{
+        const v = emailInput.value.trim();
+        // Browser-Check + Zusatz
+        if(!emailInput.checkValidity() || !isBasicValidEmail(v)){
+          e.preventDefault();
+          showEmailError('Bitte gib eine gültige E-Mail-Adresse ein.');
+          emailInput.setCustomValidity('Ungültige E-Mail');
+          return;
+        }
+        emailInput.setCustomValidity('');
+
+        // Lemin prüfen (nur einmal)
+        if(form.dataset.leminVerified === '1') return; // bereits verifiziert
+        e.preventDefault();
+        const ok = await verifyLemin();
+        if(ok){
+          clearCaptchaError();
+          form.dataset.leminVerified = '1';
+          setLoading(false);
+          form.submit();
+        }
+      }, true);
+    })();
+  </script>
+</body>
+</html>
