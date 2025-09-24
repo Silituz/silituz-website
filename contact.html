@@ -66,7 +66,8 @@ Notes:
 </div>
 <div>
 <label for="email" class="block text-sm mb-1">E‑Mail</label>
-<input id="email" name="email" type="email" required autocomplete="email" class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
+<input id=\"email\" name=\"email\" type=\"email\" required inputmode=\"email\" autocomplete=\"email\" pattern=\"[^\s@]+@[^\s@]+\.[^\s@]{2,}\" aria-describedby=\"emailError\" class=\"w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500\" />
+<p id=\"emailError\" class=\"mt-1 text-sm text-rose-400 hidden\"></p>
 </div>
 </div>
 
@@ -86,14 +87,3 @@ Notes:
 <div class="flex items-start gap-3">
 <input id="privacy" name="privacy" type="checkbox" required class="mt-1 h-4 w-4 rounded border-slate-700" />
 <label for="privacy" class="text-sm text-slate-300">Ich habe die <a href="/datenschutz.html" class="underline hover:text-emerald-400">Datenschutzhinweise</a> zur Kenntnis genommen.</label>
-</div>
-
-
-<!-- CAPTCHA (choose ONE of the options below) -->
-<!-- Option A: Netlify reCAPTCHA (no site key needed) -->
-<div data-netlify-recaptcha="true" class="mt-1"></div>
-
-
-<!-- Option B: Google reCAPTCHA v2 (Checkbox) – uncomment if NOT using Netlify widget above
-<div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
-</html>
