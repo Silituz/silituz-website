@@ -1,10 +1,11 @@
 <!-- ==========================
 FILE: contact.html
-Purpose: Contact page with Netlify Forms + Honeypot + Lemin Gamification CAPTCHA ("🐍 Serpent Shield 🛡️")
+Purpose: Contact page with spam-safe email display, Netlify Forms, honeypot + Lemin Gamification CAPTCHA
 Notes:
-- Netlify Forms: data-netlify="true" + <input type="hidden" name="form-name" value="contact">
-- Lemin: uses your Captcha ID; requires server verify via /.netlify/functions/lemin-verify (ENV: LEMIN_PRIVATE_KEY)
-- No redirect set (no success.html needed). Netlify zeigt Default-Thanks-Seite.
+- Uses Tailwind via CDN. Wenn du Tailwind bereits bundlest, entferne den CDN-Tag.
+- Netlify Forms: data-netlify="true" + hidden form-name input.
+- Lemin Captcha: Serverseitige Prüfung via Netlify Function (/.netlify/functions/lemin-verify). In Netlify ENV: LEMIN_PRIVATE_KEY setzen.
+- Optional: action="/success.html" aktivieren für Danke-Redirect.
 ========================== -->
 <!doctype html>
 <html lang="de">
@@ -19,52 +20,25 @@ Notes:
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-[Inter]">
-  <!-- Background (wie andere Seiten) -->
-  <div aria-hidden="true" class="fixed inset-0 -z-10 pointer-events-none bg-[radial-gradient(ellipse_at_top_left,rgba(16,185,129,0.16),transparent_40%),radial-gradient(ellipse_at_bottom_right,rgba(59,130,246,0.14),transparent_45%)]"></div>
-
-  <!-- Header + Desktop Nav + Mobile Drawer -->
   <header class="border-b border-slate-800/60 backdrop-blur supports-[backdrop-filter]:bg-slate-900/50 sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
       <a href="/" class="flex items-center gap-2 font-semibold tracking-tight">
-        <span class="text-emerald-400 text-xl">🐍</span>
-        <span class="text-base md:text-lg">Silituz</span>
+        <span class="text-emerald-400">🐍</span>
+        <span>Silituz</span>
       </a>
       <nav class="hidden md:flex items-center gap-6 text-sm">
-        <a class="hover:text-emerald-400" href="/about.html">Über</a>
-        <a class="hover:text-emerald-400" href="/gallery.html">Gallery</a>
-        <a class="hover:text-emerald-400" href="/socials.html">Socials</a>
-        <a class="text-emerald-400" aria-current="page" href="/contact.html">Kontakt</a>
-      </nav>
-      <button id="menuOpen" class="md:hidden inline-flex items-center justify-center rounded-xl border border-slate-800 bg-slate-900/50 p-2 hover:border-emerald-500" aria-controls="mobileMenu" aria-expanded="false" aria-label="Menü öffnen">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
-      </button>
-    </div>
-  </header>
-
-  <!-- Slide-in Mobile Menu -->
-  <aside id="mobileMenu" class="fixed inset-y-0 right-0 z-50 w-72 translate-x-full transition-transform duration-300 bg-slate-950/95 backdrop-blur border-l border-slate-800">
-    <div class="h-full flex flex-col">
-      <div class="flex items-center justify-between px-4 py-4 border-b border-slate-800">
-        <div class="flex items-center gap-2 font-semibold">
-          <span class="text-emerald-400">🐍</span><span>Silituz</span>
-        </div>
-        <button id="menuClose" class="inline-flex items-center justify-center rounded-lg border border-slate-800 p-2 hover:border-emerald-500" aria-label="Menü schließen">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M6.75 6.75l10.5 10.5m0-10.5L6.75 17.25"/></svg>
-        </button>
-      </div>
-      <nav class="p-4 flex flex-col gap-3 text-sm">
-        <a class="hover:text-emerald-400" href="/">Start</a>
         <a class="hover:text-emerald-400" href="/about.html">Über</a>
         <a class="hover:text-emerald-400" href="/gallery.html">Gallery</a>
         <a class="hover:text-emerald-400" href="/socials.html">Socials</a>
         <a class="text-emerald-400" href="/contact.html">Kontakt</a>
       </nav>
     </div>
-  </aside>
+  </header>
 
   <main class="max-w-3xl mx-auto px-4 py-12">
     <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Kontakt</h1>
-    <p class="mt-3 text-slate-300">Du kannst mir jederzeit schreiben. Für allgemeine Anfragen nutze bitte das Formular oder sende eine E-Mail an
+    <p class="mt-3 text-slate-300">
+      Du kannst mir jederzeit schreiben. Für allgemeine Anfragen nutze bitte das Formular oder sende eine E-Mail an
       <span class="font-semibold" id="safe-mail-visible">info [at] silituz.de</span>.
     </p>
 
@@ -72,37 +46,54 @@ Notes:
     <section class="mt-8 bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl">
       <h2 class="text-xl font-bold mb-4">Nachricht senden</h2>
 
-      <!-- Netlify Form (kein action-Redirect gesetzt) -->
-      <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" class="space-y-5">
+      <!-- Netlify Form -->
+      <form
+        name="contact"
+        method="POST"
+        data-netlify="true"
+        data-netlify-honeypot="bot-field"
+        class="space-y-5"
+        <!-- action="/success.html" --
+      
+        <!-- Required hidden input for Netlify form name -->
         <input type="hidden" name="form-name" value="contact" />
-        <!-- Honeypot -->
-        <p class="hidden"><label>Don’t fill this out if you're human: <input name="bot-field" /></label></p>
+        <!-- Honeypot field (hidden from humans) -->
+        <p class="hidden">
+          <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+        </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label for="name" class="block text-sm mb-1">Name</label>
-            <input id="name" name="name" type="text" required autocomplete="name" class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
+            <input id="name" name="name" type="text" required autocomplete="name"
+                   class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
           </div>
           <div>
             <label for="email" class="block text-sm mb-1">E-Mail</label>
-            <input id="email" name="email" type="email" required inputmode="email" autocomplete="email" aria-describedby="emailError" class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
+            <input id="email" name="email" type="email" required inputmode="email" autocomplete="email"
+                   aria-describedby="emailError"
+                   class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
             <p id="emailError" class="mt-1 text-sm text-rose-400 hidden"></p>
           </div>
         </div>
 
         <div>
           <label for="subject" class="block text-sm mb-1">Betreff</label>
-          <input id="subject" name="subject" type="text" required class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
+          <input id="subject" name="subject" type="text" required
+                 class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500" />
         </div>
 
         <div>
           <label for="message" class="block text-sm mb-1">Nachricht</label>
-          <textarea id="message" name="message" rows="6" required class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+          <textarea id="message" name="message" rows="6" required
+                    class="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
         </div>
 
         <div class="flex items-start gap-3">
           <input id="privacy" name="privacy" type="checkbox" required class="mt-1 h-4 w-4 rounded border-slate-700" />
-          <label for="privacy" class="text-sm text-slate-300">Ich habe die <a href="/datenschutz.html" class="underline hover:text-emerald-400">Datenschutzhinweise</a> zur Kenntnis genommen.</label>
+          <label for="privacy" class="text-sm text-slate-300">
+            Ich habe die <a href="/datenschutz.html" class="underline hover:text-emerald-400">Datenschutzhinweise</a> zur Kenntnis genommen.
+          </label>
         </div>
 
         <!-- 🐍 Serpent Shield 🛡️ (Lemin Gamification CAPTCHA) -->
@@ -112,14 +103,18 @@ Notes:
         <p id="captchaError" class="mt-2 text-sm text-rose-400 hidden"></p>
 
         <div class="pt-2">
-          <button type="submit" id="submitBtn" class="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 font-semibold text-slate-900 hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <button type="submit"
+                  id="submitBtn"
+                  class="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 font-semibold text-slate-900 hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500">
             Abschicken
           </button>
-          <p class="text-xs text-slate-400 mt-2">Hinweis: E-Mail-Adressen werden auf der Seite absichtlich als <code>[at]</code> angezeigt, um Spam zu reduzieren.</p>
+          <p class="text-xs text-slate-400 mt-2">
+            Hinweis: E-Mail-Adressen werden auf der Seite absichtlich als <code>[at]</code> angezeigt, um Spam zu reduzieren.
+          </p>
         </div>
       </form>
 
-      <!-- Mailto-Fallback -->
+      <!-- Mailto-Fallback (keine Klartext-Mail im HTML) -->
       <div class="mt-8 text-sm text-slate-400">
         <button id="mailtoBtn" class="underline hover:text-emerald-400">Alternativ per E-Mail senden</button>
       </div>
@@ -128,9 +123,7 @@ Notes:
 
   <footer class="mt-16 border-t border-slate-800/60">
     <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-400 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2 font-semibold">
-        <span class="text-emerald-400">🐍</span><span>Silituz</span>
-      </a>
+      <p>© <span id="year"></span> Silituz</p>
       <nav class="flex items-center gap-4">
         <a class="hover:text-emerald-400" href="/impressum.html">Impressum</a>
         <a class="hover:text-emerald-400" href="/datenschutz.html">Datenschutz</a>
@@ -139,51 +132,69 @@ Notes:
   </footer>
 
   <script>
-    // Jahr (falls irgendwo verwendet)
-    const y = document.getElementById('year'); if (y) y.textContent = new Date().getFullYear();
+    // Jahr ausgeben
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Mailto-Fallback
-    (function(){
-      const btn = document.getElementById('mailtoBtn');
-      btn && btn.addEventListener('click', ()=> {
-        window.location.href = 'mailto:info@silituz.de?subject=Kontakt%20über%20silituz.de';
+    // Spam-safe mailto (echte Adresse erst beim Klick)
+    const mailName = 'info';
+    const mailDomain = 'silituz.de';
+    const mailtoBtn = document.getElementById('mailtoBtn');
+    if (mailtoBtn) {
+      mailtoBtn.addEventListener('click', () => {
+        const addr = `${mailName}@${mailDomain}`;
+        window.location.href = `mailto:${addr}?subject=Kontakt%20über%20silituz.de`;
       });
-    })();
+    }
 
-    // Mobile menu toggle
+    // E-Mail Validierung (zusätzlich zu type="email")
     (function(){
-      const menu = document.getElementById('mobileMenu');
-      const openBtn = document.getElementById('menuOpen');
-      const closeBtn = document.getElementById('menuClose');
-      function open(){ menu.classList.remove('translate-x-full'); openBtn?.setAttribute('aria-expanded','true'); }
-      function close(){ menu.classList.add('translate-x-full'); openBtn?.setAttribute('aria-expanded','false'); }
-      openBtn?.addEventListener('click', open);
-      closeBtn?.addEventListener('click', close);
-      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
-    })();
+      const emailInput = document.getElementById('email');
+      const emailError = document.getElementById('emailError');
+      function showEmailError(msg){
+        emailInput.setAttribute('aria-invalid','true');
+        emailError.textContent = msg;
+        emailError.classList.remove('hidden');
+      }
+      function clearEmailError(){
+        emailInput.removeAttribute('aria-invalid');
+        emailError.textContent = '';
+        emailError.classList.add('hidden');
+      }
+      emailInput.addEventListener('input', ()=>{ clearEmailError(); emailInput.setCustomValidity(''); });
 
-    // Email-Validation + Lemin Verify (serverseitig)
-    (function(){
+      // Basistest (leer/Format)
+      function isBasicValidEmail(v){
+        const basic = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+        return basic.test(v);
+      }
+
       const form = document.forms['contact'];
-      const email = document.getElementById('email');
-      const emailErr = document.getElementById('emailError');
+      const captchaError = document.getElementById('captchaError');
       const submitBtn = document.getElementById('submitBtn');
-      const capErr = document.getElementById('captchaError');
-
-      function setLoading(b){ if(!submitBtn) return; submitBtn.disabled = b; submitBtn.textContent = b ? 'Prüfe…' : 'Abschicken'; }
-      function showEmailError(msg){ email.setAttribute('aria-invalid','true'); emailErr.textContent = msg; emailErr.classList.remove('hidden'); }
-      function clearEmailError(){ email.removeAttribute('aria-invalid'); emailErr.textContent=''; emailErr.classList.add('hidden'); }
-      function basicEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(v); }
-      email.addEventListener('input', ()=>{ clearEmailError(); email.setCustomValidity(''); });
-
-      function showCaptchaError(msg){ if(!capErr) return alert(msg); capErr.textContent = msg; capErr.classList.remove('hidden'); }
-      function clearCaptchaError(){ if(!capErr) return; capErr.textContent=''; capErr.classList.add('hidden'); }
+      function showCaptchaError(msg){
+        if(!captchaError) return alert(msg);
+        captchaError.textContent = msg;
+        captchaError.classList.remove('hidden');
+      }
+      function clearCaptchaError(){
+        if(!captchaError) return;
+        captchaError.textContent = '';
+        captchaError.classList.add('hidden');
+      }
+      function setLoading(loading){
+        if(!submitBtn) return;
+        submitBtn.disabled = loading;
+        submitBtn.textContent = loading ? 'Prüfe…' : 'Abschicken';
+      }
 
       async function verifyLemin(){
         clearCaptchaError();
         const api = window.leminCroppedCaptcha?.getCaptcha?.();
         const v = api?.getCaptchaValue?.();
-        if(!v || !v.answer || !v.challenge_id){ showCaptchaError('Bitte löse das Puzzle, um fortzufahren.'); return false; }
+        if(!v || !v.answer || !v.challenge_id){
+          showCaptchaError('Bitte löse das Puzzle, um fortzufahren.');
+          return false;
+        }
         try{
           setLoading(true);
           const res = await fetch('/.netlify/functions/lemin-verify', {
@@ -192,8 +203,12 @@ Notes:
             body: JSON.stringify({ challenge_id: v.challenge_id, answer: v.answer })
           });
           const data = await res.json();
-          if(!data.ok){ showCaptchaError('Captcha ungültig oder abgelaufen. Bitte erneut versuchen.'); setLoading(false); return false; }
-          // Optional an das Form hängen (für spätere Auswertung)
+          if(!data.ok){
+            showCaptchaError('Captcha ungültig oder abgelaufen. Bitte erneut versuchen.');
+            setLoading(false);
+            return false;
+          }
+          // Hidden fields anhängen (optional für Auswertung)
           form.insertAdjacentHTML('beforeend', `<input type="hidden" name="lemin_challenge_id" value="${v.challenge_id}">`);
           form.insertAdjacentHTML('beforeend', `<input type="hidden" name="lemin_answer" value="${v.answer}">`);
           return true;
@@ -205,16 +220,18 @@ Notes:
       }
 
       form.addEventListener('submit', async (e)=>{
-        const val = email.value.trim();
-        if(!email.checkValidity() || !basicEmail(val)){
+        const v = emailInput.value.trim();
+        // Browser-Check + Zusatz
+        if(!emailInput.checkValidity() || !isBasicValidEmail(v)){
           e.preventDefault();
           showEmailError('Bitte gib eine gültige E-Mail-Adresse ein.');
-          email.setCustomValidity('Ungültige E-Mail');
+          emailInput.setCustomValidity('Ungültige E-Mail');
           return;
         }
-        email.setCustomValidity('');
+        emailInput.setCustomValidity('');
 
-        if(form.dataset.leminVerified === '1') return; // schon verifiziert
+        // Lemin prüfen (nur einmal)
+        if(form.dataset.leminVerified === '1') return; // bereits verifiziert
         e.preventDefault();
         const ok = await verifyLemin();
         if(ok){
@@ -228,3 +245,5 @@ Notes:
   </script>
 </body>
 </html>
+
+
