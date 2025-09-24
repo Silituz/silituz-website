@@ -1,0 +1,57 @@
+<!-- ==========================
+FILE: datenschutz.html (Minimal, DSGVO-bewusst)
+========================== -->
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Datenschutzerklärung – Silituz</title>
+<meta name="description" content="Datenschutzerklärung von silituz.de" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-[Inter]">
+<main class="max-w-3xl mx-auto px-4 py-12">
+<h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Datenschutzerklärung</h1>
+
+
+<section class="mt-8 space-y-6 text-slate-300">
+<div>
+<h2 class="text-xl font-bold">1. Verantwortlicher</h2>
+<p>Wird im Impressum benannt. Kontakt: <span>kontakt [at] silituz.de</span></p>
+</div>
+<div>
+<h2 class="text-xl font-bold">2. Zugriffsdaten/Hosting</h2>
+<p>Diese Website wird über Netlify gehostet. Beim Aufruf können technisch notwendige Daten (z. B. IP‑Adresse, Zeitstempel) verarbeitet werden. Netlify ist Auftragsverarbeiter; weitere Infos in der Netlify‑Datenschutzerklärung.</p>
+</div>
+<div>
+<h2 class="text-xl font-bold">3. Kontaktformular</h2>
+<p>Bei Nutzung des Formulars werden die von dir eingegebenen Daten (Name, E‑Mail, Nachricht) zur Bearbeitung der Anfrage verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertrag/Anbahnung) oder lit. f DSGVO (berechtigtes Interesse an Kommunikation). Die Daten werden über den Netlify‑Forms‑Dienst übermittelt und gespeichert.</p>
+</div>
+<div>
+<h2 class="text-xl font-bold">4. Spam‑Schutz (reCAPTCHA/hCaptcha)</h2>
+<p>Um Missbrauch zu verhindern, kann auf den Formularen ein CAPTCHA verwendet werden. Beim Laden des CAPTCHA können personenbezogene Daten (z. B. IP‑Adresse) an den Anbieter übertragen werden. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Das CAPTCHA wird nur auf Formularseiten eingesetzt.</p>
+</div>
+<div>
+<h2 class="text-xl font-bold">5. Speicherdauer</h2>
+<p>Formular‑Daten werden gelöscht, sobald der Zweck entfällt oder gesetzliche Aufbewahrungsfristen ablaufen.</p>
+</div>
+<div>
+<h2 class="text-xl font-bold">6. Rechte der betroffenen Personen</h2>
+<p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch. Wende dich dazu an die im Impressum genannte Adresse.</p>
+</div>
+<div>
+<h2 class="text-xl font-bold">7. Externe Links</h2>
+<p>Für Inhalte externer Seiten wird keine Verantwortung übernommen.</p>
+</div>
+</section>
+
+
+<div class="mt-8 text-xs text-slate-500">Letzte Aktualisierung: <span id="du"></span></div>
+</main>
+<script>document.getElementById('du').textContent = new Date().toLocaleDateString('de-DE');</script>
+</body>
+</html>
