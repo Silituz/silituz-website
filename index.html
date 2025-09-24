@@ -117,28 +117,119 @@
 </section>
 
   <!-- Footer -->
-  <footer class="py-14">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-10 items-start">
-      <div class="flex items-center gap-4">
-        <img src="assets/images/logo.svg" alt="SILITUZ Logo" class="h-14 w-14" />
-        <div>
-          <p class="font-black text-lg">SILITUZ</p>
-          <p class="text-slate-500">KI • Musik • Anime</p>
-        </div>
-      </div>
-      <div>
-        <p class="font-semibold">Newsletter</p>
-        <form name="newsletter" method="POST" data-netlify="true" class="mt-2 flex gap-2">
-          <input type="hidden" name="form-name" value="newsletter" />
-          <input type="email" name="email" placeholder="Email address" required class="flex-1 rounded-lg border-slate-300 focus:border-emerald-500 focus:ring-emerald-500" />
-          <button class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700">Submit</button>
-        </form>
-        <div class="mt-6 text-sm text-slate-600">
-          © <span id="y"></span> Silituz. All rights reserved.
-        </div>
-      </div>
+  <footer class="site-footer">
+  <div class="footer-inner">
+    <!-- Links: Logo + Name -->
+    <div class="footer-left">
+      <!-- Optional: Bildlogo -->
+      <!-- <img src="/assets/logo-silituz.svg" alt="Silituz Logo" class="logo"> -->
+      <span class="brand">Silituz</span>
     </div>
-  </footer>
+
+    <!-- Mitte: Copyright -->
+    <div class="footer-center">
+      <small>© 2025 Silituz – Alle Rechte vorbehalten</small>
+    </div>
+
+    <!-- Rechts: Socials -->
+    <nav class="footer-right" aria-label="Social Media">
+      <a class="icon" href="https://www.tiktok.com/@silituz" target="_blank" rel="noopener">
+        <!-- TikTok -->
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.5a7.5 7.5 0 0 1-5.2-2.1v7.1a6.5 6.5 0 1 1-6.5-6.5c.4 0 .8 0 1.2.1v3A3.5 3.5 0 1 0 12 15V3h3a7.5 7.5 0 0 0 6 3v2.5z"/></svg>
+        <span class="sr-only">TikTok</span>
+      </a>
+      <a class="icon" href="https://www.youtube.com/@silituz" target="_blank" rel="noopener">
+        <!-- YouTube -->
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.4 3.5 12 3.5 12 3.5s-7.4 0-9.4.6A3 3 0 0 0 .5 6.2 31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c2 .6 9.4.6 9.4.6s7.4 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.2 31.2 0 0 0 24 12a31.2 31.2 0 0 0-.5-5.8zM9.7 15.6V8.4L16 12l-6.3 3.6z"/></svg>
+        <span class="sr-only">YouTube</span>
+      </a>
+      <a class="icon" href="https://www.instagram.com/silituz" target="_blank" rel="noopener">
+        <!-- Instagram -->
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5c3 0 3.4 0 4.6.1 1.2.1 2 .3 2.7.7.7.4 1.3 1 1.7 1.7.4.7.6 1.5.7 2.7.1 1.2.1 1.6.1 4.6s0 3.4-.1 4.6c-.1 1.2-.3 2-.7 2.7-.4.7-1 1.3-1.7 1.7-.7.4-1.5.6-2.7.7-1.2.1-1.6.1-4.6.1s-3.4 0-4.6-.1c-1.2-.1-2-.3-2.7-.7a4.4 4.4 0 0 1-1.7-1.7c-.4-.7-.6-1.5-.7-2.7C2 15.4 2 15 2 12s0-3.4.1-4.6c.1-1.2.3-2 .7-2.7.4-.7 1-1.3 1.7-1.7.7-.4 1.5-.6 2.7-.7C8.6 2 9 2 12 2z"/><circle cx="18" cy="6" r="1.3"/></svg>
+        <span class="sr-only">Instagram</span>
+      </a>
+      <a class="icon" href="https://open.spotify.com/artist/…" target="_blank" rel="noopener">
+        <!-- Spotify -->
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21zm4.8 15.2a.9.9 0 0 1-1.2.3c-3.2-2-7.1-2.5-11.8-1.4a.9.9 0 0 1-.4-1.8c5.2-1.2 9.6-.6 13.1 1.5.4.2.5.8.3 1.4zm.9-3.2a1 1 0 0 1-1.3.4c-3.6-2.2-9.2-2.9-13.5-1.6a1 1 0 1 1-.6-2c4.9-1.5 11.1-.7 15.2 1.8.5.3.6 1 .2 1.4zm.2-3.3c-4-2.4-10.6-2.6-14.4-1.5a1.1 1.1 0 0 1-.6-2.1c4.4-1.3 11.8-1.1 16.5 1.7a1.1 1.1 0 1 1-1.5 1.9z"/></svg>
+        <span class="sr-only">Spotify</span>
+      </a>
+      <a class="icon" href="https://music.apple.com/de/artist/…" target="_blank" rel="noopener">
+        <!-- Apple Music -->
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/></svg>
+        <span class="sr-only">Apple Music</span>
+      </a>
+      <a class="more" href="/socials">Mehr</a>
+    </nav>
+  </div>
+</footer>
+
+<style>
+.site-footer{
+  background: radial-gradient(80% 120% at 50% 0%, #0d0f14 0%, #0a0c10 60%, #080a0e 100%);
+  color:#e8eef2;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.footer-inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:22px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+.footer-left .brand{
+  font-weight:800;
+  letter-spacing:.5px;
+  font-size:1.1rem;
+  text-transform:uppercase;
+  background: linear-gradient(90deg,#88ccee,#6fd37f,#f5b6ff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.logo{height:28px;width:auto;vertical-align:middle;margin-right:10px}
+
+.footer-center small{opacity:.85;white-space:nowrap}
+
+.footer-right{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.footer-right .icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  transition:transform .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.footer-right .icon:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.2);
+  box-shadow:0 6px 18px rgba(0,0,0,.4);
+}
+.footer-right .icon svg{width:18px;height:18px;fill:#e8eef2}
+.footer-right .more{
+  padding:8px 12px;border-radius:10px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  text-decoration:none;color:#e8eef2;font-weight:600;
+}
+.footer-right .more:hover{
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.2);
+}
+
+@media (max-width:900px){
+  .footer-inner{flex-direction:column;align-items:center;text-align:center}
+  .footer-center{order:3}
+}
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+</style>
+
 
   <!-- Slide-out RIGHT Menu -->
   <div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity z-40"></div>
@@ -181,6 +272,7 @@
   </script>
 </body>
 </html>
+
 
 
 
