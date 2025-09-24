@@ -31,8 +31,10 @@
           <a href="contact.html" aria-current="page" class="text-emerald-700">Kontakt</a>
         </nav>
         <!-- Mobile-Trigger -->
-        <button id="snakeBtn" class="md:hidden inline-flex items-center gap-2 justify-center text-slate-900 hover:text-emerald-600 text-base font-semibold" aria-label="Menü öffnen">
-          <span class="text-2xl leading-none">🐍</span><span>Menü</span>
+        <button id="snakeBtn"
+              class="inline-flex items-center gap-2 justify-center text-slate-900 hover:text-emerald-600 text-base font-semibold"
+              aria-label="Menü öffnen">
+        <span class="text-2xl leading-none">🐍</span><span>Menü</span>
         </button>
       </div>
     </div>
@@ -147,21 +149,22 @@
   <!-- Slide-out RIGHT Menu -->
   <div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity z-40"></div>
   <aside id="sideMenu" class="fixed right-0 top-0 h-full w-72 max-w-[80%] bg-white shadow-2xl translate-x-full transition-transform z-50">
-    <div class="h-16 px-4 flex items-center justify-between border-b">
-      <div class="font-extrabold">SILITUZ</div>
-      <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Menü schließen">✕</button>
+  <div class="h-16 px-4 flex items-center justify-between border-b">
+    <div class="flex items-center gap-2 text-slate-800 font-semibold">
+      <span class="text-emerald-600 text-xl">🐍</span><span>Menü</span>
     </div>
-    <nav class="p-4 space-y-2 text-slate-800">
-      <a href="index.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Home</a>
-      <a href="about.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Über mich</a>
-      <a href="services.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Dienstleistungen</a>
-      <a href="projects.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Projekte</a>
-      <a href="gallery.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Galerie</a>
-      <a href="socials.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Socials</a>
-      <a href="contact.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Kontakt</a>
-    </nav>
-  </aside>
-
+    <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Menü schließen">✕</button>
+  </div>
+  <nav class="p-4 space-y-2 text-slate-800">
+    <a href="index.html"    class="block px-3 py-2 rounded-lg hover:bg-slate-100">Home</a>
+    <a href="about.html"    class="block px-3 py-2 rounded-lg hover:bg-slate-100">Über mich</a>
+    <a href="services.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Dienstleistungen</a>
+    <a href="projects.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Projekte</a>
+    <a href="gallery.html"  class="block px-3 py-2 rounded-lg hover:bg-slate-100">Galerie</a>
+    <a href="socials.html"  class="block px-3 py-2 rounded-lg hover:bg-slate-100">Socials</a>
+    <a href="contact.html"  class="block px-3 py-2 rounded-lg hover:bg-slate-100">Kontakt</a>
+  </nav>
+</aside>
   <script>
     // Mailto-Fallback
     (function(){
@@ -260,3 +263,4 @@
   </script>
 </body>
 </html>
+
