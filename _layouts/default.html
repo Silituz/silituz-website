@@ -3,132 +3,134 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta name="theme-color" content="#059669">
+  <!-- Meta / Basis -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{ page.title | default: "SILITUZ" }}</title>
   <meta name="description" content="Startseite von Silituz: KI • Musik • Anime." />
+
+  <!-- Theme-Farbe (PWA/Browserleisten) -->
+  <meta name="theme-color" content="#059669">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- Dark Mode Bootstrapping + Tailwind-Konfig (MUSS vor dem CDN stehen) -->
   <script>
-  (function () {
-    const ls = localStorage.getItem("theme");
-    const sysDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const enableDark = ls === "dark" || (!ls && sysDark);
-    if (enableDark) document.documentElement.classList.add("dark");
-  })();
-  window.tailwind = { config: { darkMode: 'class' } };
-</script>
-   <!-- Favicons -->
-<link rel="icon" href="{{ '/assets/images/favicon.svg' | relative_url }}" type="image/svg+xml">
-<link rel="icon" href="{{ '/assets/images/favicon-32.png' | relative_url }}" sizes="32x32" type="image/png">
-<link rel="icon" href="{{ '/assets/images/favicon-16.png' | relative_url }}" sizes="16x16" type="image/png">
-<link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}">
-<meta name="theme-color" content="#059669">    
-<link rel="apple-touch-icon" href="{{ '/apple-touch-icon.png' | relative_url }}" sizes="180x180">
-<link rel="apple-touch-icon" href="{{ '/assets/images/apple-touch-icon.png' | relative_url }}" sizes="180x180">
+    (function () {
+      const ls = localStorage.getItem("theme");
+      const sysDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const enableDark = ls === "dark" || (!ls && sysDark);
+      if (enableDark) document.documentElement.classList.add("dark");
+    })();
+    window.tailwind = { config: { darkMode: 'class' } };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
 
-<script src="https://cdn.tailwindcss.com"></script>
-<meta name="color-scheme" content="light dark">
-  <!-- Font Awesome für Social-Icons -->
+  <!-- Favicons / Manifest -->
+  <link rel="icon" href="{{ '/assets/images/favicon.svg' | relative_url }}" type="image/svg+xml">
+  <link rel="icon" href="{{ '/assets/images/favicon-32.png' | relative_url }}" sizes="32x32" type="image/png">
+  <link rel="icon" href="{{ '/assets/images/favicon-16.png' | relative_url }}" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="{{ '/apple-touch-icon.png' | relative_url }}" sizes="180x180">
+  <link rel="mask-icon" href="{{ '/assets/images/favicon.svg' | relative_url }}" color="#059669">
+  <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}">
+
+  <!-- Font Awesome (nur für Footer-Icons) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Kleine Zusatzstyles -->
   <style>
-  .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
-  .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
-  .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);}
-
-  /* Menü-Links Hover + Aktiv */
-  #sideMenu nav a { transition: background-color .25s ease, color .25s ease; }
-  #sideMenu nav a:hover { background-color:#059669; color:#fff !important; }
-  #sideMenu nav a.active { background-color:#d1fae5; color:#059669 !important; font-weight:600; }
-
-  /* Footer Styles */
-  .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
-  .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
-  .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
-  .footer-left .logo{height:40px; width:auto;}
-  .brand-texts{display:flex; flex-direction:column; line-height:1.2;}
-  .brand-title{font-size:1.2rem; font-weight:800; color:#111;}
-  .brand-sub{font-size:.85rem; color:#666;}
-  .footer-center small{font-size:.9rem; color:#555;}
-  .footer-right{display:flex; align-items:center; gap:12px;}
-  .footer-right .icon{font-size:22px; color:#888; transition:color .3s ease;}
-  .footer-right .more{font-size:.9rem; font-weight:600; color:#555; text-decoration:none; padding:6px 10px; border:1px solid #ccc; border-radius:6px; transition:all .3s ease;}
-  .footer-right .more:hover{background:#f5f5f5; border-color:#999;}
-  /* Hover-Farben */
-  .footer-right .icon.tiktok:hover{color:#000;}
-  .footer-right .icon.youtube:hover{color:#FF0000;}
-  .footer-right .icon.instagram:hover{color:#E1306C;}
-  .footer-right .icon.spotify:hover{color:#1DB954;}
-  .footer-right .icon.apple:hover{color:#FA57C1;}
-
-  /* Mehr-Button: sanfter Hover + Wobble */
-  .footer-more{transition:background-color .25s ease, color .25s ease, border-color .25s ease, transform .25s ease; color:#374151; border:1px solid #d1d5db;}
-  .footer-more:hover{background-color:#059669; border-color:#059669; color:#fff !important; animation:footer-wobble .35s ease-in-out;}
-  @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-0.6deg)}100%{transform:translateX(0) rotate(0)}}
-  @media (prefers-reduced-motion: reduce){.footer-more:hover{animation:none;}}
-  .footer-right .more.footer-more:hover{background-color:#059669 !important; border-color:#059669 !important; color:#fff !important;}
+    .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
+    .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
+    .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);}
+    /* Menü-Links */
+    #sideMenu nav a { transition: background-color .25s ease, color .25s ease; }
+    #sideMenu nav a:hover { background-color:#059669; color:#fff !important; }
+    #sideMenu nav a.active { background-color:#d1fae5; color:#059669 !important; font-weight:600; }
+    /* Footer */
+    .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
+    .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+    .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
+    .footer-left .logo{height:40px; width:auto;}
+    .brand-texts{display:flex; flex-direction:column; line-height:1.2;}
+    .brand-title{font-size:1.2rem; font-weight:800; color:#111;}
+    .brand-sub{font-size:.85rem; color:#666;}
+    .footer-center small{font-size:.9rem; color:#555;}
+    .footer-right{display:flex; align-items:center; gap:12px;}
+    .footer-right .icon{font-size:22px; color:#888; transition:color .3s ease;}
+    .footer-right .more{font-size:.9rem; font-weight:600; color:#555; text-decoration:none; padding:6px 10px; border:1px solid #ccc; border-radius:6px; transition:all .3s ease;}
+    .footer-right .more:hover{background:#f5f5f5; border-color:#999;}
+    .footer-right .icon.tiktok:hover{color:#000;}
+    .footer-right .icon.youtube:hover{color:#FF0000;}
+    .footer-right .icon.instagram:hover{color:#E1306C;}
+    .footer-right .icon.spotify:hover{color:#1DB954;}
+    .footer-right .icon.apple:hover{color:#FA57C1;}
+    .footer-more{transition:background-color .25s ease, color .25s ease, border-color .25s ease, transform .25s ease; color:#374151; border:1px solid #d1d5db;}
+    .footer-more:hover{background-color:#059669; border-color:#059669; color:#fff !important; animation:footer-wobble .35s ease-in-out;}
+    @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-0.6deg)}100%{transform:translateX(0) rotate(0)}}
+    @media (prefers-reduced-motion: reduce){.footer-more:hover{animation:none;}}
+    .footer-right .more.footer-more:hover{background-color:#059669 !important; border-color:#059669 !important; color:#fff !important;}
+    /* Dark-Body */
+    @media (prefers-color-scheme: dark){
+      .site-footer{background:#0f172a; color:#e5e7eb; border-top-color:#1f2937;}
+      .brand-title{color:#e5e7eb;}
+      .brand-sub{color:#94a3b8;}
+    }
   </style>
 </head>
-<body class="text-slate-800 antialiased">
 
-  <!-- Header (bleibt global) -->
-<header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-[1fr_auto_1fr] items-center h-16">
+<body class="text-slate-800 dark:text-slate-100 antialiased">
 
-    <!-- Logo links -->
-    <a href="{{ '/' | relative_url }}"
-       class="justify-self-start inline-flex items-center gap-3 font-black tracking-wide text-lg text-slate-900 dark:text-slate-100">
-      <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="SILITUZ Logo" class="h-9 w-9">
-      <span class="hidden sm:flex flex-col leading-tight">
-        <span>SILITUZ</span>
-        <span class="text-[10px] font-normal text-slate-500 dark:text-slate-400">KI • Musik • Anime</span>
-      </span>
-    </a>
+  <!-- HEADER: Logo links • Switch Mitte • Menü rechts -->
+  <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-[1fr_auto_1fr] items-center h-16">
 
-   <!-- Dark-Mode Toggle mittig -->
-<button id="themeToggle"
-        onclick="(function(){const el=document.documentElement;const isDark=el.classList.toggle('dark');try{localStorage.setItem('theme',isDark?'dark':'light');}catch(e){}})()"
-        class="justify-self-center relative w-16 h-8 rounded-full
-               bg-slate-300 dark:bg-slate-700
-               transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">
-  <!-- Sonne links -->
-  <span class="absolute left-1 top-1 w-6 h-6 flex items-center justify-center text-yellow-500">
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12z"/></svg>
-  </span>
-  <!-- Mond rechts -->
-  <span class="absolute right-1 top-1 w-6 h-6 flex items-center justify-center text-indigo-400">
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 1 0 9.8 9.8Z"/></svg>
-  </span>
-  <!-- Knopf -->
-  <span class="absolute top-1 left-1 w-6 h-6 rounded-full bg-white shadow-md
-               transform transition-transform dark:translate-x-8"></span>
-</button>
+      <!-- Logo -->
+      <a href="{{ '/' | relative_url }}"
+         class="justify-self-start inline-flex items-center gap-3 font-black tracking-wide text-lg text-slate-900 dark:text-slate-100">
+        <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="SILITUZ Logo" class="h-9 w-9">
+        <span class="hidden sm:flex flex-col leading-tight">
+          <span>SILITUZ</span>
+          <span class="text-[10px] font-normal text-slate-500 dark:text-slate-400">KI • Musik • Anime</span>
+        </span>
+      </a>
 
-    <!-- Menü rechts -->
-    <button id="snakeBtn"
-            class="justify-self-end inline-flex items-center gap-2 px-3 py-2 rounded-lg
-                   text-slate-900 dark:text-slate-100
-                   hover:bg-slate-100 dark:hover:bg-slate-800
-                   font-semibold"
-            aria-controls="sideMenu" aria-expanded="false">
-      <span class="text-xl">🐍</span><span class="hidden sm:inline">Menü</span>
-    </button>
-  </div>
-  
- 
-<!-- Safari pinned tab (optional, wenn du ein monochromes SVG hast) -->
-<link rel="mask-icon" href="{{ '/assets/images/favicon.svg' | relative_url }}" color="#059669">
+      <!-- Tag/Nacht Switch -->
+      <button id="themeToggle"
+              onclick="(function(){const el=document.documentElement;const isDark=el.classList.toggle('dark');try{localStorage.setItem('theme',isDark?'dark':'light');}catch(e){}})()"
+              class="justify-self-center relative w-16 h-8 rounded-full
+                     bg-slate-300 dark:bg-slate-700
+                     transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              aria-label="Dark Mode umschalten">
+        <!-- Sonne links -->
+        <span class="absolute left-1 top-1 w-6 h-6 flex items-center justify-center text-yellow-500">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12z"/></svg>
+        </span>
+        <!-- Mond rechts -->
+        <span class="absolute right-1 top-1 w-6 h-6 flex items-center justify-center text-indigo-400">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 1 0 9.8 9.8Z"/></svg>
+        </span>
+        <!-- Schiebeknopf -->
+        <span class="absolute top-1 left-1 w-6 h-6 rounded-full bg-white shadow-md
+                     transform transition-transform dark:translate-x-8"></span>
+      </button>
 
-<!-- Manifest (optional, wenn du später PWA willst) -->
-<!-- <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}"> -->
-
+      <!-- Menü -->
+      <button id="snakeBtn"
+              class="justify-self-end inline-flex items-center gap-2 px-3 py-2 rounded-lg
+                     text-slate-900 dark:text-slate-100
+                     hover:bg-slate-100 dark:hover:bg-slate-800
+                     font-semibold"
+              aria-controls="sideMenu" aria-expanded="false">
+        <span class="text-xl">🐍</span><span class="hidden sm:inline">Menü</span>
+      </button>
+    </div>
   </header>
 
-  <!-- *** HIER wird pro Seite der Inhalt eingefügt *** -->
+  <!-- Seiteninhalt -->
   <main id="content">
     {{ content }}
   </main>
 
-  <!-- Footer (bleibt global) -->
+  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-left">
@@ -147,23 +149,23 @@
         <a class="icon tiktok" href="https://www.tiktok.com/@silituz" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
         <a class="icon youtube" href="https://www.youtube.com/@silituz" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
         <a class="icon instagram" href="https://www.instagram.com/silituz" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-        <a class="icon spotify" href="https://open.spotify.com/intl-de/artist/0l3OqhrDQ7No2fPCIP0i5h?si=fCqRF9TEQI6j0XVDN44K1g&nd=1&dlsi=102bc6c3b9914294" target="_blank" rel="noopener" aria-label="Spotify"><i class="fab fa-spotify"></i></a>
+        <a class="icon spotify" href="https://open.spotify.com/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank" rel="noopener" aria-label="Spotify"><i class="fab fa-spotify"></i></a>
         <a class="icon apple" href="https://music.apple.com/de/artist/silituz/1815637787" target="_blank" rel="noopener" aria-label="Apple Music">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/></svg>
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/></svg>
         </a>
         <a class="more footer-more text-sm font-semibold border px-3 py-1.5 rounded-lg" href="{{ '/socials.html' | relative_url }}">Mehr</a>
       </nav>
     </div>
   </footer>
 
-  <!-- Slide-out RIGHT Menu (bleibt global) -->
+  <!-- OVERLAY + SIDE-MENÜ -->
   <div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity z-40"></div>
-  <aside id="sideMenu" class="fixed right-0 top-0 h-full w-72 max-w-[80%] bg-white shadow-2xl translate-x-full transition-transform z-50" aria-hidden="true">
-    <div class="h-16 px-4 flex items-center justify-between border-b">
-      <div class="font-extrabold">SILITUZ</div>
-      <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Menü schließen">✕</button>
+  <aside id="sideMenu" class="fixed right-0 top-0 h-full w-72 max-w-[80%] bg-white dark:bg-slate-900 shadow-2xl translate-x-full transition-transform z-50" aria-hidden="true">
+    <div class="h-16 px-4 flex items-center justify-between border-b dark:border-slate-800">
+      <div class="font-extrabold text-slate-800 dark:text-slate-100">SILITUZ</div>
+      <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Menü schließen">✕</button>
     </div>
-    <nav class="p-4 space-y-2 text-slate-800">
+    <nav class="p-4 space-y-2 text-slate-800 dark:text-slate-100">
       <a href="{{ '/' | relative_url }}" class="block px-3 py-2 rounded-lg {% if page.url == '/' %}active{% endif %}">Home</a>
       <a href="{{ '/about.html' | relative_url }}" class="block px-3 py-2 rounded-lg">Über mich</a>
       <a href="{{ '/gallery.html' | relative_url }}" class="block px-3 py-2 rounded-lg">Galerie</a>
@@ -176,24 +178,39 @@
     </nav>
   </aside>
 
-  <!-- JS (bleibt global) -->
-    const el = document.documentElement;
-    const isDark = el.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  });
+  <!-- GLOBAL JS: nur Menü-Logik (Toggle Dark läuft im Button-OnClick) -->
+  <script>
+    // Jahr im Footer
+    document.getElementById('y')?.appendChild(document.createTextNode(new Date().getFullYear()));
 
-  // Dein vorhandenes Menü-Script kann so bleiben:
-  const snakeBtn = document.getElementById('snakeBtn');
-  const sideMenu = document.getElementById('sideMenu');
-  const sideOverlay = document.getElementById('sideOverlay');
-  const sideClose = document.getElementById('sideClose');
-  function openMenu(){ sideMenu.classList.remove('translate-x-full'); sideOverlay.classList.remove('pointer-events-none'); requestAnimationFrame(()=>{ sideOverlay.classList.add('opacity-100'); sideOverlay.classList.remove('opacity-0'); }); snakeBtn?.setAttribute('aria-expanded','true'); sideMenu.setAttribute('aria-hidden','false'); }
-  function closeMenu(){ sideMenu.classList.add('translate-x-full'); sideOverlay.classList.add('pointer-events-none'); sideOverlay.classList.remove('opacity-100'); sideOverlay.classList.add('opacity-0'); snakeBtn?.setAttribute('aria-expanded','false'); sideMenu.setAttribute('aria-hidden','true'); }
-  snakeBtn?.addEventListener('click', openMenu);
-  sideClose?.addEventListener('click', closeMenu);
-  sideOverlay?.addEventListener('click', closeMenu);
-  window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
+    // Menü öffnen/schließen
+    const snakeBtn = document.getElementById('snakeBtn');
+    const sideMenu = document.getElementById('sideMenu');
+    const sideOverlay = document.getElementById('sideOverlay');
+    const sideClose = document.getElementById('sideClose');
 
-
+    function openMenu(){
+      sideMenu.classList.remove('translate-x-full');
+      sideOverlay.classList.remove('pointer-events-none');
+      requestAnimationFrame(()=>{
+        sideOverlay.classList.add('opacity-100');
+        sideOverlay.classList.remove('opacity-0');
+      });
+      snakeBtn?.setAttribute('aria-expanded','true');
+      sideMenu.setAttribute('aria-hidden','false');
+    }
+    function closeMenu(){
+      sideMenu.classList.add('translate-x-full');
+      sideOverlay.classList.add('pointer-events-none');
+      sideOverlay.classList.remove('opacity-100');
+      sideOverlay.classList.add('opacity-0');
+      snakeBtn?.setAttribute('aria-expanded','false');
+      sideMenu.setAttribute('aria-hidden','true');
+    }
+    snakeBtn?.addEventListener('click', openMenu);
+    sideClose?.addEventListener('click', closeMenu);
+    sideOverlay?.addEventListener('click', closeMenu);
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
+  </script>
 </body>
 </html>
