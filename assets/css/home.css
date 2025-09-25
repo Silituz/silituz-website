@@ -1,9 +1,0 @@
-.hero { position:relative; overflow:hidden; }
-.hero-bg img { width:100%; height:auto; max-height:545px; object-fit:cover; }
-.hero-content { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding: clamp(16px, 5vw, 64px); }
-
-.tiles { padding: clamp(24px, 5vw, 64px); }
-.tiles-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:24px; }
-.tile { background:#fff; border:1px solid #e5e7eb; border-radius:16px; padding:16px; text-align:center; transition:transform .15s ease, box-shadow .2s; }
-.tile:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.08); }
-.tile img { width:100%; height:auto; aspect-ratio:1 / 1; object-fit:cover; border-radius:12px; }
