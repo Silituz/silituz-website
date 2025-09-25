@@ -1,1 +1,13 @@
+<nav class="p-4 space-y-2 text-slate-800">
+  {% assign here = page.url %}
+  <a href="/index.html"      class="block px-3 py-2 rounded-lg {% if here == '/' or here == '/index.html' %}active{% endif %}">Home</a>
+  <a href="/about.html"      class="block px-3 py-2 rounded-lg {% if here == '/about.html' %}active{% endif %}">Über mich</a>
+  <a href="/gallery.html"    class="block px-3 py-2 rounded-lg {% if here == '/gallery.html' %}active{% endif %}">Galerie</a>
+  <a href="/generators.html" class="block px-3 py-2 rounded-lg {% if here == '/generators.html' %}active{% endif %}">Generatoren &amp; mehr</a>
+  <a href="/music.html"      class="block px-3 py-2 rounded-lg {% if here == '/music.html' %}active{% endif %}">Meine Musik</a>
+  <a href="/socials.html"    class="block px-3 py-2 rounded-lg {% if here == '/socials.html' %}active{% endif %}">Socials</a>
+  <a href="/support.html"    class="block px-3 py-2 rounded-lg {% if here == '/support.html' %}active{% endif %}">Unterstützung</a>
+  <a href="/contact.html"    class="block px-3 py-2 rounded-lg {% if here == '/contact.html' %}active{% endif %}">Kontakt</a>
+  <a href="/impressum.html"  class="block px-3 py-2 rounded-lg {% if here == '/impressum.html' %}active{% endif %}">Impressum</a>
+</nav>
 
