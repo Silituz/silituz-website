@@ -63,21 +63,53 @@
 <body class="text-slate-800 antialiased">
 
   <!-- Header (bleibt global) -->
-  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex h-16 items-center justify-between">
-        <a href="{{ '/' | relative_url }}" class="flex items-center gap-3 font-black tracking-wide text-xl">
-          <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="SILITUZ Logo" class="h-10 w-10" />
-          <span class="flex flex-col leading-tight">
-            <span>SILITUZ</span>
-            <span class="text-xs font-normal text-slate-500">KI • Musik • Anime</span>
-          </span>
-        </a>
-        <button id="snakeBtn" class="inline-flex items-center gap-2 justify-center text-slate-900 hover:text-emerald-600 text-base md:text-lg font-semibold" aria-controls="sideMenu" aria-expanded="false">
-          <span class="text-2xl leading-none">🐍</span><span>Menü</span>
-        </button>
-      </div>
-    </div>
+<header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-[1fr_auto_1fr] items-center h-16">
+
+    <!-- Logo links -->
+    <a href="{{ '/' | relative_url }}"
+       class="justify-self-start inline-flex items-center gap-3 font-black tracking-wide text-lg text-slate-900 dark:text-slate-100">
+      <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="SILITUZ Logo" class="h-9 w-9">
+      <span class="hidden sm:flex flex-col leading-tight">
+        <span>SILITUZ</span>
+        <span class="text-[10px] font-normal text-slate-500 dark:text-slate-400">KI • Musik • Anime</span>
+      </span>
+    </a>
+
+    <!-- Dark-Mode Toggle mittig -->
+    <button id="themeToggle"
+            class="justify-self-center inline-flex items-center gap-2 px-3 py-1.5 rounded-full
+                   border border-slate-300 dark:border-slate-700
+                   bg-white/70 dark:bg-slate-800/70
+                   text-slate-700 dark:text-slate-200
+                   shadow-sm hover:shadow transition
+                   hover:bg-slate-50 dark:hover:bg-slate-800
+                   focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            aria-label="Dark Mode umschalten"
+            title="Dark Mode umschalten">
+      <span class="dark:hidden inline-flex items-center">
+        <!-- Sonne -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12m0 4a1 1 0 0 1-1-1v-1.1a1 1 0 1 1 2 0V21a1 1 0 0 1-1 1M12 4.1a1 1 0 1 1-2 0V3a1 1 0 1 1 2 0zM5.6 6a1 1 0 0 1 0-1.4l.8-.8A1 1 0 0 1 7.8 5l-.8.8A1 1 0 0 1 5.6 6m12.8 0a1 1 0 0 1-1.4 0L16.2 5A1 1 0 1 1 17.6 3.6l.8.8A1 1 0 0 1 18.4 6M3 13a1 1 0 1 1 0-2h1.1a1 1 0 1 1 0 2zm16.9 0a1 1 0 1 1 0-2H21a1 1 0 1 1 0 2zM6.6 18.4A1 1 0 0 1 5 17l.8-.8A1 1 0 0 1 7.2 17l-.8.8a1 1 0 0 1-.8.6m10.8 0a1 1 0 0 1-.8-.6l-.8-.8A1 1 0 1 1 17.8 16l.8.8a1 1 0 0 1-1.2 1.6"/></svg>
+        <span class="ml-1 text-sm font-semibold">Light</span>
+      </span>
+      <span class="hidden dark:inline-flex items-center">
+        <!-- Mond -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 1 0 9.8 9.8Z"/></svg>
+        <span class="ml-1 text-sm font-semibold">Dark</span>
+      </span>
+    </button>
+
+    <!-- Menü rechts -->
+    <button id="snakeBtn"
+            class="justify-self-end inline-flex items-center gap-2 px-3 py-2 rounded-lg
+                   text-slate-900 dark:text-slate-100
+                   hover:bg-slate-100 dark:hover:bg-slate-800
+                   font-semibold"
+            aria-controls="sideMenu" aria-expanded="false">
+      <span class="text-xl">🐍</span><span class="hidden sm:inline">Menü</span>
+    </button>
+  </div>
+  
     <!-- Favicons -->
 <link rel="icon" href="{{ '/assets/images/favicon.svg' | relative_url }}" type="image/svg+xml">
 <link rel="icon" href="{{ '/assets/images/favicon-32.png' | relative_url }}" sizes="32x32" type="image/png">
