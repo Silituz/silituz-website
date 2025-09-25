@@ -1,0 +1,23 @@
+---
+layout: default
+---
+
+<section class="hero">
+  <div class="hero-bg">
+    <img src="{{ '/assets/img/welcome-head.svg' | relative_url }}" alt="SILITUZ Hero">
+  </div>
+
+  <div class="hero-content">
+    <h1>Willkommen bei SILITUZ</h1>
+    <p>KI-Bilder, Anime-Edits & Musik – von Silituz.</p>
+
+    <div class="hero-actions">
+      {% include components/button.html text="Über mich" href="/ueber-mich/" variant="primary" %}
+      {% include components/button.html text="Socials" href="/socials/" variant="ghost" %}
+    </div>
+  </div>
+</section>
+
+<section class="tiles">
+  {% include home/tiles.html %}
+</section>
