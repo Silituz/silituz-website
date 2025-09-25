@@ -18,17 +18,18 @@
   color: #374151; /* slate-700 */
 }
 
-/* Hover-Effekt */
-.nav-link:hover {
+/* Hover-Effekt für Menülinks */
+nav a:hover {
   background-color: #059669; /* emerald-600 */
   color: #fff !important;
 }
 
-/* Aktive Seite */
-.nav-link.active {
-  background-color: #d1fae5; /* emerald-100 (blass-grün) */
+/* Aktiver Menüpunkt */
+nav a.active {
+  background-color: #d1fae5; /* emerald-100 (blasses Grün) */
   color: #059669 !important; /* emerald-600 */
 }
+
     
   /* Footer Styles */
   .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
@@ -208,16 +209,18 @@
       <div class="font-extrabold">SILITUZ</div>
       <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Menü schließen">✕</button>
     </div>
-    <nav class="flex flex-col gap-2">
-  <a href="index.html" class="nav-link active">Home</a>
-  <a href="about.html" class="nav-link">Über mich</a>
-  <a href="gallery.html" class="nav-link">Galerie</a>
-  <a href="generatoren.html" class="nav-link">Generatoren & mehr</a>
-  <a href="socials.html" class="nav-link">Socials</a>
-  <a href="support.html" class="nav-link">Unterstützung</a>
-  <a href="contact.html" class="nav-link">Kontakt</a>
-  <a href="impressum.html" class="nav-link">Impressum</a>
+    <nav class="menu">
+  <a href="index.html" class="active">Home</a>
+  <a href="about.html">Über mich</a>
+  <a href="gallery.html">Galerie</a>
+  <a href="generatoren.html">Generatoren & mehr</a>
+  <a href="music.html">Meine Musik</a>
+  <a href="socials.html">Socials</a>
+  <a href="support.html">Unterstützung</a>
+  <a href="contact.html">Kontakt</a>
+  <a href="impressum.html">Impressum</a>
 </nav>
+
   </aside>
 
   <!-- JS -->
@@ -258,6 +261,7 @@
   </script>
 </body>
 </html>
+
 
 
 
