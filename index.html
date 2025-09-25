@@ -31,6 +31,27 @@
     .footer-right .icon.instagram:hover{color:#E1306C;}
     .footer-right .icon.spotify:hover{color:#1DB954;}
     .footer-right .icon.apple:hover{color:#FA57C1;}
+    /* Mehr-Button: sanfter Hover + Wobble */
+  .footer-more {
+    transition: background-color .25s ease, color .25s ease, border-color .25s ease, transform .25s ease;
+  }
+  .footer-more:hover {
+    background-color: #059669; /* Tailwind: emerald-600 */
+    border-color: #059669;
+    color: #ffffff;
+    animation: footer-wobble .35s ease-in-out;
+  }
+  @keyframes footer-wobble{
+    0%{ transform: translateX(0) rotate(0) }
+    25%{ transform: translateX(-1.5px) rotate(-1.2deg) }
+    50%{ transform: translateX(1.5px) rotate(1.2deg) }
+    75%{ transform: translateX(-1px) rotate(-0.6deg) }
+    100%{ transform: translateX(0) rotate(0) }
+  }
+  /* Respektiert „Bewegung reduzieren“ */
+  @media (prefers-reduced-motion: reduce){
+    .footer-more:hover { animation: none; }
+  }
   </style>
 </head>
 <body class="text-slate-800 antialiased">
@@ -210,6 +231,7 @@
   </script>
 </body>
 </html>
+
 
 
 
