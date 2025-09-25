@@ -1,1 +1,5 @@
+{% assign v = include.variant | default: 'primary' %}
+<a class="btn btn-{{ v }}" href="{{ include.href | relative_url }}">
+  {{ include.text }}
+</a>
 
