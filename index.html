@@ -5,13 +5,14 @@ permalink: /
 ---
 
 <!-- Hero Section -->
-<section class="relative w-full flex items-center overflow-hidden min-h-[60vh] md:h-[545px]">
+<section class="relative w-full flex items-center overflow-hidden min-h-[60vh] md:h-[545px] bg-[#FDE9CF]">
   <img
     src="{{ '/assets/images/welcome-head.svg' | relative_url }}"
     alt="Welcome Bild"
-    class="absolute inset-0 w-full h-full object-cover"
+    class="absolute inset-0 w-full h-full
+           object-contain md:object-cover md:object-[right_center]"
   >
-  <div class="relative z-10 max-w-3xl mx-auto text-center px-4">
+  <div class="relative z-10 max-w-3xl mx-auto px-4 text-left">
     <h1 class="text-3xl md:text-5xl font-extrabold text-white">Willkommen bei Silituz</h1>
     <p class="mt-3 text-base md:text-xl text-slate-200">…</p>
     <div class="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">…</div>
