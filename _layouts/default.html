@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+  <!-- Meta / Basis -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{ page.title | default: "SILITUZ" }}</title>
@@ -10,7 +11,7 @@
   <meta name="theme-color" content="#059669">
   <meta name="color-scheme" content="light dark">
 
-  <!-- Dark Mode Bootstrapping + Tailwind-Konfig -->
+  <!-- Dark Mode Bootstrapping + Tailwind-Konfig (MUSS vor dem CDN stehen) -->
   <script>
     (function () {
       const ls = localStorage.getItem("theme");
@@ -38,9 +39,13 @@
     .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
     .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
     .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);}
+
+    /* Side-Menü Links */
     #sideMenu nav a { transition: background-color .25s ease, color .25s ease; }
     #sideMenu nav a:hover { background-color:#059669; color:#fff !important; }
     #sideMenu nav a.active { background-color:#d1fae5; color:#059669 !important; font-weight:600; }
+
+    /* Footer (hell) */
     .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
     .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
     .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
@@ -62,22 +67,19 @@
     .footer-more:hover{background-color:#059669; border-color:#059669; color:#fff !important; animation:footer-wobble .35s ease-in-out;}
     @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-0.6deg)}100%{transform:translateX(0) rotate(0)}}
     @media (prefers-reduced-motion: reduce){.footer-more:hover{animation:none;}}
-    .footer-right .more.footer-more:hover{background-color:#059669 !important; border-color:#059669 !important; color:#fff !important;}
 
-    /* Dark-Body */
-    @media (prefers-color-scheme: dark){
-      .site-footer{background:#0f172a; color:#e5e7eb; border-top-color:#1f2937;}
-      .brand-title{color:#e5e7eb;}
-      .brand-sub{color:#94a3b8;}
-    }
+    /* Footer (dunkel) über .dark */
+    .dark .site-footer{background:#0f172a; color:#e5e7eb; border-top-color:#1f2937;}
+    .dark .brand-title{color:#e5e7eb;}
+    .dark .brand-sub{color:#94a3b8;}
 
     /* Switch-Regler sichtbar bewegen */
     #themeToggle .knob { transform: translateX(0); transition: transform .2s ease; }
-    #themeToggle.on .knob { transform: translateX(2rem); }
+    #themeToggle.on .knob { transform: translateX(2rem); } /* 32px = w-16 */
   </style>
 </head>
 
-<body class="text-slate-800 dark:text-slate-100 antialiased">
+<body class="bg-white text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased">
 
   <!-- HEADER -->
   <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
@@ -93,9 +95,16 @@
         </span>
       </a>
 
-      <!-- Tag/Nacht Switch -->
+      <!-- Tag/Nacht Switch (arbeitet auf <html> und <body>) -->
       <button id="themeToggle"
-              onclick="(function(btn){const el=document.documentElement;const isDark=el.classList.toggle('dark');try{localStorage.setItem('theme',isDark?'dark':'light');}catch(e){};btn.classList.toggle('on', isDark);})(this)"
+              onclick="(function(btn){
+                var html=document.documentElement, body=document.body;
+                var isDark=!html.classList.contains('dark');
+                html.classList.toggle('dark', isDark);
+                body.classList.toggle('dark', isDark);
+                try{ localStorage.setItem('theme', isDark?'dark':'light'); }catch(e){}
+                btn.classList.toggle('on', isDark);
+              })(this)"
               class="justify-self-center relative w-16 h-8 rounded-full
                      bg-slate-300 dark:bg-slate-700
                      transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -130,7 +139,7 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="site-footer">
+  <footer class="site-footer dark:bg-slate-900 dark:text-slate-100 dark:border-slate-800">
     <div class="footer-inner">
       <div class="footer-left">
         <a href="{{ '/' | relative_url }}" class="footer-brand">
@@ -211,17 +220,16 @@
     sideOverlay?.addEventListener('click', closeMenu);
     window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-    // Regler beim Start korrekt setzen
+    // Regler + Zustand beim Start korrekt setzen (html + body + Switch)
     (function(){
       try {
-        var stored = localStorage.getItem('theme');
+        var stored = localStorage.getItem('theme'); // 'dark' | 'light' | null
         var prefers = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         var isDark = stored ? (stored === 'dark') : prefers;
         var btn = document.getElementById('themeToggle');
-        if (isDark) {
-          document.documentElement.classList.add('dark');
-          btn && btn.classList.add('on');
-        }
+        document.documentElement.classList.toggle('dark', isDark);
+        document.body.classList.toggle('dark', isDark);
+        if (btn) btn.classList.toggle('on', isDark);
       } catch(e){}
     })();
   </script>
