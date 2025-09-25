@@ -12,7 +12,24 @@
   .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
   .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
   .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);}
+/* Basis für Menülinks */
+.nav-link {
+  @apply px-3 py-2 rounded-md font-semibold transition-colors;
+  color: #374151; /* slate-700 */
+}
 
+/* Hover-Effekt */
+.nav-link:hover {
+  background-color: #059669; /* emerald-600 */
+  color: #fff !important;
+}
+
+/* Aktive Seite */
+.nav-link.active {
+  background-color: #d1fae5; /* emerald-100 (blass-grün) */
+  color: #059669 !important; /* emerald-600 */
+}
+    
   /* Footer Styles */
   .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
   .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
@@ -191,16 +208,15 @@
       <div class="font-extrabold">SILITUZ</div>
       <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Menü schließen">✕</button>
     </div>
-    <nav class="p-4 space-y-2 text-slate-800">
-  <a href="index.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Home</a>
-  <a href="about.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Über mich</a>
-  <a href="gallery.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Galerie</a>
-  <a href="generators.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Generatoren &amp; mehr</a>
-  <a href="music.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Meine Musik</a>    
-  <a href="socials.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Socials</a>
-  <a href="support.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Unterstützung</a>
-  <a href="contact.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Kontakt</a>
-  <a href="impressum.html" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Impressum</a>
+    <nav class="flex flex-col gap-2">
+  <a href="index.html" class="nav-link active">Home</a>
+  <a href="about.html" class="nav-link">Über mich</a>
+  <a href="gallery.html" class="nav-link">Galerie</a>
+  <a href="generatoren.html" class="nav-link">Generatoren & mehr</a>
+  <a href="socials.html" class="nav-link">Socials</a>
+  <a href="support.html" class="nav-link">Unterstützung</a>
+  <a href="contact.html" class="nav-link">Kontakt</a>
+  <a href="impressum.html" class="nav-link">Impressum</a>
 </nav>
   </aside>
 
@@ -242,6 +258,7 @@
   </script>
 </body>
 </html>
+
 
 
 
