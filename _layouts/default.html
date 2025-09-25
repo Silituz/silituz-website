@@ -76,28 +76,29 @@
       </span>
     </a>
 
-    <!-- Dark-Mode Toggle mittig -->
-    <button id="themeToggle"
-            class="justify-self-center inline-flex items-center gap-2 px-3 py-1.5 rounded-full
-                   border border-slate-300 dark:border-slate-700
-                   bg-white/70 dark:bg-slate-800/70
-                   text-slate-700 dark:text-slate-200
-                   shadow-sm hover:shadow transition
-                   hover:bg-slate-50 dark:hover:bg-slate-800
-                   focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            aria-label="Dark Mode umschalten"
-            title="Dark Mode umschalten">
-      <span class="dark:hidden inline-flex items-center">
-        <!-- Sonne -->
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12m0 4a1 1 0 0 1-1-1v-1.1a1 1 0 1 1 2 0V21a1 1 0 0 1-1 1M12 4.1a1 1 0 1 1-2 0V3a1 1 0 1 1 2 0zM5.6 6a1 1 0 0 1 0-1.4l.8-.8A1 1 0 0 1 7.8 5l-.8.8A1 1 0 0 1 5.6 6m12.8 0a1 1 0 0 1-1.4 0L16.2 5A1 1 0 1 1 17.6 3.6l.8.8A1 1 0 0 1 18.4 6M3 13a1 1 0 1 1 0-2h1.1a1 1 0 1 1 0 2zm16.9 0a1 1 0 1 1 0-2H21a1 1 0 1 1 0 2zM6.6 18.4A1 1 0 0 1 5 17l.8-.8A1 1 0 0 1 7.2 17l-.8.8a1 1 0 0 1-.8.6m10.8 0a1 1 0 0 1-.8-.6l-.8-.8A1 1 0 1 1 17.8 16l.8.8a1 1 0 0 1-1.2 1.6"/></svg>
-        <span class="ml-1 text-sm font-semibold">Light</span>
-      </span>
-      <span class="hidden dark:inline-flex items-center">
-        <!-- Mond -->
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 1 0 9.8 9.8Z"/></svg>
-        <span class="ml-1 text-sm font-semibold">Dark</span>
-      </span>
-    </button>
+   <!-- Dark-Mode Toggle mittig -->
+<button id="themeToggle"
+        class="justify-self-center relative w-16 h-8 rounded-full
+               bg-slate-300 dark:bg-slate-700
+               transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">
+  <!-- Sonne links -->
+  <span class="absolute left-1 top-1 w-6 h-6 flex items-center justify-center text-yellow-500">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+      <path d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12z"/>
+    </svg>
+  </span>
+
+  <!-- Mond rechts -->
+  <span class="absolute right-1 top-1 w-6 h-6 flex items-center justify-center text-indigo-400">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 1 0 9.8 9.8Z"/>
+    </svg>
+  </span>
+
+  <!-- Knopf -->
+  <span class="absolute top-1 left-1 w-6 h-6 rounded-full bg-white shadow-md
+               transform transition-transform dark:translate-x-8"></span>
+</button>
 
     <!-- Menü rechts -->
     <button id="snakeBtn"
