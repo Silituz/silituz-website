@@ -6,23 +6,33 @@ layout: null
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ page.title | default: "SILITUZ" }}</title>
-  <meta name="description" content="{{ page.description | default: 'Silituz – KI • Musik • Anime.' }}" />
+  <title>{{ page.title | default: site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}" />
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
     /* Footer „Mehr“-Button */
     .footer-more{transition:background-color .25s,color .25s,border-color .25s,transform .25s}
     .footer-more:hover{background-color:#059669;border-color:#059669;color:#fff!important;animation:footer-wobble .35s ease-in-out}
     @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-.6deg)}100%{transform:translateX(0) rotate(0)}}
     @media (prefers-reduced-motion:reduce){.footer-more:hover{animation:none}}
-    /* Menü Hover/Aktiv – Typografie/Größe bleiben wie bei dir */
+    /* Menü Hover/Aktiv – Typografie/Größe bleiben wie zuvor */
     #sideMenu nav a{transition:background-color .25s,color .25s}
     #sideMenu nav a:hover{background-color:#059669;color:#fff!important}
     #sideMenu nav a.active{background-color:#d1fae5;color:#059669!important;font-weight:600}
+    /* Footer Icon-Hover in Markenfarben */
+    .footer-right .icon{font-size:22px;color:#888;transition:color .3s}
+    .footer-right .icon.tiktok:hover{color:#000}
+    .footer-right .icon.youtube:hover{color:#FF0000}
+    .footer-right .icon.instagram:hover{color:#E1306C}
+    .footer-right .icon.spotify:hover{color:#1DB954}
+    .footer-right .icon.apple:hover{color:#FA57C1}
   </style>
 </head>
-<body class="text-slate-800 antialiased">
+<body class="text-slate-800 antialiased bg-white">
   {% include header.html %}
 
   <main>
@@ -60,4 +70,3 @@ layout: null
   </script>
 </body>
 </html>
-
