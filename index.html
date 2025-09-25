@@ -9,54 +9,60 @@
   <!-- Font Awesome für Social-Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
-    .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
-    .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);}
-    /* Footer Styles */
-    .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
-    .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
-    .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
-    .footer-left .logo{height:40px; width:auto;}
-    .brand-texts{display:flex; flex-direction:column; line-height:1.2;}
-    .brand-title{font-size:1.2rem; font-weight:800; color:#111;}
-    .brand-sub{font-size:.85rem; color:#666;}
-    .footer-center small{font-size:.9rem; color:#555;}
-    .footer-right{display:flex; align-items:center; gap:12px;}
-    .footer-right .icon{font-size:22px; color:#888; transition:color .3s ease;}
-    .footer-right .more{font-size:.9rem; font-weight:600; color:#555; text-decoration:none; padding:6px 10px; border:1px solid #ccc; border-radius:6px; transition:all .3s ease;}
-    .footer-right .more:hover{background:#f5f5f5; border-color:#999;}
-    /* Hover-Farben */
-    .footer-right .icon.tiktok:hover{color:#000;}
-    .footer-right .icon.youtube:hover{color:#FF0000;}
-    .footer-right .icon.instagram:hover{color:#E1306C;}
-    .footer-right .icon.spotify:hover{color:#1DB954;}
-    .footer-right .icon.apple:hover{color:#FA57C1;}
-   <style>
+  .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
+  .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
+  .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);}
+
+  /* Footer Styles */
+  .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
+  .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+  .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
+  .footer-left .logo{height:40px; width:auto;}
+  .brand-texts{display:flex; flex-direction:column; line-height:1.2;}
+  .brand-title{font-size:1.2rem; font-weight:800; color:#111;}
+  .brand-sub{font-size:.85rem; color:#666;}
+  .footer-center small{font-size:.9rem; color:#555;}
+  .footer-right{display:flex; align-items:center; gap:12px;}
+  .footer-right .icon{font-size:22px; color:#888; transition:color .3s ease;}
+  .footer-right .more{font-size:.9rem; font-weight:600; color:#555; text-decoration:none; padding:6px 10px; border:1px solid #ccc; border-radius:6px; transition:all .3s ease;}
+  .footer-right .more:hover{background:#f5f5f5; border-color:#999;}
+  /* Hover-Farben */
+  .footer-right .icon.tiktok:hover{color:#000;}
+  .footer-right .icon.youtube:hover{color:#FF0000;}
+  .footer-right .icon.instagram:hover{color:#E1306C;}
+  .footer-right .icon.spotify:hover{color:#1DB954;}
+  .footer-right .icon.apple:hover{color:#FA57C1;}
+
   /* Mehr-Button: sanfter Hover + Wobble */
   .footer-more {
     transition: background-color .25s ease, color .25s ease, border-color .25s ease, transform .25s ease;
-    color: #374151; /* Tailwind: slate-700 (Standardfarbe) */
-    border: 1px solid #d1d5db; /* Tailwind: slate-300 */
+    color:#374151; /* slate-700 */
+    border:1px solid #d1d5db; /* slate-300 */
   }
   .footer-more:hover {
-    background-color: #059669; /* Tailwind: emerald-600 */
-    border-color: #059669;
-    color: #ffffff !important; /* Erzwingt weiß */
+    background-color:#059669; /* emerald-600 */
+    border-color:#059669;
+    color:#fff !important;
     animation: footer-wobble .35s ease-in-out;
   }
-  @keyframes footer-wobble {
-    0%   { transform: translateX(0) rotate(0) }
-    25%  { transform: translateX(-1.5px) rotate(-1.2deg) }
-    50%  { transform: translateX(1.5px) rotate(1.2deg) }
-    75%  { transform: translateX(-1px) rotate(-0.6deg) }
-    100% { transform: translateX(0) rotate(0) }
+  @keyframes footer-wobble{
+    0%{transform:translateX(0) rotate(0)}
+    25%{transform:translateX(-1.5px) rotate(-1.2deg)}
+    50%{transform:translateX(1.5px) rotate(1.2deg)}
+    75%{transform:translateX(-1px) rotate(-0.6deg)}
+    100%{transform:translateX(0) rotate(0)}
   }
-  /* Respektiert Bewegungsreduktion */
   @media (prefers-reduced-motion: reduce){
-    .footer-more:hover { animation: none; }
+    .footer-more:hover { animation:none; }
+  }
+
+  /* >>> Diese Zeile sorgt dafür, dass DEIN alter Hover nicht gewinnt <<< */
+  .footer-right .more.footer-more:hover {
+    background-color:#059669 !important;
+    border-color:#059669 !important;
+    color:#fff !important;
   }
 </style>
-
   </style>
 </head>
 <body class="text-slate-800 antialiased">
@@ -236,6 +242,7 @@
   </script>
 </body>
 </html>
+
 
 
 
