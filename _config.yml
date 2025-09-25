@@ -1,2 +1,14 @@
 title: "SILITUZ"
-description: "Silituz – KI • Musik • Anime."
+url: "https://silituz.de"
+baseurl: ""          # leer bei Root-Domain
+theme: null          # eigenes Layout
+markdown: kramdown
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Navigation aus _data/nav.yml
+defaults:
+  - scope: { path: "" }
+    values:
+      layout: default
