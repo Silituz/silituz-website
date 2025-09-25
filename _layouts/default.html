@@ -11,18 +11,18 @@
   <meta name="theme-color" content="#059669">
   <meta name="color-scheme" content="light dark">
 
-  <!-- Dark Mode Bootstrapping + Tailwind-Konfig (MUSS vor dem CDN stehen) -->
+  <!-- Dark Mode Bootstrapping + Tailwind-Konfig (vor dem CDN) -->
   <script>
     (function () {
       try {
-        var ls = localStorage.getItem("theme");                       // 'dark' | 'light' | null
+        var ls = localStorage.getItem("theme");
         var sysDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-        var enableDark = ls ? (ls === "dark") : sysDark;              // falls nix gespeichert: System
+        var enableDark = ls ? (ls === "dark") : sysDark;
         if (enableDark) document.documentElement.classList.add("dark");
       } catch(e) {}
     })();
     window.tailwind = window.tailwind || {};
-    window.tailwind.config = { darkMode: 'class' };                   // <-- WICHTIG
+    window.tailwind.config = { darkMode: 'class' };
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -37,8 +37,9 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <!-- Zusatzstyles -->
+  <!-- Styles -->
   <style>
+    /* ===== Basis-Komponenten ===== */
     .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
     .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
     .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);}
@@ -76,6 +77,19 @@
     .dark .brand-title{color:#e5e7eb;}
     .dark .brand-sub{color:#94a3b8;}
 
+    /* HARD DARK STYLES (sichtbares Umschalten) */
+    body { background:#ffffff; color:#1f2937; }
+    .dark body { background:#0b1220; color:#e5e7eb; }
+    #siteHeader { background:rgba(255,255,255,.80); border-bottom:1px solid #e5e7eb; }
+    .dark #siteHeader { background:rgba(15,23,42,.80); border-bottom-color:#1f2937; color:#e5e7eb; }
+    #sideMenu { background:#ffffff; color:#1f2937; }
+    .dark #sideMenu { background:#0f172a; color:#e5e7eb; }
+    #sideOverlay { background: rgba(0,0,0,.40); }
+    .card, .brand-card, .panel, .box, .tile { background:#ffffff; border:1px solid #e5e7eb; }
+    .dark .card, .dark .brand-card, .dark .panel, .dark .box, .dark .tile { background:#0f172a; border-color:#334155; }
+    .dark a { color:#93c5fd; }
+    .dark a:hover { color:#bfdbfe; }
+
     /* Switch-Regler sichtbar bewegen: .on = RECHTS (HELL) */
     #themeToggle .knob { transform: translateX(0); transition: transform .2s ease; }
     #themeToggle.on .knob { transform: translateX(2rem); } /* 32px = w-16 */
@@ -84,8 +98,8 @@
 
 <body class="bg-white text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased">
 
-  <!-- HEADER -->
-  <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
+  <!-- HEADER mit ID (wichtig für Dark-Styles) -->
+  <header id="siteHeader" class="sticky top-0 z-50 backdrop-blur border-b border-slate-200 dark:border-slate-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-[1fr_auto_1fr] items-center h-16">
 
       <!-- Logo -->
@@ -102,7 +116,7 @@
       <button id="themeToggle"
               onclick="(function(btn){
                 var isLight = !btn.classList.contains('on');   // rechts = hell
-                btn.classList.toggle('on', isLight);           // Knopfposition
+                btn.classList.toggle('on', isLight);
                 var makeDark = !isLight;                       // hell => kein dark
                 document.documentElement.classList.toggle('dark', makeDark);
                 document.body.classList.toggle('dark', makeDark);
@@ -226,14 +240,14 @@
     // Initialzustand: .on = hell (rechts), dark = nicht .on
     (function(){
       try {
-        var stored = localStorage.getItem('theme');            // 'dark' | 'light' | null
+        var stored = localStorage.getItem('theme');
         var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         var isDark = stored ? (stored === 'dark') : prefersDark;
-        var isLight = !isDark;                                 // rechts = hell
+        var isLight = !isDark;                                // rechts = hell
         var btn = document.getElementById('themeToggle');
         document.documentElement.classList.toggle('dark', isDark);
         document.body.classList.toggle('dark', isDark);
-        if (btn) btn.classList.toggle('on', isLight);          // .on = rechts/hell
+        if (btn) btn.classList.toggle('on', isLight);
       } catch(e){}
     })();
   </script>
