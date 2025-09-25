@@ -291,6 +291,37 @@
 
   <!-- JS -->
   <script>
-    const yEl = document.getElementById('y'); if (yEl) yEl.textContent = new Date().getFullYear();
-    const snakeBtn = document.getElementById('snakeBtn');
-    const sideMenu = document.get
+      // Jahr im Footer
+  const yEl = document.getElementById('y'); 
+  if (yEl) yEl.textContent = new Date().getFullYear();
+
+  // Slide-out Menü
+  const snakeBtn   = document.getElementById('snakeBtn');
+  const sideMenu   = document.getElementById('sideMenu');
+  const sideOverlay= document.getElementById('sideOverlay');
+  const sideClose  = document.getElementById('sideClose');
+
+  function openMenu(){
+    sideMenu.classList.remove('translate-x-full');
+    sideOverlay.classList.remove('pointer-events-none');
+    requestAnimationFrame(()=>{
+      sideOverlay.classList.add('opacity-100');
+      sideOverlay.classList.remove('opacity-0');
+    });
+    snakeBtn?.setAttribute('aria-expanded','true');
+    sideMenu.setAttribute('aria-hidden','false');
+  }
+  function closeMenu(){
+    sideMenu.classList.add('translate-x-full');
+    sideOverlay.classList.add('pointer-events-none');
+    sideOverlay.classList.remove('opacity-100');
+    sideOverlay.classList.add('opacity-0');
+    snakeBtn?.setAttribute('aria-expanded','false');
+    sideMenu.setAttribute('aria-hidden','true');
+  }
+
+  snakeBtn?.addEventListener('click', openMenu);
+  sideClose?.addEventListener('click', closeMenu);
+  sideOverlay?.addEventListener('click', closeMenu);
+  window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
+</script>
