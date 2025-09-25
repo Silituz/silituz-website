@@ -1,1 +1,63 @@
+---
+layout: null
+---
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ page.title | default: "SILITUZ" }}</title>
+  <meta name="description" content="{{ page.description | default: 'Silituz – KI • Musik • Anime.' }}" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Footer „Mehr“-Button */
+    .footer-more{transition:background-color .25s,color .25s,border-color .25s,transform .25s}
+    .footer-more:hover{background-color:#059669;border-color:#059669;color:#fff!important;animation:footer-wobble .35s ease-in-out}
+    @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-.6deg)}100%{transform:translateX(0) rotate(0)}}
+    @media (prefers-reduced-motion:reduce){.footer-more:hover{animation:none}}
+    /* Menü Hover/Aktiv – Typografie/Größe bleiben wie bei dir */
+    #sideMenu nav a{transition:background-color .25s,color .25s}
+    #sideMenu nav a:hover{background-color:#059669;color:#fff!important}
+    #sideMenu nav a.active{background-color:#d1fae5;color:#059669!important;font-weight:600}
+  </style>
+</head>
+<body class="text-slate-800 antialiased">
+  {% include header.html %}
+
+  <main>
+    {{ content }}
+  </main>
+
+  {% include footer.html %}
+
+  <script>
+    // Jahr im Footer
+    const yEl=document.getElementById('y'); if(yEl) yEl.textContent=new Date().getFullYear();
+
+    // Slide-out Menü
+    const snakeBtn=document.getElementById('snakeBtn');
+    const sideMenu=document.getElementById('sideMenu');
+    const sideOverlay=document.getElementById('sideOverlay');
+    const sideClose=document.getElementById('sideClose');
+
+    function openMenu(){
+      sideMenu.classList.remove('translate-x-full');
+      sideOverlay.classList.remove('pointer-events-none');
+      requestAnimationFrame(()=>{ sideOverlay.classList.add('opacity-100'); sideOverlay.classList.remove('opacity-0'); });
+      snakeBtn?.setAttribute('aria-expanded','true'); sideMenu.setAttribute('aria-hidden','false');
+    }
+    function closeMenu(){
+      sideMenu.classList.add('translate-x-full');
+      sideOverlay.classList.add('pointer-events-none');
+      sideOverlay.classList.remove('opacity-100'); sideOverlay.classList.add('opacity-0');
+      snakeBtn?.setAttribute('aria-expanded','false'); sideMenu.setAttribute('aria-hidden','true');
+    }
+    snakeBtn?.addEventListener('click',openMenu);
+    sideClose?.addEventListener('click',closeMenu);
+    sideOverlay?.addEventListener('click',closeMenu);
+    window.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeMenu(); });
+  </script>
+</body>
+</html>
 
