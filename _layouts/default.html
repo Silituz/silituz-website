@@ -14,12 +14,15 @@
   <!-- Dark Mode Bootstrapping + Tailwind-Konfig (MUSS vor dem CDN stehen) -->
   <script>
     (function () {
-      const ls = localStorage.getItem("theme");
-      const sysDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const enableDark = ls === "dark" || (!ls && sysDark);
-      if (enableDark) document.documentElement.classList.add("dark");
+      try {
+        var ls = localStorage.getItem("theme");                       // 'dark' | 'light' | null
+        var sysDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        var enableDark = ls ? (ls === "dark") : sysDark;              // falls nix gespeichert: System
+        if (enableDark) document.documentElement.classList.add("dark");
+      } catch(e) {}
     })();
-    window.tailwind = { config: { darkMode: 'class' } };
+    window.tailwind = window.tailwind || {};
+    window.tailwind.config = { darkMode: 'class' };                   // <-- WICHTIG
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -68,7 +71,7 @@
     @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-0.6deg)}100%{transform:translateX(0) rotate(0)}}
     @media (prefers-reduced-motion: reduce){.footer-more:hover{animation:none;}}
 
-    /* Footer (dunkel) über .dark */
+    /* Footer (dunkel) via .dark */
     .dark .site-footer{background:#0f172a; color:#e5e7eb; border-top-color:#1f2937;}
     .dark .brand-title{color:#e5e7eb;}
     .dark .brand-sub{color:#94a3b8;}
