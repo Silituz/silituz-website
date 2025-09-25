@@ -177,9 +177,6 @@
   </aside>
 
   <!-- JS (bleibt global) -->
-<script>
-  // Theme Toggle (merkt sich Auswahl)
-  document.getElementById('themeToggle')?.addEventListener('click', () => {
     const el = document.documentElement;
     const isDark = el.classList.toggle('dark');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
@@ -196,14 +193,7 @@
   sideClose?.addEventListener('click', closeMenu);
   sideOverlay?.addEventListener('click', closeMenu);
   window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
-</script>
-<script>
-  const tbtn = document.getElementById('themeToggle');
-  tbtn?.addEventListener('click', () => {
-    const el = document.documentElement;
-    const isDark = el.classList.toggle('dark'); // Dark-Class umschalten
-    localStorage.setItem('theme', isDark ? 'dark' : 'light'); // Speichern
-  });
-</script>
+
+
 </body>
 </html>
