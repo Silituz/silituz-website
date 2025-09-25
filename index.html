@@ -1,5 +1,58 @@
 ---
-layout: home
+layout: default
 title: "SILITUZ – Start"
 permalink: /
 ---
+
+<!-- Hero Section -->
+<section class="relative h-[545px] w-full flex items-center overflow-hidden">
+  <div class="absolute inset-0 bg-[url('{{ '/assets/images/welcome-head.svg' | relative_url }}')] bg-cover bg-center"></div>
+  <div class="absolute inset-0 bg-black/50"></div>
+  <div class="relative z-10 w-full">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white">Willkommen bei Silituz</h1>
+        <p class="mt-3 text-lg md:text-xl text-slate-200">Ich liebe es, Ideen zum Leben zu erwecken – mit Bildern, Musik und kleinen Generatoren. Schau dich gerne um und entdecke meine Projekte.</p>
+        <div class="mt-6 flex flex-wrap gap-4">
+          <a href="{{ '/about.html' | relative_url }}" class="hover-wobble inline-flex items-center justify-center rounded-lg bg-white/95 text-slate-900 px-5 py-2.5 font-semibold transition-colors hover:bg-emerald-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">Über mich</a>
+          <a href="{{ '/socials.html' | relative_url }}" class="hover-wobble inline-flex items-center justify-center rounded-lg bg-white/95 text-slate-900 px-5 py-2.5 font-semibold transition-colors hover:bg-emerald-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">Socials</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- kleine Hover-Wackel-Animation -->
+<style>
+@keyframes wobble{0%{transform:translateX(0) rotate(0);}25%{transform:translateX(-2px) rotate(-1.5deg);}50%{transform:translateX(2px) rotate(1.5deg);}75%{transform:translateX(-1px) rotate(-0.75deg);}100%{transform:translateX(0) rotate(0);}}
+.hover-wobble:hover{animation:wobble .35s ease-in-out;}
+</style>
+
+<!-- Kacheln -->
+<section class="py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+      <a href="{{ '/gallery.html' | relative_url }}" class="group relative flex flex-col items-center text-center rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <img src="{{ '/assets/images/kachel 1.svg' | relative_url }}" class="w-[400px] h-[400px] object-cover" alt="Bilder" />
+        <div class="p-4">
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Galerie</h3>
+          <p class="mt-1 text-sm text-slate-500">Kreative Kunstwerke, Illustrationen & mehr.</p>
+        </div>
+      </a>
+      <a href="{{ '/generators.html' | relative_url }}" class="group relative flex flex-col items-center text-center rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <img src="{{ '/assets/images/kachel 2.svg' | relative_url }}" class="w-[400px] h-[400px] object-cover" alt="Generatoren & mehr" />
+        <div class="p-4">
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Generatoren &amp; mehr</h3>
+          <p class="mt-1 text-sm text-slate-500">Tools, Edits und kleine Extras zum Ausprobieren.</p>
+        </div>
+      </a>
+      <a href="{{ '/music.html' | relative_url }}" class="group relative flex flex-col items-center text-center rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <img src="{{ '/assets/images/kachel 3.svg' | relative_url }}" class="w-[400px] h-[400px] object-cover" alt="Meine Musik" />
+        <div class="p-4">
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Meine Musik</h3>
+          <p class="mt-1 text-sm text-slate-500">Beats & Songs mit Herz.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
