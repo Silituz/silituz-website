@@ -3,17 +3,25 @@ layout: default
 title: "Impressum – SILITUZ"
 ---
 
-  <!-- Inhalt -->
-  <main class="py-16">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h1 class="text-3xl font-extrabold text-slate-900 mb-6">Impressum</h1>
-      <!-- Variante B: iframe -->
-      <iframe src="https://www.mein.online-impressum.de/silituz/" class="w-full h-[900px] border rounded-lg"></iframe>
+<!-- Inhalt -->
+<main class="py-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mb-6">Impressum</h1>
 
-      <!-- Fallback Hinweis -->
-      <p class="mt-6 text-sm text-slate-500">
-        Falls das Impressum nicht angezeigt wird, klicken Sie bitte hier: 
-        <a href="https://www.mein.online-impressum.de/silituz/" target="_blank" class="text-emerald-600 hover:underline">Externes Impressum öffnen</a>.
-      </p>
+    <!-- Sicher eingebettetes Iframe -->
+    <div class="relative z-0">
+      <iframe
+        src="https://www.mein.online-impressum.de/silituz/"
+        class="w-full h-[900px] border rounded-lg block relative z-0 bg-white dark:bg-slate-900"
+        loading="lazy"
+        title="Impressum von Silituz">
+      </iframe>
     </div>
-  </main>
+
+    <!-- Fallback Hinweis -->
+    <p class="mt-6 text-sm text-slate-500 dark:text-slate-400">
+      Falls das Impressum nicht angezeigt wird, klicken Sie bitte hier:
+      <a href="https://www.mein.online-impressum.de/silituz/" target="_blank" class="text-emerald-600 hover:underline">Externes Impressum öffnen</a>.
+    </p>
+  </div>
+</main>
