@@ -73,7 +73,7 @@
     .dark .brand-title{color:#e5e7eb;}
     .dark .brand-sub{color:#94a3b8;}
 
-    /* Switch-Regler sichtbar bewegen */
+    /* Switch-Regler sichtbar bewegen: .on = RECHTS (HELL) */
     #themeToggle .knob { transform: translateX(0); transition: transform .2s ease; }
     #themeToggle.on .knob { transform: translateX(2rem); } /* 32px = w-16 */
   </style>
@@ -95,15 +95,15 @@
         </span>
       </a>
 
-      <!-- Tag/Nacht Switch (arbeitet auf <html> und <body>) -->
+      <!-- Tag/Nacht Switch (rechts = hell) -->
       <button id="themeToggle"
               onclick="(function(btn){
-                var html=document.documentElement, body=document.body;
-                var isDark=!html.classList.contains('dark');
-                html.classList.toggle('dark', isDark);
-                body.classList.toggle('dark', isDark);
-                try{ localStorage.setItem('theme', isDark?'dark':'light'); }catch(e){}
-                btn.classList.toggle('on', isDark);
+                var isLight = !btn.classList.contains('on');   // rechts = hell
+                btn.classList.toggle('on', isLight);           // Knopfposition
+                var makeDark = !isLight;                       // hell => kein dark
+                document.documentElement.classList.toggle('dark', makeDark);
+                document.body.classList.toggle('dark', makeDark);
+                try{ localStorage.setItem('theme', makeDark ? 'dark' : 'light'); }catch(e){}
               })(this)"
               class="justify-self-center relative w-16 h-8 rounded-full
                      bg-slate-300 dark:bg-slate-700
@@ -220,16 +220,17 @@
     sideOverlay?.addEventListener('click', closeMenu);
     window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-    // Regler + Zustand beim Start korrekt setzen (html + body + Switch)
+    // Initialzustand: .on = hell (rechts), dark = nicht .on
     (function(){
       try {
-        var stored = localStorage.getItem('theme'); // 'dark' | 'light' | null
-        var prefers = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var isDark = stored ? (stored === 'dark') : prefers;
+        var stored = localStorage.getItem('theme');            // 'dark' | 'light' | null
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var isDark = stored ? (stored === 'dark') : prefersDark;
+        var isLight = !isDark;                                 // rechts = hell
         var btn = document.getElementById('themeToggle');
         document.documentElement.classList.toggle('dark', isDark);
         document.body.classList.toggle('dark', isDark);
-        if (btn) btn.classList.toggle('on', isDark);
+        if (btn) btn.classList.toggle('on', isLight);          // .on = rechts/hell
       } catch(e){}
     })();
   </script>
