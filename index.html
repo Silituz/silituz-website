@@ -3,44 +3,58 @@ layout: default
 title: "SILITUZ – Home"
 ---
 
-<!-- Hero-Bereich -->
+<!-- Hero -->
 <section class="relative bg-gray-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-    <img src="{{ '/assets/images/welcome-head.svg' | relative_url }}" alt="Welcome Bild" class="mx-auto mb-6 max-h-64 object-cover">
+    <!-- Bild oben: wieder groß -->
+    <img src="{{ '/assets/images/welcome-head.svg' | relative_url }}"
+         alt="Welcome Bild"
+         class="mx-auto mb-6 w-full max-w-3xl h-auto">
     <h1 class="text-4xl font-extrabold tracking-tight text-slate-900">Willkommen bei SILITUZ</h1>
     <p class="mt-4 text-lg text-slate-600">
       KI • Musik • Anime – entdecke meine neuesten Projekte und Inhalte.
     </p>
     <div class="mt-6 flex justify-center gap-4">
-      <a href="{{ '/about.html' | relative_url }}" class="px-5 py-3 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">Über mich</a>
-      <a href="{{ '/socials.html' | relative_url }}" class="px-5 py-3 rounded-lg bg-white border border-emerald-600 text-emerald-600 font-semibold hover:bg-emerald-50 transition">Socials</a>
+      <a href="{{ '/about.html' | relative_url }}"
+         class="px-5 py-3 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">Über mich</a>
+      <a href="{{ '/socials.html' | relative_url }}"
+         class="px-5 py-3 rounded-lg bg-white border border-emerald-600 text-emerald-600 font-semibold hover:bg-emerald-50 transition">Socials</a>
     </div>
   </div>
 </section>
 
-<!-- Kacheln -->
+<!-- Kacheln: Bilder wieder groß (mobil sehr groß, Desktop etwas kompakter) -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
   <!-- Kachel 1 -->
   <div class="brand-card p-6 rounded-xl border text-center">
-    <img src="{{ '/assets/images/Kachel 1.svg' | relative_url }}" alt="KI-Bilder" class="mx-auto h-32 mb-4">
-    <h2 class="text-xl font-bold mb-2">KI Bilder</h2>
+    <img src="{{ '/assets/images/Kachel 1.svg' | relative_url }}"
+         alt="KI-Bilder"
+         class="mx-auto mb-5 w-full h-64 sm:h-56 lg:h-48 object-contain">
+    <h2 class="text-2xl font-bold mb-2">KI Bilder</h2>
     <p class="text-slate-600 mb-4">Von niedlich bis episch – meine besten AI-Creations.</p>
-    <a href="{{ '/gallery.html' | relative_url }}" class="text-emerald-600 font-semibold hover:underline">Ansehen</a>
+    <a href="{{ '/gallery.html' | relative_url }}"
+       class="inline-block px-5 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">Ansehen</a>
   </div>
 
-  <!-- Kachel 2 (Generatoren & mehr) -->
+  <!-- Kachel 2 – Generatoren & mehr -->
   <div class="brand-card p-6 rounded-xl border text-center">
-    <img src="{{ '/assets/images/Kachel 2.svg' | relative_url }}" alt="Generatoren & Mehr" class="mx-auto h-32 mb-4">
-    <h2 class="text-xl font-bold mb-2">Generatoren &amp; mehr</h2>
+    <img src="{{ '/assets/images/Kachel 2.svg' | relative_url }}"
+         alt="Generatoren & Mehr"
+         class="mx-auto mb-5 w-full h-64 sm:h-56 lg:h-48 object-contain">
+    <h2 class="text-2xl font-bold mb-2">Generatoren &amp; mehr</h2>
     <p class="text-slate-600 mb-4">Kleine Tools, KI-Spielereien und hilfreiche Generatoren.</p>
-    <a href="{{ '/generators.html' | relative_url }}" class="text-emerald-600 font-semibold hover:underline">Ausprobieren</a>
+    <a href="{{ '/generators.html' | relative_url }}"
+       class="inline-block px-5 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">Ausprobieren</a>
   </div>
 
   <!-- Kachel 3 -->
   <div class="brand-card p-6 rounded-xl border text-center">
-    <img src="{{ '/assets/images/Kachel 3.svg' | relative_url }}" alt="Musikproduktion" class="mx-auto h-32 mb-4">
-    <h2 class="text-xl font-bold mb-2">Musikproduktion</h2>
+    <img src="{{ '/assets/images/Kachel 3.svg' | relative_url }}"
+         alt="Musikproduktion"
+         class="mx-auto mb-5 w-full h-64 sm:h-56 lg:h-48 object-contain">
+    <h2 class="text-2xl font-bold mb-2">Musikproduktion</h2>
     <p class="text-slate-600 mb-4">Meine Songs – veröffentlicht auf Spotify, Apple Music &amp; mehr.</p>
-    <a href="{{ '/music.html' | relative_url }}" class="text-emerald-600 font-semibold hover:underline">Anhören</a>
+    <a href="{{ '/music.html' | relative_url }}"
+       class="inline-block px-5 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">Anhören</a>
   </div>
 </section>
