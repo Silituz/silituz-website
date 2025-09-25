@@ -3,136 +3,207 @@ layout: default
 title: "Socials – SILITUZ"
 ---
 
-<!-- kleine Hover-Wackel-Animation nur für diese Seite -->
-<style>
-@keyframes wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-0.6deg)}100%{transform:translateX(0) rotate(0)}}
-.hover-wobble:hover{animation:wobble .35s ease-in-out}
-</style>
+<!-- Hero -->
+<section class="relative py-20 bg-gradient-to-tr from-emerald-100 via-white to-cyan-100">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900">Socials</h1>
+    <p class="mt-4 text-lg text-slate-600">Alle Links zu meinen Projekten, Musik & Kanälen auf einen Blick.</p>
+  </div>
+</section>
 
-<section class="py-16">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center">
-      <p class="text-emerald-600 font-semibold tracking-wide">Folge mir</p>
-      <h1 class="mt-2 text-3xl sm:text-4xl font-extrabold">Socials</h1>
-      <p class="mt-3 text-slate-600">Hier findest du all meine Kanäle auf einen Blick.</p>
+<!-- Content -->
+<main class="py-16 space-y-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+  <!-- Support -->
+  <section>
+    <h2 class="text-2xl font-bold mb-6">Support</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Tipeeestream -->
+      <a href="https://www.tipeeestream.com/silituz/donation" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/tipeee.svg' | relative_url }}" alt="Tipeeestream" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Tipeeestream</h3>
+          <p class="text-sm text-slate-600">Unterstütze mich mit einer Spende</p>
+        </div>
+      </a>
+
+      <!-- Instant Gaming -->
+      <a href="https://www.instant-gaming.com/?igr=gamer-ba0fbb7" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/instant%20gaming.svg' | relative_url }}" alt="Instant Gaming" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Instant Gaming</h3>
+          <p class="text-sm text-slate-600">Spiele günstiger kaufen</p>
+        </div>
+      </a>
+
+      <!-- Rubii.ai -->
+      <a href="https://rubii.ai/?atp=SilituzMusik" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/rubii.svg' | relative_url }}" alt="Rubii.ai" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Rubii.ai</h3>
+          <p class="text-sm text-slate-600">KI-Musik entdecken</p>
+        </div>
+      </a>
+
     </div>
+  </section>
 
-    <!-- GRID -->
-    <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <!-- Musik -->
+  <section>
+    <h2 class="text-2xl font-bold mb-6">Musik</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-      <!-- TikTok -->
-      <a href="https://www.tiktok.com/@silituz" target="_blank" rel="noopener"
-         class="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition hover-wobble flex items-center gap-4">
-        <!-- Icon -->
-        <span class="inline-flex items-center justify-center h-14 w-14 rounded-lg bg-slate-50 border border-slate-200">
-          <!-- TikTok SVG -->
-          <svg viewBox="0 0 256 256" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M207.5 78.6c-22.7 0-42.1-14.5-49-34.7v95.7c0 32.6-26.4 59-59 59s-59-26.4-59-59 26.4-59 59-59c6.3 0 12.4 1 18.1 3v35.3a35.9 35.9 0 1 0 23 33.7V16h25.9c5.1 20.4 23.5 35.5 45.6 35.5z"/></svg>
-        </span>
-        <div class="flex-1">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-slate-800">TikTok</h3>
-            <span class="text-xs text-slate-500 group-hover:text-emerald-600">/@silituz</span>
-          </div>
-          <p class="text-sm text-slate-600 mt-1">Kurzclips, Edits & Behind the Scenes</p>
-        </div>
-      </a>
-
-      <!-- Instagram -->
-      <a href="https://www.instagram.com/silituz" target="_blank" rel="noopener"
-         class="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition hover-wobble flex items-center gap-4">
-        <span class="inline-flex items-center justify-center h-14 w-14 rounded-lg bg-slate-50 border border-slate-200">
-          <!-- Instagram SVG -->
-          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a5.5 5.5 0 1 1 0 11a5.5 5.5 0 0 1 0-11zm0 2a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7zM18 6.5a1 1 0 1 1 0 2a1 1 0 0 1 0-2z"/></svg>
-        </span>
-        <div class="flex-1">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-slate-800">Instagram</h3>
-            <span class="text-xs text-slate-500 group-hover:text-emerald-600">@silituz</span>
-          </div>
-          <p class="text-sm text-slate-600 mt-1">Bilder, Stories & Ankündigungen</p>
-        </div>
-      </a>
-
-      <!-- YouTube -->
-      <a href="https://www.youtube.com/@silituz" target="_blank" rel="noopener"
-         class="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition hover-wobble flex items-center gap-4">
-        <span class="inline-flex items-center justify-center h-14 w-14 rounded-lg bg-slate-50 border border-slate-200">
-          <!-- YouTube SVG -->
-          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M23.5 6.2a4 4 0 0 0-2.8-2.8C18.9 3 12 3 12 3s-6.9 0-8.7.4A4 4 0 0 0 .5 6.2A41 41 0 0 0 0 12c0 1.9.1 3.8.5 5.8a4 4 0 0 0 2.8 2.8C5.1 21 12 21 12 21s6.9 0 8.7-.4a4 4 0 0 0 2.8-2.8c.4-2 .5-3.9.5-5.8s-.1-3.8-.5-5.8ZM9.6 15.5v-7L16 12z"/></svg>
-        </span>
-        <div class="flex-1">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-slate-800">YouTube</h3>
-            <span class="text-xs text-slate-500 group-hover:text-emerald-600">@silituz</span>
-          </div>
-          <p class="text-sm text-slate-600 mt-1">Videos & Streams</p>
+      <!-- SoundOn -->
+      <a href="https://www.soundon.global/bio/silituz" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/soundon.svg' | relative_url }}" alt="SoundOn" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Soundon</h3>
+          <p class="text-sm text-slate-600">Bio & Releases</p>
         </div>
       </a>
 
       <!-- Spotify -->
-      <a href="https://open.spotify.com/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank" rel="noopener"
-         class="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition hover-wobble flex items-center gap-4">
-        <span class="inline-flex items-center justify-center h-14 w-14 rounded-lg bg-slate-50 border border-slate-200">
-          <!-- Spotify SVG -->
-          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M12 1.8A10.2 10.2 0 1 0 22.2 12A10.2 10.2 0 0 0 12 1.8ZM17.2 16a.8.8 0 0 1-1.1.3c-3-.9-5.6-1-9 .1a.8.8 0 0 1-.5-1.5c3.7-1.2 6.7-1.1 10 .1a.8.8 0 0 1 .6 1ZM18.5 13a1 1 0 0 1-1.2.5c-3.4-1.1-7-1.2-10.3-.1a1 1 0 0 1-.7-1.8c3.7-1.2 7.7-1.1 11.5.1a1 1 0 0 1 .7 1.3ZM18.7 10a1.2 1.2 0 0 1-1.4.8c-3.9-1.3-8.2-1.4-12-.1a1.2 1.2 0 1 1-.8-2.2c4.3-1.4 9-1.3 13.3.2c.6.2 1 .8.8 1.3Z"/></svg>
-        </span>
-        <div class="flex-1">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-slate-800">Spotify</h3>
-            <span class="text-xs text-slate-500 group-hover:text-emerald-600">Artist Page</span>
-          </div>
-          <p class="text-sm text-slate-600 mt-1">Songs & Playlists</p>
+      <a href="https://open.spotify.com/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/spotify.svg' | relative_url }}" alt="Spotify" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Spotify</h3>
+          <p class="text-sm text-slate-600">Songs &amp; Playlists</p>
         </div>
       </a>
 
       <!-- Apple Music -->
-      <a href="https://music.apple.com/de/artist/silituz/1815637787" target="_blank" rel="noopener"
-         class="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition hover-wobble flex items-center gap-4">
-        <span class="inline-flex items-center justify-center h-14 w-14 rounded-lg bg-slate-50 border border-slate-200">
-          <!-- Apple Music simple note -->
-          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/></svg>
-        </span>
-        <div class="flex-1">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-slate-800">Apple Music</h3>
-            <span class="text-xs text-slate-500 group-hover:text-emerald-600">Artist Page</span>
-          </div>
-          <p class="text-sm text-slate-600 mt-1">Releases & Previews</p>
+      <a href="https://music.apple.com/de/artist/silituz/1815637787" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/apple%20music.svg' | relative_url }}" alt="Apple Music" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Apple Music</h3>
+          <p class="text-sm text-slate-600">Streams auf Apple Music</p>
         </div>
       </a>
 
-      <!-- Linktree -->
-      <a href="https://linktr.ee/silituz" target="_blank" rel="noopener"
-         class="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition hover-wobble flex items-center gap-4">
-        <span class="inline-flex items-center justify-center h-14 w-14 rounded-lg bg-slate-50 border border-slate-200">
-          <!-- Linktree simple leaf -->
-          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M12 2c2.8 0 5 2.2 5 5c0 2.5-2 4.6-4.4 4.9V22h-1.2V11.9C9 11.6 7 9.5 7 7c0-2.8 2.2-5 5-5z"/></svg>
-        </span>
-        <div class="flex-1">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-slate-800">Linktree</h3>
-            <span class="text-xs text-slate-500 group-hover:text-emerald-600">/silituz</span>
-          </div>
-          <p class="text-sm text-slate-600 mt-1">Alle Links gebündelt</p>
+      <!-- Amazon Music -->
+      <a href="https://music.amazon.de/artists/B0F94LSWQT/silituz" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/amazon%20music.svg' | relative_url }}" alt="Amazon Music" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Amazon Music</h3>
+          <p class="text-sm text-slate-600">Jetzt anhören</p>
         </div>
       </a>
 
-      <!-- Discord (optional) -->
-      <a href="https://discord.gg/xxxx" target="_blank" rel="noopener"
-         class="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition hover-wobble flex items-center gap-4">
-        <span class="inline-flex items-center justify-center h-14 w-14 rounded-lg bg-slate-50 border border-slate-200">
-          <!-- Discord SVG -->
-          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M20 4a18 18 0 0 0-4.6-1l-.2.4A16 16 0 0 1 16.9 5c-1-.5-2-.8-3-.9a11.3 11.3 0 0 0-3 0C9.8 4.2 8.8 4.5 7.9 5a15.7 15.7 0 0 1 1.7-1.6l-.2-.4A18 18 0 0 0 4 4C1.8 7.3 1 10.5 1.1 13.6c0 0 1.2 2 4.2 3.4a12.7 12.7 0 0 0 2.8 1 9.6 9.6 0 0 0 .9-1.5a8.6 8.6 0 0 1-1.5-.7l.3-.2l.2-.1a8.9 8.9 0 0 0 7.8 0l.2.1l.3.2a8.5 8.5 0 0 1-1.5.7c.2.5.6 1 1 1.5a13 13 0 0 0 2.8-1c3-1.4 4.2-3.4 4.2-3.4C23 10.4 22.2 7.2 20 4ZM9.6 13.6c-.8 0-1.5-.7-1.5-1.6s.7-1.6 1.5-1.6c.9 0 1.6.7 1.6 1.6s-.7 1.6-1.6 1.6Zm4.8 0c-.9 0-1.6-.7-1.6-1.6s.7-1.6 1.6-1.6s1.6.7 1.6 1.6s-.7 1.6-1.6 1.6Z"/></svg>
-        </span>
-        <div class="flex-1">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-slate-800">Discord</h3>
-            <span class="text-xs text-slate-500 group-hover:text-emerald-600">Community</span>
-          </div>
-          <p class="text-sm text-slate-600 mt-1">Chat & Events</p>
+      <!-- YouTube Music / Kanal -->
+      <a href="https://m.youtube.com/@silituz" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/youtube.svg' | relative_url }}" alt="YouTube" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">YouTube</h3>
+          <p class="text-sm text-slate-600">Videos &amp; Streams</p>
         </div>
       </a>
 
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- Live Plattformen -->
+  <section>
+    <h2 class="text-2xl font-bold mb-6">Live Plattformen</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- TikTok Live -->
+      <a href="https://www.tiktok.com/@silituz" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/tik%20tok.svg' | relative_url }}" alt="TikTok" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">TikTok</h3>
+          <p class="text-sm text-slate-600">@silituz</p>
+        </div>
+      </a>
+
+      <!-- YouTube Live -->
+      <a href="https://m.youtube.com/@silituz" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/youtube.svg' | relative_url }}" alt="YouTube" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">YouTube</h3>
+          <p class="text-sm text-slate-600">Videos & Streams</p>
+        </div>
+      </a>
+
+      <!-- Twitch -->
+      <a href="https://www.twitch.tv/silituz" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/twitch.svg' | relative_url }}" alt="Twitch" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Twitch</h3>
+          <p class="text-sm text-slate-600">Livestreams</p>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- Weitere Socials -->
+  <section>
+    <h2 class="text-2xl font-bold mb-6">Weitere Socials</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/silituz" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/instagram.svg' | relative_url }}" alt="Instagram" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Instagram</h3>
+          <p class="text-sm text-slate-600">@silituz</p>
+        </div>
+      </a>
+
+      <!-- Threads -->
+      <a href="https://www.threads.com/@silituz" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/threads.svg' | relative_url }}" alt="Threads" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Threads</h3>
+          <p class="text-sm text-slate-600">@silituz</p>
+        </div>
+      </a>
+
+      <!-- X -->
+      <a href="https://x.com/silituz" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/x.svg' | relative_url }}" alt="X" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">X</h3>
+          <p class="text-sm text-slate-600">@silituz</p>
+        </div>
+      </a>
+
+      <!-- Discord -->
+      <a href="https://discord.gg/VkC4XGG4aB" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/discord.svg' | relative_url }}" alt="Discord" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">Discord</h3>
+          <p class="text-sm text-slate-600">Community Server</p>
+        </div>
+      </a>
+
+      <!-- MyAnimeList -->
+      <a href="https://myanimelist.net/profile/Silitus" target="_blank"
+         class="group flex items-center gap-4 p-4 rounded-xl hover:bg-slate-100 transition">
+        <img src="{{ '/assets/socials/mal.svg' | relative_url }}" alt="MyAnimeList" class="w-10 h-10 object-contain" />
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 group-hover:text-emerald-600">MyAnimeList</h3>
+          <p class="text-sm text-slate-600">Mein Profil</p>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+</main>
