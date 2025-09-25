@@ -8,6 +8,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{ page.title | default: "SILITUZ" }}</title>
   <meta name="description" content="Startseite von Silituz: KI • Musik • Anime." />
+  <script>
+  (function () {
+    const ls = localStorage.getItem("theme");
+    const sysDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const enableDark = ls === "dark" || (!ls && sysDark);
+    if (enableDark) document.documentElement.classList.add("dark");
+  })();
+  window.tailwind = { config: { darkMode: 'class' } };
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<meta name="color-scheme" content="light dark">
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome für Social-Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
