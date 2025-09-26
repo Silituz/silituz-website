@@ -1,6 +1,3 @@
----
-
----
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -8,13 +5,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{ page.title | default: "SILITUZ" }}</title>
-  <meta name="description" content="Startseite von Silituz: KI • Musik • Anime." />
+  <meta name="description" content="Startseite von Silituz: KI • Musik • Visuals." />
 
   <!-- Theme-Farbe (PWA/Browserleisten) -->
   <meta name="theme-color" content="#059669">
   <meta name="color-scheme" content="light dark">
 
-  <!-- Dark Mode Bootstrapping + Tailwind-Konfig (MUSS vor dem CDN stehen) -->
+  <!-- Dark Mode Bootstrapping + Tailwind-Konfig (vor dem CDN!) -->
   <script>
     (function () {
       const ls = localStorage.getItem("theme");
@@ -34,10 +31,10 @@
   <link rel="mask-icon" href="{{ '/assets/images/favicon.svg' | relative_url }}" color="#059669">
   <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}">
 
-  <!-- Font Awesome (nur für Footer-Icons) -->
+  <!-- Font Awesome (für Footer-Icons) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <!-- Kleine Zusatzstyles -->
+  <!-- Zusatzstyles -->
   <style>
     .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
     .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
@@ -47,7 +44,7 @@
     #sideMenu nav a:hover { background-color:#059669; color:#fff !important; }
     #sideMenu nav a.active { background-color:#d1fae5; color:#059669 !important; font-weight:600; }
 
-    /* Footer (Light Basis) */
+    /* Footer (Light) */
     .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
     .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
     .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
@@ -58,19 +55,12 @@
     .footer-center small{font-size:.9rem; color:#555;}
     .footer-right{display:flex; align-items:center; gap:12px;}
     .footer-right .icon{font-size:22px; color:#888; transition:color .3s ease;}
-    .footer-right .more{font-size:.9rem; font-weight:600; color:#555; text-decoration:none; padding:6px 10px; border-radius:6px; transition:all .3s ease;}
-    .footer-right .more:hover{background:#f5f5f5;}
-    .footer-right .icon.tiktok:hover{color:#000;}
-    .footer-right .icon.youtube:hover{color:#FF0000;}
-    .footer-right .icon.instagram:hover{color:#E1306C;}
-    .footer-right .icon.spotify:hover{color:#1DB954;}
-    .footer-right .icon.apple:hover{color:#FA57C1;}
     .footer-more{transition:background-color .25s ease, color .25s ease, transform .25s ease; color:#374151;}
     .footer-more:hover{background-color:#059669; color:#fff !important; animation:footer-wobble .35s ease-in-out;}
     @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-0.6deg)}100%{transform:translateX(0) rotate(0)}}
     @media (prefers-reduced-motion: reduce){.footer-more:hover{animation:none;}}
 
-    /* Dark-Variante über .dark (statt fehlerhaftem @media) */
+    /* Dark via .dark */
     .dark .site-footer{background:#0f172a; color:#e5e7eb; border-top-color:#1f2937;}
     .dark .brand-title{color:#e5e7eb;}
     .dark .brand-sub{color:#94a3b8;}
@@ -83,7 +73,6 @@
   <!-- HEADER: Logo links • Toggle Mitte • Menü rechts -->
   <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-[1fr_auto_1fr] items-center h-16">
-
       <!-- Links: Logo + Text -->
       <a href="{{ '/' | relative_url }}" class="flex items-center gap-3 justify-self-start">
         <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="h-9 w-auto">
@@ -96,104 +85,32 @@
       <!-- Mitte: Toggle -->
       <div class="justify-self-center">
         <button
-          class="group relative inline-flex h-8 w-14 items-center rounded-full 
-                 bg-slate-200 dark:bg-slate-700 transition"
-          onclick="toggleTheme()"
-          aria-label="Theme umschalten"
-          title="Theme umschalten">
+          class="group relative inline-flex h-8 w-14 items-center rounded-full bg-slate-200 dark:bg-slate-700 transition"
+          onclick="toggleTheme()" aria-label="Theme umschalten" title="Theme umschalten">
           <span class="absolute inset-0 rounded-full overflow-hidden">
-            <span class="absolute inset-y-0 left-0 w-0 bg-emerald-500/90 
-                         transition-all duration-700 ease-out 
-                         group-hover:w-full"></span>
+            <span class="absolute inset-y-0 left-0 w-0 bg-emerald-500/90 transition-all duration-700 ease-out group-hover:w-full"></span>
           </span>
-          <span class="relative ml-1 inline-block h-6 w-6 transform rounded-full bg-white dark:bg-slate-200 
-                       transition-all translate-x-0 dark:translate-x-6 shadow"></span>
+          <span class="relative ml-1 inline-block h-6 w-6 transform rounded-full bg-white dark:bg-slate-200 transition-all translate-x-0 dark:translate-x-6 shadow"></span>
         </button>
       </div>
 
-      <!-- Rechts: Hauptmenü (ab md sichtbar) + Mobile-Menü-Button -->
+      <!-- Rechts: Hauptmenü (ab md) + Mobile Menü-Button -->
       <div class="justify-self-end flex items-center gap-2">
         <!-- Desktop-Menü -->
-        {% assign nav = 
-          site.data.nav | default: 
-            [
-              {"title":"Home","url":"/"},
-              {"title":"Über mich","url":"/about.html"},
-              {"title":"Socials","url":"/socials.html"},
-              {"title":"Galerie","url":"/gallery.html"},
-              {"title":"Impressum","url":"/impressum.html"}
-            ] 
-        %}
         {% assign current_url = page.url | replace: 'index.html','' | replace: '//','/' %}
         <nav class="hidden md:flex items-center gap-2" aria-label="Hauptmenü">
-  <a href="{{ '/' | relative_url }}"
-     class="px-3 py-2 rounded-lg font-medium transition
-            {% if current_url == '/' %}
-              bg-emerald-600/20 text-emerald-300
-            {% else %}
-              text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
-              dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
-            {% endif %}">
-    Home
-  </a>
-
-  <a href="{{ '/about.html' | relative_url }}"
-     class="px-3 py-2 rounded-lg font-medium transition
-            {% if current_url == '/about.html' %}
-              bg-emerald-600/20 text-emerald-300
-            {% else %}
-              text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
-              dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
-            {% endif %}">
-    Über mich
-  </a>
-
-  <a href="{{ '/socials.html' | relative_url }}"
-     class="px-3 py-2 rounded-lg font-medium transition
-            {% if current_url == '/socials.html' %}
-              bg-emerald-600/20 text-emerald-300
-            {% else %}
-              text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
-              dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
-            {% endif %}">
-    Socials
-  </a>
-
-  <a href="{{ '/gallery.html' | relative_url }}"
-     class="px-3 py-2 rounded-lg font-medium transition
-            {% if current_url == '/gallery.html' %}
-              bg-emerald-600/20 text-emerald-300
-            {% else %}
-              text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
-              dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
-            {% endif %}">
-    Galerie
-  </a>
-
-  <a href="{{ '/impressum.html' | relative_url }}"
-     class="px-3 py-2 rounded-lg font-medium transition
-            {% if current_url == '/impressum.html' %}
-              bg-emerald-600/20 text-emerald-300
-            {% else %}
-              text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
-              dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
-            {% endif %}">
-    Impressum
-  </a>
-</nav>
-
+          <a href="{{ '/' | relative_url }}" class="px-3 py-2 rounded-lg font-medium transition {% if current_url == '/' %} bg-emerald-600/20 text-emerald-300 {% else %} text-slate-800 hover:text-slate-900 hover:bg-slate-200/40 dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5 {% endif %}">Home</a>
+          <a href="{{ '/about.html' | relative_url }}" class="px-3 py-2 rounded-lg font-medium transition {% if current_url == '/about.html' %} bg-emerald-600/20 text-emerald-300 {% else %} text-slate-800 hover:text-slate-900 hover:bg-slate-200/40 dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5 {% endif %}">Über mich</a>
+          <a href="{{ '/socials.html' | relative_url }}" class="px-3 py-2 rounded-lg font-medium transition {% if current_url == '/socials.html' %} bg-emerald-600/20 text-emerald-300 {% else %} text-slate-800 hover:text-slate-900 hover:bg-slate-200/40 dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5 {% endif %}">Socials</a>
+          <a href="{{ '/gallery.html' | relative_url }}" class="px-3 py-2 rounded-lg font-medium transition {% if current_url == '/gallery.html' %} bg-emerald-600/20 text-emerald-300 {% else %} text-slate-800 hover:text-slate-900 hover:bg-slate-200/40 dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5 {% endif %}">Galerie</a>
+          <a href="{{ '/impressum.html' | relative_url }}" class="px-3 py-2 rounded-lg font-medium transition {% if current_url == '/impressum.html' %} bg-emerald-600/20 text-emerald-300 {% else %} text-slate-800 hover:text-slate-900 hover:bg-slate-200/40 dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5 {% endif %}">Impressum</a>
+        </nav>
 
         <!-- Mobile: 🐍 Menü öffnen -->
-        <button id="snakeBtn"
-                class="md:hidden inline-flex items-center gap-2 px-3 py-2 rounded-lg
-                       text-slate-900 dark:text-slate-100
-                       hover:bg-slate-100 dark:hover:bg-slate-800
-                       font-semibold"
-                aria-controls="sideMenu" aria-expanded="false">
+        <button id="snakeBtn" class="md:hidden inline-flex items-center gap-2 px-3 py-2 rounded-lg text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold" aria-controls="sideMenu" aria-expanded="false">
           <span class="text-xl">🐍</span><span class="hidden sm:inline">Menü</span>
         </button>
       </div>
-
     </div>
   </header>
 
@@ -227,12 +144,7 @@
         <a class="icon apple text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://music.apple.com/de/artist/silituz/1815637787" target="_blank" rel="noopener" aria-label="Apple Music">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/></svg>
         </a>
-
-        <!-- "Mehr" ohne Rahmen, mit dezentem Hover-Fill -->
-        <a class="more footer-more text-sm font-semibold px-3 py-1.5 rounded-lg 
-                  bg-transparent text-slate-900 dark:text-slate-100 
-                  hover:bg-emerald-500 hover:text-white transition"
-           href="{{ '/socials.html' | relative_url }}">Mehr</a>
+        <a class="more footer-more text-sm font-semibold px-3 py-1.5 rounded-lg bg-transparent text-slate-900 dark:text-slate-100 hover:bg-emerald-500 hover:text-white transition" href="{{ '/socials.html' | relative_url }}">Mehr</a>
       </nav>
     </div>
   </footer>
