@@ -80,21 +80,75 @@
 <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
 
   <!-- HEADER: Logo links • Switch Mitte • Menü rechts -->
-  <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-[1fr_auto_1fr] items-center h-16">
+  <header class="site-header">
+  <div class="container mx-auto px-4 py-4">
+    <!-- 3-Spalten-Layout: links Logo, Mitte Toggle, rechts Menü -->
+    <div class="grid grid-cols-3 items-center">
+      
+      <!-- Links: Logo + Text -->
+      <div class="justify-self-start">
+        <a href="{{ '/' | relative_url }}" class="flex items-center gap-3">
+          <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="h-9 w-auto">
+          <div class="leading-tight">
+            <span class="block text-lg font-bold text-slate-900 dark:text-slate-100">SILITUZ</span>
+            <span class="block text-xs text-slate-600 dark:text-slate-400">AI • Music • Visuals</span>
+          </div>
+        </a>
+      </div>
 
-     
-      <!-- Menü -->
-      <button id="snakeBtn"
-              class="justify-self-end inline-flex items-center gap-2 px-3 py-2 rounded-lg
-                     text-slate-900 dark:text-slate-100
-                     hover:bg-slate-100 dark:hover:bg-slate-800
-                     font-semibold"
-              aria-controls="sideMenu" aria-expanded="false">
-        <span class="text-xl">🐍</span><span class="hidden sm:inline">Menü</span>
-      </button>
+      <!-- Mitte: Toggle (optional – kannst du entfernen, wenn dauerhaft dunkel) -->
+      <div class="justify-self-center">
+        <button
+          class="group relative inline-flex h-8 w-14 items-center rounded-full 
+                 bg-slate-200 dark:bg-slate-700 transition"
+          onclick="toggleTheme()"
+          aria-label="Theme umschalten"
+          title="Theme umschalten"
+        >
+          <span class="absolute inset-0 rounded-full overflow-hidden">
+            <!-- Fill-Animation von links nach rechts beim Hover -->
+            <span class="absolute inset-y-0 left-0 w-0 bg-emerald-500/90 
+                         transition-all duration-700 ease-out 
+                         group-hover:w-full"></span>
+          </span>
+          <span class="relative ml-1 inline-block h-6 w-6 transform rounded-full bg-white dark:bg-slate-200 
+                       transition-all translate-x-0 dark:translate-x-6 shadow"></span>
+        </button>
+      </div>
+
+      <!-- Rechts: Menü (rechtsbündig) mit Active-Highlight -->
+      <nav class="justify-self-end flex items-center gap-2" aria-label="Hauptmenü">
+        {% assign nav = 
+          site.data.nav | default: 
+            [
+              {"title":"Home","url":"/"},
+              {"title":"Über mich","url":"/about.html"},
+              {"title":"Socials","url":"/socials.html"},
+              {"title":"Galerie","url":"/gallery.html"},
+              {"title":"Impressum","url":"/impressum.html"}
+            ] 
+        %}
+        {% assign current_url = page.url | replace: 'index.html','' | replace: '//','/' %}
+        {% for item in nav %}
+          {% assign item_url = item.url | replace: 'index.html','' | replace: '//','/' %}
+          {% assign is_active = (item_url == current_url) %}
+          <a href="{{ item.url }}"
+             class="px-3 py-2 rounded-lg font-medium transition
+                    {% if is_active %}
+                      bg-emerald-600/20 text-emerald-300
+                    {% else %}
+                      text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
+                      dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
+                    {% endif %}">
+            {{ item.title }}
+          </a>
+        {% endfor %}
+      </nav>
+
     </div>
-  </header>
+  </div>
+</header>
+
 
   <!-- Seiteninhalt -->
   <main id="content">
