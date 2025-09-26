@@ -1,6 +1,3 @@
----
----
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -42,11 +39,12 @@
     .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
     .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
     .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);}
-    /* Menü-Links */
+    /* Menü-Links (Side-Menü) */
     #sideMenu nav a { transition: background-color .25s ease, color .25s ease; }
     #sideMenu nav a:hover { background-color:#059669; color:#fff !important; }
     #sideMenu nav a.active { background-color:#d1fae5; color:#059669 !important; font-weight:600; }
-    /* Footer */
+
+    /* Footer (Light Basis) */
     .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
     .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
     .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
@@ -57,57 +55,50 @@
     .footer-center small{font-size:.9rem; color:#555;}
     .footer-right{display:flex; align-items:center; gap:12px;}
     .footer-right .icon{font-size:22px; color:#888; transition:color .3s ease;}
-    .footer-right .more{font-size:.9rem; font-weight:600; color:#555; text-decoration:none; padding:6px 10px; border:1px solid #ccc; border-radius:6px; transition:all .3s ease;}
-    .footer-right .more:hover{background:#f5f5f5; border-color:#999;}
+    .footer-right .more{font-size:.9rem; font-weight:600; color:#555; text-decoration:none; padding:6px 10px; border-radius:6px; transition:all .3s ease;}
+    .footer-right .more:hover{background:#f5f5f5;}
     .footer-right .icon.tiktok:hover{color:#000;}
     .footer-right .icon.youtube:hover{color:#FF0000;}
     .footer-right .icon.instagram:hover{color:#E1306C;}
     .footer-right .icon.spotify:hover{color:#1DB954;}
     .footer-right .icon.apple:hover{color:#FA57C1;}
-    .footer-more{transition:background-color .25s ease, color .25s ease, border-color .25s ease, transform .25s ease; color:#374151; border:1px solid #d1d5db;}
-    .footer-more:hover{background-color:#059669; border-color:#059669; color:#fff !important; animation:footer-wobble .35s ease-in-out;}
+    .footer-more{transition:background-color .25s ease, color .25s ease, transform .25s ease; color:#374151;}
+    .footer-more:hover{background-color:#059669; color:#fff !important; animation:footer-wobble .35s ease-in-out;}
     @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-0.6deg)}100%{transform:translateX(0) rotate(0)}}
     @media (prefers-reduced-motion: reduce){.footer-more:hover{animation:none;}}
-    .footer-right .more.footer-more:hover{background-color:#059669 !important; border-color:#059669 !important; color:#fff !important;}
-    /* Dark-Body */
-    @media (prefers-color-scheme: dark){ ... }
-      .site-footer{background:#0f172a; color:#e5e7eb; border-top-color:#1f2937;}
-      .brand-title{color:#e5e7eb;}
-      .brand-sub{color:#94a3b8;}
-    }
+
+    /* Dark-Variante über .dark (statt fehlerhaftem @media) */
+    .dark .site-footer{background:#0f172a; color:#e5e7eb; border-top-color:#1f2937;}
+    .dark .brand-title{color:#e5e7eb;}
+    .dark .brand-sub{color:#94a3b8;}
+    .dark .footer-center small{color:#cbd5e1;}
   </style>
 </head>
 
 <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
 
-  <!-- HEADER: Logo links • Switch Mitte • Menü rechts -->
-  <header class="site-header">
-  <div class="container mx-auto px-4 py-4">
-    <!-- 3-Spalten-Layout: links Logo, Mitte Toggle, rechts Menü -->
-    <div class="grid grid-cols-3 items-center">
-      
-      <!-- Links: Logo + Text -->
-      <div class="justify-self-start">
-        <a href="{{ '/' | relative_url }}" class="flex items-center gap-3">
-          <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="h-9 w-auto">
-          <div class="leading-tight">
-            <span class="block text-lg font-bold text-slate-900 dark:text-slate-100">SILITUZ</span>
-            <span class="block text-xs text-slate-600 dark:text-slate-400">AI • Music • Visuals</span>
-          </div>
-        </a>
-      </div>
+  <!-- HEADER: Logo links • Toggle Mitte • Menü rechts -->
+  <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-[1fr_auto_1fr] items-center h-16">
 
-      <!-- Mitte: Toggle (optional – kannst du entfernen, wenn dauerhaft dunkel) -->
+      <!-- Links: Logo + Text -->
+      <a href="{{ '/' | relative_url }}" class="flex items-center gap-3 justify-self-start">
+        <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="h-9 w-auto">
+        <div class="leading-tight">
+          <span class="block text-lg font-bold text-slate-900 dark:text-slate-100">SILITUZ</span>
+          <span class="block text-xs text-slate-600 dark:text-slate-400">AI • Music • Visuals</span>
+        </div>
+      </a>
+
+      <!-- Mitte: Toggle -->
       <div class="justify-self-center">
         <button
           class="group relative inline-flex h-8 w-14 items-center rounded-full 
                  bg-slate-200 dark:bg-slate-700 transition"
           onclick="toggleTheme()"
           aria-label="Theme umschalten"
-          title="Theme umschalten"
-        >
+          title="Theme umschalten">
           <span class="absolute inset-0 rounded-full overflow-hidden">
-            <!-- Fill-Animation von links nach rechts beim Hover -->
             <span class="absolute inset-y-0 left-0 w-0 bg-emerald-500/90 
                          transition-all duration-700 ease-out 
                          group-hover:w-full"></span>
@@ -117,8 +108,9 @@
         </button>
       </div>
 
-      <!-- Rechts: Menü (rechtsbündig) mit Active-Highlight -->
-      <nav class="justify-self-end flex items-center gap-2" aria-label="Hauptmenü">
+      <!-- Rechts: Hauptmenü (ab md sichtbar) + Mobile-Menü-Button -->
+      <div class="justify-self-end flex items-center gap-2">
+        <!-- Desktop-Menü -->
         {% assign nav = 
           site.data.nav | default: 
             [
@@ -130,26 +122,36 @@
             ] 
         %}
         {% assign current_url = page.url | replace: 'index.html','' | replace: '//','/' %}
-        {% for item in nav %}
-          {% assign item_url = item.url | replace: 'index.html','' | replace: '//','/' %}
-          {% assign is_active = (item_url == current_url) %}
-          <a href="{{ item.url }}"
-             class="px-3 py-2 rounded-lg font-medium transition
-                    {% if is_active %}
-                      bg-emerald-600/20 text-emerald-300
-                    {% else %}
-                      text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
-                      dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
-                    {% endif %}">
-            {{ item.title }}
-          </a>
-        {% endfor %}
-      </nav>
+        <nav class="hidden md:flex items-center gap-2" aria-label="Hauptmenü">
+          {% for item in nav %}
+            {% assign item_url = item.url | replace: 'index.html','' | replace: '//','/' %}
+            {% assign is_active = (item_url == current_url) %}
+            <a href="{{ item.url }}"
+               class="px-3 py-2 rounded-lg font-medium transition
+                      {% if is_active %}
+                        bg-emerald-600/20 text-emerald-300
+                      {% else %}
+                        text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
+                        dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
+                      {% endif %}">
+              {{ item.title }}
+            </a>
+          {% endfor %}
+        </nav>
+
+        <!-- Mobile: 🐍 Menü öffnen -->
+        <button id="snakeBtn"
+                class="md:hidden inline-flex items-center gap-2 px-3 py-2 rounded-lg
+                       text-slate-900 dark:text-slate-100
+                       hover:bg-slate-100 dark:hover:bg-slate-800
+                       font-semibold"
+                aria-controls="sideMenu" aria-expanded="false">
+          <span class="text-xl">🐍</span><span class="hidden sm:inline">Menü</span>
+        </button>
+      </div>
 
     </div>
-  </div>
-</header>
-
+  </header>
 
   <!-- Seiteninhalt -->
   <main id="content">
@@ -158,39 +160,38 @@
 
   <!-- FOOTER -->
   <footer class="site-footer bg-white text-slate-800 border-t border-slate-200 dark:bg-slate-900 dark:text-slate-100 dark:border-slate-700">
-  <div class="footer-inner container mx-auto flex items-center justify-between gap-4 py-6 px-4">
-    <div class="footer-left">
-      <a href="{{ '/' | relative_url }}" class="footer-brand flex items-center gap-3">
-        <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="logo h-8 w-auto">
-        <div class="brand-texts leading-tight">
-          <span class="brand-title block text-lg font-bold text-slate-900 dark:text-slate-100">SILITUZ</span>
-          <span class="brand-sub block text-xs text-slate-600 dark:text-slate-400">AI • Music • Visuals</span>
-        </div>
-      </a>
+    <div class="footer-inner container mx-auto flex items-center justify-between gap-4 py-6 px-4">
+      <div class="footer-left">
+        <a href="{{ '/' | relative_url }}" class="footer-brand flex items-center gap-3">
+          <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="logo h-8 w-auto">
+          <div class="brand-texts leading-tight">
+            <span class="brand-title block text-lg font-bold text-slate-900 dark:text-slate-100">SILITUZ</span>
+            <span class="brand-sub block text-xs text-slate-600 dark:text-slate-400">AI • Music • Visuals</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="footer-center">
+        <small class="text-sm text-slate-600 dark:text-slate-400">© <span id="y"></span> Silituz – Alle Rechte vorbehalten</small>
+      </div>
+
+      <nav class="footer-right flex items-center gap-3" aria-label="Social Media">
+        <a class="icon tiktok text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://www.tiktok.com/@silituz" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        <a class="icon youtube text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://www.youtube.com/@silituz" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a class="icon instagram text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://www.instagram.com/silituz" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a class="icon spotify text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://open.spotify.com/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank" rel="noopener" aria-label="Spotify"><i class="fab fa-spotify"></i></a>
+        <a class="icon apple text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://music.apple.com/de/artist/silituz/1815637787" target="_blank" rel="noopener" aria-label="Apple Music">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/></svg>
+        </a>
+
+        <!-- "Mehr" ohne Rahmen, mit dezentem Hover-Fill -->
+        <a class="more footer-more text-sm font-semibold px-3 py-1.5 rounded-lg 
+                  bg-transparent text-slate-900 dark:text-slate-100 
+                  hover:bg-emerald-500 hover:text-white transition"
+           href="{{ '/socials.html' | relative_url }}">Mehr</a>
+      </nav>
     </div>
-
-    <div class="footer-center">
-      <small class="text-sm text-slate-600 dark:text-slate-400">© <span id="y"></span> Silituz – Alle Rechte vorbehalten</small>
-    </div>
-
-    <nav class="footer-right flex items-center gap-3" aria-label="Social Media">
-      <a class="icon tiktok text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://www.tiktok.com/@silituz" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-      <a class="icon youtube text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://www.youtube.com/@silituz" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-      <a class="icon instagram text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://www.instagram.com/silituz" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <a class="icon spotify text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://open.spotify.com/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank" rel="noopener" aria-label="Spotify"><i class="fab fa-spotify"></i></a>
-      <a class="icon apple text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://music.apple.com/de/artist/silituz/1815637787" target="_blank" rel="noopener" aria-label="Apple Music">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/></svg>
-      </a>
-
-      <!-- "Mehr" ohne Rahmen, mit dezentem Hover-Fill -->
-      <a class="more footer-more text-sm font-semibold px-3 py-1.5 rounded-lg 
-                bg-transparent text-slate-900 dark:text-slate-100 
-                hover:bg-emerald-500 hover:text-white transition"
-         href="{{ '/socials.html' | relative_url }}">Mehr</a>
-    </nav>
-  </div>
-</footer>
-
+  </footer>
 
   <!-- OVERLAY + SIDE-MENÜ -->
   <div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity z-40"></div>
@@ -200,22 +201,30 @@
       <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Menü schließen">✕</button>
     </div>
     <nav class="p-4 space-y-2 text-slate-800 dark:text-slate-100">
-      <a href="{{ '/' | relative_url }}" class="block px-3 py-2 rounded-lg {% if page.url == '/' %}active{% endif %}">Home</a>
-      <a href="{{ '/about.html' | relative_url }}" class="block px-3 py-2 rounded-lg">Über mich</a>
-      <a href="{{ '/gallery.html' | relative_url }}" class="block px-3 py-2 rounded-lg">Galerie</a>
-      <a href="{{ '/generators.html' | relative_url }}" class="block px-3 py-2 rounded-lg">Generatoren &amp; mehr</a>
-      <a href="{{ '/music.html' | relative_url }}" class="block px-3 py-2 rounded-lg">Meine Musik</a>
-      <a href="{{ '/socials.html' | relative_url }}" class="block px-3 py-2 rounded-lg">Socials</a>
-      <a href="{{ '/support.html' | relative_url }}" class="block px-3 py-2 rounded-lg">Unterstützung</a>
-      <a href="{{ '/contact.html' | relative_url }}" class="block px-3 py-2 rounded-lg">Kontakt</a>
-      <a href="{{ '/impressum.html' | relative_url }}" class="block px-3 py-2 rounded-lg">Impressum</a>
+      {% assign cur = page.url | replace:'index.html','' | replace:'//','/' %}
+      <a href="{{ '/' | relative_url }}"               class="block px-3 py-2 rounded-lg {% if cur == '/' %}active{% endif %}">Home</a>
+      <a href="{{ '/about.html' | relative_url }}"     class="block px-3 py-2 rounded-lg {% if cur == '/about.html' %}active{% endif %}">Über mich</a>
+      <a href="{{ '/gallery.html' | relative_url }}"   class="block px-3 py-2 rounded-lg {% if cur == '/gallery.html' %}active{% endif %}">Galerie</a>
+      <a href="{{ '/generators.html' | relative_url }}"class="block px-3 py-2 rounded-lg {% if cur == '/generators.html' %}active{% endif %}">Generatoren &amp; mehr</a>
+      <a href="{{ '/music.html' | relative_url }}"     class="block px-3 py-2 rounded-lg {% if cur == '/music.html' %}active{% endif %}">Meine Musik</a>
+      <a href="{{ '/socials.html' | relative_url }}"   class="block px-3 py-2 rounded-lg {% if cur == '/socials.html' %}active{% endif %}">Socials</a>
+      <a href="{{ '/support.html' | relative_url }}"   class="block px-3 py-2 rounded-lg {% if cur == '/support.html' %}active{% endif %}">Unterstützung</a>
+      <a href="{{ '/contact.html' | relative_url }}"   class="block px-3 py-2 rounded-lg {% if cur == '/contact.html' %}active{% endif %}">Kontakt</a>
+      <a href="{{ '/impressum.html' | relative_url }}" class="block px-3 py-2 rounded-lg {% if cur == '/impressum.html' %}active{% endif %}">Impressum</a>
     </nav>
   </aside>
 
-  <!-- GLOBAL JS: nur Menü-Logik (Toggle Dark läuft im Button-OnClick) -->
+  <!-- GLOBAL JS -->
   <script>
     // Jahr im Footer
     document.getElementById('y')?.appendChild(document.createTextNode(new Date().getFullYear()));
+
+    // Theme-Toggle
+    function toggleTheme(){
+      const r = document.documentElement;
+      r.classList.toggle('dark');
+      localStorage.setItem('theme', r.classList.contains('dark') ? 'dark' : 'light');
+    }
 
     // Menü öffnen/schließen
     const snakeBtn = document.getElementById('snakeBtn');
