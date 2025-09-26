@@ -60,8 +60,3 @@ header img,
 header svg {
   background: transparent !important;
 }
-
-/* Nur den Über-mich-Text weiß färben */
-.about-section p {
-  color: #ffffff;   /* Weiß */
-}
