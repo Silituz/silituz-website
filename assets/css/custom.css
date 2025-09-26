@@ -1,3 +1,9 @@
+#snakeBtn, #snakeBtn:hover, #snakeBtn:focus {
+  background: transparent !important;
+}
+#snakeBtn .menu-logo, #snakeBtn video {
+  background: transparent !important;
+}
 .menu-logo {
   width: 50px;
   height: 50px;
