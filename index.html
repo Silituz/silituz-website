@@ -3,58 +3,97 @@ layout: default
 title: "SILITUZ – Home"
 ---
 
-<!-- Hero -->
-<section class="relative bg-gray-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-    <!-- Bild oben: wieder groß -->
-    <img src="{{ '/assets/images/welcome-head.svg' | relative_url }}"
-         alt="Welcome Bild"
-         class="mx-auto mb-6 w-full max-w-3xl h-auto">
-    <h1 class="text-4xl font-extrabold tracking-tight text-slate-900">Willkommen bei SILITUZ</h1>
-    <p class="mt-4 text-lg text-slate-600">
-      KI • Musik • Anime – entdecke meine neuesten Projekte und Inhalte.
-    </p>
-    <div class="mt-6 flex justify-center gap-4">
-      <a href="{{ '/about.html' | relative_url }}"
-         class="px-5 py-3 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">Über mich</a>
-      <a href="{{ '/socials.html' | relative_url }}"
-         class="px-5 py-3 rounded-lg bg-white border border-emerald-600 text-emerald-600 font-semibold hover:bg-emerald-50 transition">Socials</a>
+<!-- HERO: Vollbreit mit Bild-Hintergrund, Text links -->
+<section
+  class="relative w-full"
+  style="background-image:url('{{ '/assets/images/welcome-head.svg' | relative_url }}'); background-size:cover; background-position:center;">
+  <!-- leichte Abdunklung für Lesbarkeit -->
+  <div class="absolute inset-0 bg-black/10"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="py-16 sm:py-20 lg:py-24 grid grid-cols-1 lg:grid-cols-2 items-center gap-8">
+      <!-- Text links -->
+      <div class="text-left">
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 drop-shadow-sm">
+          Willkommen bei SILITUZ
+        </h1>
+        <p class="mt-4 text-lg text-slate-700">
+          KI • Musik • Anime – entdecke meine neuesten Projekte und Inhalte.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="{{ '/about.html' | relative_url }}"
+             class="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">
+             Über mich
+          </a>
+          <a href="{{ '/socials.html' | relative_url }}"
+             class="inline-flex items-center justify-center px-5 py-3 rounded-lg border border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold transition">
+             Socials
+          </a>
+        </div>
+      </div>
+
+      <!-- Platzhalter rechts (bewusst leer, damit Bild voll bleibt und Text links sitzt) -->
+      <div class="hidden lg:block"></div>
     </div>
   </div>
 </section>
 
-<!-- Kacheln: Bilder wieder groß (mobil sehr groß, Desktop etwas kompakter) -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-  <!-- Kachel 1 -->
-  <div class="brand-card p-6 rounded-xl border text-center">
-    <img src="{{ '/assets/images/Kachel 1.svg' | relative_url }}"
-         alt="KI-Bilder"
-         class="mx-auto mb-5 w-full h-64 sm:h-56 lg:h-48 object-contain">
-    <h2 class="text-2xl font-bold mb-2">KI Bilder</h2>
-    <p class="text-slate-600 mb-4">Von niedlich bis episch – meine besten AI-Creations.</p>
-    <a href="{{ '/gallery.html' | relative_url }}"
-       class="inline-block px-5 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">Ansehen</a>
-  </div>
+<!-- 3 KARTEN: Bild oben, darunter Text + Button, im Rahmen -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
-  <!-- Kachel 2 – Generatoren & mehr -->
-  <div class="brand-card p-6 rounded-xl border text-center">
-    <img src="{{ '/assets/images/Kachel 2.svg' | relative_url }}"
-         alt="Generatoren & Mehr"
-         class="mx-auto mb-5 w-full h-64 sm:h-56 lg:h-48 object-contain">
-    <h2 class="text-2xl font-bold mb-2">Generatoren &amp; mehr</h2>
-    <p class="text-slate-600 mb-4">Kleine Tools, KI-Spielereien und hilfreiche Generatoren.</p>
-    <a href="{{ '/generators.html' | relative_url }}"
-       class="inline-block px-5 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">Ausprobieren</a>
-  </div>
+    <!-- Karte 1 -->
+    <article class="brand-card rounded-2xl border border-slate-200 overflow-hidden bg-white">
+      <!-- Bild oben (rahmenfüllend) -->
+      <div class="bg-white">
+        <img src="{{ '/assets/images/kachel1.svg' | relative_url }}"
+             alt="KI-Bilder"
+             class="w-full aspect-[16/9] object-contain p-6">
+      </div>
+      <!-- Text + Button -->
+      <div class="px-6 pb-6">
+        <h2 class="text-xl font-bold mb-1.5">KI Bilder</h2>
+        <p class="text-slate-600 mb-4">Von niedlich bis episch – meine besten AI-Creations.</p>
+        <a href="{{ '/gallery.html' | relative_url }}"
+           class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">
+           Ansehen
+        </a>
+      </div>
+    </article>
 
-  <!-- Kachel 3 -->
-  <div class="brand-card p-6 rounded-xl border text-center">
-    <img src="{{ '/assets/images/Kachel 3.svg' | relative_url }}"
-         alt="Musikproduktion"
-         class="mx-auto mb-5 w-full h-64 sm:h-56 lg:h-48 object-contain">
-    <h2 class="text-2xl font-bold mb-2">Musikproduktion</h2>
-    <p class="text-slate-600 mb-4">Meine Songs – veröffentlicht auf Spotify, Apple Music &amp; mehr.</p>
-    <a href="{{ '/music.html' | relative_url }}"
-       class="inline-block px-5 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">Anhören</a>
+    <!-- Karte 2 -->
+    <article class="brand-card rounded-2xl border border-slate-200 overflow-hidden bg-white">
+      <div class="bg-white">
+        <img src="{{ '/assets/images/kachel2.svg' | relative_url }}"
+             alt="Generatoren & Mehr"
+             class="w-full aspect-[16/9] object-contain p-6">
+      </div>
+      <div class="px-6 pb-6">
+        <h2 class="text-xl font-bold mb-1.5">Generatoren &amp; mehr</h2>
+        <p class="text-slate-600 mb-4">Kleine Tools, KI-Spielereien und hilfreiche Generatoren.</p>
+        <a href="{{ '/generators.html' | relative_url }}"
+           class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">
+           Ausprobieren
+        </a>
+      </div>
+    </article>
+
+    <!-- Karte 3 -->
+    <article class="brand-card rounded-2xl border border-slate-200 overflow-hidden bg-white">
+      <div class="bg-white">
+        <img src="{{ '/assets/images/kachel3.svg' | relative_url }}"
+             alt="Musikproduktion"
+             class="w-full aspect-[16/9] object-contain p-6">
+      </div>
+      <div class="px-6 pb-6">
+        <h2 class="text-xl font-bold mb-1.5">Meine Musik</h2>
+        <p class="text-slate-600 mb-4">Songs auf Spotify, Apple Music &amp; mehr.</p>
+        <a href="{{ '/music.html' | relative_url }}"
+           class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">
+           Anhören
+        </a>
+      </div>
+    </article>
+
   </div>
 </section>
