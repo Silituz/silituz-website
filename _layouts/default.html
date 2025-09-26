@@ -201,6 +201,87 @@
   // ESC schließt
   window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 </script>
+<!-- THEME SLIDER JS -->
+<script>
+  // Default: dunkel, falls noch nichts gesetzt ist
+  (function () {
+    const ls = localStorage.getItem("theme");
+    const root = document.documentElement;
+    if (!ls) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      if (ls === "dark") root.classList.add("dark");
+      else root.classList.remove("dark");
+    }
+  })();
+
+  const themeBtn   = document.getElementById('themeSlider');
+  const themeThumb = document.getElementById('themeThumb');
+
+  function applyThumbPosition() {
+    const isDark = document.documentElement.classList.contains('dark');
+    themeThumb.style.transform = isDark
+      ? 'translate(3.5rem, -50%)'  // rechts => DARK
+      : 'translate(0rem, -50%)';   // links  => LIGHT
+    themeBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    themeBtn.setAttribute('aria-label', isDark ? 'Dunkles Design aktiv' : 'Helles Design aktiv');
+  }
+
+  function setTheme(isDark) {
+    document.documentElement.classList.toggle('dark', isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    applyThumbPosition();
+  }
+
+  function toggleTheme() {
+    const nowDark = !document.documentElement.classList.contains('dark');
+    setTheme(nowDark);
+  }
+
+  // Klick = Toggle (wenn nicht gerade Drag)
+  themeBtn?.addEventListener('click', (e) => {
+    if (themeDrag.active) return;
+    toggleTheme();
+  });
+
+  // Drag-Logik
+  const themeDrag = { active: false, startX: 0 };
+  function pointerDown(e) {
+    themeDrag.active = true;
+    themeDrag.startX = (e.touches?.[0]?.clientX ?? e.clientX);
+  }
+  function pointerMove(e) {
+    if (!themeDrag.active) return;
+    const rect = themeBtn.getBoundingClientRect();
+    const x = (e.touches?.[0]?.clientX ?? e.clientX) - rect.left;
+    const half = rect.width / 2;
+    const previewRight = x > half;
+    themeThumb.style.transform = previewRight
+      ? 'translate(3.5rem, -50%)'
+      : 'translate(0rem, -50%)';
+  }
+  function pointerUp(e) {
+    if (!themeDrag.active) return;
+    const rect = themeBtn.getBoundingClientRect();
+    const x = (e.changedTouches?.[0]?.clientX ?? e.clientX) - rect.left;
+    const half = rect.width / 2;
+    const chooseRight = x > half; // rechts => DARK
+    setTheme(chooseRight);
+    setTimeout(()=> themeDrag.active = false, 0);
+  }
+
+  themeBtn.addEventListener('mousedown', pointerDown);
+  themeBtn.addEventListener('mousemove', pointerMove);
+  window.addEventListener('mouseup', pointerUp);
+
+  themeBtn.addEventListener('touchstart', pointerDown, {passive:true});
+  themeBtn.addEventListener('touchmove', pointerMove, {passive:true});
+  window.addEventListener('touchend', pointerUp);
+
+  // Initiale Thumb-Position
+  applyThumbPosition();
+</script>
 
 
   <!-- Seiteninhalt -->
