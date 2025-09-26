@@ -6,3 +6,8 @@
   border-radius: 0;    /* keine runden Ecken */
   background: transparent;
 }
+.menu-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
