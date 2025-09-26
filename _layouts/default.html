@@ -123,21 +123,62 @@
         %}
         {% assign current_url = page.url | replace: 'index.html','' | replace: '//','/' %}
         <nav class="hidden md:flex items-center gap-2" aria-label="Hauptmenü">
-          {% for item in nav %}
-            {% assign item_url = item.url | replace: 'index.html','' | replace: '//','/' %}
-            {% assign is_active = (item_url == current_url) %}
-            <a href="{{ item.url }}"
-               class="px-3 py-2 rounded-lg font-medium transition
-                      {% if is_active %}
-                        bg-emerald-600/20 text-emerald-300
-                      {% else %}
-                        text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
-                        dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
-                      {% endif %}">
-              {{ item.title }}
-            </a>
-          {% endfor %}
-        </nav>
+  <a href="{{ '/' | relative_url }}"
+     class="px-3 py-2 rounded-lg font-medium transition
+            {% if current_url == '/' %}
+              bg-emerald-600/20 text-emerald-300
+            {% else %}
+              text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
+              dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
+            {% endif %}">
+    Home
+  </a>
+
+  <a href="{{ '/about.html' | relative_url }}"
+     class="px-3 py-2 rounded-lg font-medium transition
+            {% if current_url == '/about.html' %}
+              bg-emerald-600/20 text-emerald-300
+            {% else %}
+              text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
+              dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
+            {% endif %}">
+    Über mich
+  </a>
+
+  <a href="{{ '/socials.html' | relative_url }}"
+     class="px-3 py-2 rounded-lg font-medium transition
+            {% if current_url == '/socials.html' %}
+              bg-emerald-600/20 text-emerald-300
+            {% else %}
+              text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
+              dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
+            {% endif %}">
+    Socials
+  </a>
+
+  <a href="{{ '/gallery.html' | relative_url }}"
+     class="px-3 py-2 rounded-lg font-medium transition
+            {% if current_url == '/gallery.html' %}
+              bg-emerald-600/20 text-emerald-300
+            {% else %}
+              text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
+              dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
+            {% endif %}">
+    Galerie
+  </a>
+
+  <a href="{{ '/impressum.html' | relative_url }}"
+     class="px-3 py-2 rounded-lg font-medium transition
+            {% if current_url == '/impressum.html' %}
+              bg-emerald-600/20 text-emerald-300
+            {% else %}
+              text-slate-800 hover:text-slate-900 hover:bg-slate-200/40
+              dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
+            {% endif %}">
+    Impressum
+  </a>
+</nav>
+
 
         <!-- Mobile: 🐍 Menü öffnen -->
         <button id="snakeBtn"
