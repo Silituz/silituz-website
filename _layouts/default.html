@@ -88,7 +88,7 @@
         class="relative inline-flex items-center select-none"
         type="button" aria-label="Design umschalten" aria-live="polite">
         <!-- Track -->
-        <span class="relative h-9 w-24 rounded-full bg-slate-200/80 dark:bg-slate-700/80 shadow-inner overflow-hidden">
+       <span id="themeTrack" class="relative h-9 w-24 rounded-full bg-slate-200/80 dark:bg-slate-700/80 shadow-inner overflow-hidden">
           <!-- Sonne links -->
           <span class="absolute left-2 top-1/2 -translate-y-1/2 text-xl pointer-events-none">☀️</span>
           <!-- Mond rechts -->
@@ -203,7 +203,7 @@
 </script>
 <!-- THEME SLIDER JS -->
 <script>
-  // Default: dunkel, falls noch nichts gesetzt ist
+  // === Init: Bestehenden Zustand respektieren, Default = dark wenn nichts gesetzt ===
   (function () {
     const ls = localStorage.getItem("theme");
     const root = document.documentElement;
@@ -211,75 +211,75 @@
       root.classList.add("dark");
       localStorage.setItem("theme", "dark");
     } else {
-      if (ls === "dark") root.classList.add("dark");
-      else root.classList.remove("dark");
+      root.classList.toggle("dark", ls === "dark");
     }
   })();
 
-  const themeBtn   = document.getElementById('themeSlider');
-  const themeThumb = document.getElementById('themeThumb');
+  const themeBtn    = document.getElementById('themeSlider');
+  const themeTrack  = document.getElementById('themeTrack'); // neu: präzises Ziel
+  const themeThumb  = document.getElementById('themeThumb');
+
+  // Feste Positionen basierend auf w-24 (≈ 6rem) Track und w-11 (≈ 2.75rem) Thumb
+  const POS_LEFT  = 'translate(0rem, -50%)';     // ☀️ => LIGHT
+  const POS_RIGHT = 'translate(3.5rem, -50%)';   // 🌙 => DARK
 
   function applyThumbPosition() {
     const isDark = document.documentElement.classList.contains('dark');
-    themeThumb.style.transform = isDark
-      ? 'translate(3.5rem, -50%)'  // rechts => DARK
-      : 'translate(0rem, -50%)';   // links  => LIGHT
+    themeThumb.style.transform = isDark ? POS_RIGHT : POS_LEFT;
     themeBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
     themeBtn.setAttribute('aria-label', isDark ? 'Dunkles Design aktiv' : 'Helles Design aktiv');
   }
 
   function setTheme(isDark) {
-    document.documentElement.classList.toggle('dark', isDark);
+    const root = document.documentElement;
+    root.classList.toggle('dark', isDark);
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     applyThumbPosition();
   }
 
-  function toggleTheme() {
-    const nowDark = !document.documentElement.classList.contains('dark');
-    setTheme(nowDark);
+  // Entscheidet nur nach Klick-Position auf dem Track (nicht „toggeln“)
+  function chooseByX(clientX) {
+    const r = themeTrack.getBoundingClientRect();
+    const x = clientX - r.left;        // Klick relativ zum Track
+    const half = r.width / 2;
+    const goRight = x > half;          // rechts => DARK, links => LIGHT
+    setTheme(goRight);
   }
 
-  // Klick = Toggle (wenn nicht gerade Drag)
-  themeBtn?.addEventListener('click', (e) => {
-    if (themeDrag.active) return;
-    toggleTheme();
-  });
+  // Klick direkt auf Track oder Button -> nimm exakte Position
+  themeTrack.addEventListener('click', (e) => chooseByX(e.clientX));
+  themeBtn.addEventListener('click',    (e) => chooseByX(e.clientX));
 
-  // Drag-Logik
-  const themeDrag = { active: false, startX: 0 };
-  function pointerDown(e) {
-    themeDrag.active = true;
-    themeDrag.startX = (e.touches?.[0]?.clientX ?? e.clientX);
+  // Drag: fühlt sich natürlicher an
+  let dragging = false;
+
+  function onDown(e) {
+    dragging = true;
   }
-  function pointerMove(e) {
-    if (!themeDrag.active) return;
-    const rect = themeBtn.getBoundingClientRect();
-    const x = (e.touches?.[0]?.clientX ?? e.clientX) - rect.left;
-    const half = rect.width / 2;
-    const previewRight = x > half;
-    themeThumb.style.transform = previewRight
-      ? 'translate(3.5rem, -50%)'
-      : 'translate(0rem, -50%)';
+  function onMove(e) {
+    if (!dragging) return;
+    const clientX = (e.touches?.[0]?.clientX ?? e.clientX);
+    const r = themeTrack.getBoundingClientRect();
+    const x = Math.max(0, Math.min(r.width, clientX - r.left));
+    const goRight = x > r.width / 2;
+    themeThumb.style.transform = goRight ? POS_RIGHT : POS_LEFT; // Vorschau
   }
-  function pointerUp(e) {
-    if (!themeDrag.active) return;
-    const rect = themeBtn.getBoundingClientRect();
-    const x = (e.changedTouches?.[0]?.clientX ?? e.clientX) - rect.left;
-    const half = rect.width / 2;
-    const chooseRight = x > half; // rechts => DARK
-    setTheme(chooseRight);
-    setTimeout(()=> themeDrag.active = false, 0);
+  function onUp(e) {
+    if (!dragging) return;
+    dragging = false;
+    const clientX = (e.changedTouches?.[0]?.clientX ?? e.clientX);
+    chooseByX(clientX); // final setzen
   }
 
-  themeBtn.addEventListener('mousedown', pointerDown);
-  themeBtn.addEventListener('mousemove', pointerMove);
-  window.addEventListener('mouseup', pointerUp);
+  themeTrack.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
 
-  themeBtn.addEventListener('touchstart', pointerDown, {passive:true});
-  themeBtn.addEventListener('touchmove', pointerMove, {passive:true});
-  window.addEventListener('touchend', pointerUp);
+  themeTrack.addEventListener('touchstart', onDown, {passive:true});
+  window.addEventListener('touchmove', onMove, {passive:true});
+  window.addEventListener('touchend', onUp);
 
-  // Initiale Thumb-Position
+  // Start-Position aus aktuellem Theme
   applyThumbPosition();
 </script>
 
