@@ -3,7 +3,7 @@ layout: default
 title: Home
 ---
 
-<!-- Hero-Bereich -->
+<!-- Hero-Bereich (unverändert) -->
 <section class="relative w-full">
   <div class="relative w-full h-[40vw] max-h-[520px] min-h-[260px]">
     <img
@@ -11,7 +11,6 @@ title: Home
       alt="Willkommen bei Silituz"
       class="absolute inset-0 w-full h-full object-contain"
     />
-
     <!-- Text-Overlay links -->
     <div class="absolute inset-y-0 left-0 flex items-center">
       <div class="px-6 sm:px-10 md:px-14 lg:px-16">
@@ -38,69 +37,78 @@ title: Home
   </div>
 </section>
 
-<!-- Kachel-Bereich -->
+<!-- Kachel-Bereich (NEU: wobble + grüner Textbereich, kein Button) -->
 <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
     <!-- Kachel 1 -->
-    <article class="overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+    <a href="/gallery.html"
+       class="group block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition hover:shadow-lg hover:animate-[wobble_450ms_ease-in-out]"
+    >
       <div class="aspect-square w-full overflow-hidden">
         <img src="/assets/images/Kachel 1.svg" alt="KI-Bilder"
-             class="w-full h-full object-cover" />
+             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
       </div>
-      <div class="p-5">
-        <h3 class="text-lg font-semibold">KI-Bilder</h3>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+      <div class="p-5 bg-white dark:bg-gray-800 transition
+                  group-hover:bg-emerald-500 group-hover:text-white">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 transition group-hover:text-white">
+          KI-Bilder
+        </h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300 transition group-hover:text-white/95">
           Generative Art in modernem Anime-Stil – Highlights & Projekte.
         </p>
-        <div class="mt-4">
-          <a href="/gallery.html"
-             class="inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold bg-white text-gray-900 border border-gray-200 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition">
-            Anschauen
-          </a>
-        </div>
       </div>
-    </article>
+    </a>
 
     <!-- Kachel 2 -->
-    <article class="overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+    <a href="/gallery.html#edits"
+       class="group block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition hover:shadow-lg hover:animate-[wobble_450ms_ease-in-out]"
+    >
       <div class="aspect-square w-full overflow-hidden">
-        <img src="/assets/img/kachel-2.svg" alt="Anime Edits"
-             class="w-full h-full object-cover" />
+        <img src="/assets/images/Kachel 2.svg" alt="Anime Edits"
+             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
       </div>
-      <div class="p-5">
-        <h3 class="text-lg font-semibold">Anime Edits</h3>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+      <div class="p-5 bg-white dark:bg-gray-800 transition
+                  group-hover:bg-emerald-500 group-hover:text-white">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 transition group-hover:text-white">
+          Anime Edits
+        </h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300 transition group-hover:text-white/95">
           Edits & Motion-Grafiken mit Liebe zum Detail.
         </p>
-        <div class="mt-4">
-          <a href="/gallery.html#edits"
-             class="inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold bg-white text-gray-900 border border-gray-200 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition">
-            Los geht’s
-          </a>
-        </div>
       </div>
-    </article>
+    </a>
 
     <!-- Kachel 3 -->
-    <article class="overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+    <a href="/music.html"
+       class="group block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition hover:shadow-lg hover:animate-[wobble_450ms_ease-in-out]"
+    >
       <div class="aspect-square w-full overflow-hidden">
-        <img src="/assets/img/kachel-3.svg" alt="Musikproduktion"
-             class="w-full h-full object-cover" />
+        <img src="/assets/images/Kachel 3.svg" alt="Musikproduktion"
+             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
       </div>
-      <div class="p-5">
-        <h3 class="text-lg font-semibold">Musikproduktion</h3>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+      <div class="p-5 bg-white dark:bg-gray-800 transition
+                  group-hover:bg-emerald-500 group-hover:text-white">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 transition group-hover:text-white">
+          Musikproduktion
+        </h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300 transition group-hover:text-white/95">
           Von Ideen zu Releases – Spotify, Apple Music & mehr.
         </p>
-        <div class="mt-4">
-          <a href="/music.html"
-             class="inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold bg-white text-gray-900 border border-gray-200 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition">
-            Hören
-          </a>
-        </div>
       </div>
-    </article>
+    </a>
 
   </div>
+
+  <!-- Keyframes für Wobble (inline, keine Tailwind-Konfig nötig) -->
+  <style>
+    @keyframes wobble {
+      0%   { transform: translateZ(0) rotate(0deg) }
+      15%  { transform: rotate(-1.5deg) translateY(-2px) }
+      35%  { transform: rotate(1.25deg)  translateY(0px) }
+      55%  { transform: rotate(-0.75deg) translateY(-1px) }
+      75%  { transform: rotate(0.5deg)   translateY(0px) }
+      100% { transform: rotate(0deg)     translateY(0) }
+    }
+  </style>
 </section>
