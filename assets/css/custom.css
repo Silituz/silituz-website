@@ -1,14 +1,16 @@
-#snakeBtn, #snakeBtn:hover, #snakeBtn:focus {
+/* Button-Hintergrund komplett abschalten */
+#snakeBtn, #snakeBtn:hover, #snakeBtn:focus, #snakeBtn:active {
   background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
-#snakeBtn .menu-logo, #snakeBtn video {
-  background: transparent !important;
-}
+
+/* Schlange-Video größer & ohne Kasten */
 .menu-logo {
-  width: 50px;
+  width: 50px;   /* kannst du bei Bedarf auf 72px hochziehen */
   height: 50px;
-  object-fit: cover;   /* sorgt dafür, dass das Video randlos gefüllt wird */
   display: block;
-  border-radius: 0;    /* keine runden Ecken */
-  background: transparent;
+  object-fit: contain;
+  background: transparent !important;
 }
+
