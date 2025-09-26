@@ -70,12 +70,12 @@
 
 <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
 
-<!-- ===== HEADER: Logo links • Toggle Mitte • Menü rechts ===== -->
+<!-- ===== HEADER: Logo links • Toggle Mitte • Rechts: 🐍 Menü-Button ===== -->
 <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-[1fr_auto_1fr] items-center h-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-[1fr_auto_auto] items-center h-16 gap-3">
 
     <!-- Links: Logo + Text -->
-    <a href="{{ '/' | relative_url }}" class="flex items-center gap-3 justify-self-start">
+    <a href="{{ '/' | relative_url }}" class="flex items-center gap-3">
       <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="h-9 w-auto">
       <div class="leading-tight">
         <span class="block text-lg font-bold text-slate-900 dark:text-slate-100">SILITUZ</span>
@@ -95,70 +95,89 @@
       </button>
     </div>
 
-    <!-- Rechts: Desktop-Menü + Mobile-Trigger -->
-    <div class="justify-self-end flex items-center gap-2">
-      {% assign current_url = page.url | replace:'index.html','' | replace:'//','/' %}
-      {% assign nav_list = "Home:/,Über mich:/about.html,Galerie:/gallery.html,Generatoren & mehr:/generators.html,Meine Musik:/music.html,Socials:/socials.html,Unterstützung:/support.html,Kontakt:/contact.html,Impressum:/impressum.html" | split: ',' %}
-
-      <!-- Desktop-Menü -->
-      <nav class="hidden md:flex items-center gap-2" aria-label="Hauptmenü">
-        {% for i in nav_list %}
-          {% assign p = i | split: ':' %}
-          {% assign title = p[0] %}
-          {% assign href  = p[1] %}
-          <a href="{{ href | relative_url }}"
-             class="px-3 py-2 rounded-lg font-medium transition
-             {% if current_url == href %}
-               bg-emerald-600/20 text-emerald-300
-             {% else %}
-               text-slate-800 hover:text-slate-900 hover:bg-slate-200/40 dark:text-slate-200 dark:hover:text-white dark:hover:bg-white/5
-             {% endif %}">
-            {{ title }}
-          </a>
-        {% endfor %}
-      </nav>
-
-      <!-- Mobile: 🐍 Menü öffnen -->
-      <button id="snakeBtn" class="md:hidden inline-flex items-center gap-2 px-3 py-2 rounded-lg text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold" aria-controls="sideMenu" aria-expanded="false">
+    <!-- Rechts: 🐍 Menü-Trigger (immer sichtbar, Desktop & Mobil) -->
+    <div class="justify-self-end">
+      <button id="snakeBtn"
+        class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold"
+        aria-controls="sideMenu" aria-expanded="false">
         <span class="text-xl">🐍</span><span class="hidden sm:inline">Menü</span>
       </button>
     </div>
   </div>
 </header>
 
-<!-- ===== OVERLAY + SIDE-MENÜ ===== -->
-<div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity z-40"></div>
-<aside id="sideMenu" class="fixed right-0 top-0 h-full w-72 max-w-[80%] bg-white dark:bg-slate-900 shadow-2xl translate-x-full transition-transform z-50" aria-hidden="true">
-  <div class="h-16 px-4 flex items-center justify-between border-b dark:border-slate-800">
-    <div class="font-extrabold text-slate-800 dark:text-slate-100">SILITUZ</div>
+<!-- ===== OVERLAY + SLIDE-IN MENU (von rechts) ===== -->
+<div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity duration-300 z-40"></div>
+
+<aside id="sideMenu"
+  class="fixed right-0 top-0 h-full w-80 max-w-[86%] bg-white dark:bg-slate-900 shadow-2xl translate-x-full transition-transform duration-300 z-50"
+  aria-hidden="true" aria-label="Hauptmenü">
+  <!-- Kopf des Sliders -->
+  <div class="h-16 px-4 flex items-center justify-between border-b border-slate-200 dark:border-slate-800">
+    <div class="flex items-center gap-2 font-extrabold text-slate-800 dark:text-slate-100">
+      <span class="text-xl">🐍</span> <span>SILITUZ</span>
+    </div>
     <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Menü schließen">✕</button>
   </div>
-  <nav class="p-4 space-y-2 text-slate-800 dark:text-slate-100" aria-label="Mobiles Menü">
+
+  <!-- Menü-Liste -->
+  <nav class="p-4 space-y-1 text-slate-800 dark:text-slate-100">
     {% assign cur = page.url | replace:'index.html','' | replace:'//','/' %}
+    {% assign nav_list = "Home:/,Über mich:/about.html,Galerie:/gallery.html,Generatoren & mehr:/generators.html,Meine Musik:/music.html,Socials:/socials.html,Unterstützung:/support.html,Kontakt:/contact.html,Impressum:/impressum.html" | split: ',' %}
     {% for i in nav_list %}
       {% assign p = i | split: ':' %}
       {% assign title = p[0] %}
       {% assign href  = p[1] %}
-      <a href="{{ href | relative_url }}" class="block px-3 py-2 rounded-lg {% if cur == href %}bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200 font-semibold{% else %}hover:bg-slate-100 dark:hover:bg-slate-800{% endif %}">{{ title }}</a>
+      <a href="{{ href | relative_url }}"
+         class="flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition
+                {% if cur == href %} bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200 font-semibold {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 {% endif %}">
+        <span>{{ title }}</span>
+        <span class="opacity-60">›</span>
+      </a>
     {% endfor %}
   </nav>
+
+  <!-- Optional: kleine Social-Leiste unten -->
+  <div class="mt-auto p-4 border-t border-slate-200 dark:border-slate-800">
+    <div class="flex items-center gap-3 text-slate-600 dark:text-slate-300">
+      <a href="https://www.tiktok.com/@silituz" target="_blank" rel="noopener" class="hover:text-emerald-500" aria-label="TikTok"><i class="fab fa-tiktok text-lg"></i></a>
+      <a href="https://www.youtube.com/@silituz" target="_blank" rel="noopener" class="hover:text-emerald-500" aria-label="YouTube"><i class="fab fa-youtube text-lg"></i></a>
+      <a href="https://www.instagram.com/silituz" target="_blank" rel="noopener" class="hover:text-emerald-500" aria-label="Instagram"><i class="fab fa-instagram text-lg"></i></a>
+      <a href="https://open.spotify.com/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank" rel="noopener" class="hover:text-emerald-500" aria-label="Spotify"><i class="fab fa-spotify text-lg"></i></a>
+    </div>
+  </div>
 </aside>
 
-
+<!-- ===== JS: Öffnen/Schließen + Body-Scroll sperren ===== -->
 <script>
-  // Menü öffnen/schließen (wie gehabt)
   const snakeBtn = document.getElementById('snakeBtn');
   const sideMenu = document.getElementById('sideMenu');
   const sideOverlay = document.getElementById('sideOverlay');
   const sideClose = document.getElementById('sideClose');
-  function openMenu(){ sideMenu.classList.remove('translate-x-full'); sideOverlay.classList.remove('pointer-events-none'); requestAnimationFrame(()=>{ sideOverlay.classList.add('opacity-100'); sideOverlay.classList.remove('opacity-0'); }); snakeBtn?.setAttribute('aria-expanded','true'); sideMenu.setAttribute('aria-hidden','false'); }
-  function closeMenu(){ sideMenu.classList.add('translate-x-full'); sideOverlay.classList.add('pointer-events-none'); sideOverlay.classList.remove('opacity-100'); sideOverlay.classList.add('opacity-0'); snakeBtn?.setAttribute('aria-expanded','false'); sideMenu.setAttribute('aria-hidden','true'); }
+
+  function openMenu(){
+    sideMenu.classList.remove('translate-x-full');
+    sideOverlay.classList.remove('pointer-events-none');
+    requestAnimationFrame(()=>{ sideOverlay.classList.add('opacity-100'); sideOverlay.classList.remove('opacity-0'); });
+    document.body.classList.add('overflow-hidden'); // Scroll sperren
+    snakeBtn?.setAttribute('aria-expanded','true');
+    sideMenu.setAttribute('aria-hidden','false');
+  }
+  function closeMenu(){
+    sideMenu.classList.add('translate-x-full');
+    sideOverlay.classList.add('pointer-events-none');
+    sideOverlay.classList.remove('opacity-100');
+    sideOverlay.classList.add('opacity-0');
+    document.body.classList.remove('overflow-hidden'); // Scroll wieder erlauben
+    snakeBtn?.setAttribute('aria-expanded','false');
+    sideMenu.setAttribute('aria-hidden','true');
+  }
+
   snakeBtn?.addEventListener('click', openMenu);
   sideClose?.addEventListener('click', closeMenu);
   sideOverlay?.addEventListener('click', closeMenu);
   window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 </script>
-
 
   <!-- Seiteninhalt -->
   <main id="content">
