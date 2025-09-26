@@ -1,20 +1,62 @@
+/* ================================
+   HEADER / MENÜ-TRIGGER (Schlange)
+   ================================ */
+
 /* Button-Hintergrund komplett abschalten */
-#snakeBtn, #snakeBtn:hover, #snakeBtn:focus, #snakeBtn:active {
+#snakeBtn,
+#snakeBtn:hover,
+#snakeBtn:focus,
+#snakeBtn:active {
   background: transparent !important;
   box-shadow: none !important;
   outline: none !important;
+  border: none !important;
 }
 
-/* Schlange-Video größer & ohne Kasten */
+/* Schlange-Video (Menü-Logo) größer & ohne Kasten */
 .menu-logo {
-  width: 50px;   /* kannst du bei Bedarf auf 72px hochziehen */
-  height: 50px;
+  width: 64px;   /* kannst du nach Geschmack 56–72px hochziehen */
+  height: 64px;
   display: block;
-  object-fit: contain;
+  object-fit: contain;  /* skaliert das Video ohne Beschneidung */
   background: transparent !important;
+  mix-blend-mode: normal; /* keine seltsamen Mischungen */
 }
+
+/* Menü-Text etwas kräftiger */
+#snakeBtn span {
+  font-size: 1rem;   /* ca. 16px */
+  font-weight: 600;
+}
+
+/* ================================
+   THEME-SLIDER
+   ================================ */
 
 /* Theme-Slider im Header vorübergehend verstecken */
 #themeSlider {
   display: none !important;
+}
+
+/* Thumb-Animation (falls Slider später wieder sichtbar) */
+#themeThumb {
+  transition: transform .22s cubic-bezier(.2,.9,.2,1);
+}
+
+/* ================================
+   OPTIONAL – FEINTUNING
+   ================================ */
+
+/* Header-Logo etwas größer als im Footer */
+header .logo,
+header img[alt="Silituz Logo"] {
+  height: 48px; /* war 32px (h-8), jetzt ~h-12 */
+  width: auto;
+}
+
+/* Falls irgendwo ein Rest-Hintergrund auftaucht */
+header video,
+header img,
+header svg {
+  background: transparent !important;
 }
