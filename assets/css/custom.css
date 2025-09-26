@@ -1,7 +1,8 @@
 .menu-logo {
-  width: 60px;
-  height: 60px;
-  object-fit: contain;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;   /* sorgt dafür, dass das Video randlos gefüllt wird */
   display: block;
-  border-radius: 8px;
+  border-radius: 0;    /* keine runden Ecken */
+  background: transparent;
 }
