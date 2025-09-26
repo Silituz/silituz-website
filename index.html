@@ -1,97 +1,104 @@
 ---
 layout: default
-title: "SILITUZ – Home"
+title: Home
 ---
 
-<!-- HERO: Vollbreit mit Bild-Hintergrund, Text links -->
-<section
-  class="relative w-full"
-  style="background-image:url('{{ '/assets/images/welcome-head.svg' | relative_url }}'); background-size:cover; background-position:center;">
-  <!-- leichte Abdunklung für Lesbarkeit -->
-  <div class="absolute inset-0 bg-black/10"></div>
+<!-- Hero-Bereich -->
+<section class="relative w-full">
+  <div class="relative w-full h-[40vw] max-h-[520px] min-h-[260px]">
+    <img
+      src="/assets/img/welcome-head.svg"
+      alt="Willkommen bei Silituz"
+      class="absolute inset-0 w-full h-full object-contain"
+    />
 
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="py-16 sm:py-20 lg:py-24 grid grid-cols-1 lg:grid-cols-2 items-center gap-8">
-      <!-- Text links -->
-      <div class="text-left">
-        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 drop-shadow-sm">
-          Willkommen bei SILITUZ
-        </h1>
-        <p class="mt-4 text-lg text-slate-700">
-         AI • Music • Visuals – entdecke meine neuesten Projekte und Inhalte.
-        </p>
-        <div class="mt-6 flex flex-wrap gap-3">
-          <a href="{{ '/about.html' | relative_url }}"
-             class="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">
-             Über mich
-          </a>
-          <a href="{{ '/socials.html' | relative_url }}"
-             class="inline-flex items-center justify-center px-5 py-3 rounded-lg border border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold transition">
-             Socials
-          </a>
+    <!-- Text-Overlay links -->
+    <div class="absolute inset-y-0 left-0 flex items-center">
+      <div class="px-6 sm:px-10 md:px-14 lg:px-16">
+        <div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-md">
+          <h1 class="text-3xl md:text-4xl font-extrabold leading-tight">
+            Willkommen bei Silituz
+          </h1>
+          <p class="mt-2 text-base md:text-lg opacity-90">
+            KI-Bilder, Anime-Edits & Musikproduktion
+          </p>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <a href="/about.html"
+               class="rounded-xl px-4 py-2 font-semibold bg-white text-gray-900 border border-gray-200 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition">
+              Über mich
+            </a>
+            <a href="/socials.html"
+               class="rounded-xl px-4 py-2 font-semibold bg-transparent text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition">
+              Socials
+            </a>
+          </div>
         </div>
       </div>
-
-      <!-- Platzhalter rechts (bewusst leer, damit Bild voll bleibt und Text links sitzt) -->
-      <div class="hidden lg:block"></div>
     </div>
   </div>
 </section>
 
-<!-- 3 KARTEN: Bild oben, darunter Text + Button, im Rahmen -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Kachel-Bereich -->
+<section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-    <!-- Karte 1 -->
-    <article class="brand-card rounded-2xl border border-slate-200 overflow-hidden bg-white">
-      <!-- Bild oben (rahmenfüllend) -->
-      <div class="bg-white">
-        <img src="{{ '/assets/images/kachel1.svg' | relative_url }}"
-             alt="KI-Bilder"
-             class="w-full aspect-[16/9] object-contain p-6">
+    <!-- Kachel 1 -->
+    <article class="overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+      <div class="aspect-square w-full overflow-hidden">
+        <img src="/assets/img/kachel-1.svg" alt="KI-Bilder"
+             class="w-full h-full object-cover" />
       </div>
-      <!-- Text + Button -->
-      <div class="px-6 pb-6">
-        <h2 class="text-xl font-bold mb-1.5">KI Bilder</h2>
-        <p class="text-slate-600 mb-4">Von niedlich bis episch – meine besten AI-Creations.</p>
-        <a href="{{ '/gallery.html' | relative_url }}"
-           class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">
-           Ansehen
-        </a>
+      <div class="p-5">
+        <h3 class="text-lg font-semibold">KI-Bilder</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+          Generative Art in modernem Anime-Stil – Highlights & Projekte.
+        </p>
+        <div class="mt-4">
+          <a href="/gallery.html"
+             class="inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold bg-white text-gray-900 border border-gray-200 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition">
+            Anschauen
+          </a>
+        </div>
       </div>
     </article>
 
-    <!-- Karte 2 -->
-    <article class="brand-card rounded-2xl border border-slate-200 overflow-hidden bg-white">
-      <div class="bg-white">
-        <img src="{{ '/assets/images/Kachel 2.svg' | relative_url }}"
-             alt="Generatoren & Mehr"
-             class="w-full aspect-[16/9] object-contain p-6">
+    <!-- Kachel 2 -->
+    <article class="overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+      <div class="aspect-square w-full overflow-hidden">
+        <img src="/assets/img/kachel-2.svg" alt="Anime Edits"
+             class="w-full h-full object-cover" />
       </div>
-      <div class="px-6 pb-6">
-        <h2 class="text-xl font-bold mb-1.5">Generatoren &amp; mehr</h2>
-        <p class="text-slate-600 mb-4">Kleine Tools, KI-Spielereien und hilfreiche Generatoren.</p>
-        <a href="{{ '/generators.html' | relative_url }}"
-           class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">
-           Ausprobieren
-        </a>
+      <div class="p-5">
+        <h3 class="text-lg font-semibold">Anime Edits</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+          Edits & Motion-Grafiken mit Liebe zum Detail.
+        </p>
+        <div class="mt-4">
+          <a href="/gallery.html#edits"
+             class="inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold bg-white text-gray-900 border border-gray-200 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition">
+            Los geht’s
+          </a>
+        </div>
       </div>
     </article>
 
-    <!-- Karte 3 -->
-    <article class="brand-card rounded-2xl border border-slate-200 overflow-hidden bg-white">
-      <div class="bg-white">
-        <img src="{{ '/assets/images/kachel3.svg' | relative_url }}"
-             alt="Musikproduktion"
-             class="w-full aspect-[16/9] object-contain p-6">
+    <!-- Kachel 3 -->
+    <article class="overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+      <div class="aspect-square w-full overflow-hidden">
+        <img src="/assets/img/kachel-3.svg" alt="Musikproduktion"
+             class="w-full h-full object-cover" />
       </div>
-      <div class="px-6 pb-6">
-        <h2 class="text-xl font-bold mb-1.5">Meine Musik</h2>
-        <p class="text-slate-600 mb-4">Songs auf Spotify, Apple Music &amp; mehr.</p>
-        <a href="{{ '/music.html' | relative_url }}"
-           class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition">
-           Anhören
-        </a>
+      <div class="p-5">
+        <h3 class="text-lg font-semibold">Musikproduktion</h3>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+          Von Ideen zu Releases – Spotify, Apple Music & mehr.
+        </p>
+        <div class="mt-4">
+          <a href="/music.html"
+             class="inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold bg-white text-gray-900 border border-gray-200 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition">
+            Hören
+          </a>
+        </div>
       </div>
     </article>
 
