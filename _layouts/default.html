@@ -72,30 +72,36 @@
 
 <!-- ===== HEADER: Logo links • Toggle Mitte • Rechts: 🐍 Menü-Button ===== -->
 <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-[1fr_auto_auto] items-center h-16 gap-3">
-
-    <!-- Links: Logo + Text -->
-    <a href="{{ '/' | relative_url }}" class="flex items-center gap-3">
-      <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="h-9 w-auto">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 grid grid-cols-[1fr_auto_1fr] items-center">
+    <!-- Links: Logo (wie im Footer) -->
+    <a href="{{ '/' | relative_url }}" class="justify-self-start flex items-center gap-3">
+      <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="h-8 w-auto">
       <div class="leading-tight">
         <span class="block text-lg font-bold text-slate-900 dark:text-slate-100">SILITUZ</span>
         <span class="block text-xs text-slate-600 dark:text-slate-400">AI • Music • Visuals</span>
       </div>
     </a>
 
-    <!-- Mitte: Theme-Toggle -->
+    <!-- Mitte: Theme-Schieberegler -->
     <div class="justify-self-center">
-      <button
-        class="group relative inline-flex h-8 w-14 items-center rounded-full bg-slate-200 dark:bg-slate-700 transition"
-        onclick="toggleTheme()" aria-label="Theme umschalten" title="Theme umschalten">
-        <span class="absolute inset-0 rounded-full overflow-hidden">
-          <span class="absolute inset-y-0 left-0 w-0 bg-emerald-500/90 transition-all duration-700 ease-out group-hover:w-full"></span>
+      <button id="themeSlider"
+        class="relative inline-flex items-center select-none"
+        type="button" aria-label="Design umschalten" aria-live="polite">
+        <!-- Track -->
+        <span class="relative h-9 w-24 rounded-full bg-slate-200/80 dark:bg-slate-700/80 shadow-inner overflow-hidden">
+          <!-- Sonne links -->
+          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-xl pointer-events-none">☀️</span>
+          <!-- Mond rechts -->
+          <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xl pointer-events-none">🌙</span>
+          <!-- Thumb -->
+          <span id="themeThumb"
+                class="absolute top-1/2 -translate-y-1/2 h-8 w-11 rounded-full bg-white dark:bg-slate-200 shadow
+                       transition-transform duration-300 will-change-transform translate-x-0"></span>
         </span>
-        <span class="relative ml-1 inline-block h-6 w-6 transform rounded-full bg-white dark:bg-slate-200 transition-all translate-x-0 dark:translate-x-6 shadow"></span>
       </button>
     </div>
 
-    <!-- Rechts: 🐍 Menü-Trigger (immer sichtbar, Desktop & Mobil) -->
+    <!-- Rechts: Menü-Trigger -->
     <div class="justify-self-end">
       <button id="snakeBtn"
         class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold"
@@ -105,6 +111,7 @@
     </div>
   </div>
 </header>
+
 
 <!-- ===== OVERLAY + SLIDE-IN MENU (von rechts) ===== -->
 <div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity duration-300 z-40"></div>
