@@ -22,20 +22,51 @@ title: Home
             KI-Bilder, Anime-Edits & Musikproduktion
           </p>
           <div class="mt-4 flex flex-wrap gap-3">
-            <a href="/about.html"
-               class="rounded-xl px-4 py-2 font-semibold bg-white text-gray-900 border border-gray-200 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition">
-              Über mich
-            </a>
-            <a href="/socials.html"
-               class="rounded-xl px-4 py-2 font-semibold bg-transparent text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition">
-              Socials
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+  <!-- Über mich -->
+  <a href="/about.html"
+     class="group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold 
+            border border-white/40 dark:border-white/10 
+            bg-white/40 dark:bg-gray-800/40 
+            backdrop-blur-md 
+            text-gray-900 dark:text-gray-100 
+            overflow-hidden transition-colors">
+    <!-- Füllbalken -->
+    <span class="absolute inset-y-0 left-0 h-full w-0 bg-emerald-500/90 
+                 transition-all duration-[1200ms] ease-out 
+                 group-hover:w-full"></span>
+    <!-- Icon + Label (oben liegend) -->
+    <span class="relative z-10 inline-flex items-center gap-2">
+      <!-- User-Icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5Z"/>
+      </svg>
+      Über mich
+    </span>
+  </a>
+
+  <!-- Socials -->
+  <a href="/socials.html"
+     class="group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold 
+            border border-white/40 dark:border-white/10 
+            bg-white/40 dark:bg-gray-800/40 
+            backdrop-blur-md 
+            text-gray-900 dark:text-gray-100 
+            overflow-hidden transition-colors">
+    <!-- Füllbalken -->
+    <span class="absolute inset-y-0 left-0 h-full w-0 bg-emerald-500/90 
+                 transition-all duration-[1200ms] ease-out 
+                 group-hover:w-full"></span>
+    <!-- Icon + Label (oben liegend) -->
+    <span class="relative z-10 inline-flex items-center gap-2">
+      <!-- Netzwerk/Share-Icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18 8a3 3 0 1 0-2.816-4H15a3 3 0 0 0 0 6 2.98 2.98 0 0 0 1.335-.323l-6.07 3.41A3 3 0 1 0 10 16c0-.17-.017-.336-.048-.497l6.074-3.414A3 3 0 0 0 18 14a3 3 0 1 0-2.816-4H15a2.98 2.98 0 0 0 1.335-.323Z"/>
+      </svg>
+      Socials
+    </span>
+  </a>
+</div>
+
 
 <!-- Kachel-Bereich (NEU: wobble + grüner Textbereich, kein Button) -->
 <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
