@@ -1,6 +1,6 @@
 .menu-logo {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   object-fit: cover;   /* sorgt dafür, dass das Video randlos gefüllt wird */
   display: block;
   border-radius: 0;    /* keine runden Ecken */
