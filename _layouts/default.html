@@ -43,6 +43,7 @@
     #sideMenu nav a { transition: background-color .25s ease, color .25s ease; }
     #sideMenu nav a:hover { background-color:#059669; color:#fff !important; }
     #sideMenu nav a.active { background-color:#d1fae5; color:#059669 !important; font-weight:600; }
+    #themeThumb { transition: transform .22s cubic-bezier(.2,.9,.2,1); }
 
     /* Footer (Light) */
     .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
@@ -72,7 +73,7 @@
 
 <!-- ===== HEADER: Logo links • Toggle Mitte • Rechts: 🐍 Menü-Button ===== -->
 <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 grid grid-cols-[1fr_auto_1fr] items-center">
+ <div class="container mx-auto px-4 py-6 grid grid-cols-[1fr_auto_1fr] items-center">
     <!-- Links: Logo (wie im Footer) -->
     <a href="{{ '/' | relative_url }}" class="justify-self-start flex items-center gap-3">
       <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="h-8 w-auto">
@@ -88,7 +89,7 @@
         class="relative inline-flex items-center select-none"
         type="button" aria-label="Design umschalten" aria-live="polite">
         <!-- Track -->
-       <span id="themeTrack" class="relative h-9 w-24 rounded-full bg-slate-200/80 dark:bg-slate-700/80 shadow-inner overflow-hidden">
+      <span id="themeTrack" class="relative h-9 w-24 rounded-full bg-slate-200/80 dark:bg-slate-700/80 shadow-inner overflow-hidden select-none">
           <!-- Sonne links -->
           <span class="absolute left-2 top-1/2 -translate-y-1/2 text-xl pointer-events-none">☀️</span>
           <!-- Mond rechts -->
@@ -103,8 +104,8 @@
 
     <!-- Rechts: Menü-Trigger -->
     <div class="justify-self-end">
-      <button id="snakeBtn"
-        class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold"
+     <button id="snakeBtn"
+  class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800"
         aria-controls="sideMenu" aria-expanded="false">
         <span class="text-xl">🐍</span><span class="hidden sm:inline">Menü</span>
       </button>
@@ -201,9 +202,10 @@
   // ESC schließt
   window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 </script>
+  
 <!-- THEME SLIDER JS -->
 <script>
-  // === Init: Bestehenden Zustand respektieren, Default = dark wenn nichts gesetzt ===
+  // === Init: respektiere gespeichertes Theme, Default = dark ===
   (function () {
     const ls = localStorage.getItem("theme");
     const root = document.documentElement;
@@ -215,19 +217,21 @@
     }
   })();
 
-  const themeBtn    = document.getElementById('themeSlider');
-  const themeTrack  = document.getElementById('themeTrack'); // neu: präzises Ziel
-  const themeThumb  = document.getElementById('themeThumb');
+  const themeBtn   = document.getElementById('themeSlider');
+  // Robust: nimm #themeTrack, sonst fallback auf das erste <span> im Button
+  const themeTrack = document.getElementById('themeTrack') || themeBtn?.querySelector(':scope > span');
+  const themeThumb = document.getElementById('themeThumb');
 
-  // Feste Positionen basierend auf w-24 (≈ 6rem) Track und w-11 (≈ 2.75rem) Thumb
-  const POS_LEFT  = 'translate(0rem, -50%)';     // ☀️ => LIGHT
-  const POS_RIGHT = 'translate(3.5rem, -50%)';   // 🌙 => DARK
+  // Feste Positionen passend zu w-24 (≈ 6rem) und w-11 (≈ 2.75rem)
+  const POS_LEFT  = 'translate(0rem, -50%)';    // ☀️ => LIGHT
+  const POS_RIGHT = 'translate(3.5rem, -50%)';  // 🌙 => DARK
 
   function applyThumbPosition() {
+    if (!themeThumb) return;
     const isDark = document.documentElement.classList.contains('dark');
     themeThumb.style.transform = isDark ? POS_RIGHT : POS_LEFT;
-    themeBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-    themeBtn.setAttribute('aria-label', isDark ? 'Dunkles Design aktiv' : 'Helles Design aktiv');
+    themeBtn?.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    themeBtn?.setAttribute('aria-label', isDark ? 'Dunkles Design aktiv' : 'Helles Design aktiv');
   }
 
   function setTheme(isDark) {
@@ -237,27 +241,33 @@
     applyThumbPosition();
   }
 
-  // Entscheidet nur nach Klick-Position auf dem Track (nicht „toggeln“)
+  // Wähle strikt anhand der Klick-Position auf dem TRACK (links = LIGHT, rechts = DARK)
   function chooseByX(clientX) {
+    if (!themeTrack) return;
     const r = themeTrack.getBoundingClientRect();
-    const x = clientX - r.left;        // Klick relativ zum Track
-    const half = r.width / 2;
-    const goRight = x > half;          // rechts => DARK, links => LIGHT
-    setTheme(goRight);
+    const x = clientX - r.left;
+    const goRight = x > r.width / 2;
+    setTheme(goRight); // rechts => DARK
   }
 
-  // Klick direkt auf Track oder Button -> nimm exakte Position
-  themeTrack.addEventListener('click', (e) => chooseByX(e.clientX));
-  themeBtn.addEventListener('click',    (e) => chooseByX(e.clientX));
+  // Klick exakt auf den Track verwenden (kein Toggle!)
+  themeTrack?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    chooseByX(e.clientX);
+  });
 
-  // Drag: fühlt sich natürlicher an
+  // Falls jemand genau auf den Button (aber nicht Track) klickt: auch Position nehmen
+  themeBtn?.addEventListener('click', (e) => {
+    // Wenn das Event vom Track kam, hat es bereits gestoppt
+    chooseByX(e.clientX);
+  });
+
+  // Drag mit Live-Vorschau
   let dragging = false;
 
-  function onDown(e) {
-    dragging = true;
-  }
+  function onDown(e) { dragging = true; }
   function onMove(e) {
-    if (!dragging) return;
+    if (!dragging || !themeTrack || !themeThumb) return;
     const clientX = (e.touches?.[0]?.clientX ?? e.clientX);
     const r = themeTrack.getBoundingClientRect();
     const x = Math.max(0, Math.min(r.width, clientX - r.left));
@@ -268,20 +278,21 @@
     if (!dragging) return;
     dragging = false;
     const clientX = (e.changedTouches?.[0]?.clientX ?? e.clientX);
-    chooseByX(clientX); // final setzen
+    chooseByX(clientX);
   }
 
-  themeTrack.addEventListener('mousedown', onDown);
+  themeTrack?.addEventListener('mousedown', onDown);
   window.addEventListener('mousemove', onMove);
   window.addEventListener('mouseup', onUp);
 
-  themeTrack.addEventListener('touchstart', onDown, {passive:true});
-  window.addEventListener('touchmove', onMove, {passive:true});
+  themeTrack?.addEventListener('touchstart', onDown, { passive: true });
+  window.addEventListener('touchmove', onMove, { passive: true });
   window.addEventListener('touchend', onUp);
 
-  // Start-Position aus aktuellem Theme
+  // Startposition korrekt setzen
   applyThumbPosition();
 </script>
+
 
 
   <!-- Seiteninhalt -->
