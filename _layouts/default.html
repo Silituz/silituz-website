@@ -107,17 +107,13 @@
 
     <!-- Rechts: Menü-Trigger -->
 <div class="justify-self-end">
-  <button id="snakeBtn"
-    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-lg font-semibold text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800">
-    <span class="text-3xl">🐍</span><span class="hidden sm:inline">Menü</span>
-    
-    <!-- Animiertes Logo (statt 🐍 Emoji) -->
+  <button id="snakeBtn" class="inline-flex items-center gap-2">
+   <!-- Animiertes Logo (statt 🐍 Emoji) -->
     <video autoplay loop muted playsinline class="menu-logo">
       <source src="{{ '/assets/videos/menu-logo.webm' | relative_url }}" type="video/webm">
       <source src="{{ '/assets/videos/menu-logo.mp4' | relative_url }}" type="video/mp4">
-      Dein Browser unterstützt dieses Video-Format nicht.
+      Dein Browser unterstützt dieses Video-Format nicht
     </video>
-
     <span class="hidden sm:inline">Menü</span>
   </button>
 </div>
