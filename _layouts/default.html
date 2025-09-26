@@ -157,34 +157,44 @@
 
 <!-- ===== JS: Öffnen/Schließen + Body-Scroll sperren ===== -->
 <script>
-  const snakeBtn = document.getElementById('snakeBtn');
-  const sideMenu = document.getElementById('sideMenu');
+  const snakeBtn    = document.getElementById('snakeBtn');
+  const sideMenu    = document.getElementById('sideMenu');
   const sideOverlay = document.getElementById('sideOverlay');
-  const sideClose = document.getElementById('sideClose');
+  const sideClose   = document.getElementById('sideClose');
 
   function openMenu(){
     sideMenu.classList.remove('translate-x-full');
     sideOverlay.classList.remove('pointer-events-none');
     requestAnimationFrame(()=>{ sideOverlay.classList.add('opacity-100'); sideOverlay.classList.remove('opacity-0'); });
-    document.body.classList.add('overflow-hidden'); // Scroll sperren
+    document.body.classList.add('overflow-hidden');
     snakeBtn?.setAttribute('aria-expanded','true');
     sideMenu.setAttribute('aria-hidden','false');
   }
+
   function closeMenu(){
     sideMenu.classList.add('translate-x-full');
     sideOverlay.classList.add('pointer-events-none');
     sideOverlay.classList.remove('opacity-100');
     sideOverlay.classList.add('opacity-0');
-    document.body.classList.remove('overflow-hidden'); // Scroll wieder erlauben
+    document.body.classList.remove('overflow-hidden');
     snakeBtn?.setAttribute('aria-expanded','false');
     sideMenu.setAttribute('aria-hidden','true');
   }
 
-  snakeBtn?.addEventListener('click', openMenu);
+  function toggleMenu(){
+    const isClosed = sideMenu.classList.contains('translate-x-full');
+    isClosed ? openMenu() : closeMenu();
+  }
+
+  // Klicks
+  snakeBtn?.addEventListener('click', toggleMenu);  // <— jetzt Toggle
   sideClose?.addEventListener('click', closeMenu);
   sideOverlay?.addEventListener('click', closeMenu);
+
+  // ESC schließt
   window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 </script>
+
 
   <!-- Seiteninhalt -->
   <main id="content">
@@ -220,68 +230,5 @@
       </nav>
     </div>
   </footer>
-
-  <!-- OVERLAY + SIDE-MENÜ -->
-  <div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity z-40"></div>
-  <aside id="sideMenu" class="fixed right-0 top-0 h-full w-72 max-w-[80%] bg-white dark:bg-slate-900 shadow-2xl translate-x-full transition-transform z-50" aria-hidden="true">
-    <div class="h-16 px-4 flex items-center justify-between border-b dark:border-slate-800">
-      <div class="font-extrabold text-slate-800 dark:text-slate-100">SILITUZ</div>
-      <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Menü schließen">✕</button>
-    </div>
-    <nav class="p-4 space-y-2 text-slate-800 dark:text-slate-100">
-      {% assign cur = page.url | replace:'index.html','' | replace:'//','/' %}
-      <a href="{{ '/' | relative_url }}"               class="block px-3 py-2 rounded-lg {% if cur == '/' %}active{% endif %}">Home</a>
-      <a href="{{ '/about.html' | relative_url }}"     class="block px-3 py-2 rounded-lg {% if cur == '/about.html' %}active{% endif %}">Über mich</a>
-      <a href="{{ '/gallery.html' | relative_url }}"   class="block px-3 py-2 rounded-lg {% if cur == '/gallery.html' %}active{% endif %}">Galerie</a>
-      <a href="{{ '/generators.html' | relative_url }}"class="block px-3 py-2 rounded-lg {% if cur == '/generators.html' %}active{% endif %}">Generatoren &amp; mehr</a>
-      <a href="{{ '/music.html' | relative_url }}"     class="block px-3 py-2 rounded-lg {% if cur == '/music.html' %}active{% endif %}">Meine Musik</a>
-      <a href="{{ '/socials.html' | relative_url }}"   class="block px-3 py-2 rounded-lg {% if cur == '/socials.html' %}active{% endif %}">Socials</a>
-      <a href="{{ '/support.html' | relative_url }}"   class="block px-3 py-2 rounded-lg {% if cur == '/support.html' %}active{% endif %}">Unterstützung</a>
-      <a href="{{ '/contact.html' | relative_url }}"   class="block px-3 py-2 rounded-lg {% if cur == '/contact.html' %}active{% endif %}">Kontakt</a>
-      <a href="{{ '/impressum.html' | relative_url }}" class="block px-3 py-2 rounded-lg {% if cur == '/impressum.html' %}active{% endif %}">Impressum</a>
-    </nav>
-  </aside>
-
-  <!-- GLOBAL JS -->
-  <script>
-    // Jahr im Footer
-    document.getElementById('y')?.appendChild(document.createTextNode(new Date().getFullYear()));
-
-    // Theme-Toggle
-    function toggleTheme(){
-      const r = document.documentElement;
-      r.classList.toggle('dark');
-      localStorage.setItem('theme', r.classList.contains('dark') ? 'dark' : 'light');
-    }
-
-    // Menü öffnen/schließen
-    const snakeBtn = document.getElementById('snakeBtn');
-    const sideMenu = document.getElementById('sideMenu');
-    const sideOverlay = document.getElementById('sideOverlay');
-    const sideClose = document.getElementById('sideClose');
-
-    function openMenu(){
-      sideMenu.classList.remove('translate-x-full');
-      sideOverlay.classList.remove('pointer-events-none');
-      requestAnimationFrame(()=>{
-        sideOverlay.classList.add('opacity-100');
-        sideOverlay.classList.remove('opacity-0');
-      });
-      snakeBtn?.setAttribute('aria-expanded','true');
-      sideMenu.setAttribute('aria-hidden','false');
-    }
-    function closeMenu(){
-      sideMenu.classList.add('translate-x-full');
-      sideOverlay.classList.add('pointer-events-none');
-      sideOverlay.classList.remove('opacity-100');
-      sideOverlay.classList.add('opacity-0');
-      snakeBtn?.setAttribute('aria-expanded','false');
-      sideMenu.setAttribute('aria-hidden','true');
-    }
-    snakeBtn?.addEventListener('click', openMenu);
-    sideClose?.addEventListener('click', closeMenu);
-    sideOverlay?.addEventListener('click', closeMenu);
-    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
-  </script>
-</body>
+ </body>
 </html>
