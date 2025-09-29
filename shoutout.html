@@ -3,24 +3,31 @@ layout: default
 title: "Shoutout"
 ---
 
+<!-- Sektion: Shoutout -->
 <section class="py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <!-- Titel + Mini-Text -->
-    <h1 class="text-4xl font-extrabold text-center text-emerald-500 mb-3">Shoutout</h1>
-    <p class="text-center text-gray-300 mb-10">
-      JuJu Empire — einfach mega nett. Danke für euren Rücken, jeden Tag.
-    </p>
+    <!-- SECTION HEADER (wie auf den anderen Seiten) -->
+    <header class="text-center">
+      <h1 class="text-4xl font-extrabold text-emerald-500">Shoutout</h1>
+      <div class="mx-auto mt-3 mb-10 h-[3px] w-32 rounded-full
+                  bg-gradient-to-r from-emerald-500/70 via-emerald-300/80 to-emerald-500/70"></div>
+      <p class="text-gray-300">JuJu Empire — einfach mega nett. Danke für euren Rücken, jeden Tag.</p>
+    </header>
 
-    <!-- FEATURED -->
-    <div class="grid gap-8 lg:grid-cols-2 mb-14">
-      <!-- Soju -->
-      <a href="https://twitch.tv/mrsoju_" target="_blank" rel="noopener" class="rounded-2xl p-8 block
-         bg-white/10 backdrop-blur border border-white/20 shadow-lg
-         transition transform hover:bg-white/20 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.01]
-         active:bg-white/30 active:scale-[0.99]">
+    <!-- FEATURED (2 breite Karten) -->
+    <div class="mt-12 grid gap-8 lg:grid-cols-2">
+      <!-- Card-Pattern wie auf anderen Seiten: Glas + dezentes Fill auf Hover -->
+      <a href="https://twitch.tv/mrsoju_" target="_blank" rel="noopener"
+         class="group block rounded-2xl p-8
+                bg-white/10 backdrop-blur border border-white/20 shadow-lg
+                transition duration-200
+                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
+                active:bg-white/25 active:translate-y-0">
         <div class="flex items-center gap-6">
-          <img src="/assets/images/shoutout/soju.jpg" alt="Soju" class="w-24 h-24 rounded-full ring-4 ring-emerald-500 object-cover">
+          <img src="/assets/images/shoutout/soju.jpg" alt="Soju"
+               class="w-24 h-24 rounded-full ring-4 ring-emerald-500 object-cover
+                      transition duration-200 group-hover:ring-emerald-400">
           <div>
             <div class="text-white text-2xl font-semibold">Soju</div>
             <div class="text-emerald-400 text-xs uppercase tracking-wider mb-1">MVP • Creator Buddy</div>
@@ -29,13 +36,16 @@ title: "Shoutout"
         </div>
       </a>
 
-      <!-- Marketingfutzi -->
-      <a href="https://example.com/agentur" target="_blank" rel="noopener" class="rounded-2xl p-8 block
-         bg-white/10 backdrop-blur border border-white/20 shadow-lg
-         transition transform hover:bg-white/20 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.01]
-         active:bg-white/30 active:scale-[0.99]">
+      <a href="https://example.com/agentur" target="_blank" rel="noopener"
+         class="group block rounded-2xl p-8
+                bg-white/10 backdrop-blur border border-white/20 shadow-lg
+                transition duration-200
+                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
+                active:bg-white/25 active:translate-y-0">
         <div class="flex items-center gap-6">
-          <img src="/assets/images/shoutout/marketingfutzi.jpg" alt="Marketingfutzi" class="w-24 h-24 rounded-full ring-4 ring-emerald-500 object-cover">
+          <img src="/assets/images/shoutout/marketingfutzi.jpg" alt="Marketingfutzi"
+               class="w-24 h-24 rounded-full ring-4 ring-emerald-500 object-cover
+                      transition duration-200 group-hover:ring-emerald-400">
           <div>
             <div class="text-white text-2xl font-semibold">Marketingfutzi</div>
             <div class="text-emerald-400 text-xs uppercase tracking-wider mb-1">Brain & Strategy</div>
@@ -45,72 +55,124 @@ title: "Shoutout"
       </a>
     </div>
 
-    <!-- ÄLTESTE & BESTE FREUNDE -->
-    <h2 class="text-2xl font-bold text-emerald-400 mb-6">Älteste & beste Freunde</h2>
-    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    <!-- ÄLTESTE & BESTE FREUNDE (bis zu 9 Karten) -->
+    <h2 class="mt-14 text-2xl font-bold text-emerald-400">Älteste & beste Freunde</h2>
+    <div class="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
 
-      <!-- 1 -->
-      <a href="https://instagram.com/sun" target="_blank" rel="noopener" class="rounded-xl p-6 text-center block
-        bg-white/10 backdrop-blur border border-white/20 shadow-lg
-        transition transform hover:bg-white/20 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02]
-        active:bg-white/30 active:scale-[0.98]">
-        <img src="/assets/images/shoutout/sun.jpg" alt="Sun" class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover">
+      <!-- Beispielkarte: bitte die folgenden 9 nach Bedarf befüllen -->
+      <a href="https://instagram.com/sun" target="_blank" rel="noopener"
+         class="group block rounded-xl p-6 text-center
+                bg-white/10 backdrop-blur border border-white/20 shadow-lg
+                transition duration-200
+                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
+                active:bg-white/25 active:translate-y-0">
+        <img src="/assets/images/shoutout/sun.jpg" alt="Sun"
+             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
+                    transition duration-200 group-hover:ring-emerald-400">
         <h3 class="text-white text-xl font-semibold">Sun</h3>
         <p class="text-gray-300 text-sm">Klarer Blick. Ehrliches Feedback.</p>
       </a>
 
-      <!-- 2 -->
-      <a href="https://tiktok.com/@polina" target="_blank" rel="noopener" class="rounded-xl p-6 text-center block bg-white/10 backdrop-blur border border-white/20 shadow-lg transition transform hover:bg-white/20 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:bg-white/30 active:scale-[0.98]">
-        <img src="/assets/images/shoutout/polina.jpg" alt="Polina" class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover">
+      <a href="https://tiktok.com/@polina" target="_blank" rel="noopener"
+         class="group block rounded-xl p-6 text-center
+                bg-white/10 backdrop-blur border border-white/20 shadow-lg
+                transition duration-200
+                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
+                active:bg-white/25 active:translate-y-0">
+        <img src="/assets/images/shoutout/polina.jpg" alt="Polina"
+             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
+                    transition duration-200 group-hover:ring-emerald-400">
         <h3 class="text-white text-xl font-semibold">Polina</h3>
         <p class="text-gray-300 text-sm">Herz, Style, Drive.</p>
       </a>
 
-      <!-- 3 -->
-      <a href="https://instagram.com/angel" target="_blank" rel="noopener" class="rounded-xl p-6 text-center block bg-white/10 backdrop-blur border border-white/20 shadow-lg transition transform hover:bg-white/20 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:bg-white/30 active:scale-[0.98]">
-        <img src="/assets/images/shoutout/angel.jpg" alt="Angel" class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover">
+      <a href="https://instagram.com/angel" target="_blank" rel="noopener"
+         class="group block rounded-xl p-6 text-center
+                bg-white/10 backdrop-blur border border-white/20 shadow-lg
+                transition duration-200
+                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
+                active:bg-white/25 active:translate-y-0">
+        <img src="/assets/images/shoutout/angel.jpg" alt="Angel"
+             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
+                    transition duration-200 group-hover:ring-emerald-400">
         <h3 class="text-white text-xl font-semibold">Angel</h3>
         <p class="text-gray-300 text-sm">Feines Auge. Stiller Motor.</p>
       </a>
 
-      <!-- 4 -->
-      <a href="https://tiktok.com/@eunice" target="_blank" rel="noopener" class="rounded-xl p-6 text-center block bg-white/10 backdrop-blur border border-white/20 shadow-lg transition transform hover:bg-white/20 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:bg-white/30 active:scale-[0.98]">
-        <img src="/assets/images/shoutout/eunice.jpg" alt="Eunice" class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover">
+      <a href="https://tiktok.com/@eunice" target="_blank" rel="noopener"
+         class="group block rounded-xl p-6 text-center
+                bg-white/10 backdrop-blur border border-white/20 shadow-lg
+                transition duration-200
+                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
+                active:bg-white/25 active:translate-y-0">
+        <img src="/assets/images/shoutout/eunice.jpg" alt="Eunice"
+             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
+                    transition duration-200 group-hover:ring-emerald-400">
         <h3 class="text-white text-xl font-semibold">Eunice</h3>
         <p class="text-gray-300 text-sm">Warm, stark, verlässlich.</p>
       </a>
 
-      <!-- 5 -->
-      <a href="https://twitch.tv/wolf" target="_blank" rel="noopener" class="rounded-xl p-6 text-center block bg-white/10 backdrop-blur border border-white/20 shadow-lg transition transform hover:bg-white/20 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:bg-white/30 active:scale-[0.98]">
-        <img src="/assets/images/shoutout/wolf.jpg" alt="Wolf" class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover">
+      <a href="https://twitch.tv/wolf" target="_blank" rel="noopener"
+         class="group block rounded-xl p-6 text-center
+                bg-white/10 backdrop-blur border border-white/20 shadow-lg
+                transition duration-200
+                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
+                active:bg-white/25 active:translate-y-0">
+        <img src="/assets/images/shoutout/wolf.jpg" alt="Wolf"
+             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
+                    transition duration-200 group-hover:ring-emerald-400">
         <h3 class="text-white text-xl font-semibold">Wolf</h3>
         <p class="text-gray-300 text-sm">Hört alles. Hält dicht.</p>
       </a>
 
-      <!-- 6 -->
-      <a href="https://instagram.com/charisse" target="_blank" rel="noopener" class="rounded-xl p-6 text-center block bg-white/10 backdrop-blur border border-white/20 shadow-lg transition transform hover:bg-white/20 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:bg-white/30 active:scale-[0.98]">
-        <img src="/assets/images/shoutout/charisse.jpg" alt="Charisse" class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover">
+      <a href="https://instagram.com/charisse" target="_blank" rel="noopener"
+         class="group block rounded-xl p-6 text-center
+                bg-white/10 backdrop-blur border border-white/20 shadow-lg
+                transition duration-200
+                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
+                active:bg-white/25 active:translate-y-0">
+        <img src="/assets/images/shoutout/charisse.jpg" alt="Charisse"
+             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
+                    transition duration-200 group-hover:ring-emerald-400">
         <h3 class="text-white text-xl font-semibold">Charisse</h3>
         <p class="text-gray-300 text-sm">Push. Fokus. Energie.</p>
       </a>
 
-      <!-- 7 -->
-      <a href="https://example.com/coco" target="_blank" rel="noopener" class="rounded-xl p-6 text-center block bg-white/10 backdrop-blur border border-white/20 shadow-lg transition transform hover:bg-white/20 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:bg-white/30 active:scale-[0.98]">
-        <img src="/assets/images/shoutout/coco.jpg" alt="Coco" class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover">
+      <a href="https://example.com/coco" target="_blank" rel="noopener"
+         class="group block rounded-xl p-6 text-center
+                bg-white/10 backdrop-blur border border-white/20 shadow-lg
+                transition duration-200
+                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
+                active:bg-white/25 active:translate-y-0">
+        <img src="/assets/images/shoutout/coco.jpg" alt="Coco"
+             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
+                    transition duration-200 group-hover:ring-emerald-400">
         <h3 class="text-white text-xl font-semibold">Coco</h3>
         <p class="text-gray-300 text-sm">Pure Soul. Immer da.</p>
       </a>
 
-      <!-- 8 -->
-      <a href="https://example.com/icequeen" target="_blank" rel="noopener" class="rounded-xl p-6 text-center block bg-white/10 backdrop-blur border border-white/20 shadow-lg transition transform hover:bg-white/20 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:bg-white/30 active:scale-[0.98]">
-        <img src="/assets/images/shoutout/icequeen.jpg" alt="Icequeen" class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover">
+      <a href="https://example.com/icequeen" target="_blank" rel="noopener"
+         class="group block rounded-xl p-6 text-center
+                bg-white/10 backdrop-blur border border-white/20 shadow-lg
+                transition duration-200
+                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
+                active:bg-white/25 active:translate-y-0">
+        <img src="/assets/images/shoutout/icequeen.jpg" alt="Icequeen"
+             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
+                    transition duration-200 group-hover:ring-emerald-400">
         <h3 class="text-white text-xl font-semibold">Icequeen</h3>
         <p class="text-gray-300 text-sm">Ruhig. Klar. Unbeirrbar.</p>
       </a>
 
-      <!-- 9 (Platzhalter / tauschen) -->
-      <a href="https://example.com/friend9" target="_blank" rel="noopener" class="rounded-xl p-6 text-center block bg-white/10 backdrop-blur border border-white/20 shadow-lg transition transform hover:bg-white/20 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] active:bg-white/30 active:scale-[0.98]">
-        <img src="/assets/images/shoutout/friend9.jpg" alt="Freund/in 9" class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover">
+      <a href="https://example.com/friend9" target="_blank" rel="noopener"
+         class="group block rounded-xl p-6 text-center
+                bg-white/10 backdrop-blur border border-white/20 shadow-lg
+                transition duration-200
+                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
+                active:bg-white/25 active:translate-y-0">
+        <img src="/assets/images/shoutout/friend9.jpg" alt="Freund/in 9"
+             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
+                    transition duration-200 group-hover:ring-emerald-400">
         <h3 class="text-white text-xl font-semibold">Freund/in 9</h3>
         <p class="text-gray-300 text-sm">Langjährig. Vertrauensvoll.</p>
       </a>
