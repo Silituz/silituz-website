@@ -1,186 +1,221 @@
 ---
 layout: default
-title: "Shoutout"
+title: "Shoutout – SILITUZ"
 ---
 
-<!-- Sektion: Shoutout -->
+<!-- Hero -->
+<section class="relative h-64">
+  <!-- Hintergrundbild -->
+  <img src="/assets/images/shoutout-head.svg" alt="Shoutout"
+       class="absolute inset-0 w-full h-full object-cover" />
+
+  <!-- Overlay-Karte mittig -->
+  <div class="absolute inset-0 flex items-center justify-center">
+    <div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm 
+                rounded-2xl p-4 sm:p-6 shadow-md text-center">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-emerald-500">Shoutout</h1>
+      <p class="mt-2 text-base md:text-lg text-slate-100 dark:text-slate-300 opacity-90">
+        JuJu Empire — einfach mega nett. Danke für euren Rücken, jeden Tag.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED -->
+<section class="py-16 bg-slate-900">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-500 text-center">Featured</h2>
+    <p class="mt-2 text-lg text-slate-100 text-center">Zwei Leuchttürme – vorneweg und immer da.</p>
+
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-2 gap-8">
+
+      <!-- Soju -->
+      <a href="https://twitch.tv/mrsoju_" target="_blank" rel="noopener"
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/shoutout/soju.jpg" alt="Soju"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Soju</h3>
+            <p class="mt-2 text-sm text-slate-100/85">High energy. Wilde Ideen. Immer am Start.</p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Marketingfutzi -->
+      <a href="https://example.com/agentur" target="_blank" rel="noopener"
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/shoutout/marketingfutzi.jpg" alt="Marketingfutzi"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Marketingfutzi</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Hilft jedem gern. Einer der besten Grow-Channels. Eigene Agentur.</p>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ÄLTESTE & BESTE FREUNDE -->
 <section class="py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-500 text-center">Älteste & beste Freunde</h2>
+    <p class="mt-2 text-lg text-slate-100 text-center">Mitunter die 9, die von Anfang an tragen.</p>
 
-    <!-- SECTION HEADER (wie auf den anderen Seiten) -->
-    <header class="text-center">
-      <h1 class="text-4xl font-extrabold text-emerald-500">Shoutout</h1>
-      <div class="mx-auto mt-3 mb-10 h-[3px] w-32 rounded-full
-                  bg-gradient-to-r from-emerald-500/70 via-emerald-300/80 to-emerald-500/70"></div>
-      <p class="text-gray-300">JuJu Empire — einfach mega nett. Danke für euren Rücken, jeden Tag.</p>
-    </header>
-
-    <!-- FEATURED (2 breite Karten) -->
-    <div class="mt-12 grid gap-8 lg:grid-cols-2">
-      <!-- Card-Pattern wie auf anderen Seiten: Glas + dezentes Fill auf Hover -->
-      <a href="https://twitch.tv/mrsoju_" target="_blank" rel="noopener"
-         class="group block rounded-2xl p-8
-                bg-white/10 backdrop-blur border border-white/20 shadow-lg
-                transition duration-200
-                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
-                active:bg-white/25 active:translate-y-0">
-        <div class="flex items-center gap-6">
-          <img src="/assets/images/shoutout/soju.jpg" alt="Soju"
-               class="w-24 h-24 rounded-full ring-4 ring-emerald-500 object-cover
-                      transition duration-200 group-hover:ring-emerald-400">
-          <div>
-            <div class="text-white text-2xl font-semibold">Soju</div>
-            <div class="text-emerald-400 text-xs uppercase tracking-wider mb-1">MVP • Creator Buddy</div>
-            <p class="text-gray-300">High energy. Wilde Ideen. Immer am Start.</p>
-          </div>
-        </div>
-      </a>
-
-      <a href="https://example.com/agentur" target="_blank" rel="noopener"
-         class="group block rounded-2xl p-8
-                bg-white/10 backdrop-blur border border-white/20 shadow-lg
-                transition duration-200
-                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
-                active:bg-white/25 active:translate-y-0">
-        <div class="flex items-center gap-6">
-          <img src="/assets/images/shoutout/marketingfutzi.jpg" alt="Marketingfutzi"
-               class="w-24 h-24 rounded-full ring-4 ring-emerald-500 object-cover
-                      transition duration-200 group-hover:ring-emerald-400">
-          <div>
-            <div class="text-white text-2xl font-semibold">Marketingfutzi</div>
-            <div class="text-emerald-400 text-xs uppercase tracking-wider mb-1">Brain & Strategy</div>
-            <p class="text-gray-300">Hilft jedem gern. Einer der besten Grow-Channels. Eigene Agentur.</p>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <!-- ÄLTESTE & BESTE FREUNDE (bis zu 9 Karten) -->
-    <h2 class="mt-14 text-2xl font-bold text-emerald-400">Älteste & beste Freunde</h2>
-    <div class="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-
-      <!-- Beispielkarte: bitte die folgenden 9 nach Bedarf befüllen -->
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- 1 -->
       <a href="https://instagram.com/sun" target="_blank" rel="noopener"
-         class="group block rounded-xl p-6 text-center
-                bg-white/10 backdrop-blur border border-white/20 shadow-lg
-                transition duration-200
-                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
-                active:bg-white/25 active:translate-y-0">
-        <img src="/assets/images/shoutout/sun.jpg" alt="Sun"
-             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
-                    transition duration-200 group-hover:ring-emerald-400">
-        <h3 class="text-white text-xl font-semibold">Sun</h3>
-        <p class="text-gray-300 text-sm">Klarer Blick. Ehrliches Feedback.</p>
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/shoutout/sun.jpg" alt="Sun"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Sun</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Klarer Blick. Ehrliches Feedback.</p>
+          </div>
+        </div>
       </a>
 
+      <!-- 2 -->
       <a href="https://tiktok.com/@polina" target="_blank" rel="noopener"
-         class="group block rounded-xl p-6 text-center
-                bg-white/10 backdrop-blur border border-white/20 shadow-lg
-                transition duration-200
-                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
-                active:bg-white/25 active:translate-y-0">
-        <img src="/assets/images/shoutout/polina.jpg" alt="Polina"
-             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
-                    transition duration-200 group-hover:ring-emerald-400">
-        <h3 class="text-white text-xl font-semibold">Polina</h3>
-        <p class="text-gray-300 text-sm">Herz, Style, Drive.</p>
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/shoutout/polina.jpg" alt="Polina"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Polina</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Herz, Style, Drive.</p>
+          </div>
+        </div>
       </a>
 
+      <!-- 3 -->
       <a href="https://instagram.com/angel" target="_blank" rel="noopener"
-         class="group block rounded-xl p-6 text-center
-                bg-white/10 backdrop-blur border border-white/20 shadow-lg
-                transition duration-200
-                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
-                active:bg-white/25 active:translate-y-0">
-        <img src="/assets/images/shoutout/angel.jpg" alt="Angel"
-             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
-                    transition duration-200 group-hover:ring-emerald-400">
-        <h3 class="text-white text-xl font-semibold">Angel</h3>
-        <p class="text-gray-300 text-sm">Feines Auge. Stiller Motor.</p>
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/shoutout/angel.jpg" alt="Angel"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Angel</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Feines Auge. Stiller Motor.</p>
+          </div>
+        </div>
       </a>
 
+      <!-- 4 -->
       <a href="https://tiktok.com/@eunice" target="_blank" rel="noopener"
-         class="group block rounded-xl p-6 text-center
-                bg-white/10 backdrop-blur border border-white/20 shadow-lg
-                transition duration-200
-                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
-                active:bg-white/25 active:translate-y-0">
-        <img src="/assets/images/shoutout/eunice.jpg" alt="Eunice"
-             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
-                    transition duration-200 group-hover:ring-emerald-400">
-        <h3 class="text-white text-xl font-semibold">Eunice</h3>
-        <p class="text-gray-300 text-sm">Warm, stark, verlässlich.</p>
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/shoutout/eunice.jpg" alt="Eunice"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Eunice</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Warm, stark, verlässlich.</p>
+          </div>
+        </div>
       </a>
 
+      <!-- 5 -->
       <a href="https://twitch.tv/wolf" target="_blank" rel="noopener"
-         class="group block rounded-xl p-6 text-center
-                bg-white/10 backdrop-blur border border-white/20 shadow-lg
-                transition duration-200
-                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
-                active:bg-white/25 active:translate-y-0">
-        <img src="/assets/images/shoutout/wolf.jpg" alt="Wolf"
-             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
-                    transition duration-200 group-hover:ring-emerald-400">
-        <h3 class="text-white text-xl font-semibold">Wolf</h3>
-        <p class="text-gray-300 text-sm">Hört alles. Hält dicht.</p>
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/shoutout/wolf.jpg" alt="Wolf"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Wolf</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Hört alles. Hält dicht.</p>
+          </div>
+        </div>
       </a>
 
+      <!-- 6 -->
       <a href="https://instagram.com/charisse" target="_blank" rel="noopener"
-         class="group block rounded-xl p-6 text-center
-                bg-white/10 backdrop-blur border border-white/20 shadow-lg
-                transition duration-200
-                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
-                active:bg-white/25 active:translate-y-0">
-        <img src="/assets/images/shoutout/charisse.jpg" alt="Charisse"
-             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
-                    transition duration-200 group-hover:ring-emerald-400">
-        <h3 class="text-white text-xl font-semibold">Charisse</h3>
-        <p class="text-gray-300 text-sm">Push. Fokus. Energie.</p>
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/shoutout/charisse.jpg" alt="Charisse"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Charisse</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Push. Fokus. Energie.</p>
+          </div>
+        </div>
       </a>
 
+      <!-- 7 -->
       <a href="https://example.com/coco" target="_blank" rel="noopener"
-         class="group block rounded-xl p-6 text-center
-                bg-white/10 backdrop-blur border border-white/20 shadow-lg
-                transition duration-200
-                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
-                active:bg-white/25 active:translate-y-0">
-        <img src="/assets/images/shoutout/coco.jpg" alt="Coco"
-             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
-                    transition duration-200 group-hover:ring-emerald-400">
-        <h3 class="text-white text-xl font-semibold">Coco</h3>
-        <p class="text-gray-300 text-sm">Pure Soul. Immer da.</p>
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/shoutout/coco.jpg" alt="Coco"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Coco</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Pure Soul. Immer da.</p>
+          </div>
+        </div>
       </a>
 
+      <!-- 8 -->
       <a href="https://example.com/icequeen" target="_blank" rel="noopener"
-         class="group block rounded-xl p-6 text-center
-                bg-white/10 backdrop-blur border border-white/20 shadow-lg
-                transition duration-200
-                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
-                active:bg-white/25 active:translate-y-0">
-        <img src="/assets/images/shoutout/icequeen.jpg" alt="Icequeen"
-             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
-                    transition duration-200 group-hover:ring-emerald-400">
-        <h3 class="text-white text-xl font-semibold">Icequeen</h3>
-        <p class="text-gray-300 text-sm">Ruhig. Klar. Unbeirrbar.</p>
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/shoutout/icequeen.jpg" alt="Icequeen"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Icequeen</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Ruhig. Klar. Unbeirrbar.</p>
+          </div>
+        </div>
       </a>
 
+      <!-- 9 (Platzhalter) -->
       <a href="https://example.com/friend9" target="_blank" rel="noopener"
-         class="group block rounded-xl p-6 text-center
-                bg-white/10 backdrop-blur border border-white/20 shadow-lg
-                transition duration-200
-                hover:bg-white/20 hover:shadow-xl hover:-translate-y-0.5
-                active:bg-white/25 active:translate-y-0">
-        <img src="/assets/images/shoutout/friend9.jpg" alt="Freund/in 9"
-             class="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-emerald-500 object-cover
-                    transition duration-200 group-hover:ring-emerald-400">
-        <h3 class="text-white text-xl font-semibold">Freund/in 9</h3>
-        <p class="text-gray-300 text-sm">Langjährig. Vertrauensvoll.</p>
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/shoutout/friend9.jpg" alt="Freund/in 9"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Freund/in 9</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Langjährig. Vertrauensvoll.</p>
+          </div>
+        </div>
       </a>
 
     </div>
-
-    <p class="mt-10 text-center text-sm text-gray-500">
-      Bilder unter <code class="text-gray-400">/assets/images/shoutout/</code> ablegen. Links & Namen nach Bedarf anpassen.
-    </p>
   </div>
 </section>
