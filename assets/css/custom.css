@@ -15,8 +15,8 @@
 
 /* Schlange-Video (Menü-Logo) größer & ohne Kasten */
 .menu-logo {
-  width: 64px;   /* kannst du nach Geschmack 56–72px hochziehen */
-  height: 64px;
+  width: 58px;   /* kannst du nach Geschmack 56–72px hochziehen */
+  height: 58px;
   display: block;
   object-fit: contain;  /* skaliert das Video ohne Beschneidung */
   background: transparent !important;
