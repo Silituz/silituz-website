@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Persona Matcher — Single File (DE/EN, Zodiac, 24Q, Rarity)</title>
+  <style>
+    :root{
+      --bg:#f7f8fc; --ink:#0f172a; --muted:#6b7280; --brand:#7c3aed; --brand2:#06b6d4;
+      --card:#ffffffee; --border:#e5e7eb; --radius:16px; --shadow:0 10px 30px rgba(2,6,23,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto; background:
+      radial-gradient(1000px 900px at 120% -10%, #e9d5ff55, transparent 50%),
+      radial-gradient(900px 800px at -20% 110%, #99f6e455, transparent 55%), var(--bg); color:var(--ink)}
+    .wrap{max-width:980px; margin:0 auto; padding:16px; display:grid; gap:16px}
+    header{display:flex; gap:12px; align-items:center; justify-content:space-between}
+    .brand{display:flex; gap:10px; align-items:center}
+    .logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--brand),#a78bfa 60%,var(--brand2)); box-shadow:var(--shadow)}
+    h1{font-size:20px; margin:0}
+    .card{background:var(--card); backdrop-filter:saturate(1.1) blur(8px); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px}
+    .controls{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+    .btn{border:0; border-radius:12px; padding:10px 14px; font-weight:700; color:#fff; background:linear-gradient(135deg,var(--brand),#8b5cf6); cursor:pointer}
+    .btn.ghost{background:#fff; color:var(--ink); border:1px solid var(--border)}
+    .btn:disabled{opacity:.6; cursor:not-allowed}
+    .progress{height:10px; background:#eef2ff; border-radius:999px; overflow:hidden;}
+    .progress>div{height:100%; width:0%; background:linear-gradient(90deg,var(--brand),#8b5cf6,var(--brand2)); transition:width .25s}
+    .qtext{font-size:18px; margin:0 0 6px 0}
+    .scale{display:grid; grid-template-columns:repeat(7,1fr); gap:8px}
+    .opt{position:relative}
+    input[type=radio]{appearance:none; width:100%; height:46px; border-radius:12px; border:1px solid var(--border); background:#fff; cursor:pointer}
+    input[type=radio]:checked{outline:3px solid #a78bfa55; border-color:#a78bfa}
+    .opt label{position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; font-weight:600; color:#334155; font-size:13px}
+    .muted{color:var(--muted); font-size:13px}
+
+    /* Result */
+    .type-badge{display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px; background:#fff; border:1px solid var(--border)}
+    .pill{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:#eef2ff; color:#4338ca; font-weight:700; font-size:12px}
+    .grid{display:grid; gap:12px}
+    @media(min-width:900px){ .grid{grid-template-columns: 1.2fr .8fr} }
+    .list{display:grid; gap:8px}
+    .tag{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:#fff; border:1px solid var(--border);}
+    .copy{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; background:#0f172a; color:#e5e7eb; padding:10px; border-radius:12px; overflow:auto}
+
+    .axes{display:grid; gap:8px}
+    .bar{height:10px; background:#eef2ff; border-radius:999px; overflow:hidden}
+    .bar>div{height:100%; width:50%; background:linear-gradient(90deg,var(--brand),#8b5cf6);}
+
+    .rar{display:flex; align-items:center; gap:10px;}
+    .rar-meter{flex:1; height:10px; background:#eef2ff; border-radius:999px; overflow:hidden}
+    .rar-meter>div{height:100%; width:0%; background:linear-gradient(90deg,#06b6d4,#7c3aed)}
+
+    /* Modals */
+    .modal{position:fixed; inset:0; background:rgba(15,23,42,.35); display:grid; place-items:center}
+    .modal>.dialog{background:#fff; border:1px solid var(--border); box-shadow:var(--shadow); border-radius:16px; width:min(560px,92vw); padding:18px}
+    .lang-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+
+    footer{color:var(--muted); font-size:13px; text-align:center; padding:8px}
+
+    /* Type badge icons */
+    .icon{width:20px; height:20px; border-radius:6px; display:inline-grid; place-items:center; font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand"><div class="logo"></div><h1 id="title">Persona Matcher</h1></div>
+      <div class="controls">
+        <button id="btnLang" class="btn ghost">Deutsch / English</button>
+        <button id="btnZodiac" class="btn ghost">Sternzeichen</button>
+        <button id="btnReset" class="btn ghost">Neu starten</button>
+        <button id="btnShare" class="btn">Link teilen</button>
+      </div>
+    </header>
+
+    <!-- Language Modal -->
+    <div id="langModal" class="modal" role="dialog" aria-modal="true" hidden>
+      <div class="dialog">
+        <h3 style="margin:0 0 8px 0">Sprache wählen • Choose language</h3>
+        <div class="lang-grid">
+          <button class="btn" data-lang="de">Deutsch</button>
+          <button class="btn" data-lang="en">English</button>
+        </div>
+        <p class="muted" style="margin-top:10px">Du kannst später jederzeit wechseln.</p>
+      </div>
+    </div>
+
+    <!-- Zodiac Modal -->
+    <div id="zodModal" class="modal" role="dialog" aria-modal="true" hidden>
+      <div class="dialog">
+        <h3 id="zodH" style="margin:0 0 8px 0">Sternzeichen wählen</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px" id="zodGrid"></div>
+        <p id="zodHint" class="muted" style="margin-top:10px">Wir nutzen es leicht gewichtet für die Auswertung und zeigen dir eine kurze Deutung.</p>
+      </div>
+    </div>
+
+    <!-- Intro / Progress -->
+    <div class="card" id="intro">
+      <h2 id="introH" style="margin:0 0 6px 0">Schneller Persönlichkeitstest</h2>
+      <p id="introP" class="muted">24 Aussagen • 7-stufige Skala. Ergebnis als 4 Buchstaben (ähnlich MBTI). Danach siehst du passende <b>Stars</b>, <b>Anime-Charaktere</b> und <b>Fiction</b> — community-basierte Einschätzungen.</p>
+      <div class="progress" style="margin:10px 0 0 0"><div id="bar"></div></div>
+    </div>
+
+    <!-- Question Card -->
+    <div class="card" id="quiz" hidden>
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px">
+        <div class="pill" id="step">Frage 1 / 24</div>
+        <div class="pill" id="axisHint">E ↔ I</div>
+      </div>
+      <p class="qtext" id="qtext">…</p>
+      <div class="scale" id="scale"></div>
+      <div style="display:flex; gap:10px; margin-top:10px; justify-content:space-between">
+        <button id="prev" class="btn ghost">Zurück</button>
+        <button id="next" class="btn">Weiter</button>
+      </div>
+    </div>
+
+    <!-- Result Card -->
+    <div class="card" id="result" hidden>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap">
+        <div class="type-badge"><span id="typeIcon" class="icon" aria-hidden="true">🔷</span><b id="type">—</b><span id="typeName" class="muted"> </span></div>
+        <div class="pill" id="percent">—</div>
+      </div>
+      <p id="desc" style="margin:10px 0"> </p>
+      <div class="grid">
+        <div class="card" style="padding:12px">
+          <h3 id="hMatches" style="margin:0 0 8px 0">Matches</h3>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px">
+            <button class="btn ghost" data-tab="stars">Stars</button>
+            <button class="btn ghost" data-tab="anime">Anime</button>
+            <button class="btn ghost" data-tab="fiction">Fiction</button>
+          </div>
+          <div class="list" id="matches"></div>
+        </div>
+        <div class="card" style="padding:12px">
+          <h3 id="hProfile" style="margin:0 0 8px 0">Dein Profil</h3>
+          <div class="axes" id="axesBox"></div>
+          <div class="rar" style="margin-top:10px">
+            <span class="muted" id="rarLabel">Seltenheit:</span>
+            <div class="rar-meter"><div id="rarFill"></div></div>
+            <span id="rarText" class="muted">—</span>
+          </div>
+          <div class="copy" id="copyBox" style="margin-top:10px"></div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:12px">
+        <h3 id="hLife" style="margin:0 0 8px 0">Deutung & Lebensbereiche</h3>
+        <div id="life"></div>
+        <div style="margin-top:10px" class="muted" id="zodExplain"></div>
+      </div>
+    </div>
+
+    <footer id="foot">Disclaimer: Zuordnungen, Häufigkeiten & Sternzeichen-Deutung sind community-/inoffiziell. Für Spaß & Inspiration. Offline & mobilfreundlich.</footer>
+  </div>
+
+<script>
+(function(){
+  // ===== i18n =====
+  const STR = {
+    de: {
+      title: 'Persona Matcher',
+      introH: 'Schneller Persönlichkeitstest',
+      introP: '24 Aussagen • 7-stufige Skala. Ergebnis als 4 Buchstaben (ähnlich MBTI). Danach siehst du passende Stars, Anime-Charaktere und Fiction — community-basierte Einschätzungen.',
+      step: (i,n)=>`Frage ${i} / ${n}`,
+      axis: {EI:'E ↔ I', SN:'S ↔ N', TF:'T ↔ F', JP:'J ↔ P'},
+      labels: ['Stimme gar nicht zu','-2','-1','Neutral','+1','+2','Stimme voll zu'],
+      next:'Weiter', prev:'Zurück', show:'Ergebnis anzeigen',
+      matches:'Matches', profile:'Dein Profil', rarity:'Seltenheit:', share:'Link teilen', restart:'Neu starten', lang:'Deutsch / English', zodiac:'Sternzeichen',
+      life:'Deutung & Lebensbereiche',
+      lifeKeys:{job:'Job', private:'Privat', family:'Familie', love:'Liebe', wealth:'Wohlstand'},
+      zodPick:'Sternzeichen wählen', zodHint:'Wir nutzen es leicht gewichtet für die Auswertung und zeigen dir eine kurze Deutung.',
+      rarityText: p=> p>10? 'häufig' : p>5? 'mittel' : p>2? 'selten' : 'sehr selten',
+      zodExplain:(sign)=>`Sternzeichen berücksichtigt: ${sign}. Einfluss als leichte Gewichtung, keine Wissenschaft.`,
+      foot:'Disclaimer: Zuordnungen, Häufigkeiten & Sternzeichen-Deutung sind community-/inoffiziell. Für Spaß & Inspiration. Offline & mobilfreundlich.'
+    },
+    en: {
+      title: 'Persona Matcher',
+      introH: 'Quick Personality Test',
+      introP: '24 statements • 7-point scale. Result as a 4-letter type (MBTI‑like). Then see matching Stars, Anime, and Fiction — community-based estimates.',
+      step: (i,n)=>`Question ${i} / ${n}`,
+      axis: {EI:'E ↔ I', SN:'S ↔ N', TF:'T ↔ F', JP:'J ↔ P'},
+      labels: ["Strongly disagree","-2","-1","Neutral","+1","+2","Strongly agree"],
+      next:'Next', prev:'Back', show:'Show result',
+      matches:'Matches', profile:'Your Profile', rarity:'Rarity:', share:'Share link', restart:'Restart', lang:'Deutsch / English', zodiac:'Zodiac',
+      life:'Interpretation & Life Areas',
+      lifeKeys:{job:'Career', private:'Personal', family:'Family', love:'Love', wealth:'Wealth'},
+      zodPick:'Choose zodiac sign', zodHint:'Used with a light weighting and a short interpretation.',
+      rarityText: p=> p>10? 'common' : p>5? 'uncommon' : p>2? 'rare' : 'very rare',
+      zodExplain:(sign)=>`Zodiac considered: ${sign}. Light-weighted influence, not scientific.`,
+      foot:'Disclaimer: Matches, frequencies & zodiac are community/unofficial. For fun & inspiration. Offline & mobile-friendly.'
+    }
+  };
+
+  // ===== Zodiac =====
+  const ZOD = {
+    de:['Widder','Stier','Zwillinge','Krebs','Löwe','Jungfrau','Waage','Skorpion','Schütze','Steinbock','Wassermann','Fische'],
+    en:['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces']
+  };
+  // very light axis nudges per sign (for fun). values in -0.8..+0.8 added to sums before typing
+  const ZBIAS = {
+    Aries:{EI:+0.6, SN:+0.2, TF:+0.2, JP:+0.3},
+    Taurus:{EI:-0.2, SN:-0.3, TF:+0.1, JP:+0.6},
+    Gemini:{EI:+0.5, SN:+0.5, TF:0, JP:-0.2},
+    Cancer:{EI:-0.5, SN:-0.2, TF:-0.3, JP:+0.3},
+    Leo:{EI:+0.6, SN:+0.1, TF:+0.2, JP:+0.1},
+    Virgo:{EI:-0.2, SN:-0.5, TF:+0.2, JP:+0.6},
+    Libra:{EI:+0.2, SN:+0.1, TF:-0.2, JP:-0.1},
+    Scorpio:{EI:-0.3, SN:+0.2, TF:+0.3, JP:+0.2},
+    Sagittarius:{EI:+0.4, SN:+0.6, TF:0, JP:-0.3},
+    Capricorn:{EI:-0.2, SN:-0.2, TF:+0.5, JP:+0.7},
+    Aquarius:{EI:+0.1, SN:+0.5, TF:+0.2, JP:-0.2},
+    Pisces:{EI:-0.3, SN:+0.2, TF:-0.3, JP:-0.2}
+  };
+
+  // ===== Questions (24) – each maps to an axis via weight (E/I, S/N, T/F, J/P)
+  // score: 1..7 -> convert to -3..+3 around neutral (4)
+  const Q = [
+    {axis:'EI', dir:+1, de:'Ich lade meine Energie in Gruppen/Aktionen auf.', en:'I recharge through groups and activity.'},
+    {axis:'SN', dir:-1, de:'Ich vertraue konkreten Fakten mehr als Intuition.', en:'I trust concrete facts more than intuition.'},
+    {axis:'TF', dir:+1, de:'Ich entscheide eher logisch als gefühlsbasiert.', en:'I decide more by logic than by feelings.'},
+    {axis:'JP', dir:+1, de:'Ich plane gerne im Voraus und mag klare Strukturen.', en:'I like planning ahead and clear structure.'},
+    {axis:'EI', dir:+1, de:'Neue Menschen kennenzulernen fällt mir leicht.', en:'Meeting new people is easy for me.'},
+    {axis:'SN', dir:+1, de:'Ich suche nach Mustern/Möglichkeiten hinter Details.', en:'I look for patterns/possibilities behind details.'},
+    {axis:'TF', dir:-1, de:'Harmonie ist mir wichtiger als „recht haben“.', en:'Harmony matters more to me than being right.'},
+    {axis:'JP', dir:-1, de:'Ich halte Optionen gern offen und bin spontan.', en:'I like to keep options open and be spontaneous.'},
+    {axis:'EI', dir:+1, de:'Ich denke laut und teile Ideen früh.', en:'I think out loud and share ideas early.'},
+    {axis:'SN', dir:+1, de:'Ich verlasse mich oft auf Bauchgefühl/Imagination.', en:'I often rely on gut feel/imagination.'},
+    {axis:'TF', dir:+1, de:'Ich gebe direktes, sachliches Feedback.', en:'I give direct, matter‑of‑fact feedback.'},
+    {axis:'JP', dir:+1, de:'To‑Do‑Listen und Deadlines motivieren mich.', en:'To‑do lists and deadlines motivate me.'},
+    // extra (finer)
+    {axis:'EI', dir:-1, de:'Lange Alleinzeit lädt meine Akkus am besten.', en:'Long alone time recharges me best.'},
+    {axis:'SN', dir:-1, de:'Ich bleibe lieber beim Bewährten als zu improvisieren.', en:'I prefer sticking to what works over improvising.'},
+    {axis:'TF', dir:+1, de:'Ich trenne Person und Problem konsequent.', en:'I separate person from problem consistently.'},
+    {axis:'JP', dir:-1, de:'Ich starte gern, bevor alles ist definiert.', en:'I like starting before everything is defined.'},
+    {axis:'EI', dir:+1, de:'Events/Partys geben mir Energie.', en:'Events/parties give me energy.'},
+    {axis:'SN', dir:+1, de:'Ich genieße Brainstorming über „Was wäre wenn?“.', en:'I enjoy brainstorming about "what if".'},
+    {axis:'TF', dir:-1, de:'Ich priorisiere Beziehungen über Regeln.', en:'I prioritize relationships over rules.'},
+    {axis:'JP', dir:+1, de:'Ordnung/Struktur beruhigt mich.', en:'Order/structure calms me.'},
+    {axis:'EI', dir:-1, de:'Zu viel Smalltalk strengt mich an.', en:'Too much small talk drains me.'},
+    {axis:'SN', dir:+1, de:'Zukunftsvisionen motivieren mich mehr als Faktenlisten.', en:'Future visions motivate me more than fact lists.'},
+    {axis:'TF', dir:+1, de:'Ich argumentiere gern mit Daten/Belegen.', en:'I like to argue with data/evidence.'},
+    {axis:'JP', dir:-1, de:'Ich lasse Pläne gern flexibel und offen.', en:'I like to keep plans flexible and open.'},
+  ];
+
+  const AXIS = ['EI','SN','TF','JP'];
+
+  // Type metadata – names & blurbs + life areas; icons
+  const META = {
+    ENFJ:{name:{de:'Der Mentor',en:'The Mentor'}, desc:{de:'Warm, visionär, organisiert – motiviert andere, das Beste zu geben.', en:'Warm, visionary, organized – motivates others to give their best.'}, icon:'🧭', life:{
+      job:{de:'Führen durch Coaching, HR, Bildung, Community.', en:'Lead through coaching, HR, education, community.'},
+      private:{de:'Aktive Netzwerker, brauchen Sinn & Wirkung.', en:'Active networkers; need purpose & impact.'},
+      family:{de:'Harmonisieren, planen gemeinsame Ziele.', en:'Harmonize and plan shared goals.'},
+      love:{de:'Zuwendung & Wachstumsgespräche wichtig.', en:'Affection and growth talks matter.'},
+      wealth:{de:'Stabil mit Plan; investiert werteorientiert.', en:'Stable with a plan; values‑based investing.'}
+    }},
+    ENFP:{name:{de:'Der Inspirator',en:'The Inspirer'}, desc:{de:'Kreativ, enthusiastisch, ideenreich – liebt Möglichkeiten und Menschen.', en:'Creative, enthusiastic, idea‑rich – loves possibilities and people.'}, icon:'✨', life:{
+      job:{de:'Kreativfelder, Marketing, Content, Startups.', en:'Creative fields, marketing, content, startups.'},
+      private:{de:'Braucht Abwechslung & Freiheit.', en:'Needs variety and freedom.'},
+      family:{de:'Bringt Wärme & Ideen ein.', en:'Brings warmth and ideas.'},
+      love:{de:'Leidenschaftlich, sucht Tiefe & Spaß.', en:'Passionate; seeks depth and fun.'},
+      wealth:{de:'Besser mit Budget‑Apps & Routinen.', en:'Benefits from budgeting apps and routines.'}
+    }},
+    ENTJ:{name:{de:'Der Stratege',en:'The Strategist'}, desc:{de:'Entschlossen, planvoll, führungsstark – denkt in Systemen.', en:'Decisive, planful, leadership‑oriented – thinks in systems.'}, icon:'♟️', life:{
+      job:{de:'Management, Strategie, Unternehmertum.', en:'Management, strategy, entrepreneurship.'},
+      private:{de:'Setzt Meilensteine, liebt Effizienz.', en:'Sets milestones; loves efficiency.'},
+      family:{de:'Strukturiert, fördert Leistung.', en:'Structured; promotes performance.'},
+      love:{de:'Direkt; schätzt Partners auf Augenhöhe.', en:'Direct; values equals.'},
+      wealth:{de:'Zielgerichtetes Investieren, Risiko kalkuliert.', en:'Goal‑driven investing; calculated risk.'}
+    }},
+    ENTP:{name:{de:'Der Tüftler',en:'The Inventor'}, desc:{de:'Erfinderisch, schlagfertig – testet Grenzen mit neuen Ideen.', en:'Inventive, quick‑witted – tests boundaries with new ideas.'}, icon:'🧪', life:{
+      job:{de:'Innovation, R&D, Produkt, Medien.', en:'Innovation, R&D, product, media.'},
+      private:{de:'Debatten & Experimente als Hobby.', en:'Debates and experiments as hobbies.'},
+      family:{de:'Regt zum Querdenken an.', en:'Encourages lateral thinking.'},
+      love:{de:'Spielerisch, mental stimulierend.', en:'Playful, mentally stimulating.'},
+      wealth:{de:'Neigt zu „Moonshots“ – Diversifizieren.', en:'Prone to moonshots — diversify.'}
+    }},
+    ESFJ:{name:{de:'Der Gastgeber',en:'The Host'}, desc:{de:'Fürsorglich, praktisch, teamorientiert – schafft Verbundenheit.', en:'Caring, practical, team‑oriented – creates connection.'}, icon:'🤝', life:{
+      job:{de:'People Ops, Service, Healthcare, Bildung.', en:'People ops, service, healthcare, education.'},
+      private:{de:'Pflegt Rituale & Freundeskreis.', en:'Maintains rituals and friendships.'},
+      family:{de:'Starker Support & Organisation.', en:'Strong support and organization.'},
+      love:{de:'Loyal, aufmerksam, traditionell.', en:'Loyal, attentive, traditional.'},
+      wealth:{de:'Solide, spart für Sicherheit.', en:'Solid; saves for security.'}
+    }},
+    ESFP:{name:{de:'Der Performer',en:'The Performer'}, desc:{de:'Spontan, lebensfroh – bringt Energie in jede Situation.', en:'Spontaneous, lively – brings energy to any situation.'}, icon:'🎉', life:{
+      job:{de:'Entertainment, Events, Verkauf, Social.', en:'Entertainment, events, sales, social.'},
+      private:{de:'Erlebnisse > Dinge.', en:'Experiences > things.'},
+      family:{de:'Spaßbringer, herzoffen.', en:'Fun‑bringer, open‑hearted.'},
+      love:{de:'Romantisch & präsent.', en:'Romantic and present.'},
+      wealth:{de:'Achtung Impulskäufe; Automatismen helfen.', en:'Watch impulses; automation helps.'}
+    }},
+    ESTJ:{name:{de:'Der Organisator',en:'The Organizer'}, desc:{de:'Strukturiert, zuverlässig – setzt Pläne konsequent um.', en:'Structured, reliable – executes plans consistently.'}, icon:'📋', life:{
+      job:{de:'Projektleitung, Verwaltung, Finanzen.', en:'PM, administration, finance.'},
+      private:{de:'Ordnung, klare Vereinbarungen.', en:'Order; clear agreements.'},
+      family:{de:'Regeln & Stabilität.', en:'Rules and stability.'},
+      love:{de:'Verbindlich, loyal.', en:'Committed, loyal.'},
+      wealth:{de:'Planvoll; Renten & ETFs.', en:'Planned; pensions and ETFs.'}
+    }},
+    ESTP:{name:{de:'Der Macher',en:'The Doer'}, desc:{de:'Handlungsorientiert, risikofreudig – liebt Tempo und Action.', en:'Action‑oriented, risk‑taking – loves speed and action.'}, icon:'⚡', life:{
+      job:{de:'Sales, Einsatzleitung, Sport/Events.', en:'Sales, ops, sports/events.'},
+      private:{de:'Abenteuer & Wettbewerb.', en:'Adventure & competition.'},
+      family:{de:'Pragmatisch, packt an.', en:'Pragmatic, hands‑on.'},
+      love:{de:'Direkt, körperlich präsent.', en:'Direct, physically present.'},
+      wealth:{de:'Chancenorientiert; Stop‑Loss hilft.', en:'Opportunity‑driven; stop‑loss helps.'}
+    }},
+    INFJ:{name:{de:'Der Berater',en:'The Counselor'}, desc:{de:'Empathisch, tiefgründig – verbindet Werte mit Visionen.', en:'Empathic, deep – blends values with vision.'}, icon:'🌙', life:{
+      job:{de:'Counseling, Schreiben, Non‑Profit.', en:'Counseling, writing, non‑profit.'},
+      private:{de:'Tiefe Gespräche, Rückzug nötig.', en:'Deep talks, needs retreat.'},
+      family:{de:'Verbindet, heilt Konflikte.', en:'Connects, heals conflicts.'},
+      love:{de:'Loyal & idealistisch.', en:'Loyal and idealistic.'},
+      wealth:{de:'Wertegeleitet; Impact‑Investing.', en:'Values‑led; impact investing.'}
+    }},
+    INFP:{name:{de:'Der Idealist',en:'The Idealist'}, desc:{de:'Authentisch, einfühlsam – lebt nach inneren Werten.', en:'Authentic, compassionate – lives by inner values.'}, icon:'🕊️', life:{
+      job:{de:'Creative, Pflege, Bildung, Storytelling.', en:'Creative, care, education, storytelling.'},
+      private:{de:'Sinnsuche & Kunst.', en:'Meaning & art.'},
+      family:{de:'Warm, tolerant.', en:'Warm, tolerant.'},
+      love:{de:'Romantisch, idealistisch.', en:'Romantic, idealistic.'},
+      wealth:{de:'Regelmäßige Sparpläne helfen.', en:'Automatic savings help.'}
+    }},
+    INTJ:{name:{de:'Der Architekt',en:'The Architect'}, desc:{de:'Analytisch, vorausschauend – baut langfristige Strategien.', en:'Analytical, foresighted – builds long‑term strategies.'}, icon:'📐', life:{
+      job:{de:'Strategie, Forschung, Tech, Data.', en:'Strategy, research, tech, data.'},
+      private:{de:'Effizienz & Systeme.', en:'Efficiency & systems.'},
+      family:{de:'Vorausschauend, leitend.', en:'Foresighted, guiding.'},
+      love:{de:'Loyal, zeigt Zuwendung pragmatisch.', en:'Loyal; shows care pragmatically.'},
+      wealth:{de:'Langfristig, Disziplin.', en:'Long‑term, disciplined.'}
+    }},
+    INTP:{name:{de:'Der Analytiker',en:'The Analyst'}, desc:{de:'Neugierig, systemdenkend – versteht Prinzipien hinter Dingen.', en:'Curious, systems thinker – understands underlying principles.'}, icon:'🔬', life:{
+      job:{de:'Forschung, Dev, Ingenieur, Analyse.', en:'Research, dev, engineering, analysis.'},
+      private:{de:'Hobbys mit Tiefgang.', en:'Deep‑dive hobbies.'},
+      family:{de:'Ruhig, lösungsorientiert.', en:'Calm, solution‑focused.'},
+      love:{de:'Zuneigung durch Taten/Logik.', en:'Care via deeds/logic.'},
+      wealth:{de:'Rational; Kosten‑Nutzen.', en:'Rational; cost‑benefit.'}
+    }},
+    ISFJ:{name:{de:'Der Beschützer',en:'The Protector'}, desc:{de:'Pflichtbewusst, zuverlässig – achtet auf Details & Menschen.', en:'Conscientious, reliable – attends to details & people.'}, icon:'🛡️', life:{
+      job:{de:'Pflege, Verwaltung, Support.', en:'Care, admin, support.'},
+      private:{de:'Rituale, Erinnerungs‑pflege.', en:'Rituals, memory‑keeping.'},
+      family:{de:'Hält Laden am Laufen.', en:'Keeps things running.'},
+      love:{de:'Zuverlässig & zärtlich.', en:'Reliable & tender.'},
+      wealth:{de:'Sicherheitsfokus, konservativ.', en:'Security‑focused, conservative.'}
+    }},
+    ISFP:{name:{de:'Der Künstler',en:'The Artist'}, desc:{de:'Sensibel, ästhetisch – lebt im Flow des Moments.', en:'Sensitive, aesthetic – lives in the moment.'}, icon:'🎨', life:{
+      job:{de:'Design, Handwerk, Pflege.', en:'Design, craft, care.'},
+      private:{de:'Natur & Ästhetik.', en:'Nature & aesthetics.'},
+      family:{de:'Sanft & hilfsbereit.', en:'Gentle & helpful.'},
+      love:{de:'Liebenswürdig, zärtlich.', en:'Loving, tender.'},
+      wealth:{de:'Spart für Projekte/Tools.', en:'Saves for projects/tools.'}
+    }},
+    ISTJ:{name:{de:'Der Inspektor',en:'The Inspector'}, desc:{de:'Sorgfältig, verantwortungsvoll – hält Ordnung & Traditionen.', en:'Careful, responsible – keeps order & traditions.'}, icon:'📏', life:{
+      job:{de:'Recht, Finanzen, Verwaltung.', en:'Law, finance, admin.'},
+      private:{de:'Verlässliche Routinen.', en:'Reliable routines.'},
+      family:{de:'Pflichtbewusst.', en:'Dutiful.'},
+      love:{de:'Konstant & loyal.', en:'Constant & loyal.'},
+      wealth:{de:'Diszipliniert, risikoarm.', en:'Disciplined, low‑risk.'}
+    }},
+    ISTP:{name:{de:'Der Techniker',en:'The Technician'}, desc:{de:'Pragmatisch, ruhig – versteht, wie Dinge funktionieren.', en:'Pragmatic, calm – understands how things work.'}, icon:'🛠️', life:{
+      job:{de:'Technik, Reparatur, Taktik.', en:'Tech, repair, tactics.'},
+      private:{de:'Hands‑on Projekte.', en:'Hands‑on projects.'},
+      family:{de:'Hilft praktisch.', en:'Helps practically.'},
+      love:{de:'Unaufgeregt, treu.', en:'Low‑key, faithful.'},
+      wealth:{de:'Werkzeug vor Luxus.', en:'Tools over luxury.'}
+    }},
+    ESFP:{}, ESTP:{}, ESFJ:{}, ESTJ:{} // placeholders already defined above
+  };
+
+  // Prevalence (rough, fun only)
+  const PREV = { ISFJ:13.8, ESFJ:12.3, ISTJ:11.6, ISFP:8.8, ESTJ:8.7, ESFP:8.5, ENFP:8.1,
+    ISTP:5.4, INFP:4.4, ESTP:4.3, INTP:3.3, ENTP:3.2, ENFJ:2.5, INTJ:2.1, ENTJ:1.8, INFJ:1.5 };
+
+  // ===== State & elements =====
+  let L = localStorage.getItem('persona:lang') || '';
+  let Z = localStorage.getItem('persona:zod') || '';
+  const $ = s=>document.querySelector(s);
+  const bar = $('#bar');
+  const intro = $('#intro');
+  const quiz = $('#quiz');
+  const result = $('#result');
+  const step = $('#step');
+  const axisHint = $('#axisHint');
+  const qtext = $('#qtext');
+  const scale = $('#scale');
+  const next = $('#next');
+  const prev = $('#prev');
+  const btnReset = $('#btnReset');
+  const btnShare = $('#btnShare');
+  const btnLang = $('#btnLang');
+  const btnZodiac = $('#btnZodiac');
+  const matchesBox = $('#matches');
+  const copyBox = $('#copyBox');
+  const axesBox = $('#axesBox');
+  const typeEl = $('#type');
+  const typeName = $('#typeName');
+  const percent = $('#percent');
+  const desc = $('#desc');
+  const rarFill = $('#rarFill');
+  const rarText = $('#rarText');
+  const rarLabel = $('#rarLabel');
+  const title = $('#title');
+  const introH = $('#introH');
+  const introP = $('#introP');
+  const hMatches = $('#hMatches');
+  const hProfile = $('#hProfile');
+  const hLife = $('#hLife');
+  const foot = $('#foot');
+  const langModal = $('#langModal');
+  const zodModal = $('#zodModal');
+  const zodGrid = $('#zodGrid');
+  const zodH = $('#zodH');
+  const zodHint = $('#zodHint');
+  const typeIcon = $('#typeIcon');
+  const life = $('#life');
+  const zodExplain = $('#zodExplain');
+
+  let i = 0; // question index
+  let answers = new Array(Q.length).fill(4); // neutral (1..7)
+
+  // ===== Language setup =====
+  function setLang(lang){
+    L = lang; localStorage.setItem('persona:lang', L);
+    const T = STR[L];
+    title.textContent = T.title; introH.textContent = T.introH; introP.textContent = T.introP; btnShare.textContent = T.share; btnReset.textContent = T.restart; btnLang.textContent = T.lang; btnZodiac.textContent = T.zodiac; hMatches.textContent = T.matches; hProfile.textContent = T.profile; hLife.textContent = T.life; rarLabel.textContent = T.rarity; foot.textContent = T.foot; zodH.textContent = T.zodPick; zodHint.textContent = T.zodHint;
+    // render zodiac choices
+    zodGrid.innerHTML='';
+    (ZOD[L]||ZOD.de).forEach((name,idx)=>{
+      const b = document.createElement('button'); b.className='btn ghost'; b.textContent=name; b.style.textAlign='left';
+      b.addEventListener('click', ()=>{ setZod(idx); zodModal.hidden=true; intro.hidden=false; quiz.hidden=false; result.hidden=true; renderQuestion(); });
+      zodGrid.appendChild(b);
+    });
+    renderQuestion();
+  }
+  function askLang(){ langModal.hidden=false; }
+  langModal?.querySelectorAll('[data-lang]')?.forEach(b=> b.addEventListener('click',()=>{ langModal.hidden=true; setLang(b.dataset.lang); // then ask zodiac
+    setTimeout(()=>{ zodModal.hidden=false; }, 80);
+  }));
+  btnLang.addEventListener('click', ()=>{ langModal.hidden=false; });
+
+  function setZod(idx){
+    const name = (ZOD[L]||ZOD.de)[idx] || '';
+    Z = name; localStorage.setItem('persona:zod', Z);
+  }
+  btnZodiac.addEventListener('click', ()=>{ zodModal.hidden=false; });
+
+  // Restore from hash if present
+  (function restore(){
+    try{
+      if(location.hash.startsWith('#t=')){
+        const t = location.hash.slice(3,7); setLang(L||'de'); if(!Z){ zodModal.hidden=false; } showResult(t); return;
+      }
+    }catch(e){}
+  })();
+
+  // ===== Render question =====
+  function renderQuestion(){
+    const n = Q.length; const T = STR[L||'de'];
+    const q = Q[i];
+    // only show quiz if language AND zodiac chosen
+    if(!L){ askLang(); return; }
+    if(!Z){ zodModal.hidden=false; return; }
+
+    intro.hidden = false; quiz.hidden = false; result.hidden = true;
+    step.textContent = T.step(i+1, n);
+    axisHint.textContent = T.axis[q.axis] || q.axis;
+    qtext.textContent = q[L||'de'];
+    bar.style.width = ((i)/n*100).toFixed(1)+'%';
+
+    scale.innerHTML = '';
+    const labels = T.labels;
+    for(let k=1;k<=7;k++){
+      const wrap = document.createElement('div'); wrap.className='opt';
+      const id = `q${i}_${k}`;
+      const input = document.createElement('input'); input.type='radio'; input.name='q'+i; input.id=id; input.value=k;
+      if(answers[i]===k) input.checked=true; input.addEventListener('change',()=>answers[i]=k);
+      const lab = document.createElement('label'); lab.setAttribute('for',id); lab.textContent = labels[k-1];
+      wrap.appendChild(input); wrap.appendChild(lab); scale.appendChild(wrap);
+    }
+    prev.textContent = T.prev; next.textContent = (i===n-1? T.show : T.next);
+    prev.disabled = i===0;
+  }
+
+  function axisLabel(ax){ const T = STR[L||'de']; return T.axis[ax] || ax; }
+
+  function compute(){
+    const sums = {EI:0,SN:0,TF:0,JP:0};
+    answers.forEach((val,idx)=>{
+      // map 1..7 -> -3..+3
+      const centered = (val-4); // -3..+3
+      const q = Q[idx];
+      sums[q.axis] += centered * q.dir;
+    });
+    // apply zodiac light bias
+    if(Z){
+      const key = (ZOD.en[ZOD[L||'de'].indexOf(Z)]||'');
+      const b = ZBIAS[key]||{}; ['EI','SN','TF','JP'].forEach(ax=> sums[ax]+= (b[ax]||0));
+    }
+    const type = (sums.EI>=0?'E':'I') + (sums.SN>=0?'N':'S') + (sums.TF>=0?'T':'F') + (sums.JP>=0?'J':'P');
+    const pctParts = AXIS.map(ax=>{
+      const v = sums[ax];
+      const maxAxis = Q.filter(q=>q.axis===ax).length * 3; // max absolute
+      const side = (ax==='EI')?(v>=0?'E':'I'):(ax==='SN')?(v>=0?'N':'S'):(ax==='TF')?(v>=0?'T':'F'):(v>=0?'J':'P');
+      const p = Math.round((Math.abs(v)/maxAxis)*100);
+      return {ax, side, p};
+    });
+    return {type, sums, pctParts};
+  }
+
+  function renderAxes(parts){
+    axesBox.innerHTML='';
+    parts.forEach(({ax,side,p})=>{
+      const row = document.createElement('div');
+      const label = document.createElement('div'); label.style.display='flex'; label.style.justifyContent='space-between'; label.style.alignItems='center';
+      label.innerHTML = `<b>${axisLabel(ax)}</b> <span>${side} ${p}%</span>`;
+      const bar = document.createElement('div'); bar.className='bar';
+      const fill = document.createElement('div'); fill.style.width = (50 + (side===ax[0]? p/2 : -p/2)) + '%';
+      bar.appendChild(fill);
+      row.appendChild(label); row.appendChild(bar); axesBox.appendChild(row);
+    });
+  }
+
+  function rarityFor(type){
+    const p = PREV[type]; if(!p) return {p:0, text:'—'};
+    const T = STR[L||'de'];
+    return {p, text: `${p.toFixed(1)}% • ${T.rarityText(p)}`};
+  }
+
+  function iconFor(type){
+    const meta = META[type]; return meta?.icon || '🔷';
+  }
+
+  function lifeBlock(type){
+    const meta = META[type]; if(!meta?.life) return '';
+    const T = STR[L||'de'];
+    const k = T.lifeKeys;
+    const LTEXT = meta.life;
+    const row = (key)=>`<div style="margin:6px 0"><b>${k[key]}:</b> ${LTEXT[key][L||'de']}</div>`;
+    return row('job')+row('private')+row('family')+row('love')+row('wealth');
+  }
+
+  function showResult(type){
+    const T = STR[L||'de'];
+    intro.hidden = true; quiz.hidden = true; result.hidden = false;
+    const meta = META[type] || {name:{[L]:'—'}, desc:{[L]:'(Unbekannter Typ)'}};
+    typeEl.textContent = type; typeName.textContent = meta.name[L||'de'] || '—'; desc.textContent = meta.desc[L||'de'] || '';
+    typeIcon.textContent = iconFor(type);
+    const info = compute();
+    percent.textContent = info.pctParts.map(x=>`${x.side} ${x.p}%`).join(' · ');
+    renderAxes(info.pctParts);
+    const rar = rarityFor(type); rarFill.style.width = Math.min(100, rar.p) + '%'; rarText.textContent = rar.text;
+    copyBox.textContent = `Type: ${type} — ${meta.name[L||'de']}
+Axes: ${percent.textContent}
+Rarity: ${rar.text}
+Zodiac: ${Z||'-'}
+Note: community-based & unofficial`;
+    renderMatches(type, 'stars');
+    life.innerHTML = lifeBlock(type);
+    zodExplain.textContent = T.zodExplain(Z||'-');
+    try{ history.replaceState(null,'', '#t='+type); }catch(e){}
+  }
+
+  function renderMatches(type, tab){
+    const data = MATCHES[type] || {stars:[],anime:[],fiction:[]};
+    const arr = data[tab] || [];
+    matchesBox.innerHTML = '';
+    if(arr.length===0){ matchesBox.innerHTML = '<div class="muted">—</div>'; return; }
+    arr.forEach(name=>{
+      const el = document.createElement('div'); el.className='tag'; el.textContent = name + ' (Fan‑Typisierung)';
+      matchesBox.appendChild(el);
+    });
+    document.querySelectorAll('[data-tab]').forEach(btn=>{ if(btn.dataset.tab===tab){ btn.classList.remove('ghost'); } else { btn.classList.add('ghost'); } });
+  }
+
+  // Events
+  next.addEventListener('click',()=>{ if(i < Q.length-1){ i++; renderQuestion(); } else { const info = compute(); showResult(info.type); }});
+  prev.addEventListener('click',()=>{ if(i>0){ i--; renderQuestion(); }});
+  document.querySelectorAll('[data-tab]').forEach(btn=> btn.addEventListener('click',()=> renderMatches((typeEl.textContent||'ENFP'), btn.dataset.tab)) );
+  btnReset.addEventListener('click',()=>{ i=0; answers = new Array(Q.length).fill(4); location.hash=''; intro.hidden=false; quiz.hidden=true; result.hidden=true; bar.style.width='0%'; renderQuestion(); });
+  btnShare.addEventListener('click',()=>{ const url = location.href; navigator.clipboard?.writeText(url); btnShare.textContent='✓'; setTimeout(()=>btnShare.textContent=STR[L||'de'].share,1000); });
+
+  // Start — ask language then zodiac
+  if(!L){ langModal.hidden=false; } else { setLang(L); }
+  if(L && !Z){ setTimeout(()=>{ zodModal.hidden=false; }, 60); }
+})();
+</script>
+</body>
+</html>
