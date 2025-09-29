@@ -146,7 +146,7 @@
   <!-- Menü-Liste -->
   <nav class="p-4 space-y-1 text-slate-800 dark:text-slate-100">
     {% assign cur = page.url | replace:'index.html','' | replace:'//','/' %}
-    {% assign nav_list = "Home:/,Über mich:/about.html,Galerie:/gallery.html,Generatoren & mehr:/generators.html,Meine Musik:/music.html,Socials:/socials.html,Unterstützung:/support.html,Kontakt:/contact.html,Impressum:/impressum.html" | split: ',' %}
+    {% assign nav_list = "Home:/,Über Silituz:/about.html,Galerie:/gallery.html,Generatoren & mehr:/generators.html,Meine Musik:/music.html,Socials:/socials.html,Unterstützung:/support.html,Kontakt:/contact.html,Impressum:/impressum.html" | split: ',' %}
     {% for i in nav_list %}
       {% assign p = i | split: ':' %}
       {% assign title = p[0] %}
