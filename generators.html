@@ -15,65 +15,99 @@ title: "Generatoren & mehr – SILITUZ"
                 rounded-2xl p-4 sm:p-6 shadow-md text-center">
       <h1 class="text-3xl md:text-4xl font-extrabold text-emerald-500">Generatoren &amp; mehr</h1>
       <p class="mt-2 text-base md:text-lg text-slate-700 dark:text-slate-300 opacity-90">
-     Kleine Tools, kreative KI-Generatoren und spannende Extras von Silituz
+        Kleine Tools, kreative KI-Generatoren und spannende Extras von Silituz.
       </p>
     </div>
   </div>
 </section>
 
- <!-- Generatoren als Kachel-Grid wie Startseite -->
+
+<!-- SPIELE -->
+<section class="py-16 bg-slate-900">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-500 text-center">Spiele</h2>
+    <p class="mt-2 text-lg text-slate-100 text-center">Kleine interaktive KI-Minispiele – Spaß für zwischendurch.</p>
+
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Spiel 1 -->
+      <a href="https://shiny-stroopwafel-a2ef1e.netlify.app/" target="_blank" rel="noopener"
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/game1.svg" alt="Minispiel"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Mein erstes Spiel</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Ein kleines KI-Minispiel – ready to play!</p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Platzhalter für weitere Spiele (optional)
+      <a href="#" class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800"></div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Zweites Spiel</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Beschreibung …</p>
+          </div>
+        </div>
+      </a>
+      -->
+    </div>
+  </div>
+</section>
+
+
+<!-- GENERATOREN -->
 <section class="py-16">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-500 text-center">Generatoren</h2>
+    <p class="mt-2 text-lg text-slate-100 text-center">Hilfreiche Generatoren und kreative Anwendungen.</p>
 
-    <!-- Kachel: Generator 1 -->
-    <a href="/generator-1" class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
-      <!-- Bildbereich -->
-      <div class="aspect-square w-full bg-gray-100 dark:bg-gray-800">
-      <!-- Hier einmal den Bildnamen ändern, sobald neue Bilder da sind -->
-        <img src="/assets/images/Kachel1.svg" alt="Generator 1"
-             class="w-full h-full object-cover" />
-      </div>
-
-      <!-- Textbalken mit Fill-Effekt -->
-      <div class="relative bg-slate-800/90 text-white rounded-b-2xl overflow-hidden">
-        <!-- Fill nur im Balken -->
-        <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
-        <div class="relative z-10 p-5">
-          <h3 class="text-lg font-semibold">Generator 1</h3>
-          <p class="mt-2 text-sm text-white/85">Beschreibung oder kurzer Text zum Generator.</p>
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Charakter-Generator -->
+      <a href="https://silituz.github.io/charakter-builder/" target="_blank" rel="noopener"
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/char-builder.svg" alt="Charakter-Generator"
+               class="w-full h-full object-cover" />
         </div>
-      </div>
-    </a>
-
-    <!-- Kachel: Generator 2 -->
-    <a href="/generator-2" class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
-      <div class="aspect-square w-full bg-gray-100 dark:bg-gray-800">
-        <img src="/assets/images/Kachel2.svg" alt="Generator 2"
-             class="w-full h-full object-cover" />
-      </div>
-      <div class="relative bg-slate-800/90 text-white rounded-b-2xl overflow-hidden">
-        <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
-        <div class="relative z-10 p-5">
-          <h3 class="text-lg font-semibold">Generator 2</h3>
-          <p class="mt-2 text-sm text-white/85">Beschreibung oder kurzer Text zum Generator.</p>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Charakter-Generator</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Erstelle mit wenigen Klicks deinen eigenen Charakter.</p>
+          </div>
         </div>
-      </div>
-    </a>
+      </a>
 
-    <!-- Kachel: Extra-Bereich -->
-    <a href="/extras" class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
-      <div class="aspect-square w-full bg-gray-100 dark:bg-gray-800">
-        <img src="/assets/images/Kachel3.svg" alt="Extra-Bereich" 
-             class="w-full h-full object-cover" />
-      </div>
-      <div class="relative bg-slate-800/90 text-white rounded-b-2xl overflow-hidden">
-        <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
-        <div class="relative z-10 p-5">
-          <h3 class="text-lg font-semibold">Extra-Bereich</h3>
-          <p class="mt-2 text-sm text-white/85">Kreative Tools, Spiele oder andere Inhalte.</p>
+      <!-- Platzhalter für weiteren Generator (optional)
+      <a href="#" class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800"></div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">Zweiter Generator</h3>
+            <p class="mt-2 text-sm text-slate-100/85">Beschreibung …</p>
+          </div>
         </div>
-      </div>
-    </a>
+      </a>
+      -->
+    </div>
+  </div>
+</section>
 
+<!-- OPTIONAL: EXTRAS (vorbereitet, später aktivieren)
+<section class="py-16 bg-slate-900">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-500 text-center">Extras</h2>
+    <p class="mt-2 text-lg text-slate-100 text-center">Kleine Zusatzfunktionen und kreative Experimente.</p>
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Kacheln hier ergänzen -->
+    </div>
   </div>
 </section>
