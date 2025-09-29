@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aim Trainer — Single File</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --panel:#ffffffcc;
+      --ink:#121826;
+      --muted:#6b7280;
+      --accent:#6366f1;
+      --good:#10b981;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --shadow:0 10px 30px rgba(2,6,23,.08), 0 2px 8px rgba(2,6,23,.06);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue";
+      background: radial-gradient(1200px 1200px at 80% -10%, #eef2ff 0%, transparent 60%),
+                  radial-gradient(1000px 800px at -10% 120%, #dcfce7 0%, transparent 55%),
+                  var(--bg);
+      color:var(--ink);
+    }
+    .shell{display:grid; grid-template-rows:auto 1fr auto; min-height:100%;}
+    header{display:flex; gap:16px; align-items:center; justify-content:space-between; padding:18px 22px; position:sticky; top:0; z-index:30}
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,#60a5fa,#a78bfa,#34d399); box-shadow:var(--shadow)}
+    h1{font-size:18px; margin:0}
+    .controls{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+    .pill{display:flex; align-items:center; gap:8px; padding:10px 12px; background:var(--panel); backdrop-filter:saturate(1.2) blur(6px); border:1px solid #e5e7eb; border-radius:999px; box-shadow:var(--shadow)}
+    .pill input[type="number"], .pill input[type="range"]{accent-color:var(--accent)}
+    .btn{border:0; padding:10px 14px; border-radius:12px; font-weight:600; color:#fff; background:linear-gradient(135deg,var(--accent),#8b5cf6); box-shadow:var(--shadow); cursor:pointer}
+    .btn:disabled{opacity:.55; cursor:not-allowed}
+    .ghost{background:#fff; color:var(--ink); border:1px solid #e5e7eb}
+
+    .arena-wrap{display:grid; grid-template-columns: 300px 1fr 340px; gap:16px; padding:16px;}
+
+    .panel{background:var(--panel); backdrop-filter:saturate(1.1) blur(8px); border:1px solid #e5e7eb; border-radius:var(--radius); box-shadow:var(--shadow); padding:16px}
+
+    .arena{position:relative; overflow:hidden; border-radius:var(--radius); height:68vh; min-height:420px; background: repeating-conic-gradient(from 0deg, rgba(99,102,241,.06) 0 15deg, transparent 15deg 30deg), #fafafa; border:1px dashed #e5e7eb}
+    .crosshair{position:absolute; inset:0; pointer-events:none}
+    .crosshair:before, .crosshair:after{content:""; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);}
+    .crosshair:before{width:30px; height:30px; border:1px dashed rgba(17,24,39,.25); border-radius:50%}
+    .crosshair:after{width:2px; height:2px; border-radius:50%; background:rgba(17,24,39,.35)}
+
+    .target{position:absolute; border-radius:50%; display:grid; place-items:center; cursor:crosshair; box-shadow:0 6px 16px rgba(17,24,39,.15);}
+    .target::after{content:""; width:50%; height:50%; border-radius:50%; border:2px solid #fff; opacity:.7}
+    .pulse{animation:pulse 900ms ease-out infinite}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(99,102,241,.35)} 100%{box-shadow:0 0 0 24px rgba(99,102,241,0)}}
+
+    .scoreboard{display:grid; gap:8px}
+    .metric{display:flex; justify-content:space-between; align-items:center; padding:8px 10px; border-radius:12px; background:#fff; border:1px solid #eef2f7}
+    .metric small{color:var(--muted)}
+
+    .rightcol canvas{width:100%; height:auto; aspect-ratio:1/1}
+    .legend{display:grid; gap:8px; margin-top:8px}
+    .legend div{display:flex; justify-content:space-between;}
+
+    footer{padding:14px 18px; color:var(--muted); display:flex; gap:12px; align-items:center; justify-content:space-between}
+    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; padding:3px 8px; border-radius:8px; border:1px solid #e5e7eb; background:#fff}
+
+    .toast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 14px; border-radius:12px; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:opacity .2s}
+    .toast.show{opacity:1}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand"><div class="logo"></div><h1>Aim Trainer</h1></div>
+      <div class="controls">
+        <div class="pill">Ziele: <input id="shots" type="number" min="5" max="200" value="30" style="width:64px"> </div>
+        <div class="pill">Größe: <input id="minSz" type="number" min="8" max="80" value="24" style="width:64px">–<input id="maxSz" type="number" min="12" max="120" value="64" style="width:64px"> px</div>
+        <div class="pill">Rand-Puffer: <input id="pad" type="number" min="0" max="100" value="24" style="width:64px"> px</div>
+        <button id="startBtn" class="btn">Start (Space)</button>
+        <button id="exportBtn" class="btn ghost">Export JSON</button>
+      </div>
+    </header>
+
+    <main class="arena-wrap">
+      <section class="panel">
+        <h3 style="margin:0 0 8px 0">Live-Stats</h3>
+        <div class="scoreboard" id="score">
+          <div class="metric"><span>Treffer</span><b id="hits">0</b></div>
+          <div class="metric"><span>Fehlklicks</span><b id="miss">0</b></div>
+          <div class="metric"><span>Ø Reaktionszeit</span><b id="avg">–</b></div>
+          <div class="metric"><span>Beste / Schlechteste</span><b id="bestWorst">–</b></div>
+          <div class="metric"><span>Genauigkeit</span><b id="acc">–</b></div>
+        </div>
+        <hr style="margin:14px 0; border:none; border-top:1px solid #e5e7eb">
+        <div style="font-size:13px; color:var(--muted)">
+          Tipp: Klicke so nah wie möglich am Mittelpunkt. <span class="kbd">Space</span> startet neu.
+        </div>
+      </section>
+
+      <section class="panel arena" id="arena">
+        <div class="crosshair" aria-hidden="true"></div>
+        <!-- Targets werden per JS eingesetzt -->
+      </section>
+
+      <aside class="panel rightcol">
+        <h3 style="margin:0 0 8px 0">Leistungsradar</h3>
+        <canvas id="radar" width="600" height="600"></canvas>
+        <div class="legend" id="legend"></div>
+      </aside>
+    </main>
+
+    <footer>
+      <div>Viel Spaß! • <span class="kbd">Linke Maustaste</span> schießt • <span class="kbd">Space</span> Neustart</div>
+      <div id="sessionLabel"></div>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const arena = document.getElementById('arena');
+  const startBtn = document.getElementById('startBtn');
+  const exportBtn = document.getElementById('exportBtn');
+  const ui = {
+    hits:document.getElementById('hits'),
+    miss:document.getElementById('miss'),
+    avg:document.getElementById('avg'),
+    bestWorst:document.getElementById('bestWorst'),
+    acc:document.getElementById('acc'),
+    session:document.getElementById('sessionLabel')
+  };
+  const inputs = {
+    shots: document.getElementById('shots'),
+    minSz: document.getElementById('minSz'),
+    maxSz: document.getElementById('maxSz'),
+    pad: document.getElementById('pad')
+  };
+
+  const radar = document.getElementById('radar');
+  const rctx = radar.getContext('2d');
+  const legend = document.getElementById('legend');
+
+  let state = resetState();
+  let targetEl = null;
+
+  function resetState(){
+    return {
+      running:false,
+      shot:0,
+      shots: Number(inputs.shots?.value||30),
+      hits:0,
+      misses:0,
+      shownAt:0,
+      lastCenter:null,
+      records:[], // {dt,size,clickOffset,center:[x,y],fromPrevDist,id}
+      clicksTotal:0,
+      seed:Math.random().toString(36).slice(2,8)
+    }
+  }
+
+  function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 1400);
+  }
+
+  function rand(min,max){return Math.random()*(max-min)+min}
+
+  function clamp(v,a,b){return Math.max(a, Math.min(b,v))}
+
+  function spawnTarget(){
+    if(targetEl){targetEl.remove(); targetEl=null}
+    const rect = arena.getBoundingClientRect();
+    const pad = Number(inputs.pad.value||24);
+    const min = Number(inputs.minSz.value||24);
+    const max = Number(inputs.maxSz.value||64);
+    const size = Math.round(rand(min,max));
+
+    const x = Math.round(rand(pad, rect.width - pad - size));
+    const y = Math.round(rand(pad, rect.height - pad - size));
+
+    const el = document.createElement('div');
+    el.className = 'target pulse';
+    const hue = Math.floor(rand(200,320));
+    el.style.background = `radial-gradient(circle at 35% 35%, rgba(255,255,255,.85), rgba(255,255,255,.0) 45%), linear-gradient(135deg, hsl(${hue} 90% 60%), hsl(${hue+40} 90% 55%))`;
+    el.style.width = el.style.height = size+"px";
+    el.style.left = x+"px"; el.style.top = y+"px";
+
+    const center = [x + size/2, y + size/2];
+    const fromPrevDist = state.lastCenter? dist(center, state.lastCenter): 0;
+
+    el.addEventListener('click', (ev)=>{
+      ev.stopPropagation();
+      if(!state.running) return;
+      const now = performance.now();
+      const dt = now - state.shownAt;
+      const click = [ev.offsetX, ev.offsetY];
+      const clickOffset = dist(click, [size/2,size/2]);
+      state.hits++; state.clicksTotal++;
+      state.records.push({dt, size, clickOffset, center, fromPrevDist, id: fittsID(fromPrevDist, size)});
+      updateHUD();
+      nextOrFinish();
+    });
+
+    arena.appendChild(el);
+    targetEl = el;
+    state.shownAt = performance.now();
+    state.lastCenter = center;
+  }
+
+  function dist(a,b){const dx=a[0]-b[0], dy=a[1]-b[1]; return Math.hypot(dx,dy)}
+  function fittsID(D,W){ // Shannon formulation
+    if(W<=0) return 0; return Math.log2(D/W + 1);
+  }
+
+  function updateHUD(){
+    ui.hits.textContent = state.hits;
+    ui.miss.textContent = state.misses;
+
+    if(state.records.length){
+      const dts = state.records.map(r=>r.dt);
+      const avg = mean(dts);
+      const best = Math.min(...dts), worst=Math.max(...dts);
+      ui.avg.textContent = Math.round(avg)+ ' ms';
+      ui.bestWorst.textContent = Math.round(best)+' / '+Math.round(worst)+' ms';
+      const acc = state.clicksTotal? (state.hits/state.clicksTotal): 0;
+      ui.acc.textContent = (acc*100).toFixed(1)+'%';
+      drawRadar(scoreAxes());
+    } else {
+      ui.avg.textContent='–'; ui.bestWorst.textContent='–'; ui.acc.textContent='–';
+      drawRadar(null);
+    }
+  }
+
+  function mean(arr){return arr.reduce((a,b)=>a+b,0)/arr.length}
+  function stdev(arr){if(arr.length<2) return 0; const m=mean(arr); return Math.sqrt(mean(arr.map(x=>(x-m)**2)))}
+
+  function scoreAxes(){
+    if(!state.records.length) return null;
+    const dts = state.records.map(r=>r.dt);
+    const avg = mean(dts), sd = stdev(dts);
+    const offsets = state.records.map(r=>r.clickOffset);
+    const avgOff = mean(offsets);
+    const ids = state.records.map(r=>r.id).filter(n=>isFinite(n));
+    const avgID = ids.length? mean(ids): 0;
+    const acc = state.clicksTotal? (state.hits/state.clicksTotal): 0;
+
+    function scale(val, good, bad){ // 100 good, 0 bad, clamp
+      const t = clamp((bad - val)/(bad - good), 0, 1);
+      return Math.round(t*100);
+    }
+    const speed = scale(avg, 200, 800);
+    const precision = scale(avgOff, 5, 32);
+    const consistency = scale(sd, 80, 300);
+    const efficiency = scale(avgID, 2.5, 5.5);
+    const accuracy = Math.round(clamp((acc - 0.6)/(0.98-0.6),0,1)*100);
+
+    const overall = Math.round((speed+precision+consistency+efficiency+accuracy)/5);
+    return {axes:[
+      {label:'Speed', value:speed},
+      {label:'Precision', value:precision},
+      {label:'Consistency', value:consistency},
+      {label:'Efficiency', value:efficiency},
+      {label:'Accuracy', value:accuracy}
+    ], overall, raw:{avg, sd, avgOff, avgID, acc}};
+  }
+
+  function drawRadar(scores){
+    const ctx = rctx; const w = radar.width, h = radar.height; ctx.clearRect(0,0,w,h);
+    const cx=w/2, cy=h/2, R = Math.min(w,h)*0.38;
+    ctx.save();
+    // grid rings
+    ctx.strokeStyle = 'rgba(17,24,39,.08)';
+    for(let i=1;i<=4;i++){ ctx.beginPath(); ctx.arc(cx,cy,(R/4)*i,0,Math.PI*2); ctx.stroke(); }
+
+    if(!scores){ ctx.restore(); return; }
+    const N = scores.axes.length;
+    // spokes
+    ctx.strokeStyle = 'rgba(17,24,39,.12)';
+    for(let i=0;i<N;i++){
+      const a = (-Math.PI/2) + i*(Math.PI*2/N);
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+R*Math.cos(a), cy+R*Math.sin(a)); ctx.stroke();
+    }
+    // polygon
+    const pts = scores.axes.map((ax,i)=>{
+      const a = (-Math.PI/2) + i*(Math.PI*2/N);
+      const r = R*(ax.value/100);
+      return [cx+r*Math.cos(a), cy+r*Math.sin(a)];
+    });
+    ctx.beginPath(); pts.forEach((p,i)=> i? ctx.lineTo(p[0],p[1]) : ctx.moveTo(p[0],p[1])); ctx.closePath();
+    const grad = ctx.createLinearGradient(0,0,w,h); grad.addColorStop(0,'rgba(99,102,241,.35)'); grad.addColorStop(1,'rgba(139,92,246,.35)');
+    ctx.fillStyle = grad; ctx.strokeStyle='rgba(99,102,241,.9)'; ctx.lineWidth=2; ctx.fill(); ctx.stroke();
+
+    // center overall label
+    ctx.fillStyle = '#111827'; ctx.font = '700 28px ui-sans-serif, system-ui'; ctx.textAlign='center';
+    ctx.fillText(scores.overall+' / 100', cx, cy+10);
+
+    // legend values
+    legend.innerHTML = '';
+    for(const ax of scores.axes){
+      const row = document.createElement('div');
+      const bar = document.createElement('div');
+      bar.style.height='8px'; bar.style.background='#e5e7eb'; bar.style.borderRadius='999px';
+      const fill = document.createElement('div');
+      fill.style.width=ax.value+'%'; fill.style.height='100%'; fill.style.borderRadius='999px';
+      fill.style.background='linear-gradient(90deg, #6366f1, #8b5cf6)';
+      bar.appendChild(fill);
+      row.innerHTML = `<span>${ax.label}</span><b>${ax.value}</b>`;
+      legend.appendChild(row); legend.appendChild(bar);
+    }
+    ctx.restore();
+  }
+
+  function nextOrFinish(){
+    state.shot++;
+    if(state.shot >= state.shots){
+      finish();
+    } else {
+      spawnTarget();
+    }
+  }
+
+  function start(){
+    state = resetState();
+    state.running = true;
+    inputsToState();
+    updateHUD();
+    ui.session.textContent = `Session ${state.seed}`;
+    spawnTarget();
+    startBtn.disabled = true;
+  }
+
+  function inputsToState(){
+    state.shots = Number(inputs.shots.value||30);
+  }
+
+  function finish(){
+    state.running=false; if(targetEl){targetEl.remove(); targetEl=null}
+    startBtn.disabled = false;
+    const scores = scoreAxes();
+    if(!scores){toast('Keine Daten'); return}
+
+    // Highscore speichern
+    const key='aimtrainer:highscore';
+    const prev = Number(localStorage.getItem(key)||0);
+    if(scores.overall > prev){ localStorage.setItem(key, scores.overall); toast('🏆 Neuer Highscore: '+scores.overall) }
+    else { toast('Fertig! Overall: '+scores.overall) }
+
+    // pretty print summary in console
+    const summary = {
+      session: state.seed,
+      shots: state.shots,
+      hits: state.hits,
+      clicks: state.clicksTotal,
+      misses: state.misses,
+      metrics: scores,
+    };
+    console.table({
+      Speed:scores.axes[0].value,
+      Precision:scores.axes[1].value,
+      Consistency:scores.axes[2].value,
+      Efficiency:scores.axes[3].value,
+      Accuracy:scores.axes[4].value,
+      Overall:scores.overall
+    });
+    console.log('Summary', summary);
+  }
+
+  arena.addEventListener('click', ()=>{
+    if(!state.running) return;
+    state.misses++; state.clicksTotal++; updateHUD();
+  });
+
+  startBtn.addEventListener('click', start);
+  window.addEventListener('keydown', (e)=>{ if(e.code==='Space'){ e.preventDefault(); if(!state.running) start(); }});
+
+  exportBtn.addEventListener('click', ()=>{
+    const data = {
+      when: new Date().toISOString(),
+      session: state.seed,
+      records: state.records,
+      settings: {shots:state.shots, min:Number(inputs.minSz.value), max:Number(inputs.maxSz.value), pad:Number(inputs.pad.value)},
+      summary: scoreAxes()
+    };
+    const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `aim-trainer-${state.seed}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  // initial paint
+  drawRadar(null);
+})();
+</script>
+</body>
+</html>
