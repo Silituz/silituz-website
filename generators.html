@@ -10,50 +10,56 @@ title: "Generatoren & mehr – SILITUZ"
     </div>
   </section>
 
-  <!-- Content: Platzhalter für Generatoren -->
- <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+ <!-- Generatoren als Kachel-Grid wie Startseite -->
+<section class="py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
-        <!-- Generator 1 -->
-    <a href="/generator-1"
-      <a class="group relative block overflow-hidden rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
-       
-      <!-- Hintergrund-Fill -->
-      <span class="absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
-      
-      <!-- Inhalt -->
-      <div class="relative z-10 px-6 py-5">
-        <h3 class="text-lg font-semibold text-slate-800 group-hover:text-white">Generator 1</h3>
-        <p class="mt-2 text-sm text-slate-500 group-hover:text-white/90">
-          Beschreibung oder kurzer Text zum Generator.
-        </p>
+    <!-- Kachel: Generator 1 -->
+    <a href="/generator-1" class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+      <!-- Bildbereich -->
+      <div class="aspect-square w-full bg-gray-100 dark:bg-gray-800">
+        <img src="/assets/images/Kachel 1.svg" alt="Generator 1"
+             class="w-full h-full object-cover" />
+      </div>
+
+      <!-- Textbalken mit Fill-Effekt -->
+      <div class="relative bg-slate-800/90 text-white rounded-b-2xl overflow-hidden">
+        <!-- Fill nur im Balken -->
+        <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+        <div class="relative z-10 p-5">
+          <h3 class="text-lg font-semibold">Generator 1</h3>
+          <p class="mt-2 text-sm text-white/85">Beschreibung oder kurzer Text zum Generator.</p>
+        </div>
       </div>
     </a>
 
-    <!-- Generator 2 -->
-    <a href="/generator-2"
-      <a class="group relative block overflow-hidden rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
-       
-      <span class="absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
-      
-      <div class="relative z-10 px-6 py-5">
-        <h3 class="text-lg font-semibold text-slate-800 group-hover:text-white">Generator 2</h3>
-        <p class="mt-2 text-sm text-slate-500 group-hover:text-white/90">
-          Beschreibung oder kurzer Text zum Generator.
-        </p>
+    <!-- Kachel: Generator 2 -->
+    <a href="/generator-2" class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+      <div class="aspect-square w-full bg-gray-100 dark:bg-gray-800">
+        <img src="/assets/images/Kachel 2.svg" alt="Generator 2"
+             class="w-full h-full object-cover" />
+      </div>
+      <div class="relative bg-slate-800/90 text-white rounded-b-2xl overflow-hidden">
+        <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+        <div class="relative z-10 p-5">
+          <h3 class="text-lg font-semibold">Generator 2</h3>
+          <p class="mt-2 text-sm text-white/85">Beschreibung oder kurzer Text zum Generator.</p>
+        </div>
       </div>
     </a>
 
-    <!-- Extra-Bereich -->
-    <a href="/extras"
-      <a class="group relative block overflow-hidden rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
-      <span class="absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
-      
-      <div class="relative z-10 px-6 py-5">
-        <h3 class="text-lg font-semibold text-slate-800 group-hover:text-white">Extra-Bereich</h3>
-        <p class="mt-2 text-sm text-slate-500 group-hover:text-white/90">
-          Kreative Tools, Spiele oder andere Inhalte.
-        </p>
+    <!-- Kachel: Extra-Bereich -->
+    <a href="/extras" class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+      <div class="aspect-square w-full bg-gray-100 dark:bg-gray-800">
+        <img src="/assets/images/Kachel 3.svg" alt="Extra-Bereich"
+             class="w-full h-full object-cover" />
+      </div>
+      <div class="relative bg-slate-800/90 text-white rounded-b-2xl overflow-hidden">
+        <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+        <div class="relative z-10 p-5">
+          <h3 class="text-lg font-semibold">Extra-Bereich</h3>
+          <p class="mt-2 text-sm text-white/85">Kreative Tools, Spiele oder andere Inhalte.</p>
+        </div>
       </div>
     </a>
 
