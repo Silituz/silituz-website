@@ -13,21 +13,19 @@ FILE: datenschutz.html (Minimal, DSGVO-bewusst)
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Globale Text-Styles -->
-  <style>
-    h1 {
-      @apply text-slate-100 font-extrabold;
-    }
-    h2 {
-      @apply text-slate-100 font-bold;
-    }
-    p {
-      @apply text-slate-300;
-    }
-    small, .small, .text-xs {
-      @apply text-slate-400;
-    }
-  </style>
+ <!-- Globale Text-Styles (ohne @apply) -->
+<style>
+  /* Überschriften hell */
+  h1 { color: #F1F5F9; font-weight: 800; }   /* slate-100 */
+  h2 { color: #F1F5F9; font-weight: 700; }   /* slate-100 */
+
+  /* Fließtext etwas dunkler */
+  p { color: #CBD5E1; }                      /* slate-300 */
+
+  /* Kleiner Text noch dezenter */
+  small, .small, .text-xs { color: #94A3B8; }/* slate-400 */
+</style>
+
 </head>
 <body class="bg-slate-950 text-slate-100 font-[Inter]">
 <main class="max-w-3xl mx-auto px-4 py-12">
