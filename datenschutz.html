@@ -34,17 +34,19 @@ FILE: datenschutz.html (Minimal, DSGVO-bewusst)
 
   <!-- Zurück-Button -->
   <div class="mb-6">
-    <a href="/" 
-       class="group relative inline-flex items-center px-4 py-2 rounded-lg border border-emerald-600 text-white font-semibold overflow-hidden">
+  <a href="javascript:history.back()" ...
+     class="group inline-flex items-center justify-center w-12 h-12 rounded-md overflow-hidden">
        
       <!-- Emerald-Fill -->
       <span class="absolute inset-y-0 left-0 w-0 bg-emerald-600 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
       
       <!-- Inhalt (weißer Pfeil + Text) -->
       <span class="relative z-10 flex items-center space-x-2">
-        <!-- Pfeil-Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M12.707 15.707a1 1 0 01-1.414 0L6.586 11H18a1 1 0 100-2H6.586l4.707-4.707a1 1 0 00-1.414-1.414l-6.414 6.414a1 1 0 000 1.414l6.414 6.414a1 1 0 001.414 0z" clip-rule="evenodd" />
+                <!-- Pfeil-SVG -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+         class="w-10 h-10 stroke-white fill-transparent transition-all duration-700 group-hover:fill-emerald-600 group-hover:stroke-emerald-400">
+      <path stroke-width="2"
+            d="M4 12h16M12 6l8 6-8 6" />
         </svg>
         <span>Zurück</span>
       </span>
@@ -52,12 +54,7 @@ FILE: datenschutz.html (Minimal, DSGVO-bewusst)
   </div>
 
   <!-- Hauptüberschrift -->
-  <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-100">
-    Datenschutzerklärung
-  </h1>
-
- 
-<h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-emerald-600">
+ <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-emerald-600">
   Datenschutzerklärung
 </h1>
 
