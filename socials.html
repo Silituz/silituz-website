@@ -77,14 +77,30 @@ title: "Socials – SILITUZ"
       </a>
 
       <a href="https://open.spotify.com/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank"
-         class="group relative flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md transition hover:shadow-lg hover:-translate-y-0.5 hover:scale-[1.01]">
-        <span class="pointer-events-none absolute inset-0 bg-slate-900/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
-        <img src="{{ '/assets/socials/spotify.svg' | relative_url }}" alt="Spotify" class="w-10 h-10 object-contain relative z-10" />
-        <div class="relative z-10">
-          <h3 class="text-lg font-bold text-white group-hover:text-slate-100 transition-colors duration-300">Spotify</h3>
-          <p class="text-sm text-white">Songs & Playlists</p>
-        </div>
-      </a>
+   class="group relative flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-700
+          bg-white dark:bg-gray-800 shadow-md transition hover:shadow-lg overflow-hidden">
+  
+  <!-- Füll-Animation (läuft von links nach rechts rein) -->
+  <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500/15 
+               transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+
+  <!-- Sanfte Abdunklung beim Hover -->
+  <span class="pointer-events-none absolute inset-0 bg-slate-900/10 opacity-0 
+               transition-opacity duration-300 group-hover:opacity-100"></span>
+
+  <!-- Inhalt -->
+  <img src="{{ '/assets/socials/spotify.svg' | relative_url }}" 
+       alt="Spotify" 
+       class="w-10 h-10 object-contain relative z-10" />
+
+  <div class="relative z-10">
+    <h3 class="text-lg font-bold text-white group-hover:text-slate-100 transition-colors duration-300">
+      Spotify
+    </h3>
+    <p class="text-sm text-white/95">Songs & Playlists</p>
+  </div>
+</a>
+
 
       <a href="https://music.apple.com/de/artist/silituz/1815637787" target="_blank"
          class="group relative flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md transition hover:shadow-lg hover:-translate-y-0.5 hover:scale-[1.01]">
