@@ -73,9 +73,33 @@
 </head>
 
 <script>document.getElementById('y')?.textContent = new Date().getFullYear();</script>
- 
+
+<!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(["setCookieDomain", "*.analytics.silituz.de"]);
+  _paq.push(["setDoNotTrack", true]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//analytics.silituz.de/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+  
 <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
 
+  <noscript>
+  <p><img referrerpolicy="no-referrer-when-downgrade"
+          src="https://analytics.silituz.de/matomo.php?idsite=1&amp;rec=1"
+          style="border:0;" alt="" /></p>
+</noscript>
+  
 <!-- ===== HEADER: Logo links • Toggle Mitte • Rechts: 🐍 Menü-Button ===== -->
 <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
   <div class="container mx-auto px-4 py-6 grid grid-cols-[1fr_auto_1fr] items-center">
