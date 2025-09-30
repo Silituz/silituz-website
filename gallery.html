@@ -28,21 +28,22 @@ title: "Galerie – SILITUZ"
        style="border: 6px solid; border-image: repeating-linear-gradient(45deg, #f59e0b 0 14px, #111827 14px 28px) 8;">
     <div class="bg-slate-800/90 p-6 md:p-8">
 
-      <!-- Kopfzeile: Achtung zentriert -->
+      <!-- Kopfzeile: Achtung zentriert, optisch weiter unten -->
       <div class="text-center">
-        <p class="text-2xl md:text-3xl font-extrabold uppercase tracking-widest text-amber-300
-                  flex items-center justify-center gap-2">
-          🚨 <span class="tracking-[0.2em]">A C H T U N G</span> 🚨
+        <p class="text-2xl md:text-3xl font-extrabold uppercase text-amber-300
+                  flex items-center justify-center gap-2 leading-none
+                  translate-y-1 md:translate-y-2">
+          🚨 <span class="tracking-[0.18em]">A C H T U N G</span> 🚨
         </p>
       </div>
 
       <!-- Inhalt: links Bild, rechts Text; Text vertikal mittig zur Bildhöhe -->
-      <div class="mt-3 grid gap-6 md:grid-cols-[220px,1fr] items-center">
-        <!-- Bild links -->
+      <div class="mt-0 grid gap-6 md:grid-cols-[300px,1fr] items-center">
+        <!-- Bild links (größer) -->
         <div class="justify-self-center md:justify-self-start">
           <img src="{{ '/assets/images/bau-snake.svg' | relative_url }}"
                alt="Silituz Bau-Snake"
-               class="w-40 h-40 md:w-60 md:h-60 object-contain drop-shadow" />
+               class="w-44 h-44 md:w-64 md:h-64 object-contain drop-shadow" />
         </div>
 
         <!-- Text rechts -->
@@ -52,6 +53,10 @@ title: "Galerie – SILITUZ"
             Im Moment sind hier noch keine Bilder zu sehen. Wir bereiten alles vor –
             es wird leider noch ein wenig Zeit benötigen.
           </p>
+
+          <!-- Fortschrittsbalken -->
+          <div class="mt-4 h-1 w-full overflow-hidden rounded-full bg-slate-700">
+            <div class="h-full w-1/3 bg-emerald-500/80 animate-pulse"></div>
           </div>
         </div>
       </div>
@@ -73,6 +78,7 @@ title: "Galerie – SILITUZ"
       </div>
     </div>
   </section>
+
 
 
 
