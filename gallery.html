@@ -26,25 +26,27 @@ title: "Galerie – SILITUZ"
          class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 md:mt-12 mb-10">
   <div class="group relative overflow-hidden rounded-2xl shadow-md"
        style="border: 6px solid; border-image: repeating-linear-gradient(45deg, #f59e0b 0 14px, #111827 14px 28px) 8;">
-    <div class="relative bg-slate-800/90 p-6 md:p-8">
-      
-      <!-- Überschrift: zentriert, ab md absolut auf Bild-Höhe -->
-      <p class="text-2xl md:text-3xl font-extrabold uppercase tracking-widest text-amber-300
-                flex items-center justify-center gap-2
-                mb-4 md:mb-0 md:absolute md:inset-x-0 md:top-6">
-        🚨 Achtung 🚨
-      </p>
+    <div class="bg-slate-800/90 p-6 md:p-8">
 
-      <!-- Inhalt: links Bild (ohne extra Top-Abstand), rechts Text (mit Top-Abstand damit nix überlappt) -->
-      <div class="grid gap-6 md:grid-cols-[220px,1fr] items-start">
+      <!-- Kopfzeile: Achtung zentriert -->
+      <div class="text-center">
+        <p class="text-2xl md:text-3xl font-extrabold uppercase tracking-widest text-amber-300
+                  flex items-center justify-center gap-2">
+          🚨 <span class="tracking-[0.2em]">A C H T U N G</span> 🚨
+        </p>
+      </div>
+
+      <!-- Inhalt: links Bild, rechts Text; Text vertikal mittig zur Bildhöhe -->
+      <div class="mt-6 grid gap-6 md:grid-cols-[220px,1fr] items-center">
         <!-- Bild links -->
         <div class="justify-self-center md:justify-self-start">
           <img src="{{ '/assets/images/bau-snake.svg' | relative_url }}"
-               alt="Silituz Bau-Snake" class="w-40 h-40 md:w-48 md:h-48 object-contain drop-shadow" />
+               alt="Silituz Bau-Snake"
+               class="w-40 h-40 md:w-48 md:h-48 object-contain drop-shadow" />
         </div>
 
         <!-- Text rechts -->
-        <div class="md:mt-12">
+        <div class="max-w-prose">
           <h2 class="text-2xl font-bold text-emerald-500">Bilder noch in Vorbereitung</h2>
           <p class="mt-2 text-slate-100/85">
             Im Moment sind hier noch keine Bilder zu sehen. Wir bereiten alles vor –
@@ -57,9 +59,6 @@ title: "Galerie – SILITUZ"
     </div>
   </div>
 </section>
-
-
-
 
   <!-- Galerie -->
   <section class="py-16">
@@ -74,6 +73,7 @@ title: "Galerie – SILITUZ"
       </div>
     </div>
   </section>
+
 
 
 
