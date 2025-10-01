@@ -36,7 +36,6 @@
 
   <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
 
-  
   <!-- Zusatzstyles -->
   <style>
     .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
@@ -47,7 +46,6 @@
     #sideMenu nav a:hover { background-color:#059669; color:#fff !important; }
     #sideMenu nav a.active { background-color:#d1fae5; color:#059669 !important; font-weight:600; }
     #themeThumb { transition: transform .22s cubic-bezier(.2,.9,.2,1); }
-
     /* Footer (Light) */
     .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
     .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
@@ -63,36 +61,36 @@
     .footer-more:hover{background-color:#059669; color:#fff !important; animation:footer-wobble .35s ease-in-out;}
     @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-0.6deg)}100%{transform:translateX(0) rotate(0)}}
     @media (prefers-reduced-motion: reduce){.footer-more:hover{animation:none;}}
-
     /* Dark via .dark */
     .dark .site-footer{background:#0f172a; color:#e5e7eb; border-top-color:#1f2937;}
     .dark .brand-title{color:#e5e7eb;}
     .dark .brand-sub{color:#94a3b8;}
     .dark .footer-center small{color:#cbd5e1;}
   </style>
-</head>
 
-<script>document.getElementById('y')?.textContent = new Date().getFullYear();</script>
+  <!-- Jahreszahl (falls #y existiert) -->
+  <script>document.getElementById('y')?.textContent = new Date().getFullYear();</script>
 
-<!-- Matomo -->
-<script>
-  var _paq = window._paq = window._paq || [];
-  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-  _paq.push(["setCookieDomain", "*.analytics.silituz.de"]);
-  _paq.push(["setDoNotTrack", true]);
-  _paq.push(['trackPageView']);
-  _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//analytics.silituz.de/";
-    _paq.push(['setTrackerUrl', u+'matomo.php']);
-    _paq.push(['setSiteId', '1']);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-  })();
-</script>
-<!-- End Matomo Code -->
+  <!-- Matomo -->
+  <script>
+    var _paq = window._paq = window._paq || [];
+    _paq.push(["setCookieDomain", "*.analytics.silituz.de"]);
+    _paq.push(["setDoNotTrack", true]);
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u="//analytics.silituz.de/";
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      _paq.push(['setSiteId', '1']);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+  </script>
+  <!-- End Matomo Code -->
 
   {% include head-seo.html %}
+</head>
+
 
   
 <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
