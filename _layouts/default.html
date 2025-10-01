@@ -220,9 +220,11 @@
   {%- assign is_en_menu = is_en_global -%}
 
   {%- if is_en_menu -%}
-    {%- assign nav_list = "Home:/,About:/about.html,Gallery:/gallery.html,Generators & more:/generators.html,My Music:/music.html,Socials:/socials.html,Support:/support.html,Shoutout:/shoutout.html,Contact:/contact.html,Imprint:/impressum.html" | split: ',' -%}
+    {%- assign nav_list = "Home:/,About:/about/,Gallery:/gallery/,Generators & more:/generators/,My Music:/music/,Socials:/socials/,Support:/support/,Shoutout:/shoutout/,Contact:/contact/,Imprint:/impressum/" | split: ',' -%}
+
   {%- else -%}
-    {%- assign nav_list = "Home:/,Über Silituz:/about.html,Galerie:/gallery.html,Generatoren & mehr:/generators.html,Meine Musik:/music.html,Socials:/socials.html,Unterstützung:/support.html,Shoutout:/shoutout.html,Kontakt:/contact.html,Impressum:/impressum.html" | split: ',' -%}
+    {%- assign nav_list = "Home:/,Über Silituz:/about/,Galerie:/gallery/,Generatoren & mehr:/generators/,Meine Musik:/music/,Socials:/socials/,Unterstützung:/support/,Shoutout:/shoutout/,Kontakt:/contact/,Impressum:/impressum/" | split: ',' -%}
+
   {%- endif -%}
 
   {%- assign cur = page.url | replace:'index.html','' | replace:'//','/' -%}
@@ -296,7 +298,7 @@
     </div>
 
     <div class="footer-center">
-      <a href="{{ '/impressum.html' | relative_url }}"
+     <a href="{{ '/impressum/' | relative_url }}" 
          class="text-sm text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition-colors cursor-pointer">
          © {{ "now" | date: "%Y" }} Silituz – Alle Rechte vorbehalten
       </a>
@@ -313,7 +315,7 @@
       <a class="more footer-more text-base font-semibold px-3.5 py-2 rounded-lg bg-transparent
          text-slate-600 dark:text-slate-300
          hover:bg-emerald-500 hover:text-white transition"
-         href="{{ '/socials.html' | relative_url }}">
+         href="{{ '/socials/' | relative_url }}">
         Mehr
       </a>
     </nav>
