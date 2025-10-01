@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="{{ page.lang | default: site.lang | default: 'de' }}">
 <head>
   <!-- Meta / Basis -->
   <meta charset="utf-8" />
@@ -11,6 +11,50 @@
   <meta name="theme-color" content="#059669">
   <meta name="color-scheme" content="light dark">
 
+  {%- comment -%} === i18n: canonical + hreflang (DE/EN) === {%- endcomment -%}
+  {%- assign is_en = page.lang == 'en' or page.url contains '/en/' -%}
+  {%- assign page_url = page.url -%}
+
+  {%- comment -%}
+  Rohpfade ohne baseurl (zum Vergleichen mit site.pages):
+  - de_path: /about/ (ohne /en)
+  - en_path: /en/about/ (mit /en)
+  {%- endcomment -%}
+  {%- assign de_path = page_url | replace_first: '/en', '' -%}
+  {%- assign en_path = '/en' | append: page_url | replace: '//en/', '/en/' -%}
+
+  {%- assign has_de = false -%}
+  {%- assign has_en = false -%}
+  {%- for p in site.pages -%}
+    {%- if p.url == de_path -%}{%- assign has_de = true -%}{%- endif -%}
+    {%- if p.url == en_path -%}{%- assign has_en = true -%}{%- endif -%}
+  {%- endfor -%}
+
+  {%- comment -%}
+  Canonical: jeweils die eigene Variante
+  {%- endcomment -%}
+  {%- if is_en -%}
+    <link rel="canonical" href="{{ en_path | relative_url }}">
+  {%- else -%}
+    <link rel="canonical" href="{{ de_path | relative_url }}">
+  {%- endif -%}
+
+  {%- comment -%}
+  Alternates: Nur ausgeben, wenn die jeweilige Seite existiert.
+  X-default zeigt auf DE (Root) – passt zu deiner Hauptsprache.
+  {%- endcomment -%}
+  {%- if has_de -%}
+    <link rel="alternate" hreflang="de" href="{{ de_path | relative_url }}">
+  {%- endif -%}
+  {%- if has_en -%}
+    <link rel="alternate" hreflang="en" href="{{ en_path | relative_url }}">
+  {%- endif -%}
+  {%- if has_de -%}
+    <link rel="alternate" hreflang="x-default" href="{{ de_path | relative_url }}">
+  {%- endif -%}
+  {#  === /i18n block === #}
+
+  
   <!-- Dark Mode Bootstrapping + Tailwind-Konfig (vor dem CDN!) -->
   <script>
     (function () {
