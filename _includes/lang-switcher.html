@@ -1,4 +1,4 @@
-{%- comment -%} Robust: Link zur Gegen-URL bauen {%- endcomment -%}
+{%- comment -%} Detect EN reliably {%- endcomment -%}
 {%- assign is_en = false -%}
 {%- if page.lang == 'en' -%}
   {%- assign is_en = true -%}
@@ -6,16 +6,19 @@
   {%- assign is_en = true -%}
 {%- endif -%}
 
-{%- assign de_url = page.url | replace_first: '/en', '' -%}
+{%- comment -%} Build counterpart URLs {%- endcomment -%}
+{%- assign de_url = page.url | replace_first: '/en','' -%}
 {%- assign en_url = '/en' | append: de_url -%}
 
-<div class="flex items-center gap-2 text-sm">
+<div class="flex items-center gap-2 text-sm" role="group" aria-label="Language switcher">
   <a href="{{ de_url | relative_url }}"
-     class="px-2 py-1 rounded border {{ is_en | default: false | unless }}bg-emerald-500 text-white border-emerald-500{{ endunless }}">
-     DE
+     class="px-2 py-1 rounded border transition
+            {% unless is_en %} bg-emerald-500 text-white border-emerald-500 {% else %} border-slate-300 hover:border-emerald-500 {% endunless %}">
+    DE
   </a>
   <a href="{{ en_url | relative_url }}"
-     class="px-2 py-1 rounded border {{ is_en | default: false | if }}bg-emerald-500 text-white border-emerald-500{{ endif }}">
-     EN
+     class="px-2 py-1 rounded border transition
+            {% if is_en %} bg-emerald-500 text-white border-emerald-500 {% else %} border-slate-300 hover:border-emerald-500 {% endif %}">
+    EN
   </a>
 </div>
