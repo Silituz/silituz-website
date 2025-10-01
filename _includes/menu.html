@@ -1,12 +1,45 @@
-<nav class="p-4 space-y-2 text-slate-800">
-  {% assign here = page.url %}
-  <a href="/index.html"      class="block px-3 py-2 rounded-lg {% if here == '/' or here == '/index.html' %}active{% endif %}">Home</a>
-  <a href="/about.html"      class="block px-3 py-2 rounded-lg {% if here == '/about.html' %}active{% endif %}">Über mich</a>
-  <a href="/gallery.html"    class="block px-3 py-2 rounded-lg {% if here == '/gallery.html' %}active{% endif %}">Galerie</a>
-  <a href="/generators.html" class="block px-3 py-2 rounded-lg {% if here == '/generators.html' %}active{% endif %}">Generatoren &amp; mehr</a>
-  <a href="/music.html"      class="block px-3 py-2 rounded-lg {% if here == '/music.html' %}active{% endif %}">Meine Musik</a>
-  <a href="/socials.html"    class="block px-3 py-2 rounded-lg {% if here == '/socials.html' %}active{% endif %}">Socials</a>
-  <a href="/support.html"    class="block px-3 py-2 rounded-lg {% if here == '/support.html' %}active{% endif %}">Unterstützung</a>
-  <a href="/contact.html"    class="block px-3 py-2 rounded-lg {% if here == '/contact.html' %}active{% endif %}">Kontakt</a>
-  <a href="/impressum.html"  class="block px-3 py-2 rounded-lg {% if here == '/impressum.html' %}active{% endif %}">Impressum</a>
+{% assign is_en = page.lang == "en" or page.url contains "/en/" %}
+
+{% if is_en %}
+  {% assign nav_list = "
+    Home:/,
+    About:/en/about/,
+    Gallery:/gallery/,
+    Generators & more:/generators/,
+    My Music:/music/,
+    Socials:/socials/,
+    Support:/support/,
+    Shoutout:/shoutout/,
+    Contact:/en/contact/,
+    Imprint:/impressum/
+  " | split: ',' %}
+{% else %}
+  {% assign nav_list = "
+    Home:/,
+    Über Silituz:/about/,
+    Galerie:/gallery/,
+    Generatoren & mehr:/generators/,
+    Meine Musik:/music/,
+    Socials:/socials/,
+    Unterstützung:/support/,
+    Shoutout:/shoutout/,
+    Kontakt:/contact/,
+    Impressum:/impressum/
+  " | split: ',' %}
+{% endif %}
+
+<nav class="p-4 space-y-1 text-slate-800 dark:text-slate-100">
+  {% assign cur = page.url | replace:'index.html','' | replace:'//','/' %}
+  {% for i in nav_list %}
+    {% assign p = i | split: ':' %}
+    {% assign title = p[0] | strip %}
+    {% assign href  = p[1] | strip %}
+    <a href="{{ href | relative_url }}"
+       class="flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition
+              {% if cur == href %} bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200 font-semibold {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 {% endif %}">
+      <span>{{ title }}</span>
+      <span class="opacity-60">›</span>
+    </a>
+  {% endfor %}
 </nav>
+
