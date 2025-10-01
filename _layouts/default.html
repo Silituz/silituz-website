@@ -99,6 +99,53 @@
   {% include head-seo.html %}
 </head>
   
+  <!-- ===== JS: Öffnen/Schließen + Body-Scroll sperren ===== -->
+<script>
+  (function () {
+    const snakeBtn    = document.getElementById('snakeBtn');
+    const sideMenu    = document.getElementById('sideMenu');
+    const sideOverlay = document.getElementById('sideOverlay');
+    const sideClose   = document.getElementById('sideClose');
+
+    if (!sideMenu || !sideOverlay || !snakeBtn) return;
+
+    function openMenu(){
+      sideMenu.classList.remove('translate-x-full');
+      sideOverlay.classList.remove('pointer-events-none');
+      requestAnimationFrame(() => {
+        sideOverlay.classList.add('opacity-100');
+        sideOverlay.classList.remove('opacity-0');
+      });
+      document.body.classList.add('overflow-hidden');
+      snakeBtn.setAttribute('aria-expanded','true');
+      sideMenu.setAttribute('aria-hidden','false');
+    }
+
+    function closeMenu(){
+      sideMenu.classList.add('translate-x-full');
+      sideOverlay.classList.add('pointer-events-none');
+      sideOverlay.classList.remove('opacity-100');
+      sideOverlay.classList.add('opacity-0');
+      document.body.classList.remove('overflow-hidden');
+      snakeBtn.setAttribute('aria-expanded','false');
+      sideMenu.setAttribute('aria-hidden','true');
+    }
+
+    function toggleMenu(){
+      const isClosed = sideMenu.classList.contains('translate-x-full');
+      isClosed ? openMenu() : closeMenu();
+    }
+
+    // Klick-Handler
+    snakeBtn.addEventListener('click', toggleMenu);
+    sideClose?.addEventListener('click', closeMenu);
+    sideOverlay?.addEventListener('click', closeMenu);
+
+    // ESC schließt
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+  })();
+</script>
+
 <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
 
 <!-- HEADER -->
