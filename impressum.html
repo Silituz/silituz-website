@@ -1,44 +1,21 @@
 ---
 layout: default
 title: "Impressum – SILITUZ"
+lang: de
+
+hero_alt: "Impressum"
+hero_title: "Impressum"
+hero_sub: ""
+
+# Inhalt / Iframe
+iframe_src: "https://www.mein.online-impressum.de/silituz/"
+iframe_title: "Impressum von Silituz"
+
+fallback_text: "Falls das Impressum nicht angezeigt wird, klicken Sie bitte hier:"
+fallback_link_label: "Externes Impressum öffnen"
+
+# Optionaler Hinweisblock (lassen, wenn gewünscht; sonst entfernen)
+notice: ""
 ---
-<!-- Hero -->
-<section class="relative h-64">
-  <!-- Hintergrundbild -->
-  <img src="/assets/images/impressum-head.svg" alt="impressum"
-       class="absolute inset-0 w-full h-full object-cover" />
 
-  <!-- Overlay-Karte mittig -->
-  <div class="absolute inset-0 flex items-center justify-center">
-    <div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm 
-                rounded-2xl p-4 sm:p-6 shadow-md text-center">
-      <h1 class="text-3xl md:text-4xl font-extrabold text-emerald-500">Impressum</h1>
-      <p class="mt-2 text-base md:text-lg text-slate-700 dark:text-slate-300 opacity-90">
-    
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- Inhalt -->
-<main class="py-16">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-    
-
-    <!-- Sicher eingebettetes Iframe -->
-    <div class="relative z-0">
-      <iframe
-        src="https://www.mein.online-impressum.de/silituz/"
-        class="w-full h-[900px] border rounded-lg block relative z-0 bg-white dark:bg-slate-900"
-        loading="lazy"
-        title="Impressum von Silituz">
-      </iframe>
-    </div>
-
-    <!-- Fallback Hinweis -->
-    <p class="mt-6 text-sm text-slate-500 dark:text-slate-400">
-      Falls das Impressum nicht angezeigt wird, klicken Sie bitte hier:
-      <a href="https://www.mein.online-impressum.de/silituz/" target="_blank" class="text-emerald-500 hover:underline">Externes Impressum öffnen</a>.
-    </p>
-  </div>
-</main>
+{% include impressum_shared.html %}
