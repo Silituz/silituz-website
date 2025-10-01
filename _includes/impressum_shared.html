@@ -1,0 +1,48 @@
+<!-- Hero -->
+<section class="relative h-64">
+  <img src="{{ '/assets/images/impressum-head.svg' | relative_url }}" alt="{{ page.hero_alt }}"
+       class="absolute inset-0 w-full h-full object-cover" />
+  <div class="absolute inset-0 flex items-center justify-center">
+    <div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm 
+                rounded-2xl p-4 sm:p-6 shadow-md text-center">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-emerald-500">{{ page.hero_title }}</h1>
+      {% if page.hero_sub %}
+        <p class="mt-2 text-base md:text-lg text-slate-700 dark:text-slate-300 opacity-90">
+          {{ page.hero_sub }}
+        </p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- Inhalt -->
+<main class="py-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    {% if page.notice %}
+      <div class="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 text-sm text-slate-700 dark:text-slate-300">
+        {{ page.notice }}
+      </div>
+    {% endif %}
+
+    <!-- Sicher eingebettetes Iframe -->
+    <div class="relative z-0">
+      <iframe
+        src="{{ page.iframe_src }}"
+        class="w-full h-[900px] border rounded-lg block relative z-0 bg-white dark:bg-slate-900"
+        loading="lazy"
+        title="{{ page.iframe_title }}"
+        referrerpolicy="no-referrer"
+        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+      ></iframe>
+    </div>
+
+    <!-- Fallback Hinweis -->
+    <p class="mt-6 text-sm text-slate-500 dark:text-slate-400">
+      {{ page.fallback_text }}
+      <a href="{{ page.iframe_src }}" target="_blank" rel="noopener" class="text-emerald-500 hover:underline">
+        {{ page.fallback_link_label }}
+      </a>.
+    </p>
+  </div>
+</main>
