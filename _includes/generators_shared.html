@@ -1,0 +1,156 @@
+<!-- Hero -->
+<section class="relative h-64">
+  <img src="/assets/images/generator-head.svg" alt="{{ page.hero_alt }}"
+       class="absolute inset-0 w-full h-full object-cover" />
+  <div class="absolute inset-0 flex items-center justify-center">
+    <div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm 
+                rounded-2xl p-4 sm:p-6 shadow-md text-center">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-emerald-500">{{ page.hero_title }}</h1>
+      <p class="mt-2 text-base md:text-lg text-slate-100 dark:text-slate-300 opacity-90">
+        {{ page.hero_sub }}
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- SPIELE -->
+<section class="py-16 bg-slate-900">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-500 text-center">{{ page.games_head }}</h2>
+    <p class="mt-2 text-lg text-slate-100 text-center">{{ page.games_sub }}</p>
+
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Spiel 1 -->
+      <a href="https://shiny-stroopwafel-a2ef1e.netlify.app/" target="_blank" rel="noopener"
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/wolf-game.svg" alt="{{ page.game1_alt }}"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">{{ page.game1_title }}</h3>
+            <p class="mt-2 text-sm text-slate-100/85">{{ page.game1_text }}</p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Spiel 2: Aim Trainer -->
+      <a href="/assets/extras/aim-trainer.html" target="_blank" rel="noopener"
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/aim-trainer.svg" alt="{{ page.game2_alt }}"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold">{{ page.game2_title }}</h3>
+            <p class="mt-2 text-sm text-slate-100/85">{{ page.game2_text }}</p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Spiel 3: Click Challenge -->
+      <a href="/assets/extras/click-challenge.html" target="_blank" rel="noopener"
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/click.svg" alt="{{ page.game3_alt }}"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold">{{ page.game3_title }}</h3>
+            <p class="mt-2 text-sm text-slate-100/85">{{ page.game3_text }}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- GENERATOREN -->
+<section class="py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-500 text-center">{{ page.gens_head }}</h2>
+    <p class="mt-2 text-lg text-slate-100 text-center">{{ page.gens_sub }}</p>
+
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Charakter-Generator -->
+      <a href="https://silituz.github.io/charakter-builder/" target="_blank" rel="noopener"
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/prompt-builder.svg" alt="{{ page.gen1_alt }}"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">{{ page.gen1_title }}</h3>
+            <p class="mt-2 text-sm text-slate-100/85">{{ page.gen1_text }}</p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Passwort-Generator -->
+      <a href="/assets/extras/password-generator.html" target="_blank" rel="noopener"
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/password.svg" alt="{{ page.gen2_alt }}"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold">{{ page.gen2_title }}</h3>
+            <p class="mt-2 text-sm text-slate-100/85">{{ page.gen2_text }}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- EXTRAS -->
+<section class="py-16 bg-slate-900">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-500 text-center">{{ page.extras_head }}</h2>
+    <p class="mt-2 text-lg text-slate-100 text-center">{{ page.extras_sub }}</p>
+
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Sound Sequencer -->
+      <a href="/assets/extras/sound-sequencer.html" target="_blank" rel="noopener"
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/sequencer.svg" alt="{{ page.extra1_alt }}"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">{{ page.extra1_title }}</h3>
+            <p class="mt-2 text-sm text-slate-100/85">{{ page.extra1_text }}</p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Persönlichkeitstest -->
+      <a href="/assets/extras/personality-test.html" target="_blank" rel="noopener"
+         class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/personality.svg" alt="{{ page.extra2_alt }}"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold">{{ page.extra2_title }}</h3>
+            <p class="mt-2 text-sm text-slate-100/85">{{ page.extra2_text }}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
