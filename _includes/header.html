@@ -1,101 +1,116 @@
-<header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200 relative">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex h-16 items-center justify-between relative z-10">
-      <!-- Marke links -->
-      <a href="{{ '/' | relative_url }}" class="flex items-center gap-3 font-black tracking-wide text-xl">
-        <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="SILITUZ Logo" class="h-10 w-10" />
-        <span class="flex flex-col leading-tight">
-          <span>SILITUZ</span>
-          <span class="text-xs font-normal text-slate-500">KI • Musik • Anime</span>
-        </span>
-      </a>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SILITUZ – Header mit Menü-Video</title>
+  <meta name="description" content="Demo-Seite: Header mit Video im Menü-Button und Slide-out-Menü." />
 
-      <!-- Menü-Button rechts -->
-      <button id="snakeBtn"
-              class="inline-flex items-center gap-2 justify-center text-slate-900 hover:text-emerald-600 text-base md:text-lg font-semibold"
-              aria-controls="sideMenu" aria-expanded="false">
-        <span class="text-2xl leading-none">🐍</span><span>Menü</span>
-      </button>
+  <!-- Tailwind über CDN (falls du schon Tailwind bundlest, kannst du das rausnehmen) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-slate-900">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between relative z-10">
+        <!-- Marke links -->
+        <a href="{{ '/' | relative_url }}" class="flex items-center gap-3 font-black tracking-wide text-xl">
+          <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="SILITUZ Logo" class="h-10 w-10" />
+          <span class="flex flex-col leading-tight">
+            <span>SILITUZ</span>
+            <span class="text-xs font-normal text-slate-500">KI • Musik • Anime</span>
+          </span>
+        </a>
+
+        <!-- Menü-Button rechts mit Video -->
+        <button id="snakeBtn"
+                class="inline-flex items-center gap-2 justify-center text-slate-900 hover:text-emerald-600 text-base md:text-lg font-semibold"
+                aria-controls="sideMenu" aria-expanded="false">
+          <!-- Video-Logo -->
+          <video id="menuVideo"
+                 class="h-8 w-8 rounded-md object-cover"
+                 autoplay muted loop playsinline preload="metadata">
+            <!-- Moderne Browser: WebM -->
+            <source src="{{ '/assets/videos/menu-logo.webm' | relative_url }}" type="video/webm">
+            <!-- Fallback: Safari/Apple -->
+            <source src="{{ '/assets/videos/menu-logo.mp4'  | relative_url }}" type="video/mp4">
+          </video>
+          <!-- Schriftzug -->
+          <span>Menü</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Overlay -->
+  <div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity z-40"></div>
+
+  <!-- Slide-out-Menü -->
+  <aside id="sideMenu"
+         class="fixed right-0 top-0 h-full w-72 max-w-[80%] bg-white shadow-2xl translate-x-full transition-transform z-50"
+         aria-hidden="true" aria-label="Hauptmenü">
+
+    <!-- Kopf -->
+    <div class="h-16 px-4 flex items-center justify-between border-b">
+      <div class="font-extrabold">SILITUZ</div>
+      <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Menü schließen">✕</button>
     </div>
 
-    <!-- Video oben rechts -->
-    <div class="pointer-events-none select-none">
-      <video
-        id="headerVideo"
-        class="hidden sm:block absolute top-1 right-2 w-40 md:w-56 lg:w-72 aspect-video object-cover rounded-xl shadow-lg ring-1 ring-black/10"
-        autoplay muted playsinline loop preload="metadata"
-        poster="{{ '/assets/video/menu-logo.webm' | relative_url }}">
-        <source src="{{ '/assets/videos/menu-logo.mp4' | relative_url }}" type="video/mp4">
-        <!-- Optional zweite Quelle -->
-        <!-- <source src="{{ '/assets/videos/header.webm' | relative_url }}" type="video/webm"> -->
-      </video>
+    <!-- Sprache / Language -->
+    <div class="px-4 py-3 border-b flex items-center justify-between">
+      <span class="text-xs uppercase tracking-wider opacity-60">Sprache / Language</span>
+      {% include lang-switcher.html %}
     </div>
-  </div>
-</header>
 
-<!-- Slide-out Overlay -->
-<div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity z-40"></div>
+    <!-- Menüeinträge -->
+    {% include menu.html %}
+  </aside>
 
-<!-- Side Menu -->
-<aside id="sideMenu"
-       class="fixed right-0 top-0 h-full w-72 max-w-[80%] bg-white shadow-2xl translate-x-full transition-transform z-50"
-       aria-hidden="true" aria-label="Hauptmenü">
+  <!-- Script -->
+  <script>
+    // --- Menü-Steuerung ---
+    const sideMenu    = document.getElementById('sideMenu');
+    const sideBtn     = document.getElementById('snakeBtn');
+    const sideClose   = document.getElementById('sideClose');
+    const sideOverlay = document.getElementById('sideOverlay');
 
-  <!-- Kopf -->
-  <div class="h-16 px-4 flex items-center justify-between border-b">
-    <div class="font-extrabold">SILITUZ</div>
-    <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Menü schließen">✕</button>
-  </div>
+    function openMenu() {
+      if (!sideMenu) return;
+      sideMenu.classList.remove("translate-x-full");
+      sideOverlay?.classList.remove("opacity-0","pointer-events-none");
+      sideBtn?.setAttribute("aria-expanded","true");
+    }
+    function closeMenu() {
+      if (!sideMenu) return;
+      sideMenu.classList.add("translate-x-full");
+      sideOverlay?.classList.add("opacity-0","pointer-events-none");
+      sideBtn?.setAttribute("aria-expanded","false");
+    }
 
-  <!-- Sprache / Language -->
-  <div class="px-4 py-3 border-b flex items-center justify-between">
-    <span class="text-xs uppercase tracking-wider opacity-60">Sprache / Language</span>
-    {% include lang-switcher.html %}
-  </div>
+    sideBtn?.addEventListener("click", openMenu);
+    sideClose?.addEventListener("click", closeMenu);
+    sideOverlay?.addEventListener("click", closeMenu);
 
-  <!-- Menü -->
-  {% include menu.html %}
-</aside>
+    // --- Video Autoplay Fix ---
+    (function () {
+      const v = document.getElementById('menuVideo');
+      if (!v) return;
+      v.muted = true;
+      v.defaultMuted = true;
 
-<!-- Script: Menü + Video -->
-<script>
-  // --- Menü-Steuerung ---
-  const sideMenu    = document.getElementById('sideMenu');
-  const sideBtn     = document.getElementById('snakeBtn');
-  const sideClose   = document.getElementById('sideClose');
-  const sideOverlay = document.getElementById('sideOverlay');
+      // iOS/Safari brauchen manchmal Interaktion
+      const kick = () => { v.play().catch(()=>{}); window.removeEventListener('touchstart', kick); window.removeEventListener('click', kick); };
+      window.addEventListener('touchstart', kick, { once: true });
+      window.addEventListener('click', kick, { once: true });
 
-  function openMenu() {
-    sideMenu.classList.remove("translate-x-full");
-    sideOverlay.classList.remove("opacity-0","pointer-events-none");
-    sideBtn.setAttribute("aria-expanded","true");
-  }
-  function closeMenu() {
-    sideMenu.classList.add("translate-x-full");
-    sideOverlay.classList.add("opacity-0","pointer-events-none");
-    sideBtn.setAttribute("aria-expanded","false");
-  }
-
-  sideBtn.addEventListener("click", openMenu);
-  sideClose.addEventListener("click", closeMenu);
-  sideOverlay.addEventListener("click", closeMenu);
-
-  // --- Video-Fix (Autoplay & iOS) ---
-  (function () {
-    const v = document.getElementById('headerVideo');
-    if (!v) return;
-    v.muted = true;
-    v.defaultMuted = true;
-
-    // iOS/Safari braucht oft User-Interaktion
-    const kick = () => { v.play().catch(()=>{}); window.removeEventListener('touchstart', kick); window.removeEventListener('click', kick); };
-    window.addEventListener('touchstart', kick, { once: true });
-    window.addEventListener('click', kick, { once: true });
-
-    // Pausieren / Fortsetzen bei Tab-Wechsel
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) v.pause();
-      else v.play().catch(()=>{});
-    });
-  })();
-</script>
+      // Bei Tab-Wechsel neu starten
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) v.pause();
+        else v.play().catch(()=>{});
+      });
+    })();
+  </script>
+</body>
+</html>
