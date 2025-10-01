@@ -1,17 +1,18 @@
-title: "SILITUZ"
+# saubere, sprechende URLs
+permalink: pretty
 
-markdown: kramdown
-theme: null
+# Standard-Sprache = Deutsch
+lang: de
 
-plugins:
-  - jekyll-polyglot
-
-languages: ["de","en"]
-default_lang: "de"
-
-exclude_from_localization:
-  - assets
-  - CNAME
-  - favicon.ico
-
-# Wichtig: KEIN benutzerdefinierter permalink, damit .html-Links bleiben
+# Defaults für Sprachen über Ordner
+defaults:
+  # alles (Standard: de)
+  - scope:
+      path: ""
+    values:
+      lang: de
+  # alles unter /en/ ist Englisch
+  - scope:
+      path: "en"
+    values:
+      lang: en
