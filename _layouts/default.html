@@ -91,6 +91,9 @@
   })();
 </script>
 <!-- End Matomo Code -->
+
+  {% include head-seo.html %}
+
   
 <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
 
@@ -167,22 +170,43 @@
     <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Menü schließen">✕</button>
   </div>
 
-  <!-- Menü-Liste -->
-  <nav class="p-4 space-y-1 text-slate-800 dark:text-slate-100">
-    {% assign cur = page.url | replace:'index.html','' | replace:'//','/' %}
-    {% assign nav_list = "Home:/,Über Silituz:/about.html,Galerie:/gallery.html,Generatoren & mehr:/generators.html,Meine Musik:/music.html,Socials:/socials.html,Unterstützung:/support.html,Shoutout:/shoutout.html,Kontakt:/contact.html,Impressum:/impressum.html" | split: ',' %}
-    {% for i in nav_list %}
-      {% assign p = i | split: ':' %}
-      {% assign title = p[0] %}
-      {% assign href  = p[1] %}
-      <a href="{{ href | relative_url }}"
-         class="flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition
-                {% if cur == href %} bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200 font-semibold {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 {% endif %}">
-        <span>{{ title }}</span>
-        <span class="opacity-60">›</span>
-      </a>
-    {% endfor %}
-  </nav>
+<!-- Sprachwahl -->
+<div class="p-4 pb-2 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+  <span class="text-xs uppercase tracking-wider opacity-60">Sprache / Language</span>
+  {% include lang-switcher.html %}
+</div>
+
+  
+<!-- Menü-Liste -->
+{% assign is_en = page.lang == "en" or page.url contains "/en/" %}
+{% if is_en %}
+  {% assign prefix = "/en" %}
+  {% assign nav_list = "Home:/,About:/about.html,Gallery:/gallery.html,Generators & more:/generators.html,My Music:/music.html,Socials:/socials.html,Support:/support.html,Shoutout:/shoutout.html,Contact:/contact.html,Imprint:/impressum.html" | split: ',' %}
+{% else %}
+  {% assign prefix = "" %}
+  {% assign nav_list = "Home:/,Über Silituz:/about.html,Galerie:/gallery.html,Generatoren & mehr:/generators.html,Meine Musik:/music.html,Socials:/socials.html,Unterstützung:/support.html,Shoutout:/shoutout.html,Kontakt:/contact.html,Impressum:/impressum.html" | split: ',' %}
+{% endif %}
+
+<nav class="p-4 space-y-1 text-slate-800 dark:text-slate-100">
+  {% assign cur = page.url | replace:'index.html','' | replace:'//','/' %}
+  {% for i in nav_list %}
+    {% assign p = i | split: ':' %}
+    {% assign title = p[0] %}
+    {% assign href  = p[1] %}
+    {% comment %}
+      Prefix /en nur in der EN-Version voranstellen:
+      (relative_url kommt danach wie gehabt)
+    {% endcomment %}
+    {% assign full = prefix | append: href %}
+    <a href="{{ full | relative_url }}"
+       class="flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition
+              {% if cur == full %} bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200 font-semibold {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 {% endif %}">
+      <span>{{ title }}</span>
+      <span class="opacity-60">›</span>
+    </a>
+  {% endfor %}
+</nav>
+
 
   <!-- Optional: kleine Social-Leiste unten -->
   <div class="mt-auto p-4 border-t border-slate-200 dark:border-slate-800">
