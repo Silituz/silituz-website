@@ -1,49 +1,13 @@
 ---
 layout: default
 title: "Meine Musik – SILITUZ"
+lang: de
+hero_alt: "Musik"
+hero_title: "Musik"
+hero_sub: "Beats & Songs von Silituz – verfügbar auf Spotify, Apple Music & mehr"
+spotify_head: "Spotify"
+apple_head: "Apple Music"
+apple_embed_src: "https://embed.music.apple.com/de/artist/silituz/1815637787"
 ---
-<!-- Hero -->
-<section class="relative h-64">
-  <!-- Hintergrundbild -->
-  <img src="/assets/images/music-head.svg" alt="Musik"
-       class="absolute inset-0 w-full h-full object-cover" />
 
-  <!-- Overlay-Karte mittig -->
-  <div class="absolute inset-0 flex items-center justify-center">
-    <div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm 
-                rounded-2xl p-4 sm:p-6 shadow-md text-center">
-      <h1 class="text-3xl md:text-4xl font-extrabold text-emerald-500">Musik</h1>
-      <p class="mt-2 text-base md:text-lg text-slate-700 dark:text-slate-300 opacity-90">
-     Beat & Songs von Silituz - verfügbar auf Spotify, Apple Music & mehr
-      </p>
-    </div>
-  </div>
-</section>
-
-  <!-- Content: Musik-Embeds -->
-  <section class="py-16">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 grid sm:grid-cols-2 gap-10">
-
-      <!-- Spotify Embed -->
-      <div class="p-6 rounded-2xl shadow-md bg-slate-800/90 text-white">
-        <h3 class="text-lg font-semibold mb-3">Spotify</h3>
-        <iframe style="border-radius:12px"
-          src="https://open.spotify.com/embed/artist/0l3OqhrDQ7No2fPCIP0i5h?utm_source=generator"
-          width="100%" height="380" frameborder="0"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
-        </iframe>
-      </div>
-
-      <!-- Apple Music Embed -->
-      <div class="p-6 rounded-2xl shadow-md bg-slate-800/90 text-white">
-        <h3 class="text-lg font-semibold mb-3">Apple Music</h3>
-        <iframe allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
-          frameborder="0" height="380"
-          style="width:100%;max-width:660px;overflow:hidden;background:transparent;"
-          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-          src="https://embed.music.apple.com/de/artist/silituz/1815637787">
-        </iframe>
-      </div>
-
-    </div>
-  </section>
+{% include music_shared.html %}
