@@ -2,8 +2,8 @@ name: Build & Deploy (Jekyll + Polyglot)
 
 on:
   push:
-    branches: ["i18n-test"]   # erst nur unser Test-Branch
-  workflow_dispatch:          # erlaubt manuelles Starten
+    branches: ["main"]     # nur main löst Deploy aus
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -18,21 +18,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
           bundler-cache: true
-
-      - name: Install dependencies
-        run: bundle install --path vendor/bundle
-
-      - name: Build site
-        run: bundle exec jekyll build --trace
-
+      - run: bundle install --path vendor/bundle
+      - run: bundle exec jekyll build --trace
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
