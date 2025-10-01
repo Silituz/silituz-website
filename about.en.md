@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "About"
+title: "About me"
 lang: en
 permalink: /en/about.html
 ---
