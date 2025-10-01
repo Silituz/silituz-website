@@ -15,11 +15,6 @@
   {%- assign is_en = page.lang == 'en' or page.url contains '/en/' -%}
   {%- assign page_url = page.url -%}
 
-  {%- comment -%}
-  Rohpfade ohne baseurl (zum Vergleichen mit site.pages):
-  - de_path: /about/ (ohne /en)
-  - en_path: /en/about/ (mit /en)
-  {%- endcomment -%}
   {%- assign de_path = page_url | replace_first: '/en', '' -%}
   {%- assign en_path = '/en' | append: page_url | replace: '//en/', '/en/' -%}
 
@@ -30,19 +25,12 @@
     {%- if p.url == en_path -%}{%- assign has_en = true -%}{%- endif -%}
   {%- endfor -%}
 
-  {%- comment -%}
-  Canonical: jeweils die eigene Variante
-  {%- endcomment -%}
   {%- if is_en -%}
     <link rel="canonical" href="{{ en_path | relative_url }}">
   {%- else -%}
     <link rel="canonical" href="{{ de_path | relative_url }}">
   {%- endif -%}
 
-  {%- comment -%}
-  Alternates: Nur ausgeben, wenn die jeweilige Seite existiert.
-  X-default zeigt auf DE (Root) – passt zu deiner Hauptsprache.
-  {%- endcomment -%}
   {%- if has_de -%}
     <link rel="alternate" hreflang="de" href="{{ de_path | relative_url }}">
   {%- endif -%}
@@ -54,8 +42,7 @@
   {%- endif -%}
   {%- comment -%} === /i18n block === {%- endcomment -%}
 
-  
-  <!-- Dark Mode Bootstrapping + Tailwind-Konfig (vor dem CDN!) -->
+  <!-- Dark Mode Bootstrapping + Tailwind-Konfig -->
   <script>
     (function () {
       const ls = localStorage.getItem("theme");
@@ -75,7 +62,7 @@
   <link rel="mask-icon" href="{{ '/assets/images/favicon.svg' | relative_url }}" color="#059669">
   <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}">
 
-  <!-- Font Awesome (für Footer-Icons) -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
@@ -85,12 +72,10 @@
     .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
     .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
     .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);}
-    /* Menü-Links (Side-Menü) */
     #sideMenu nav a { transition: background-color .25s ease, color .25s ease; }
     #sideMenu nav a:hover { background-color:#059669; color:#fff !important; }
     #sideMenu nav a.active { background-color:#d1fae5; color:#059669 !important; font-weight:600; }
     #themeThumb { transition: transform .22s cubic-bezier(.2,.9,.2,1); }
-    /* Footer (Light) */
     .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
     .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
     .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
@@ -105,49 +90,21 @@
     .footer-more:hover{background-color:#059669; color:#fff !important; animation:footer-wobble .35s ease-in-out;}
     @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-0.6deg)}100%{transform:translateX(0) rotate(0)}}
     @media (prefers-reduced-motion: reduce){.footer-more:hover{animation:none;}}
-    /* Dark via .dark */
     .dark .site-footer{background:#0f172a; color:#e5e7eb; border-top-color:#1f2937;}
     .dark .brand-title{color:#e5e7eb;}
     .dark .brand-sub{color:#94a3b8;}
     .dark .footer-center small{color:#cbd5e1;}
   </style>
 
-  <!-- Jahreszahl (falls #y existiert) -->
-  <script>document.getElementById('y')?.textContent = new Date().getFullYear();</script>
-
-  <!-- Matomo -->
-  <script>
-    var _paq = window._paq = window._paq || [];
-    _paq.push(["setCookieDomain", "*.analytics.silituz.de"]);
-    _paq.push(["setDoNotTrack", true]);
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-      var u="//analytics.silituz.de/";
-      _paq.push(['setTrackerUrl', u+'matomo.php']);
-      _paq.push(['setSiteId', '1']);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
-  </script>
-  <!-- End Matomo Code -->
-
   {% include head-seo.html %}
 </head>
   
 <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
 
-  <noscript>
-  <p><img referrerpolicy="no-referrer-when-downgrade"
-          src="https://analytics.silituz.de/matomo.php?idsite=1&amp;rec=1"
-          style="border:0;" alt="" /></p>
-</noscript>
-  
-<!-- ===== HEADER: Logo links • Toggle Mitte • Rechts: 🐍 Menü-Button ===== -->
+<!-- HEADER -->
 <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
   <div class="container mx-auto px-4 py-6 grid grid-cols-[1fr_auto_1fr] items-center">
 
-    <!-- Links: Logo (größer als im Footer) -->
     <a href="{{ '/' | relative_url }}" class="justify-self-start flex items-center gap-3">
       <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="h-12 w-auto">
       <div class="leading-tight">
@@ -156,290 +113,127 @@
       </div>
     </a>
 
-    <!-- Mitte: Theme-Schieberegler (sichtbar lassen; wenn verstecken gewünscht -> CSS #themeSlider{display:none!important}) -->
     <div class="justify-self-center">
-      <button id="themeSlider"
-        class="relative inline-flex items-center select-none"
-        type="button" aria-label="Design umschalten" aria-live="polite">
-        <!-- Track -->
+      <button id="themeSlider" class="relative inline-flex items-center select-none" type="button">
         <span id="themeTrack" class="relative h-9 w-24 rounded-full bg-slate-200/80 dark:bg-slate-700/80 shadow-inner overflow-hidden select-none">
-          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-xl pointer-events-none">☀️</span>
-          <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xl pointer-events-none">🌙</span>
-          <span id="themeThumb"
-                class="absolute top-1/2 -translate-y-1/2 h-8 w-11 rounded-full bg-white dark:bg-slate-200 shadow
-                       transition-transform duration-300 will-change-transform translate-x-0"></span>
+          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-xl">☀️</span>
+          <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xl">🌙</span>
+          <span id="themeThumb" class="absolute top-1/2 -translate-y-1/2 h-8 w-11 rounded-full bg-white dark:bg-slate-200 shadow"></span>
         </span>
       </button>
     </div>
 
-    <!-- Rechts: Menü-Trigger -->
     <div class="justify-self-end">
       <button id="snakeBtn"
         aria-controls="sideMenu" aria-expanded="false"
-        class="group inline-flex items-center gap-3 px-4 py-2 rounded-xl text-lg font-semibold
-               text-slate-900 dark:text-slate-100 bg-transparent
-               hover:bg-transparent focus:bg-transparent active:bg-transparent
-               focus:outline-none focus:ring-2 ring-emerald-500/40">
-
-        <!-- Schlange als Video -->
-        <video autoplay loop muted playsinline preload="auto"
-               class="menu-logo"
-               aria-hidden="true">
+        class="group inline-flex items-center gap-3 px-4 py-2 rounded-xl text-lg font-semibold text-slate-900 dark:text-slate-100">
+        <video autoplay loop muted playsinline preload="auto" class="menu-logo" aria-hidden="true">
           <source src="{{ '/assets/videos/menu-logo.webm?v=3' | relative_url }}" type="video/webm">
           <source src="{{ '/assets/videos/menu-logo.mp4?v=3'  | relative_url }}" type="video/mp4">
         </video>
-
        <span class="hidden sm:inline transition-colors group-hover:text-emerald-500">Menü</span>
       </button>
     </div>
 
-  </div> <!-- 👈 Grid-Container schließen -->
-</header> <!-- 👈 Header schließen -->
+  </div>
+</header>
 
-<!-- ===== OVERLAY + SLIDE-IN MENU (von rechts) ===== -->
+<!-- Overlay + SideMenu -->
 <div id="sideOverlay" class="fixed inset-0 bg-black/40 opacity-0 pointer-events-none transition-opacity duration-300 z-40"></div>
-
 <aside id="sideMenu"
   class="fixed right-0 top-0 h-full w-80 max-w-[86%] bg-white dark:bg-slate-900 shadow-2xl translate-x-full transition-transform duration-300 z-50"
   aria-hidden="true" aria-label="Hauptmenü">
-  <!-- Kopf des Sliders -->
+
   <div class="h-16 px-4 flex items-center justify-between border-b border-slate-200 dark:border-slate-800">
     <div class="flex items-center gap-2 font-extrabold text-slate-800 dark:text-slate-100">
       <span class="text-xl">🐍</span> <span>SILITUZ</span>
     </div>
-    <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Menü schließen">✕</button>
+    <button id="sideClose" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">✕</button>
   </div>
 
-<!-- Sprachwahl -->
-<div class="p-4 pb-2 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-  <span class="text-xs uppercase tracking-wider opacity-60">Sprache / Language</span>
-  {% include lang-switcher.html %}
-</div>
-  
-<!-- Menü-Liste -->
-{% assign is_en = page.lang == "en" or page.url contains "/en/" %}
-{% if is_en %}
-  {% assign prefix = "/en" %}
-  {% assign nav_list = "Home:/,About:/about.html,Gallery:/gallery.html,Generators & more:/generators.html,My Music:/music.html,Socials:/socials.html,Support:/support.html,Shoutout:/shoutout.html,Contact:/contact.html,Imprint:/impressum.html" | split: ',' %}
-{% else %}
-  {% assign prefix = "" %}
-  {% assign nav_list = "Home:/,Über Silituz:/about.html,Galerie:/gallery.html,Generatoren & mehr:/generators.html,Meine Musik:/music.html,Socials:/socials.html,Unterstützung:/support.html,Shoutout:/shoutout.html,Kontakt:/contact.html,Impressum:/impressum.html" | split: ',' %}
-{% endif %}
+  <!-- Sprachwahl -->
+  <div class="p-4 pb-2 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+    <span class="text-xs uppercase tracking-wider opacity-60">Sprache / Language</span>
+    {% include lang-switcher.html %}
+  </div>
 
-<nav class="p-4 space-y-1 text-slate-800 dark:text-slate-100">
-  {% assign cur = page.url | replace:'index.html','' | replace:'//','/' %}
-  {% for i in nav_list %}
-    {% assign p = i | split: ':' %}
-    {% assign title = p[0] %}
-    {% assign href  = p[1] %}
-    {% comment %}
-      Prefix /en nur in der EN-Version voranstellen:
-      (relative_url kommt danach wie gehabt)
-    {% endcomment %}
-    {% assign full = prefix | append: href %}
-    <a href="{{ full | relative_url }}"
-       class="flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition
-              {% if cur == full %} bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200 font-semibold {% else %} hover:bg-slate-100 dark:hover:bg-slate-800 {% endif %}">
-      <span>{{ title }}</span>
-      <span class="opacity-60">›</span>
-    </a>
-  {% endfor %}
-</nav>
+  <!-- Menü-Liste -->
+  {%- assign is_en = false -%}
+  {%- if page.lang == 'en' -%}
+    {%- assign is_en = true -%}
+  {%- elsif page.url | slice: 0,4 == '/en/' -%}
+    {%- assign is_en = true -%}
+  {%- endif -%}
 
+  {%- if is_en -%}
+    {%- assign nav_list = "Home:/,About:/about.html,Gallery:/gallery.html,Generators & more:/generators.html,My Music:/music.html,Socials:/socials.html,Support:/support.html,Shoutout:/shoutout.html,Contact:/contact.html,Imprint:/impressum.html" | split: ',' -%}
+  {%- else -%}
+    {%- assign nav_list = "Home:/,Über Silituz:/about.html,Galerie:/gallery.html,Generatoren & mehr:/generators.html,Meine Musik:/music.html,Socials:/socials.html,Unterstützung:/support.html,Shoutout:/shoutout.html,Kontakt:/contact.html,Impressum:/impressum.html" | split: ',' -%}
+  {%- endif -%}
 
-  <!-- Optional: kleine Social-Leiste unten -->
+  {%- assign cur = page.url | replace:'index.html','' | replace:'//','/' -%}
+  <nav class="p-4 space-y-1 text-slate-800 dark:text-slate-100">
+    {%- for i in nav_list -%}
+      {%- assign p = i | split: ':' -%}
+      {%- assign title = p[0] -%}
+      {%- assign href  = p[1] -%}
+      {%- assign full = href -%}
+      {%- if is_en -%}
+        {%- if full | slice: 0,4 != '/en/' -%}
+          {%- assign full = '/en' | append: full -%}
+        {%- endif -%}
+      {%- else -%}
+        {%- if full | slice: 0,4 == '/en/' -%}
+          {%- assign full = full | replace_first: '/en','' -%}
+        {%- endif -%}
+      {%- endif -%}
+      {%- assign full_norm = full | replace:'index.html','' | replace:'//','/' -%}
+      <a href="{{ full | relative_url }}"
+         class="flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition
+                {%- if cur == full_norm -%} bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200 font-semibold {%- else -%} hover:bg-slate-100 dark:hover:bg-slate-800 {%- endif -%}">
+        <span>{{ title }}</span>
+        <span class="opacity-60">›</span>
+      </a>
+    {%- endfor -%}
+  </nav>
+
+  <!-- Socials -->
   <div class="mt-auto p-4 border-t border-slate-200 dark:border-slate-800">
     <div class="flex items-center justify-center gap-5 text-slate-600 dark:text-slate-300">
-      <a href="https://www.tiktok.com/@silituz" target="_blank" rel="noopener" class="hover:text-emerald-500" aria-label="TikTok"><i class="fab fa-tiktok text-lg"></i></a>
-      <a href="https://www.youtube.com/@silituz" target="_blank" rel="noopener" class="hover:text-emerald-500" aria-label="YouTube"><i class="fab fa-youtube text-lg"></i></a>
-      <a href="https://www.instagram.com/silituz" target="_blank" rel="noopener" class="hover:text-emerald-500" aria-label="Instagram"><i class="fab fa-instagram text-lg"></i></a>
-      <a href="https://open.spotify.com/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank" rel="noopener" class="hover:text-emerald-500" aria-label="Spotify"><i class="fab fa-spotify text-lg"></i></a>
-      <a href="https://music.apple.com/de/artist/silituz/1815637787"
-   target="_blank" rel="noopener"
-   class="hover:text-emerald-500" aria-label="Apple Music" title="Apple Music">
-  <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
-       <path d="M16 5v9.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 5z" fill="currentColor"/>
-  </svg>
-</a>
+      <a href="https://www.tiktok.com/@silituz" target="_blank"><i class="fab fa-tiktok text-lg"></i></a>
+      <a href="https://www.youtube.com/@silituz" target="_blank"><i class="fab fa-youtube text-lg"></i></a>
+      <a href="https://www.instagram.com/silituz" target="_blank"><i class="fab fa-instagram text-lg"></i></a>
+      <a href="https://open.spotify.com/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank"><i class="fab fa-spotify text-lg"></i></a>
+      <a href="https://music.apple.com/de/artist/silituz/1815637787" target="_blank">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/></svg>
+      </a>
     </div>
   </div>
 </aside>
 
-<!-- ===== JS: Öffnen/Schließen + Body-Scroll sperren ===== -->
-<script>
-  const snakeBtn    = document.getElementById('snakeBtn');
-  const sideMenu    = document.getElementById('sideMenu');
-  const sideOverlay = document.getElementById('sideOverlay');
-  const sideClose   = document.getElementById('sideClose');
+<!-- Seiteninhalt -->
+<main id="content">
+  {{ content }}
+</main>
 
-  function openMenu(){
-    sideMenu.classList.remove('translate-x-full');
-    sideOverlay.classList.remove('pointer-events-none');
-    requestAnimationFrame(()=>{ sideOverlay.classList.add('opacity-100'); sideOverlay.classList.remove('opacity-0'); });
-    document.body.classList.add('overflow-hidden');
-    snakeBtn?.setAttribute('aria-expanded','true');
-    sideMenu.setAttribute('aria-hidden','false');
-  }
-
-  function closeMenu(){
-    sideMenu.classList.add('translate-x-full');
-    sideOverlay.classList.add('pointer-events-none');
-    sideOverlay.classList.remove('opacity-100');
-    sideOverlay.classList.add('opacity-0');
-    document.body.classList.remove('overflow-hidden');
-    snakeBtn?.setAttribute('aria-expanded','false');
-    sideMenu.setAttribute('aria-hidden','true');
-  }
-
-  function toggleMenu(){
-    const isClosed = sideMenu.classList.contains('translate-x-full');
-    isClosed ? openMenu() : closeMenu();
-  }
-
-  // Klicks
-  snakeBtn?.addEventListener('click', toggleMenu);  // <— jetzt Toggle
-  sideClose?.addEventListener('click', closeMenu);
-  sideOverlay?.addEventListener('click', closeMenu);
-
-  // ESC schließt
-  window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
-</script>
-  
-<!-- THEME SLIDER JS -->
-<script>
-  // === Init: respektiere gespeichertes Theme, Default = dark ===
-  (function () {
-    const ls = localStorage.getItem("theme");
-    const root = document.documentElement;
-    if (!ls) {
-      root.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      root.classList.toggle("dark", ls === "dark");
-    }
-  })();
-
-  const themeBtn   = document.getElementById('themeSlider');
-  // Robust: nimm #themeTrack, sonst fallback auf das erste <span> im Button
-  const themeTrack = document.getElementById('themeTrack') || themeBtn?.querySelector(':scope > span');
-  const themeThumb = document.getElementById('themeThumb');
-
-  // Feste Positionen passend zu w-24 (≈ 6rem) und w-11 (≈ 2.75rem)
-  const POS_LEFT  = 'translate(0rem, -50%)';    // ☀️ => LIGHT
-  const POS_RIGHT = 'translate(3.5rem, -50%)';  // 🌙 => DARK
-
-  function applyThumbPosition() {
-    if (!themeThumb) return;
-    const isDark = document.documentElement.classList.contains('dark');
-    themeThumb.style.transform = isDark ? POS_RIGHT : POS_LEFT;
-    themeBtn?.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-    themeBtn?.setAttribute('aria-label', isDark ? 'Dunkles Design aktiv' : 'Helles Design aktiv');
-  }
-
-  function setTheme(isDark) {
-    const root = document.documentElement;
-    root.classList.toggle('dark', isDark);
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    applyThumbPosition();
-  }
-
-  // Wähle strikt anhand der Klick-Position auf dem TRACK (links = LIGHT, rechts = DARK)
-  function chooseByX(clientX) {
-    if (!themeTrack) return;
-    const r = themeTrack.getBoundingClientRect();
-    const x = clientX - r.left;
-    const goRight = x > r.width / 2;
-    setTheme(goRight); // rechts => DARK
-  }
-
-  // Klick exakt auf den Track verwenden (kein Toggle!)
-  themeTrack?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    chooseByX(e.clientX);
-  });
-
-  // Falls jemand genau auf den Button (aber nicht Track) klickt: auch Position nehmen
-  themeBtn?.addEventListener('click', (e) => {
-    // Wenn das Event vom Track kam, hat es bereits gestoppt
-    chooseByX(e.clientX);
-  });
-
-  // Drag mit Live-Vorschau
-  let dragging = false;
-
-  function onDown(e) { dragging = true; }
-  function onMove(e) {
-    if (!dragging || !themeTrack || !themeThumb) return;
-    const clientX = (e.touches?.[0]?.clientX ?? e.clientX);
-    const r = themeTrack.getBoundingClientRect();
-    const x = Math.max(0, Math.min(r.width, clientX - r.left));
-    const goRight = x > r.width / 2;
-    themeThumb.style.transform = goRight ? POS_RIGHT : POS_LEFT; // Vorschau
-  }
-  function onUp(e) {
-    if (!dragging) return;
-    dragging = false;
-    const clientX = (e.changedTouches?.[0]?.clientX ?? e.clientX);
-    chooseByX(clientX);
-  }
-
-  themeTrack?.addEventListener('mousedown', onDown);
-  window.addEventListener('mousemove', onMove);
-  window.addEventListener('mouseup', onUp);
-
-  themeTrack?.addEventListener('touchstart', onDown, { passive: true });
-  window.addEventListener('touchmove', onMove, { passive: true });
-  window.addEventListener('touchend', onUp);
-
-  // Startposition korrekt setzen
-  applyThumbPosition();
-</script>
-
-
-
-  <!-- Seiteninhalt -->
-  <main id="content">
-    {{ content }}
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="site-footer bg-white text-slate-800 border-t border-slate-200 dark:bg-slate-900 dark:text-slate-100 dark:border-slate-700">
-    <div class="footer-inner container mx-auto flex items-center justify-between gap-4 py-6 px-4">
-      <div class="footer-left">
-        <a href="{{ '/' | relative_url }}" class="footer-brand flex items-center gap-3">
-          <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="logo h-8 w-auto">
-          <div class="brand-texts leading-tight">
-            <span class="brand-title block text-lg font-bold text-slate-900 dark:text-slate-100">SILITUZ</span>
-            <span class="brand-sub block text-xs text-slate-600 dark:text-slate-400">AI • Music • Visuals</span>
-          </div>
-        </a>
-      </div>
-
-      <div class="footer-center">
-  <a href="{{ '/impressum.html' | relative_url }}"
-     class="text-sm text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition-colors cursor-pointer">
-     © {{ "now" | date: "%Y" }} Silituz – Alle Rechte vorbehalten
-  </a>
-</div>
-
-
-      <nav class="footer-right flex items-center gap-3" aria-label="Social Media">
-        <a class="icon tiktok text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://www.tiktok.com/@silituz" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-        <a class="icon youtube text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://www.youtube.com/@silituz" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-        <a class="icon instagram text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://www.instagram.com/silituz" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-        <a class="icon spotify text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://open.spotify.com/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank" rel="noopener" aria-label="Spotify"><i class="fab fa-spotify"></i></a>
-        <a class="icon apple text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://music.apple.com/de/artist/silituz/1815637787" target="_blank" rel="noopener" aria-label="Apple Music">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/></svg>
-        </a>
-        <a class="more footer-more text-base font-semibold px-3.5 py-2 rounded-lg bg-transparent
-           text-slate-600 dark:text-slate-300
-           hover:bg-emerald-500 hover:text-white transition"
-   href="{{ '/socials.html' | relative_url }}">
-  Mehr
-</a>
-
-      </nav>
+<!-- FOOTER -->
+<footer class="site-footer bg-white text-slate-800 border-t border-slate-200 dark:bg-slate-900 dark:text-slate-100 dark:border-slate-700">
+  <div class="footer-inner container mx-auto flex items-center justify-between gap-4 py-6 px-4">
+    <div class="footer-left">
+      <a href="{{ '/' | relative_url }}" class="footer-brand flex items-center gap-3">
+        <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="logo h-8 w-auto">
+        <div class="brand-texts leading-tight">
+          <span class="brand-title block text-lg font-bold">SILITUZ</span>
+          <span class="brand-sub block text-xs">AI • Music • Visuals</span>
+        </div>
+      </a>
     </div>
-  </footer>
- </body>
+    <div class="footer-center">
+      <a href="{{ '/impressum.html' | relative_url }}" class="text-sm hover:text-emerald-500 transition-colors">
+        © {{ "now" | date: "%Y" }} Silituz – Alle Rechte vorbehalten
+      </a>
+    </div>
+  </div>
+</footer>
+</body>
 </html>
