@@ -1,0 +1,59 @@
+<!-- Hero -->
+<section class="relative h-64">
+  <img src="/assets/images/gallery-head.svg" alt="{{ page.hero_alt }}"
+       class="absolute inset-0 w-full h-full object-cover" />
+
+  <div class="absolute inset-0 flex items-center justify-center">
+    <div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm 
+                rounded-2xl p-4 sm:p-6 shadow-md text-center">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-emerald-500">{{ page.hero_title }}</h1>
+      <p class="mt-2 text-base md:text-lg text-slate-700 dark:text-slate-300 opacity-90">
+        {{ page.hero_sub }}
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Hinweis (Bau-Style) -->
+<section role="status" aria-live="polite"
+         class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 md:mt-12 mb-10">
+  <div class="group relative overflow-hidden rounded-2xl shadow-md"
+       style="border: 6px solid; border-image: repeating-linear-gradient(45deg, #f59e0b 0 14px, #111827 14px 28px) 8;">
+    <div class="relative bg-slate-800/90 p-6 md:p-8">
+
+      <p class="text-2xl md:text-3xl font-extrabold uppercase tracking-widest text-amber-300
+                flex items-center justify-center gap-2
+                mb-4 md:mb-0 md:absolute md:inset-x-0 md:top-6">
+        🚨 {{ page.warn_head }} 🚨
+      </p>
+
+      <div class="grid gap-6 md:grid-cols-[220px,1fr] items-start">
+        <div class="justify-self-center md:justify-self-start">
+          <img src="{{ '/assets/images/bau-snake.svg' | relative_url }}"
+               alt="Silituz Bau-Snake" class="w-40 h-40 md:w-44 md:h-44 object-contain drop-shadow" />
+        </div>
+
+        <div class="md:mt-12">
+          <h2 class="text-2xl font-bold text-emerald-500">{{ page.warn_title }}</h2>
+          <p class="mt-2 text-slate-100/85">
+            {{ page.warn_text }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Galerie -->
+<section class="py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <img class="rounded-xl shadow object-cover w-full h-72" src="assets/images/gallery1.webp" alt="{{ page.img1_alt }}" />
+      <img class="rounded-xl shadow object-cover w-full h-72" src="assets/images/gallery2.webp" alt="{{ page.img2_alt }}" />
+      <img class="rounded-xl shadow object-cover w-full h-72" src="assets/images/gallery3.webp" alt="{{ page.img3_alt }}" />
+      <img class="rounded-xl shadow object-cover w-full h-72" src="assets/images/gallery4.webp" alt="{{ page.img4_alt }}" />
+      <img class="rounded-xl shadow object-cover w-full h-72" src="assets/images/gallery5.webp" alt="{{ page.img5_alt }}" />
+      <img class="rounded-xl shadow object-cover w-full h-72" src="assets/images/gallery6.webp" alt="{{ page.img6_alt }}" />
+    </div>
+  </div>
+</section>
