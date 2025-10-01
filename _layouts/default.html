@@ -91,6 +91,20 @@
 
   {% include head-seo.html %}
 </head>
+
+  <script>
+  (function(){
+    var a = document.querySelectorAll('a[href$=".html"]');
+    a.forEach(function(link){
+      var href = link.getAttribute('href');
+      // interne Links (beginnen mit /) umschreiben
+      if (href && href.charAt(0)==='/' && !href.startsWith('/assets/')) {
+        link.setAttribute('href', href.replace(/\.html$/, '/') );
+      }
+    });
+  })();
+</script>
+
   
 <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
 
