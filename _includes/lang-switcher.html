@@ -1,0 +1,10 @@
+{% assign is_en = page.lang == "en" or page.url contains '/en/' %}
+<nav class="flex items-center gap-3 text-sm">
+  {% if is_en %}
+    <a class="hover:text-emerald-400" href="{{ page.url | replace_first: '/en', '' }}">DE</a>
+    <span class="text-emerald-500 font-semibold">EN</span>
+  {% else %}
+    <span class="text-emerald-500 font-semibold">DE</span>
+    <a class="hover:text-emerald-400" href="/en{{ page.url }}">EN</a>
+  {% endif %}
+</nav>
