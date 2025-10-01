@@ -62,31 +62,31 @@
 
   <!-- Zusatzstyles -->
   <style>
-    .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
-    .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
-    .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);}
-    #sideMenu nav a { transition: background-color .25s ease, color .25s ease; }
-    #sideMenu nav a:hover { background-color:#059669; color:#fff !important; }
-    #sideMenu nav a.active { background-color:#d1fae5; color:#059669 !important; font-weight:600; }
-    #themeThumb { transition: transform .22s cubic-bezier(.2,.9,.2,1); }
-    .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
-    .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
-    .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
-    .footer-left .logo{height:40px; width:auto;}
-    .brand-texts{display:flex; flex-direction:column; line-height:1.2;}
-    .brand-title{font-size:1.2rem; font-weight:800; color:#111;}
-    .brand-sub{font-size:.85rem; color:#666;}
-    .footer-center small{font-size:.9rem; color:#555;}
-    .footer-right{display:flex; align-items:center; gap:12px;}
-    .footer-right .icon{font-size:22px; color:#888; transition:color .3s ease;}
-    .footer-more{transition:background-color .25s ease, color .25s ease, transform .25s ease; color:#374151;}
-    .footer-more:hover{background-color:#059669; color:#fff !important; animation:footer-wobble .35s ease-in-out;}
-    @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-0.6deg)}100%{transform:translateX(0) rotate(0)}}
-    @media (prefers-reduced-motion: reduce){.footer-more:hover{animation:none;}}
-    .dark .site-footer{background:#0f172a; color:#e5e7eb; border-top-color:#1f2937;}
-    .dark .brand-title{color:#e5e7eb;}
-    .dark .brand-sub{color:#94a3b8;}
-    .dark .footer-center small{color:#cbd5e1;}
+    .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);} 
+    .brand-card{transition:transform .15s ease, box-shadow .15s ease;} 
+    .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);} 
+    #sideMenu nav a { transition: background-color .25s ease, color .25s ease; } 
+    #sideMenu nav a:hover { background-color:#059669; color:#fff !important; } 
+    #sideMenu nav a.active { background-color:#d1fae5; color:#059669 !important; font-weight:600; } 
+    #themeThumb { transition: transform .22s cubic-bezier(.2,.9,.2,1); } 
+    .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;} 
+    .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;} 
+    .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;} 
+    .footer-left .logo{height:40px; width:auto;} 
+    .brand-texts{display:flex; flex-direction:column; line-height:1.2;} 
+    .brand-title{font-size:1.2rem; font-weight:800; color:#111;} 
+    .brand-sub{font-size:.85rem; color:#666;} 
+    .footer-center small{font-size:.9rem; color:#555;} 
+    .footer-right{display:flex; align-items:center; gap:12px;} 
+    .footer-right .icon{font-size:22px; color:#888; transition:color .3s ease;} 
+    .footer-more{transition:background-color .25s ease, color .25s ease, transform .25s ease; color:#374151;} 
+    .footer-more:hover{background-color:#059669; color:#fff !important; animation:footer-wobble .35s ease-in-out;} 
+    @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-0.6deg)}100%{transform:translateX(0) rotate(0)}} 
+    @media (prefers-reduced-motion: reduce){.footer-more:hover{animation:none;}} 
+    .dark .site-footer{background:#0f172a; color:#e5e7eb; border-top-color:#1f2937;} 
+    .dark .brand-title{color:#e5e7eb;} 
+    .dark .brand-sub{color:#94a3b8;} 
+    .dark .footer-center small{color:#cbd5e1;} 
   </style>
 
   {% include head-seo.html %}
@@ -118,7 +118,7 @@
         </span>
       </button>
 
-      <!-- Sprachschalter mit Flaggen -->
+      <!-- Sprachschalter mit Flaggen (robust mit Existenz-Check) -->
       {%- assign is_en_global = false -%}
       {%- if page.lang == 'en' -%}
         {%- assign is_en_global = true -%}
@@ -127,6 +127,13 @@
       {%- endif -%}
       {%- assign de_url_global = page.url | replace_first: '/en','' -%}
       {%- assign en_url_global = '/en' | append: de_url_global -%}
+
+      {%- assign de_exists_current = false -%}
+      {%- assign en_exists_current = false -%}
+      {%- for pg in site.pages -%}
+        {%- if pg.url == de_url_global -%}{%- assign de_exists_current = true -%}{%- endif -%}
+        {%- if pg.url == en_url_global -%}{%- assign en_exists_current = true -%}{%- endif -%}
+      {%- endfor -%}
 
       <div class="flex items-center gap-2" role="group" aria-label="Language switcher">
         <a href="{{ de_url_global | relative_url }}" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg border text-sm
@@ -139,8 +146,10 @@
           </svg>
           <span class="sr-only">Deutsch</span><span aria-hidden="true">DE</span>
         </a>
-        <a href="{{ en_url_global | relative_url }}" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg border text-sm
-                   {% if is_en_global %} bg-emerald-500 text-white border-emerald-500 {% else %} border-slate-300 hover:border-emerald-500 {% endif %}">
+        <a href="{{ (en_exists_current ? en_url_global : de_url_global) | relative_url }}"
+           {% unless en_exists_current %}data-missing="true" title="English version not available – fallback to DE"{% endunless %}
+           class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg border text-sm
+                   {% if is_en_global and en_exists_current %} bg-emerald-500 text-white border-emerald-500 {% else %} border-slate-300 hover:border-emerald-500 {% endif %}">
           <!-- US Flagge -->
           <svg viewBox="0 0 7410 3900" width="18" height="12" aria-hidden="true">
             <rect width="7410" height="3900" fill="#b22234"/>
@@ -161,7 +170,7 @@
     </div>
 
     <!-- Rechts: Menü-Trigger -->
-    {%- assign menu_label = is_en_global | default: false | if -%}Menu{%- else -%}Menü{%- endif -%}
+    {%- capture menu_label -%}{%- if is_en_global -%}Menu{%- else -%}Menü{%- endif -%}{%- endcapture -%}
     <div class="justify-self-end">
       <button id="snakeBtn"
         aria-controls="sideMenu" aria-expanded="false"
@@ -217,7 +226,8 @@
         {%- if en_exists -%}
           {%- assign full = en_candidate -%}
         {%- else -%}
-          {%- assign full = href -%} {# fallback auf DE wenn EN-Seite fehlt #}
+          {%- assign full = href -%}
+          {% comment %} fallback auf DE wenn EN-Seite fehlt {% endcomment %}
         {%- endif -%}
       {%- else -%}
         {%- if full | slice: 0,4 == '/en/' -%}{%- assign full = full | replace_first: '/en','' -%}{%- endif -%}
@@ -256,7 +266,7 @@
   {{ content }}
 </main>
 
-<!-- ===== FOOTER (wie vorher) ===== -->
+<!-- ===== FOOTER ===== -->
 <footer class="site-footer bg-white text-slate-800 border-t border-slate-200 dark:bg-slate-900 dark:text-slate-100 dark:border-slate-700">
   <div class="footer-inner container mx-auto flex items-center justify-between gap-4 py-6 px-4">
     <div class="footer-left">
