@@ -549,3 +549,15 @@ z-index: 0;
   color: #10b981 !important;   /* emerald-500 */
 }
 
+/* Footer – Link „Mehr / More“: grau → hover grün + weiß + wobble */
+.footer-more {
+  background: transparent !important;
+  color: #9ca3af !important;            /* slate-400 */
+  transition: background-color .25s ease, color .25s ease, transform .25s ease;
+}
+.footer-more:hover,
+.footer-more:focus-visible {
+  background-color: #10b981 !important; /* emerald-500 */
+  color: #ffffff !important;            /* weiß beim Hover */
+  animation: footer-wobble .35s ease-in-out;
+}
