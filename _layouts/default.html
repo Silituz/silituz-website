@@ -89,20 +89,28 @@
     .dark .brand-sub{color:#94a3b8;}
     .dark .footer-center small{color:#cbd5e1;}
 
-    /* === Language: nur Glow + transparent === */
-    .lang-active {
-      color: #10b981 !important; /* emerald-500 */
-      filter: drop-shadow(0 0 6px rgba(16,185,129,.55));
-    }
-    .dark .lang-active {
-      filter: drop-shadow(0 0 8px rgba(16,185,129,.60));
-    }
+  /* === Sprachschalter: kräftiges Leuchten === */
+.lang-active,
+a[data-lang][data-active] {
+  color: #10b981 !important; /* emerald-500 */
+  text-shadow: 0 0 14px rgba(16,185,129,.8), 0 0 26px rgba(16,185,129,.55);
+  filter: drop-shadow(0 0 14px rgba(16,185,129,.75));
+  font-weight: 600;
+}
 
-    /* Sprachschalter aktiv leuchten lassen über data-active (JS setzt das) */
-    a[data-lang][data-active] {
-      color: rgb(16 185 129); /* emerald-500 */
-      text-shadow: 0 0 6px rgba(16,185,129,.6);
-    }
+/* Hover-Effekt für nicht-aktive Sprache */
+a[data-lang]:hover {
+  color: #10b981;
+  text-shadow: 0 0 10px rgba(16,185,129,.6), 0 0 18px rgba(16,185,129,.45);
+  filter: drop-shadow(0 0 12px rgba(16,185,129,.5));
+}
+
+/* Dark-Mode noch intensiver */
+.dark .lang-active,
+.dark a[data-lang][data-active] {
+  text-shadow: 0 0 18px rgba(16,185,129,.9), 0 0 32px rgba(16,185,129,.65);
+  filter: drop-shadow(0 0 20px rgba(16,185,129,.85));
+}
 
    /* === Menü-Button: Neon-Glow + stärkeres Pulsieren, wenn aktiv === */
 #snakeBtn .menu-logo {
