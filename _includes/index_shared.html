@@ -11,35 +11,36 @@
   <div class="absolute inset-y-0 left-[8%] flex items-center">
     <div class="px-6 sm:px-10 md:px-14 lg:px-16">
       <!-- Card/Glass -->
-      <div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-md">
-        <h1 class="text-3xl md:text-4xl font-extrabold leading-tight text-emerald-500">
-          {{ page.hero_title }}
-        </h1>
-        <p class="mt-2 text-base md:text-lg opacity-90">
-          {{ page.hero_sub }}
-        </p>
+<div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-md text-center">
+  <h1 class="text-3xl md:text-4xl font-extrabold leading-tight text-emerald-500">
+    {{ page.hero_title }}
+  </h1>
+  <p class="mt-2 text-base md:text-lg opacity-90">
+    {{ page.hero_sub }}
+  </p>
 
-        <!-- Buttons: gleichmäßig, mit Luft zum Rand -->
-        <div class="mt-4 flex gap-4 justify-between px-4">
-          <!-- Über mich / About -->
-          <a href="{{ page.about_link }}"
-             class="welcome-btn flex-1 text-center group relative inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 font-semibold overflow-hidden transition-colors">
-            <span class="absolute inset-y-0 left-0 h-full w-0 bg-emerald-500/90 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
-            <span class="relative z-10 inline-flex items-center gap-2">
-              {{ page.about_btn }}
-            </span>
-          </a>
+  <!-- Buttons: gleichmäßig, mit Luft zum Rand -->
+  <div class="mt-4 flex gap-4 justify-between px-4">
+    <!-- Über mich / About -->
+    <a href="{{ page.about_link }}"
+       class="welcome-btn flex-1 text-center group relative inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 font-semibold overflow-hidden transition-colors">
+      <span class="absolute inset-y-0 left-0 h-full w-0 bg-emerald-500/90 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+      <span class="relative z-10 inline-flex items-center gap-2">
+        {{ page.about_btn }}
+      </span>
+    </a>
 
-          <!-- Socials -->
-          <a href="/socials/"
-             class="welcome-btn flex-1 text-center group relative inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 font-semibold overflow-hidden transition-colors">
-            <span class="absolute inset-y-0 left-0 h-full w-0 bg-emerald-500/90 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
-            <span class="relative z-10 inline-flex items-center gap-2">
-              {{ page.socials_btn }}
-            </span>
-          </a>
-        </div>
-      </div>
+    <!-- Socials -->
+    <a href="/socials/"
+       class="welcome-btn flex-1 text-center group relative inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 font-semibold overflow-hidden transition-colors">
+      <span class="absolute inset-y-0 left-0 h-full w-0 bg-emerald-500/90 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+      <span class="relative z-10 inline-flex items-center gap-2">
+        {{ page.socials_btn }}
+      </span>
+    </a>
+  </div>
+</div>
+
     </div>
   </div>
 </section>
