@@ -521,3 +521,17 @@ z-index: 0;
 #sideMenu nav a[aria-current="page"] {
   /* Klassen aus dem Anchor regeln das bereits; hier nur Reserve */
 }
+
+/* ================================
+   GALERIE: Attention / Achtung Label
+   ================================ */
+
+/* Erzwingt gelb, egal was global wirkt */
+.attention-label {
+  color: #fcd34d !important; /* amber-300 */
+}
+
+/* Falls du in deinem HTML noch kein extra class-Attribut hast: 
+   einfach die <p> Zeile so anpassen: 
+   <p class="attention-label ...">🚨 {{ page.warn_head }} 🚨</p>
+*/
