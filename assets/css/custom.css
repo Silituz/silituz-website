@@ -112,6 +112,32 @@ hr, .border-default {
   backdrop-filter: blur(6px);
 }
 
+/* ================================
+   GRÜN → WEISS HOVER
+   ================================ */
+
+/* Alle Links, die grün sind */
+a:hover {
+  color: #ffffff !important;
+}
+
+/* Alle Buttons mit grünem Hintergrund */
+.btn-primary:hover,
+.bg-emerald-500:hover,
+.bg-emerald-600:hover,
+.bg-emerald-700:hover {
+  background-color: #ffffff !important;
+  color: #000000 !important; /* Text dann schwarz, damit man es lesen kann */
+}
+
+/* Alle Texte, die grün sind (emerald) */
+.text-emerald-500:hover,
+.text-emerald-400:hover,
+.text-emerald-300:hover {
+  color: #ffffff !important;
+}
+
+
 /* ===== GLOBAL OVERRIDES (schlagen Tailwind-Utilities) ===== */
 
 /* Basis */
