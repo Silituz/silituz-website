@@ -60,3 +60,52 @@ header img,
 header svg {
   background: transparent !important;
 }
+
+/* ================================
+   GLOBAL – TEXT & FARBSYSTEM
+   ================================ */
+
+/* Hintergrund & Standard-Text */
+body {
+  background-color: #020617; /* slate-950 */
+  color: #e2e8f0;            /* slate-200 */
+}
+
+/* Überschriften – einheitlich Emerald */
+h1, h2, h3, h4, h5, h6 {
+  color: #10b981; /* emerald-500 */
+  font-weight: 700;
+}
+
+/* Fließtext / Sekundärtext */
+p, li, dt, dd {
+  color: #e2e8f0; /* slate-200 */
+}
+small, figcaption, .text-muted {
+  color: #94a3b8; /* slate-400 */
+}
+
+/* Links */
+a {
+  color: #34d399; /* emerald-400 */
+  text-decoration: underline;
+  text-decoration-color: rgba(52, 211, 153, 0.3);
+}
+a:hover {
+  color: #6ee7b7; /* emerald-300 */
+  text-decoration-color: #34d399;
+}
+
+/* Borders / Linien */
+hr, .border-default {
+  border-color: #1e293b; /* slate-800 */
+}
+
+/* Karten / Boxen */
+.card {
+  background-color: rgba(15, 23, 42, 0.6); /* slate-900/60 */
+  border: 1px solid #1e293b;
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  backdrop-filter: blur(6px);
+}
