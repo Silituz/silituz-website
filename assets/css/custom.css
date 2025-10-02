@@ -232,4 +232,20 @@ a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
 .tab-btn:focus-visible .relative {
   color: #ffffff !important;
 }
+/* ================================
+   Willkommen-Buttons (Index)
+   ================================ */
+.welcome-btn {
+  background: transparent !important;   /* kein Hintergrund */
+  color: #cbd5e1 !important;            /* slate-300 */
+}
 
+.welcome-btn .relative {
+  transition: color .3s ease;
+}
+
+/* Wenn Balken drüber: Text weiß */
+.welcome-btn:hover .relative,
+.welcome-btn:focus-visible .relative {
+  color: #ffffff !important;
+}
