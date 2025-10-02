@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: site.lang | default: 'de' }}">
 <head>
-  <!-- Meta / Basis -->
+  <!-- =========================
+       META / BASIS-DATEN
+       - Seitentitel, Viewport, Description
+       ========================= -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{ page.title | default: "SILITUZ" }}</title>
   <meta name="description" content="Startseite von Silituz: KI • Musik • Visuals." />
 
-  <!-- Theme-Farbe (PWA/Browserleisten) -->
+  <!-- =========================
+       BROWSER-LEISTEN / PWA-FARBEN
+       - steuert die Farbe der Browser-/App-Leisten
+       ========================= -->
   <meta name="theme-color" content="#059669">
-  <meta name="color-scheme" content="light dark">
+  <meta name="color-scheme" content="light dark"><!-- nur Hinweis; Dark wird per Klasse aktiviert -->
 
+  <!-- =========================
+       I18N / SEO: CANONICAL + HREFLANG
+       - erkennt DE/EN Pfade und setzt <link rel="alternate">
+       - hier nichts farbbezogenes; nur SEO
+       ========================= -->
   {%- comment -%} === i18n: canonical + hreflang (DE/EN) === {%- endcomment -%}
   {%- assign is_en_head = page.lang == 'en' or page.url contains '/en/' -%}
   {%- assign page_url = page.url -%}
@@ -35,7 +46,13 @@
   {%- if has_de -%}<link rel="alternate" hreflang="x-default" href="{{ de_path | relative_url }}">{%- endif -%}
   {%- comment -%} === /i18n block === {%- endcomment -%}
 
-  <!-- Dark Mode Bootstrapping + Tailwind-Konfig -->
+  <!-- =========================
+       DARK-BOOTSTRAP + TAILWIND
+       - Script 1: setzt beim Laden ggf. die Klasse "dark" (aus LocalStorage/System)
+       - Script 2: Tailwind-Konfig (darkMode:'class') muss VOR der CDN-Datei stehen
+       - Script 3: Tailwind via CDN = Utility-Klassen (text-*, bg-*, border-*, etc.)
+         > WICHTIG: custom.css wird DANACH geladen, um Tailwind zu überschreiben
+       ========================= -->
   <script>
     (function () {
       const ls = localStorage.getItem("theme");
@@ -43,11 +60,20 @@
       const enableDark = ls === "dark" || (!ls && sysDark);
       if (enableDark) document.documentElement.classList.add("dark");
     })();
+    // Tailwind Vorkonfiguration (gilt für die nachfolgende CDN-Datei)
     window.tailwind = { config: { darkMode: 'class' } };
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!--
+    TAILWIND KURZ ERKLÄRT:
+    - bringt Utility-Klassen wie text-slate-200, text-emerald-500, bg-slate-900 usw.
+    - wenn irgendwo text-slate-300 o.ä. steht, überschreibt das deine Standard-Textfarbe.
+    - deshalb wird custom.css NACH Tailwind geladen, damit deine globalen Regeln gewinnen.
+  -->
 
-  <!-- Favicons / Manifest -->
+  <!-- =========================
+       FAVICONS / MANIFEST
+       ========================= -->
   <link rel="icon" href="{{ '/assets/images/favicon.svg' | relative_url }}" type="image/svg+xml">
   <link rel="icon" href="{{ '/assets/images/favicon-32.png' | relative_url }}" sizes="32x32" type="image/png">
   <link rel="icon" href="{{ '/assets/images/favicon-16.png' | relative_url }}" sizes="16x16" type="image/png">
@@ -55,13 +81,29 @@
   <link rel="mask-icon" href="{{ '/assets/images/favicon.svg' | relative_url }}" color="#059669">
   <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}">
 
-  <!-- Font Awesome -->
+  <!-- =========================
+       ICONS / LIBS (optional)
+       ========================= -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <!-- Optional: eigene globale CSS-Datei -->
+  <!-- =========================
+       DEINE GLOBALE CSS (custom.css)
+       - HIER verankerst du das Farb-Setup für ALLE Seiten.
+       - Überschriften-Farbe zentral ändern: in custom.css -> h1..h6 { color: ... }
+       - Standard-Text: custom.css -> body { color: ... }
+       - Kleintexte/Unterschriften: custom.css -> small/.text-muted { color: ... }
+       - Links: custom.css -> a / a:hover
+       - Rahmen: custom.css -> .border-default (optional: !important)
+       - Cards/Kacheln: custom.css -> .card
+       - Tipp: custom.css MUSS NACH Tailwind geladen werden.
+       ========================= -->
   <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
 
-  <!-- Zusatzstyles (bereinigt) -->
+  <!-- =========================
+       ZUSATZSTYLES (Inline)
+       - kleine, seitenweite Extras (Glass, Hover, Footer, Sprachschalter, Menü)
+       - NICHT der zentrale Ort für Farben – nur Komponenten-Feinschliff
+       ========================= -->
   <style>
     .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
     .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
@@ -70,6 +112,8 @@
     #sideMenu nav a:hover { background-color:#059669; color:#fff !important; }
     #sideMenu nav a.active { background-color:#d1fae5; color:#059669 !important; font-weight:600; }
     #themeThumb { transition: transform .22s cubic-bezier(.2,.9,.2,1); }
+
+    /* Footer: hat eigene Styles für Light/Dark – Farben bei Bedarf in custom.css angleichen */
     .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
     .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
     .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
@@ -89,59 +133,51 @@
     .dark .brand-sub{color:#94a3b8;}
     .dark .footer-center small{color:#cbd5e1;}
 
-  /* === Sprachschalter: kräftiges Leuchten === */
-.lang-active,
-a[data-lang][data-active] {
-  color: #10b981 !important; /* emerald-500 */
-  text-shadow: 0 0 14px rgba(16,185,129,.8), 0 0 26px rgba(16,185,129,.55);
-  filter: drop-shadow(0 0 14px rgba(16,185,129,.75));
-  font-weight: 600;
-}
-
-/* Hover-Effekt für nicht-aktive Sprache */
-a[data-lang]:hover {
-  color: #10b981;
-  text-shadow: 0 0 10px rgba(16,185,129,.6), 0 0 18px rgba(16,185,129,.45);
-  filter: drop-shadow(0 0 12px rgba(16,185,129,.5));
-}
-
-/* Dark-Mode noch intensiver */
-.dark .lang-active,
-.dark a[data-lang][data-active] {
-  text-shadow: 0 0 18px rgba(16,185,129,.9), 0 0 32px rgba(16,185,129,.65);
-  filter: drop-shadow(0 0 20px rgba(16,185,129,.85));
-}
-
-   /* === Menü-Button: Neon-Glow + stärkeres Pulsieren, wenn aktiv === */
-#snakeBtn .menu-logo {
-  filter: drop-shadow(0 0 10px rgba(16,185,129,.5));
-}
-#snakeBtn:hover .menu-logo {
-  filter: drop-shadow(0 0 16px rgba(16,185,129,.75));
-}
-#snakeBtn:hover span,
-#snakeBtn[aria-expanded="true"] span {
-  color: #10b981; /* emerald-500 */
-  text-shadow: 0 0 14px rgba(16,185,129,.8), 0 0 24px rgba(16,185,129,.55);
-}
-#snakeBtn[aria-expanded="true"] {
-  filter: drop-shadow(0 0 18px rgba(16,185,129,.65));
-  animation: neonPulse 1.6s ease-in-out infinite;
-}
-#snakeBtn[aria-expanded="true"] .menu-logo {
-  filter: drop-shadow(0 0 22px rgba(16,185,129,.85));
-}
-@keyframes neonPulse {
-  0%   { transform: scale(1);   filter: drop-shadow(0 0 12px rgba(16,185,129,.55)); }
-  50%  { transform: scale(1.05); filter: drop-shadow(0 0 22px rgba(16,185,129,.85)); }
-  100% { transform: scale(1);   filter: drop-shadow(0 0 12px rgba(16,185,129,.55)); }
-}
-
-    @media (prefers-reduced-motion: reduce) {
-      #snakeBtn[aria-expanded="true"] { animation: none; }
+    /* Sprachschalter: kräftiges Leuchten */
+    .lang-active,
+    a[data-lang][data-active] {
+      color: #10b981 !important; /* emerald-500 */
+      text-shadow: 0 0 14px rgba(16,185,129,.8), 0 0 26px rgba(16,185,129,.55);
+      filter: drop-shadow(0 0 14px rgba(16,185,129,.75));
+      font-weight: 600;
     }
+    a[data-lang]:hover {
+      color: #10b981;
+      text-shadow: 0 0 10px rgba(16,185,129,.6), 0 0 18px rgba(16,185,129,.45);
+      filter: drop-shadow(0 0 12px rgba(16,185,129,.5));
+    }
+    .dark .lang-active,
+    .dark a[data-lang][data-active] {
+      text-shadow: 0 0 18px rgba(16,185,129,.9), 0 0 32px rgba(16,185,129,.65);
+      filter: drop-shadow(0 0 20px rgba(16,185,129,.85));
+    }
+
+    /* Menü-Button: Neon-Glow + Pulsieren, wenn aktiv */
+    #snakeBtn .menu-logo { filter: drop-shadow(0 0 10px rgba(16,185,129,.5)); }
+    #snakeBtn:hover .menu-logo { filter: drop-shadow(0 0 16px rgba(16,185,129,.75)); }
+    #snakeBtn:hover span,
+    #snakeBtn[aria-expanded="true"] span {
+      color: #10b981; /* emerald-500 */
+      text-shadow: 0 0 14px rgba(16,185,129,.8), 0 0 24px rgba(16,185,129,.55);
+    }
+    #snakeBtn[aria-expanded="true"] {
+      filter: drop-shadow(0 0 18px rgba(16,185,129,.65));
+      animation: neonPulse 1.6s ease-in-out infinite;
+    }
+    #snakeBtn[aria-expanded="true"] .menu-logo {
+      filter: drop-shadow(0 0 22px rgba(16,185,129,.85));
+    }
+    @keyframes neonPulse {
+      0%   { transform: scale(1);   filter: drop-shadow(0 0 12px rgba(16,185,129,.55)); }
+      50%  { transform: scale(1.05); filter: drop-shadow(0 0 22px rgba(16,185,129,.85)); }
+      100% { transform: scale(1);   filter: drop-shadow(0 0 12px rgba(16,185,129,.55)); }
+    }
+    @media (prefers-reduced-motion: reduce) { #snakeBtn[aria-expanded="true"] { animation: none; } }
   </style>
 
+  <!-- =========================
+       SEO-PARTIAL
+       ========================= -->
   {% include head-seo.html %}
 </head>
 
