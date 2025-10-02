@@ -426,4 +426,17 @@ a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
 /* WICHTIG: global-hover-fill ignoriert diesen Button */
 #tipeeeButton * { --skip-hover-fill: true; }
 
+/* =============================================================
+   GALLERY-PAGE EXCEPTION: Attention / Achtung Label
+   ============================================================= */
+
+/* Label immer gelb (amber-300) */
+.attention-label {
+  color: #fcd34d !important; /* amber-300 */
+}
+
+/* Schutz: vom global-hover-fill nicht überschreiben lassen */
+.attention-label.keep-yellow {
+  color: #fcd34d !important;
+}
 
