@@ -96,6 +96,16 @@
     .dark .lang-active {
       filter: drop-shadow(0 0 8px rgba(16,185,129,.60));
     }
+
+<style>
+/* Sprachschalter aktiv leuchten lassen */
+a[data-lang][data-active] {
+  color: rgb(16 185 129);              /* emerald-500 */
+  text-shadow: 0 0 6px rgba(16,185,129,.6);
+}
+</style>
+
+    
   </style>
 
   {% include head-seo.html %}
@@ -116,6 +126,103 @@
 
 <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
 
+<script>
+(function () {
+  /**
+   * Entfernt alle führenden Sprachpräfixe (/en/ oder /de/) und liefert den "neutralen" Pfad zurück.
+   * Beispiele:
+   *  /en/en/about.html   -> /about.html
+   *  /de/about.html      -> /about.html
+   *  /en/               -> /
+   */
+  function stripLangPrefix(pathname) {
+    // führende /en/ oder /de/ (auch mehrfach) entfernen
+    return pathname.replace(/^\/(?:en|de)(?:\/|$)+/i, '/');
+  }
+
+  /**
+   * Baut einen Pfad für die gewünschte Sprache.
+   * target = 'en'  -> genau ein "/en/" Prefix
+   * target = 'de'  -> kein Sprachprefix (DE ist Default)
+   */
+  function buildLangPath(target, pathname) {
+    const clean = stripLangPrefix(pathname);
+    // Root vereinheitlichen ("/index.html" -> "/")
+    const normalized = clean.replace(/^\/index\.html$/i, '/');
+
+    if (target === 'en') {
+      // "/en" + normalized; Achtung: Doppel-Slash vermeiden
+      return '/en' + (normalized === '/' ? '/' : normalized);
+    } else {
+      // Deutsch: ohne Prefix
+      return normalized;
+    }
+  }
+
+  /**
+   * Wechselt die Sprache, ohne doppelte /en/ zu erzeugen, behält ?query und #hash.
+   * Verwendet replace() statt assign(), damit der Verlauf nicht zugemüllt wird.
+   */
+  function switchLang(target) {
+    const url = new URL(window.location.href);
+    const currentPath = url.pathname;
+
+    const nextPath = buildLangPath(target, currentPath);
+    // Wenn bereits korrekt: nichts tun (verhindert Neuladen bei Mehrfachklicks)
+    if (nextPath === currentPath) return;
+
+    // Query & Hash beibehalten
+    url.pathname = nextPath;
+    // Verhindert "Zurück"-Ketten bei mehrfachen Klicks
+    window.location.replace(url.toString());
+  }
+
+  // Alle Elemente mit data-lang behandeln (Buttons ODER Links)
+  function attachHandlers() {
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      const target = (el.getAttribute('data-lang') || '').toLowerCase();
+      if (target !== 'en' && target !== 'de') return;
+
+      el.addEventListener('click', function (e) {
+        // Links nicht normal folgen lassen – wir übernehmen die Navigation
+        e.preventDefault();
+        e.stopPropagation();
+        switchLang(target);
+      }, { passive: false });
+    });
+  }
+
+  // Optional: Visuelle Synchronisierung des Schalters (falls du eine aktive Klasse setzen willst)
+  function reflectActiveLang() {
+    const isEN = /^\/en(?:\/|$)/i.test(location.pathname);
+    document.documentElement.setAttribute('data-active-lang', isEN ? 'en' : 'de');
+    // Beispiel: .lang-en[data-active=true] stylen
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      const t = el.getAttribute('data-lang')?.toLowerCase();
+      el.toggleAttribute('data-active', (isEN && t === 'en') || (!isEN && t === 'de'));
+    });
+  }
+
+  // Initialisieren
+  document.addEventListener('DOMContentLoaded', function () {
+    // Falls jemand bereits /en/en/en/... aufruft, sofort "heilen":
+    const healed = buildLangPath(/^\/en\//i.test(location.pathname) ? 'en' : 'de', location.pathname);
+    if (healed !== location.pathname) {
+      const u = new URL(location.href);
+      u.pathname = healed;
+      return window.location.replace(u.toString());
+    }
+
+    attachHandlers();
+    reflectActiveLang();
+  });
+
+  // Falls du clientseitig Inhalte änderst und den DOM neu renderst,
+  // kannst du danach erneut attachHandlers() aufrufen.
+})();
+</script>
+
+  
 <!-- ===== HEADER (Flex wie Footer) ===== -->
 <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
   <div class="container mx-auto px-4 py-6 flex items-center justify-between gap-4">
@@ -140,43 +247,47 @@
         </span>
       </button>
 
-      <!-- Sprachschalter (transparent, nur Glow bei aktiv) -->
-      <div class="flex items-center gap-2" role="group" aria-label="Language switcher">
-        <!-- DE -->
-        <a href="{{ page.url | replace_first:'/en','' | relative_url }}"
-           class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm
-                  {% if page.lang == 'de' or page.url contains '/de/' %} lang-active {% else %} text-slate-700 dark:text-slate-300 hover:text-emerald-600 {% endif %}
-                  focus:outline-none focus:ring-0">
-          <svg viewBox="0 0 3 2" width="18" height="12" aria-hidden="true">
-            <rect width="3" height="2" fill="#000"/>
-            <rect width="3" height="1.333" y="0.667" fill="#DD0000"/>
-            <rect width="3" height="0.667" y="1.333" fill="#FFCE00"/>
-          </svg>
-          <span class="sr-only">Deutsch</span><span aria-hidden="true">DE</span>
-        </a>
+    <!-- Sprachschalter (transparent, nur Glow bei aktiv) -->
+<div class="flex items-center gap-2" role="group" aria-label="Language switcher">
+  <!-- DE -->
+  <a
+    data-lang="de"
+    href="{{ page.url | replace_first:'/en','' | relative_url }}"
+    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm
+           {% if page.lang == 'de' or page.url contains '/de/' %} lang-active {% else %} text-slate-700 dark:text-slate-300 hover:text-emerald-600 {% endif %}
+           focus:outline-none focus:ring-0">
+    <svg viewBox="0 0 3 2" width="18" height="12" aria-hidden="true">
+      <rect width="3" height="2" fill="#000"/>
+      <rect width="3" height="1.333" y="0.667" fill="#DD0000"/>
+      <rect width="3" height="0.667" y="1.333" fill="#FFCE00"/>
+    </svg>
+    <span class="sr-only">Deutsch</span><span aria-hidden="true">DE</span>
+  </a>
 
-        <!-- EN -->
-        <a href="{{ '/en' | append: page.url | replace:'//en/','/en/' | relative_url }}"
-           class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm
-                  {% if page.lang == 'en' or page.url contains '/en/' %} lang-active {% else %} text-slate-700 dark:text-slate-300 hover:text-emerald-600 {% endif %}
-                  focus:outline-none focus:ring-0">
-          <svg viewBox="0 0 7410 3900" width="18" height="12" aria-hidden="true">
-            <rect width="7410" height="3900" fill="#b22234"/>
-            <path d="M0,450H7410M0,1050H7410M0,1650H7410M0,2250H7410M0,2850H7410M0,3450H7410" stroke="#fff" stroke-width="300"/>
-            <rect width="2964" height="2100" fill="#3c3b6e"/>
-            <g fill="#fff">
-              {% for y in (0..9) %}
-                {% assign offset = y | modulo: 2 | times: 123 %}
-                {% for x in (0..5) %}
-                  <circle cx="{{ 247 | plus: offset | plus: x | times: 412 }}" cy="{{ 210 | plus: y | times: 210 }}" r="90"/>
-                {% endfor %}
-              {% endfor %}
-            </g>
-          </svg>
-          <span class="sr-only">English</span><span aria-hidden="true">EN</span>
-        </a>
-      </div>
-    </div>
+  <!-- EN -->
+  <a
+    data-lang="en"
+    href="{{ '/en' | append: page.url | replace:'//en/','/en/' | relative_url }}"
+    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm
+           {% if page.lang == 'en' or page.url contains '/en/' %} lang-active {% else %} text-slate-700 dark:text-slate-300 hover:text-emerald-600 {% endif %}
+           focus:outline-none focus:ring-0">
+    <svg viewBox="0 0 7410 3900" width="18" height="12" aria-hidden="true">
+      <rect width="7410" height="3900" fill="#b22234"/>
+      <path d="M0,450H7410M0,1050H7410M0,1650H7410M0,2250H7410M0,2850H7410M0,3450H7410" stroke="#fff" stroke-width="300"/>
+      <rect width="2964" height="2100" fill="#3c3b6e"/>
+      <g fill="#fff">
+        {% for y in (0..9) %}
+          {% assign offset = y | modulo: 2 | times: 123 %}
+          {% for x in (0..5) %}
+            <circle cx="{{ 247 | plus: offset | plus: x | times: 412 }}" cy="{{ 210 | plus: y | times: 210 }}" r="90"/>
+          {% endfor %}
+        {% endfor %}
+      </g>
+    </svg>
+    <span class="sr-only">English</span><span aria-hidden="true">EN</span>
+  </a>
+</div>
+
 
     <!-- Rechts: Schlange + „Menü/Menu“ (wie Footer-Rechts, mit Abstand) -->
     <div class="flex items-center gap-3 shrink-0">
