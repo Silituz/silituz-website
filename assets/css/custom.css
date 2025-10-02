@@ -404,3 +404,26 @@ a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
 
 5) Der Block nutzt !important nur auf den Textfarben im Scope #tipeeeButton, damit er garantiert stärker als die globale :has()-Regel ist. -->
 
+/* =============================================================
+   SUPPORT-PAGE EXCEPTION: Tipeee Button
+   ============================================================= */
+
+/* Der globale hover-fill darf den Button NICHT beeinflussen. */
+#tipeeeButton { position: relative; isolation: isolate; }
+#tipeeeButton .fillbar { position: absolute; inset: 0; left: 0; width: 0; transition: width .7s ease-out; z-index: 0; }
+
+/* Eigenes Fill: rot */
+#tipeeeButton .fillbar { background-color: #ef4444; }
+#tipeeeButton:hover .fillbar,
+#tipeeeButton:focus-visible .fillbar { width: 100%; }
+
+/* Textfarben */
+#tipeeeButton .btn-title,
+#tipeeeButton .label-normal { color: #cbd5e1 !important; } /* slate-300 */
+#tipeeeButton:hover .btn-title,
+#tipeeeButton .label-hover { color: #000000 !important; } /* schwarz */
+
+/* WICHTIG: global-hover-fill ignoriert diesen Button */
+#tipeeeButton * { --skip-hover-fill: true; }
+
+
