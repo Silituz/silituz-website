@@ -2,7 +2,6 @@
 <section class="relative h-64">
   <img src="/assets/images/music-head.svg" alt="{{ page.hero_alt }}"
        class="absolute inset-0 w-full h-full object-cover" />
-
   <div class="absolute inset-0 flex items-center justify-center">
     <div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm 
                 rounded-2xl p-4 sm:p-6 shadow-md text-center">
@@ -40,4 +39,128 @@
     </div>
 
   </div>
+</section>
+
+<!-- Plattformen-Übersicht -->
+<section class="py-14" id="music-platforms">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Headline (auto DE/EN) -->
+    {% assign is_en = page.lang == 'en' or page.url contains '/en/' %}
+    <div class="text-center mb-8">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-500">
+        {% if is_en %}Everywhere you listen{% else %}Überall, wo du Musik hörst{% endif %}
+      </h2>
+      <p class="mt-2 text-slate-300">
+        {% if is_en %}Available on{% else %}Aktuell auf{% endif %}
+        <strong><span id="platformCount">30+</span> {% if is_en %}platforms{% else %}Plattformen{% endif %}</strong> – Streaming & Social.
+      </p>
+    </div>
+
+    <!-- Grid -->
+    <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <!-- Streaming -->
+      <li><a class="platform platform-link" href="https://spotify.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/spotify.svg" alt="Spotify"></span><span class="label">Spotify</span></a></li>
+
+      <li><a class="platform platform-link" href="https://music.apple.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/apple-music.svg" alt="Apple Music"></span><span class="label">Apple Music</span></a></li>
+
+      <li><a class="platform platform-link" href="https://music.amazon.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/amazon-music.svg" alt="Amazon Music"></span><span class="label">Amazon Music</span></a></li>
+
+      <li><a class="platform platform-link" href="https://music.youtube.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/youtube-music.svg" alt="YouTube Music"></span><span class="label">YouTube Music</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.anghami.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/anghami.svg" alt="Anghami"></span><span class="label">Anghami</span></a></li>
+
+      <li><a class="platform platform-link" href="https://awa.fm" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/awa.svg" alt="AWA"></span><span class="label">AWA</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.claromusica.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/claromusica.svg" alt="ClaroMusica"></span><span class="label">ClaroMusica</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.deezer.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/deezer.svg" alt="Deezer"></span><span class="label">Deezer</span></a></li>
+
+      <li><a class="platform platform-link" href="https://fizy.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/fizy.svg" alt="Fizy"></span><span class="label">Fizy</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.gracenote.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/gracenote.svg" alt="Gracenote"></span><span class="label">Gracenote</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.iheart.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/iheartradio.svg" alt="iHeartRadio"></span><span class="label">iHeartRadio</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.jiosaavn.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/jiosaavn.svg" alt="JioSaavn"></span><span class="label">JioSaavn</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.joox.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/joox.svg" alt="Joox"></span><span class="label">Joox</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.kkbox.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/kkbox.svg" alt="KKBox"></span><span class="label">KKBox</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.kuackmedia.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/kuack.svg" alt="Kuack"></span><span class="label">Kuack</span></a></li>
+
+      <li><a class="platform platform-link" href="https://music.line.me" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/line-music.svg" alt="Line Music"></span><span class="label">Line Music</span></a></li>
+
+      <li><a class="platform platform-link" href="https://lissen.to" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/lissen.svg" alt="Lissen"></span><span class="label">Lissen</span></a></li>
+
+      <li><a class="platform platform-link" href="https://music.163.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/netease.svg" alt="NetEase"></span><span class="label">NetEase</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.pandora.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/pandora.svg" alt="Pandora"></span><span class="label">Pandora</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.qobuz.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/qobuz.svg" alt="Qobuz"></span><span class="label">Qobuz</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.tencentmusic.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/tencent.svg" alt="Tencent"></span><span class="label">Tencent</span></a></li>
+
+      <li><a class="platform platform-link" href="https://tidal.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/tidal.svg" alt="Tidal"></span><span class="label">Tidal</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.touchtunes.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/touchtunes.svg" alt="TouchTunes / PlayNetwork"></span><span class="label">TouchTunes / PlayNetwork</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.trebel.io" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/trebel.svg" alt="Trebel"></span><span class="label">Trebel</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.7digital.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/triller-7digital.svg" alt="Triller / 7Digital"></span><span class="label">Triller / 7Digital</span></a></li>
+
+      <li><a class="platform platform-link" href="https://wynk.in" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/wynk-hungama.svg" alt="Wynk / Hungama"></span><span class="label">Wynk / Hungama</span></a></li>
+
+      <li><a class="platform platform-link" href="https://yousee.dk/musik" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/yousee-telmore.svg" alt="YouSee Musik / TelmoreMusik"></span><span class="label">YouSee Musik / TelmoreMusik</span></a></li>
+
+      <li><a class="platform platform-link" href="https://zingmp3.vn" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/zingmp3.svg" alt="Zing MP3"></span><span class="label">Zing MP3</span></a></li>
+
+      <!-- Social / UGC -->
+      <li><a class="platform platform-link" href="https://www.tiktok.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/tiktok.svg" alt="TikTok"></span><span class="label">TikTok</span></a></li>
+
+      <li><a class="platform platform-link" href="https://www.douyin.com" target="_blank" rel="noopener">
+        <span class="icon"><img src="/assets/logos/douyin.svg" alt="Douyin"></span><span class="label">Douyin</span></a></li>
+    </ul>
+  </div>
+
+  <!-- Auto-Count -->
+  <script>
+    (function(){
+      try{
+        var c = document.querySelectorAll('#music-platforms .platform').length;
+        var el = document.getElementById('platformCount');
+        if(el && c) el.textContent = c.toString();
+      }catch(e){}
+    })();
+  </script>
 </section>
