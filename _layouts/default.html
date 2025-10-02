@@ -110,7 +110,7 @@
 
 <!-- ===== HEADER ===== -->
 <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
-<div class="container mx-auto px-4 py-6 grid grid-cols-3 items-center gap-x-2 sm:gap-x-6">
+<div class="container mx-auto px-4 py-6 grid grid-cols-[auto_1fr_auto] items-center gap-x-4 sm:gap-x-8">
 
     <!-- Links: Logo -->
     <a href="{{ '/' | relative_url }}" class="col-start-1 justify-self-start flex items-center gap-3">
@@ -122,7 +122,7 @@
     </a>
 
     <!-- Mitte: Theme-Slider + Sprachschalter -->
-<div class="col-start-2 justify-self-end flex items-center gap-4 pr-1 sm:pr-0">
+<div class="col-start-2 justify-self-center flex items-center gap-4">
   <!-- Theme -->
   <button id="themeSlider" class="relative inline-flex items-center select-none" type="button" aria-label="Design umschalten" aria-live="polite">
     <span id="themeTrack" class="relative h-9 w-24 rounded-full bg-slate-200/80 dark:bg-slate-700/80 shadow-inner overflow-hidden select-none">
@@ -171,7 +171,7 @@
 
 </div>
     <!-- Rechts: Menü-Trigger -->
-    <div class="col-start-3 justify-self-end -mr-2 sm:mr-0">
+   <div class="col-start-3 justify-self-end flex items-center gap-3 sm:gap-4">
       <button id="snakeBtn"
         aria-controls="sideMenu" aria-expanded="false"
         class="group inline-flex items-center gap-3 px-4 py-2 rounded-xl text-lg font-semibold text-slate-900 dark:text-slate-100 focus:outline-none">
