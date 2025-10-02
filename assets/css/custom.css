@@ -1,563 +1,172 @@
-/* ================================
-   HEADER / MENÜ-TRIGGER (Schlange)
-   ================================ */
+/* =============================================================
+   SILITUZ – CLEAN THEME CSS (Consolidated)
+   - Tokens
+   - Base Typography
+   - Header/Menu Trigger
+   - Theme Slider
+   - Layout Polish
+   - Components (Menu, Social, Cards, Buttons)
+   - Global Hover-Fill (v2)
+   - Exceptions (Support Button, Attention Label)
+   - Footer "Mehr/More"
+   ============================================================= */
 
-/* Button-Hintergrund komplett abschalten */
-#snakeBtn,
-#snakeBtn:hover,
-#snakeBtn:focus,
-#snakeBtn:active {
-  background: transparent !important;
-  box-shadow: none !important;
-  outline: none !important;
-  border: none !important;
+/* =============================
+   0) TOKENS (Farben/Vars)
+   ============================= */
+:root{
+  --bg:        #020617;   /* slate-950 */
+  --text:      #e2e8f0;   /* slate-200 */
+  --muted:     #94a3b8;   /* slate-400 */
+  --brand:     #10b981;   /* emerald-500 */
+  --brand-100: #d1fae5;   /* emerald-100 */
+  --brand-300: #6ee7b7;   /* emerald-300 */
+  --brand-400: #34d399;   /* emerald-400 */
+  --brand-700: #047857;   /* emerald-700 */
+  --slate-800: #1e293b;   /* slate-800 */
+  --attention: #fcd34d;   /* amber-300 */
+  --danger:    #ef4444;   /* red-500 */
 }
 
-/* Schlange-Video (Menü-Logo) größer & ohne Kasten */
-.menu-logo {
-  width: 58px;   /* 56–72px nach Geschmack */
-  height: 58px;
-  display: block;
-  object-fit: contain;
-  background: transparent !important;
-  mix-blend-mode: normal;
-}
+/* =============================
+   1) BASE TYPOGRAPHY
+   ============================= */
+html, body{ background:var(--bg); color:var(--text); }
+:is(h1,h2,h3,h4,h5,h6){ color:var(--brand); font-weight:700; }
+:is(p,li,dt,dd){ color:var(--text); }
+small, figcaption, .text-muted{ color:var(--muted); }
 
-/* Menü-Text etwas kräftiger */
-#snakeBtn span {
-  font-size: 1rem;   /* ~16px */
-  font-weight: 600;
-}
+a{ color:var(--brand-400); text-decoration:underline; text-decoration-color:color-mix(in oklab, var(--brand-400) 30%, transparent); }
+a:hover{ color:var(--brand-300); text-decoration-color:var(--brand-400); }
 
+hr, .border-default{ border-color:var(--slate-800) !important; }
 
-/* ================================
-   THEME-SLIDER
-   ================================ */
-
-#themeSlider { display: none !important; }
-#themeThumb { transition: transform .22s cubic-bezier(.2,.9,.2,1); }
-
-
-/* ================================
-   OPTIONAL – FEINTUNING
-   ================================ */
-
-header .logo,
-header img[alt="Silituz Logo"] { height: 48px; width: auto; }
-
-header video,
-header img,
-header svg { background: transparent !important; }
-
-
-/* ================================
-   GLOBAL OVERRIDES (schlagen Tailwind-Utilities)
-   ================================ */
-
-/* Basis-Hintergrund + Standard-Text */
-body { background-color:#020617; color:#e2e8f0; } /* slate-950 / slate-200 */
-
-/* Überschriften überall Emerald – auch wenn Klassen dranhängen */
-:is(h1,h2,h3,h4,h5,h6) { color:#10b981 !important; font-weight:700; } /* emerald-500 */
-
-/* Fließtext standardisieren – schlägt text-slate-3xx etc. */
-:is(p,li,dt,dd) { color:#e2e8f0 !important; } /* slate-200 */
-
-/* Unterschriften / Kleinteile */
-small, figcaption, .text-muted { color:#94a3b8 !important; } /* slate-400 */
-
-/* Links (Standard) */
-a {
-  color:#34d399 !important; /* emerald-400 */
-  text-decoration: underline;
-  text-decoration-color: rgba(52,211,153,.3);
-}
-a:hover {
-  color:#6ee7b7 !important; /* emerald-300 */
-  text-decoration-color:#34d399;
-}
-
-/* Standard-Ränder */
-hr, .border-default { border-color:#1e293b !important; } /* slate-800 */
-
-/* Karten / Boxen */
-.card {
+/* Cards / Boxen */
+.card{
   background-color:rgba(15,23,42,.6) !important; /* slate-900/60 */
-  border:1px solid #1e293b !important;
+  border:1px solid var(--slate-800) !important;
   border-radius:1rem;
   box-shadow:0 2px 6px rgba(0,0,0,.3);
   backdrop-filter: blur(6px);
 }
 
-
-/* ================================
-   ZIELGERICHTETE ANPASSUNGEN (1–10)
-   ================================ */
-
-/* (1) Überschriften nie weiß-hovern (statisch grün) */
-:is(h1,h2,h3,h4,h5,h6):hover { color:#10b981 !important; text-shadow:none !important; }
-
-/* (2) CTA "Auf Instagram testen" in slate-300 */
-.cta-ig { color:#cbd5e1 !important; }               /* slate-300 */
-.cta-ig:hover { color:#ffffff !important; }         /* optional weiß */
-
-/* (3) Footer: Mitte & Icons rechts slate-300; Hover emerald-500 */
-.footer-center small,
-.footer-right .icon { color:#cbd5e1 !important; }   /* slate-300 */
-.footer-right .icon:hover { color:#10b981 !important; } /* emerald-500 */
-
-/* (4) Sprachschalter DE/EN: aktiv grün, inaktiv slate-300 */
-a[data-lang][data-active] { color:#10b981 !important; }
-a[data-lang]:not([data-active]) { color:#cbd5e1 !important; }
-a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
-
-/* (5) Menü-Register-Links standard slate-300; Hover grün */
-#sideMenu nav a { color:#cbd5e1 !important; background:transparent !important; }
-#sideMenu nav a:hover { color:#10b981 !important; }
-
-/* (6) Seitenmenü-Brand „SILITUZ“: slate-300 + dünner emerald-Glow */
-.side-brand {
-  color:#cbd5e1; /* slate-300 */
-  text-shadow:
-    0 0 1px #10b981,               /* hauchdünner Rand */
-    0 0 8px rgba(16,185,129,.45);  /* weicher Glow */
-}
-
-/* (7) Hauptnavigation/Seitennamen: slate-300; Hover emerald-500 */
-.main-nav a { color:#cbd5e1 !important; }
-.main-nav a:hover { color:#10b981 !important; }
-/* .main-nav a.active – lässt du wie definiert (aktuelle Seite) */
-
-/* (8) Galerie „Attention“ bleibt gelb (nicht hoverbar) */
-.attention { color:#fde047 !important; pointer-events:none; } /* yellow-300 */
-
-/* (9) Support-Button: grün mit slate-300 Text; Hover weiß + schwarz */
-.btn-support {
-  background-color:#10b981 !important; /* emerald-500 */
-  color:#cbd5e1 !important;            /* slate-300 */
-}
-.btn-support:hover { background-color:#ffffff !important; color:#000000 !important; }
-
-/* (10) Sicherheitshalber: H-Überschriften nicht „weiß-leuchten“ */
-:is(h1,h2,h3,h4,h5,h6):hover { color:#10b981 !important; text-shadow:none !important; }
-
-/* ================================
-   (1) Header-Tabs "Über Silituz" & "Socials"
-   - transparent, Text slate-300
-   - Hover: Text weiß, KEIN Hintergrund
-================================== */
-.tab-btn {
-  background: transparent !important;
-  color: #cbd5e1 !important;           /* slate-300 */
-  border: none !important;
-}
-.tab-btn:hover,
-.tab-btn:focus-visible {
-  color: #ffffff !important;
-  background: transparent !important;
-  text-decoration: none;
-}
-
-/* ================================
-   (2) "Jetzt auf Instagram testen"
-   - Text slate-300; Hover weiß
-================================== */
-.cta-ig {
-  color: #cbd5e1 !important;           /* slate-300 */
-}
-.cta-ig:hover,
-.cta-ig:focus-visible {
-  color: #ffffff !important;
-}
-
-/* ================================
-   (3) Fußzeile – mittlere Spalte
-   - Standard: slate-300
-   - Hover: emerald-500
-================================== */
-.footer-center,
-.footer-center small,
-.footer-center a {
-  color: #cbd5e1 !important;           /* slate-300 */
-}
-.footer-center:hover,
-.footer-center small:hover,
-.footer-center a:hover {
-  color: #10b981 !important;           /* emerald-500 */
-}
-
-/* ================================
-   (4) Seiten-Menü Links
-   - Standard: slate-300
-   - Hover: emerald-500
-   - Aktiv (gewählte Seite): grüner BG + gut lesbarer Text
-================================== */
-#sideMenu nav a {
-  color: #cbd5e1 !important;           /* slate-300 */
-  background: transparent !important;
-  border-radius: 0.5rem;                /* etwas weicher */
-  transition: color .2s ease, background-color .2s ease;
-}
-#sideMenu nav a:hover,
-#sideMenu nav a:focus-visible {
-  color: #10b981 !important;           /* emerald-500 */
-  background: transparent !important;
-}
-
-/* Aktiver Eintrag – wähle EINE Variante:
-   a) nutze class="active"
-   b) oder setze aria-current="page"
-   Beide sind hier abgedeckt. */
-#sideMenu nav a.active,
-#sideMenu nav a[aria-current="page"] {
-  background-color: rgba(16,185,129,.16) !important; /* emerald-500/16 */
-  color: #d1fae5 !important;                         /* emerald-100 für guten Kontrast */
-  box-shadow: inset 0 0 0 1px rgba(16,185,129,.35);
-}
-
-/* (10) Sicherheitshalber: H-Überschriften nicht „weiß-leuchten“ */
-:is(h1,h2,h3,h4,h5,h6):hover { color:#10b981 !important; text-shadow:none !important; }
-
-/* ================================
-   GENERISCH: "Füll-auf-Hover" → Text immer slate-300
-================================== */
-.group:has(> .bg-emerald-500),
-.group:has(> .bg-emerald-500\/90),
-.group:has(> .bg-emerald-600),
-.group:has(> .bg-emerald-700),
-.group:has(> .fillbar-emerald) {}
-
-/* Hover-Regel */
-.group:hover:has(> .bg-emerald-500),
-.group:focus-within:has(> .bg-emerald-500),
-.group:hover:has(> .bg-emerald-500\/90),
-.group:focus-within:has(> .bg-emerald-500\/90),
-.group:hover:has(> .bg-emerald-600),
-.group:focus-within:has(> .bg-emerald-600),
-.group:hover:has(> .bg-emerald-700),
-.group:focus-within:has(> .bg-emerald-700),
-.group:hover:has(> .fillbar-emerald),
-.group:focus-within:has(> .fillbar-emerald) {
-  .relative, .z-10 { color: #cbd5e1 !important; } /* slate-300 */
-}
-
-/* ================================
-   Willkommen-Buttons (Index)
-================================== */
-.welcome-btn {
-  background: transparent !important;
-  color: #cbd5e1 !important;
-}
-.welcome-btn .relative { transition: color .3s ease; }
-.welcome-btn:hover .relative,
-.welcome-btn:focus-visible .relative {
-  color: #cbd5e1 !important;
-}
-
-/* ================================
-   Tabs "Über Silituz" & "Socials"
-================================== */
-.tab-btn {
-  background: transparent !important;
-  color: #cbd5e1 !important;
-}
-.tab-btn .relative { transition: color .3s ease; }
-.tab-btn:hover .relative,
-.tab-btn:focus-visible .relative {
-  color: #cbd5e1 !important;
-}
-
-/* =========================================================
-   GLOBAL: Für ALLE "Füll-auf-Hover"-Komponenten
-   Wenn innerhalb eines .group-Containers irgendwo ein
-   emerald-Füllbalken existiert, färbe beim Hover den
-   Vordergrundtext (relative/z-10) auf slate-300.
-   ========================================================= */
-
-/* Hover + Focus-within, breit gematcht (ohne >) */
-.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700),
-.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) {
-  /* nix – Containerzustand als Haken */
-}
-
-/* Vordergrundtext einfärben – mehrere gängige Layer-Namen abdecken */
-.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) .relative,
-.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) .relative,
-.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) .z-10,
-.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) .z-10 {
-  color: #cbd5e1 !important; /* slate-300 */
-}
-
-/* Fallback, falls kein .relative/.z-10 genutzt wurde
-   (z. B. Text direkt in <h3> oder <p>):
-   – wir nehmen "erste Textebene" innerhalb des Links/Containers. */
-.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) > *:not([class*="bg-emerald"]),
-.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) > *:not([class*="bg-emerald"]) {
-  color: #cbd5e1 !important;
-}
-
-/* =============================================================
-   GLOBAL HOVER-FILL HANDLING (v2 – robuster Match)
-   - Färbt Vordergrund-Text (Titel) → slate-300, WENN ein
-     emerald-Fülllayer in derselben .group existiert.
-   - Breite Erkennung via [class*="bg-emerald-…"] ODER .fillbar-emerald.
-   - Ausnahme: .keep-white bleibt weiß.
-   - Optionaler Fallback ohne :has(): .hover-fill (siehe unten)
-   ============================================================= */
-
-:root { --slate-300:#cbd5e1; }
-
-/* === Preferred: mit :has() (moderne Browser) === */
-.group:hover:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald),
-.group:focus-within:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) {}
-
-/* Text-/Titel-Layer zuverlässig treffen */
-.group:hover:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) :is(.fg,.relative,.z-10,h1,h2,h3,h4,h5,h6,.btn-title),
-.group:focus-within:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) :is(.fg,.relative,.z-10,h1,h2,h3,h4,h5,h6,.btn-title){
-  color: var(--slate-300) !important;
-}
-
-/* Ausnahme: bewusst weiß lassen */
-.group:hover:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) .keep-white,
-.group:focus-within:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) .keep-white{
-  color:#ffffff !important;
-}
-
-/* Leucht-Reset auf Headings (verhindert Weiß-Schimmer) */
+/* Headings nicht „weiß-leuchten“ */
 :is(h1,h2,h3,h4,h5,h6):hover{ text-shadow:none !important; }
 
-/* === Optionaler Fallback ohne :has() ===
-   Falls dein Browser/Setup :has() blockt oder die Füll-Span
-   außerhalb der .group liegt: markiere die betroffenen Gruppen
-   einmalig mit .hover-fill im HTML.
-*/
-.hover-fill:hover :is(.fg,.relative,.z-10,h1,h2,h3,h4,h5,h6,.btn-title),
-.hover-fill:focus-within :is(.fg,.relative,.z-10,h1,h2,h3,h4,h5,h6,.btn-title){
-  color: var(--slate-300) !important;
+/* =============================
+   2) HEADER / MENÜ-TRIGGER
+   ============================= */
+#snakeBtn, #snakeBtn:hover, #snakeBtn:focus, #snakeBtn:active{
+  background:transparent !important; box-shadow:none !important; outline:none !important; border:none !important;
 }
+.menu-logo{ width:58px; height:58px; display:block; object-fit:contain; background:transparent !important; mix-blend-mode:normal; }
+#snakeBtn span{ font-size:1rem; font-weight:600; }
+
+/* =============================
+   3) THEME SLIDER
+   ============================= */
+#themeSlider{ display:none !important; }
+#themeThumb{ transition: transform .22s cubic-bezier(.2,.9,.2,1); }
+
+/* =============================
+   4) LAYOUT POLISH
+   ============================= */
+header .logo, header img[alt="Silituz Logo"]{ height:48px; width:auto; }
+header video, header img, header svg{ background:transparent !important; }
+
+/* =============================
+   5) COMPONENTS
+   ============================= */
+/* 5.1) Slider-Menü (nur Text grün auf Hover; aktiv mit Emerald-BG) */
+#sideMenu nav a{ color:#cbd5e1 !important; background:transparent !important; border-radius:.5rem; transition:color .2s, background-color .2s; }
+#sideMenu nav a *{ color:inherit !important; }
+#sideMenu nav a:not([aria-current="page"]):hover,
+#sideMenu nav a:not([aria-current="page"]):focus-visible{ color:var(--brand) !important; background:transparent !important; }
+#sideMenu nav a[aria-current="page"]{
+  background-color:rgba(16,185,129,.16) !important; /* emerald-500/16 */
+  color:var(--brand-100) !important; /* guter Kontrast */
+  box-shadow: inset 0 0 0 1px rgba(16,185,129,.35);
+  font-weight:600;
+}
+
+/* 5.2) Seitenmenü-Brand "SILITUZ" */
+.side-brand{ color:#cbd5e1; text-shadow:0 0 1px var(--brand), 0 0 8px rgba(16,185,129,.45); }
+
+/* 5.3) Hauptnavigation/Seitennamen (außerhalb SideMenu) */
+.main-nav a{ color:#cbd5e1 !important; }
+.main-nav a:hover{ color:var(--brand) !important; }
+
+/* 5.4) SideMenu – Social Icons unten */
+#sideMenu .border-t a{ color:#cbd5e1 !important; transition:color .25s ease; }
+#sideMenu .border-t a:hover, #sideMenu .border-t a:focus-visible{ color:var(--brand) !important; }
+
+/* 5.5) CTA Buttons (z. B. Instagram testen) */
+.cta-ig{ color:#cbd5e1 !important; }
+.cta-ig:hover, .cta-ig:focus-visible{ color:#ffffff !important; }
+
+/* 5.6) Footer Mitte & Icons rechts */
+.footer-center, .footer-center small, .footer-center a{ color:#cbd5e1 !important; }
+.footer-right .icon{ color:#cbd5e1 !important; }
+.footer-right .icon:hover{ color:var(--brand) !important; }
+
+/* 5.7) Willkommens-Buttons (Index) */
+.welcome-btn{ background:transparent !important; color:#cbd5e1 !important; }
+.welcome-btn .relative{ transition:color .3s ease; }
+.welcome-btn:hover .relative, .welcome-btn:focus-visible .relative{ color:#cbd5e1 !important; }
+
+/* 5.8) Tabs (Über Silituz & Socials) */
+.tab-btn{ background:transparent !important; color:#cbd5e1 !important; border:none !important; }
+.tab-btn .relative{ transition:color .3s ease; }
+.tab-btn:hover .relative, .tab-btn:focus-visible .relative{ color:#ffffff !important; }
+
+/* =============================
+   6) GLOBAL HOVER-FILL (v2)
+   – Wenn innerhalb einer .group ein emerald-Fülllayer existiert,
+     färbe den Vordergrundtext (relative/z-10/fg) auf slate-300.
+   ============================= */
+:root{ --slate-300:#cbd5e1; }
+
+.group:hover:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald),
+.group:focus-within:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald){}
+
+.group:hover:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) :is(.fg,.relative,.z-10,h1,h2,h3,h4,h5,h6,.btn-title),
+.group:focus-within:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) :is(.fg,.relative,.z-10,h1,h2,h3,h4,h5,h6,.btn-title){
+  color:var(--slate-300) !important;
+}
+.group:hover:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) .keep-white,
+.group:focus-within:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) .keep-white{ color:#ffffff !important; }
+
+/* Optionaler Fallback ohne :has(): markiere Container mit .hover-fill */
+.hover-fill:hover :is(.fg,.relative,.z-10,h1,h2,h3,h4,h5,h6,.btn-title),
+.hover-fill:focus-within :is(.fg,.relative,.z-10,h1,h2,h3,h4,h5,h6,.btn-title){ color:var(--slate-300) !important; }
 .hover-fill:hover .keep-white, .hover-fill:focus-within .keep-white{ color:#fff !important; }
 
-<link rel="stylesheet" href="/assets/css/global-hover-fill.v2.css?v=20251002">
+/* =============================
+   7) EXCEPTIONS
+   ============================= */
+/* 7.1) Support-Button (roter Fill, Text: normal grau → hover schwarz) */
+#tipeeeButton{ position:relative; isolation:isolate; border-radius:.75rem; background:var(--brand); }
+#tipeeeButton .fillbar{ position:absolute; inset:0; width:0; background:var(--danger); transition:width .7s ease-out; z-index:0; }
+#tipeeeButton:hover .fillbar, #tipeeeButton:focus-visible .fillbar{ width:100%; }
+#tipeeeButton .label-normal{ position:relative; z-index:1; color:#cbd5e1 !important; transition:opacity .3s; }
+#tipeeeButton .label-hover{ position:absolute; inset:0; z-index:1; display:flex; align-items:center; justify-content:center; color:#000 !important; opacity:0; transition:opacity .3s; }
+#tipeeeButton:hover .label-normal{ opacity:0; }
+#tipeeeButton:hover .label-hover{ opacity:1; }
 
-<!-- ======= CSS: am Ende deiner global-hover-fill.v2.css anhängen ODER separat einbinden ======= -->
-<style>
-  /* SUPPORT-EXCEPTION: eigener Ablauf – überschreibt Global-Rule gezielt */
-  #tipeeeButton {
-    background-color: #10b981; /* emerald-500 */
-    color: #cbd5e1;            /* slate-300 */
-    isolation: isolate;        /* für saubere Z-Stacks innerhalb des Buttons */
-  }
-  /* roter Fülllayer */
-  #tipeeeButton .fillbar {
-    position: absolute;
-    inset: 0; left: 0;
-    width: 0;
-    background-color: #ef4444; /* red-500 */
-    transition: width .7s ease-out;
-    z-index: 0;
-  }
-  #tipeeeButton:hover .fillbar,
-  #tipeeeButton:focus-visible .fillbar {
-    width: 100%;
-  }
+/* 7.2) Gallery: Attention/Achtung – immer gelb */
+.attention-label{ color:var(--attention) !important; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
 
-  /* Textfarben (überschreibt global-hover-fill) */
-  #tipeeeButton .btn-title { color: #cbd5e1 !important; }  /* normal: slate-300 */
-  #tipeeeButton:hover .btn-title,
-  #tipeeeButton:focus-visible .btn-title { color: #000000 !important; } /* hover: schwarz */
-
-  /* Falls du weiterhin zwei Textebenen (normal/hover) austauschst, stelle sicher:
-     - Normal hat slate-300
-     - Hover-Label ist schwarz
-  */
-  #tipeeeButton .label-normal { color: #cbd5e1 !important; }
-  #tipeeeButton .label-hover  { color: #000000 !important; }
-</style>
-
-<!-- ======= HTML: Ersetze NUR den Button-Block unten durch diesen ======= -->
-<a href="https://www.tipeeestream.com/silituz/donation" target="_blank" rel="noopener" id="tipeeeButton"
-   class="group relative inline-block px-6 py-2.5 rounded-lg bg-emerald-500 font-semibold overflow-hidden">
-  <!-- roter Füllbalken unter dem Text -->
-  <span class="fillbar" aria-hidden="true"></span>
-
-  <!-- Optional: ikonisches Herzchen o.ä. könnte hier mit .z-10 rein -->
-
-  <!-- Textwechsel wie gehabt, aber mit festen Farben -->
-  <span class="label-normal relative z-10 block transition-opacity duration-300 group-hover:opacity-0">
-    {{ page.tipeee_btn_normal }}
-  </span>
-  <span class="label-hover absolute inset-0 z-10 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-    {{ page.tipeee_btn_hover }}
-  </span>
-</a>
-
-<!-- ===== Hinweise =====
-1) Der Button nutzt nun einen eigenen roten Fill (red-500) und bleibt vom global-hover-fill unabhängig.
-2) Normalzustand: Hintergrund grün (emerald-500), Schrift slate-300.
-3) Hover: roter Fill fährt voll, Schrift wird schwarz.
-4) Wenn du keinen Textwechsel brauchst, kannst du nur EINE Ebene verwenden. Gib ihr dann zusätzlich die Klasse .btn-title (die oben schon schwarz auf Hover bekommt):
-
-  <a id="tipeeeButton" class="group relative inline-block px-6 py-2.5 rounded-lg bg-emerald-500 font-semibold overflow-hidden">
-    <span class="fillbar"></span>
-    <span class="btn-title relative z-10">Jetzt unterstützen</span>
-  </a>
-
-5) Der Block nutzt !important nur auf den Textfarben im Scope #tipeeeButton, damit er garantiert stärker als die globale :has()-Regel ist. -->
-
-/* =============================================================
-   SUPPORT-PAGE EXCEPTION: Tipeee Button
-   ============================================================= */
-
-/* Der globale hover-fill darf den Button NICHT beeinflussen. */
-#tipeeeButton { position: relative; isolation: isolate; }
-#tipeeeButton .fillbar { position: absolute; inset: 0; left: 0; width: 0; transition: width .7s ease-out; z-index: 0; }
-
-/* Eigenes Fill: rot */
-#tipeeeButton .fillbar { background-color: #ef4444; }
-#tipeeeButton:hover .fillbar,
-#tipeeeButton:focus-visible .fillbar { width: 100%; }
-
-/* Textfarben */
-#tipeeeButton .btn-title,
-#tipeeeButton .label-normal { color: #cbd5e1 !important; } /* slate-300 */
-#tipeeeButton:hover .btn-title,
-#tipeeeButton .label-hover { color: #000000 !important; } /* schwarz */
-
-/* WICHTIG: global-hover-fill ignoriert diesen Button */
-#tipeeeButton * { --skip-hover-fill: true; }
-
-<!-- CSS dazu (in global-hover-fill.v2.css anhängen oder separat einbinden) -->
-<style>
-#tipeeeButton { position: relative; isolation: isolate; }
-#tipeeeButton .fillbar {
-position: absolute;
-inset: 0; left: 0;
-width: 0;
-background-color: #ef4444; /* rot */
-transition: width .7s ease-out;
-z-index: 0;
-}
-#tipeeeButton:hover .fillbar,
-#tipeeeButton:focus-visible .fillbar { width: 100%; }
-
-
-#tipeeeButton .label-normal { color: #cbd5e1 !important; } /* slate-300 */
-#tipeeeButton .label-hover { color: #000000 !important; } /* schwarz */
-</style>
-
-/* =============================================================
-   GALLERY-PAGE EXCEPTION: Attention / Achtung Label
-   ============================================================= */
-
-/* Label immer gelb (amber-300) */
-.attention-label {
-  color: #fcd34d !important; /* amber-300 */
-}
-
-/* Schutz: vom global-hover-fill nicht überschreiben lassen */
-.attention-label.keep-yellow {
-  color: #fcd34d !important;
-}
-
-/* ================================
-   SLIDER-MENÜ (robust v2)
-   ================================ */
-
-/* 0) Falls Kinder-Elemente (i, span) eigene Farben haben → erben */
-#sideMenu nav a * { color: inherit !important; }
-
-/* 1) Standard: Schrift slate-300, transparenter BG */
-#sideMenu nav a,
-#sideMenu .main-nav a {
-  color: #cbd5e1 !important;                /* slate-300 */
-  background: transparent !important;
-  border-radius: .5rem;
-  transition: color .2s ease, background-color .2s ease;
-}
-
-/* 2) Hover (nur NICHT-aktive Links): Schrift emerald-500, BG transparent */
-#sideMenu nav a:not(.active):not([aria-current="page"]):hover,
-#sideMenu .main-nav a:not(.active):not([aria-current="page"]):hover,
-#sideMenu nav a:not(.active):not([aria-current="page"]):focus-visible,
-#sideMenu .main-nav a:not(.active):not([aria-current="page"]):focus-visible {
-  color: #10b981 !important;                /* emerald-500 */
-  background: transparent !important;
-}
-
-/* 3) Aktiv (aktuelle Seite): dezenter Emerald-Hintergrund + gut lesbarer Text */
-#sideMenu nav a.active,
-#sideMenu nav a[aria-current="page"],
-#sideMenu .main-nav a.active,
-#sideMenu .main-nav a[aria-current="page"] {
-  background-color: rgba(16,185,129,.16) !important; /* emerald-500/16 */
-  color: #d1fae5 !important;                          /* emerald-100 */
-  box-shadow: inset 0 0 0 1px rgba(16,185,129,.35);
-}
-
-/* 4) Optional: „dunkler Emerald“-Variante statt transparentem BG (einfach ent-kommentieren) */
-/*
-#sideMenu nav a.active,
-#sideMenu nav a[aria-current="page"],
-#sideMenu .main-nav a.active,
-#sideMenu .main-nav a[aria-current="page"] {
-  background-color: #065f46 !important;  // emerald-700
-  color: #ecfdf5 !important;             // emerald-50
-  box-shadow: none;
-}
-*/
-
-/* Slider-Menü: nur Text grün auf Hover; aktiver Link mit Emerald-BG */
-#sideMenu nav a { color:#cbd5e1 !important; background:transparent !important; }
-#sideMenu nav a * { color:inherit !important; } /* Pfeil/Icons erben die Farbe */
-
-/* Nur NICHT-aktive Links verändern sich auf Hover */
-#sideMenu nav a:not([aria-current="page"]):hover,
-#sideMenu nav a:not([aria-current="page"]):focus-visible {
-  color:#10b981 !important;       /* emerald-500 */
+/* =============================
+   8) FOOTER – "Mehr / More"
+   ============================= */
+.footer-more{
   background:transparent !important;
-}
-
-/* Aktiver Link (per aria-current vom Template gesetzt) – Fallback, falls nötig */
-#sideMenu nav a[aria-current="page"] {
-  /* Klassen aus dem Anchor regeln das bereits; hier nur Reserve */
-}
-
-/* ================================
-   GALERIE: Attention / Achtung Label
-   ================================ */
-
-/* Erzwingt gelb, egal was global wirkt */
-.attention-label {
-  color: #fcd34d !important; /* amber-300 */
-}
-
-/* Falls du in deinem HTML noch kein extra class-Attribut hast: 
-   einfach die <p> Zeile so anpassen: 
-   <p class="attention-label ...">🚨 {{ page.warn_head }} 🚨</p>
-*/
-
-/* ================================
-   SideMenu – Social Icons unten
-   ================================ */
-#sideMenu .border-t a {
-  color: #cbd5e1 !important;   /* slate-300 */
-  transition: color .25s ease;
-}
-
-#sideMenu .border-t a:hover,
-#sideMenu .border-t a:focus-visible {
-  color: #10b981 !important;   /* emerald-500 */
-}
-
-/* Footer – Link „Mehr / More“: grau → hover grün + weiß + wobble */
-.footer-more {
-  background: transparent !important;
-  color: #9ca3af !important;            /* slate-400 */
+  color:#9ca3af !important; /* slate-400 */
   transition: background-color .25s ease, color .25s ease, transform .25s ease;
 }
-.footer-more:hover,
-.footer-more:focus-visible {
-  background-color: #10b981 !important; /* emerald-500 */
-  color: #ffffff !important;            /* weiß beim Hover */
+.footer-more:hover, .footer-more:focus-visible{
+  background-color:var(--brand) !important; /* emerald-500 */
+  color:#ffffff !important; /* weiß */
   animation: footer-wobble .35s ease-in-out;
 }
+/* keyframes footer-wobble sind bereits in deinem Projekt vorhanden – sonst hier ergänzen. */
