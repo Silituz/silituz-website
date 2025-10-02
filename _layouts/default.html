@@ -385,12 +385,18 @@
       {%- endif -%}
 
       {%- assign full_norm = full | replace:'index.html','' | replace:'//','/' -%}
-      <a href="{{ full | relative_url }}"
-         class="flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition
-                {%- if cur == full_norm -%} bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200 font-semibold {%- else -%} hover:bg-slate-100 dark:hover:bg-slate-800 {%- endif -%}">
-        <span>{{ title }}</span>
-        <span class="opacity-60">›</span>
-      </a>
+<a href="{{ full | relative_url }}"
+   {% if cur == full_norm %} aria-current="page" {% endif %}
+   class="flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition
+          {% if cur == full_norm %}
+            bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200 font-semibold
+          {% else %}
+            text-slate-300 hover:text-emerald-500
+          {% endif %}">
+  <span>{{ title }}</span>
+  <span class="opacity-60">›</span>
+</a>
+
     {%- endfor -%}
   </nav>
 
