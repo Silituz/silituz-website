@@ -188,42 +188,64 @@
         </span>
       </button>
 
-      {%- assign is_en = page.lang == 'en' or page.url contains '/en/' -%}
-      {%- assign base_url = page.url | replace_first:'/en','' -%}
+     {%- assign clean_url = page.url | replace:'//','/' -%}
+{%- assign is_en = clean_url | slice: 0,4 == '/en/' or page.lang == 'en' -%}
 
-      <!-- Sprachschalter – transparent/glassy + Tropfen-Thumb -->
-      <div class="relative select-none" role="group" aria-label="Language switcher" id="langSwitch" data-active="{% if is_en %}en{% else %}de{% endif %}">
-        <div class="lang-track relative w-[128px] h-9 rounded-full p-1">
-          <span id="langThumb"
-                class="lang-thumb absolute top-1 left-1 h-[calc(100%-0.5rem)] w-[calc(50%-0.25rem)] transition-transform duration-300 ease-out {% if is_en %}lang-thumb--active{% endif %}"
-                style="transform: translateX({% if is_en %}calc(100% + 0.5rem){% else %}0{% endif %});"></span>
-          <div class="grid grid-cols-2 relative z-10 h-full">
-            <a id="langDE" href="{{ base_url | relative_url }}"
-               class="flex items-center justify-center gap-1.5 rounded-full text-sm font-medium {% unless is_en %}lang-active{% else %}text-slate-700 dark:text-slate-300 hover:text-emerald-600{% endunless %}">
-              <svg viewBox="0 0 3 2" width="16" height="11" aria-hidden="true" class="opacity-90">
-                <rect width="3" height="2" fill="#000"/>
-                <rect width="3" height="1.333" y="0.667" fill="#DD0000"/>
-                <rect width="3" height="0.667" y="1.333" fill="#FFCE00"/>
-              </svg>
-              <span aria-hidden="true">DE</span><span class="sr-only">Deutsch</span>
-            </a>
-            <a id="langEN" href="{{ '/en' | append: base_url | replace:'//','/' | relative_url }}"
-               class="flex items-center justify-center gap-1.5 rounded-full text-sm font-medium {% if is_en %}lang-active{% else %}text-slate-700 dark:text-slate-300 hover:text-emerald-600{% endif %}">
-              <svg viewBox="0 0 7410 3900" width="16" height="11" aria-hidden="true" class="opacity-90">
-                <rect width="7410" height="3900" fill="#b22234"/>
-                <path d="M0,450H7410M0,1050H7410M0,1650H7410M0,2250H7410M0,2850H7410M0,3450H7410" stroke="#fff" stroke-width="300"/>
-                <rect width="2964" height="2100" fill="#3c3b6e"/>
-                <g fill="#fff">
-                  {% for y in (0..9) %}{% assign offset = y | modulo: 2 | times: 123 %}{% for x in (0..5) %}
-                    <circle cx="{{ 247 | plus: offset | plus: x | times: 412 }}" cy="{{ 210 | plus: y | times: 210 }}" r="90"/>
-                  {% endfor %}{% endfor %}
-                </g>
-              </svg>
-              <span aria-hidden="true">EN</span><span class="sr-only">English</span>
-            </a>
-          </div>
-        </div>
-      </div>
+{%- comment -%} DE-Ziel: immer /en am Anfang entfernen {%- endcomment -%}
+{%- assign de_href = clean_url | replace_first:'/en','' -%}
+
+{%- comment -%} EN-Ziel: genau ein /en/ vorn (wenn nicht schon da) {%- endcomment -%}
+{%- assign en_href = clean_url -%}
+{%- unless clean_url | slice: 0,4 == '/en/' -%}
+  {%- assign en_href = '/en' | append: clean_url -%}
+{%- endunless -%}
+{%- assign en_href = en_href | replace:'//','/' -%}
+
+
+    <!-- Sprachschalter – transparent/glassy + Tropfen-Thumb -->
+<div class="relative select-none" role="group" aria-label="Language switcher"
+     id="langSwitch" data-active="{% if is_en %}en{% else %}de{% endif %}">
+  <div class="lang-track relative w-[128px] h-9 rounded-full p-1">
+    <!-- Thumb -->
+    <span id="langThumb"
+          class="lang-thumb absolute top-1 left-1 h-[calc(100%-0.5rem)] w-[calc(50%-0.25rem)]
+                 transition-transform duration-300 ease-out {% if is_en %}lang-thumb--active{% endif %}"
+          style="transform: translateX({% if is_en %}calc(100% + 0.5rem){% else %}0{% endif %});"></span>
+
+    <!-- Klickflächen -->
+    <div class="grid grid-cols-2 relative z-10 h-full">
+      <!-- DE -->
+      <a id="langDE" href="{{ de_href | relative_url }}"
+         class="flex items-center justify-center gap-1.5 rounded-full text-sm font-medium
+                {% unless is_en %}lang-active{% else %}text-slate-700 dark:text-slate-300 hover:text-emerald-600{% endunless %}">
+        <svg viewBox="0 0 3 2" width="16" height="11" aria-hidden="true" class="opacity-90">
+          <rect width="3" height="2" fill="#000"/>
+          <rect width="3" height="1.333" y="0.667" fill="#DD0000"/>
+          <rect width="3" height="0.667" y="1.333" fill="#FFCE00"/>
+        </svg>
+        <span aria-hidden="true">DE</span><span class="sr-only">Deutsch</span>
+      </a>
+
+      <!-- EN -->
+      <a id="langEN" href="{{ en_href | relative_url }}"
+         class="flex items-center justify-center gap-1.5 rounded-full text-sm font-medium
+                {% if is_en %}lang-active{% else %}text-slate-700 dark:text-slate-300 hover:text-emerald-600{% endif %}">
+        <svg viewBox="0 0 7410 3900" width="16" height="11" aria-hidden="true" class="opacity-90">
+          <rect width="7410" height="3900" fill="#b22234"/>
+          <path d="M0,450H7410M0,1050H7410M0,1650H7410M0,2250H7410M0,2850H7410M0,3450H7410" stroke="#fff" stroke-width="300"/>
+          <rect width="2964" height="2100" fill="#3c3b6e"/>
+          <g fill="#fff">
+            {% for y in (0..9) %}{% assign offset = y | modulo: 2 | times: 123 %}{% for x in (0..5) %}
+              <circle cx="{{ 247 | plus: offset | plus: x | times: 412 }}" cy="{{ 210 | plus: y | times: 210 }}" r="90"/>
+            {% endfor %}{% endfor %}
+          </g>
+        </svg>
+        <span aria-hidden="true">EN</span><span class="sr-only">English</span>
+      </a>
+    </div>
+  </div>
+</div>
+
       <!-- /Sprachschalter -->
     </div>
 
@@ -492,19 +514,16 @@
       setTimeout(()=>{ window.location.assign(href); }, 220); // nach Transition navigieren
     }
 
-    linkDE.addEventListener('click', (e)=>{
-      const cur = root.getAttribute('data-active');
-      if(cur === 'de'){ e.preventDefault(); return; }  // schon aktiv → nix tun
-      e.preventDefault();
-      glideThenGo('de', linkDE.getAttribute('href'));
-    });
+  linkDE.addEventListener('click', (e)=>{
+  e.preventDefault();
+  glideThenGo('de', linkDE.getAttribute('href'));
+});
 
-    linkEN.addEventListener('click', (e)=>{
-      const cur = root.getAttribute('data-active');
-      if(cur === 'en'){ e.preventDefault(); return; }
-      e.preventDefault();
-      glideThenGo('en', linkEN.getAttribute('href'));
-    });
+linkEN.addEventListener('click', (e)=>{
+  e.preventDefault();
+  glideThenGo('en', linkEN.getAttribute('href'));
+});
+
   })();
 </script>
 
