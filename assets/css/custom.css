@@ -111,3 +111,31 @@ hr, .border-default {
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   backdrop-filter: blur(6px);
 }
+
+/* ===== GLOBAL OVERRIDES (schlagen Tailwind-Utilities) ===== */
+
+/* Basis */
+body { background-color:#020617; color:#e2e8f0; } /* slate-950 / slate-200 */
+
+/* Überschriften überall Emerald – auch wenn Klassen dranhängen */
+:is(h1,h2,h3,h4,h5,h6) { color:#10b981 !important; font-weight:700; } /* emerald-500 */
+
+/* Fließtext standardisieren – schlägt text-slate-300 etc. */
+:is(p,li,dt,dd) { color:#e2e8f0 !important; } /* slate-200 */
+
+/* Unterschriften / Kleinteile */
+small, figcaption, .text-muted { color:#94a3b8 !important; } /* slate-400 */
+
+/* Links */
+a { color:#34d399 !important; text-decoration:underline; text-decoration-color:rgba(52,211,153,.3); } /* emerald-400 */
+a:hover { color:#6ee7b7 !important; text-decoration-color:#34d399; } /* emerald-300 */
+
+/* Standard-Ränder */
+hr, .border-default { border-color:#1e293b !important; } /* slate-800 */
+
+/* Karten / Boxen */
+.card {
+  background-color:rgba(15,23,42,.6) !important; /* slate-900/60 */
+  border:1px solid #1e293b !important;
+  border-radius:1rem; box-shadow:0 2px 6px rgba(0,0,0,.3); backdrop-filter:blur(6px);
+}
