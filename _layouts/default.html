@@ -179,11 +179,13 @@
           <source src="{{ '/assets/videos/menu-logo.webm?v=3' | relative_url }}" type="video/webm">
           <source src="{{ '/assets/videos/menu-logo.mp4?v=3'  | relative_url }}" type="video/mp4">
         </video>
-        <span class="inline transition-colors group-hover:text-emerald-500">
-          {{ menu_label }}
-        </span>
-      </button>
-    </div>
+        
+       <!-- Menü-Text immer sichtbar -->
+    <span class="inline transition-colors group-hover:text-emerald-500">
+      {% if page.lang == "en" %}Menu{% else %}Menü{% endif %}
+    </span>
+  </button>
+</div>
 
   </div>
 </header>
