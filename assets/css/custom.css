@@ -105,7 +105,9 @@ header video, header img, header svg{ background:transparent !important; }
 .cta-ig:hover, .cta-ig:focus-visible{ color:#ffffff !important; }
 
 /* 5.6) Footer Mitte & Icons rechts */
-/* Footer – Mitte-Link Hover Emerald */
+/* Standard: grau (steht schon weiter oben definiert) */
+
+/* Hover: Mitte-Link emerald-500 */
 .footer-center a:hover,
 .footer-center a:focus-visible {
   color: #10b981 !important; /* emerald-500 */
