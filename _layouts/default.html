@@ -87,6 +87,25 @@
     .dark .brand-title{color:#e5e7eb;} 
     .dark .brand-sub{color:#94a3b8;} 
     .dark .footer-center small{color:#cbd5e1;} 
+
+    /* --- Soft Emerald Glow (wie 404/success) --- */
+.lang-glow {
+  box-shadow:
+    0 0 0 6px rgba(16,185,129,.10),   /* äußerer softer Saum */
+    0 8px 30px rgba(16,185,129,.20);  /* weicher Glow */
+}
+.lang-glow-anim {
+  animation: langPulse 1.8s ease-in-out infinite;
+}
+@keyframes langPulse {
+  0%, 100% { box-shadow:
+    0 0 0 6px rgba(16,185,129,.10),
+    0 8px 30px rgba(16,185,129,.20);}
+  50% { box-shadow:
+    0 0 0 8px rgba(16,185,129,.15),
+    0 10px 36px rgba(16,185,129,.28);}
+}
+
   </style>
 
   {% include head-seo.html %}
@@ -112,7 +131,7 @@
 <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
   <div class="container mx-auto px-4 py-6 flex items-center justify-between gap-4">
 
-    <!-- Links: Logo (wie im Footer) -->
+    <!-- Links: Logo -->
     <a href="{{ '/' | relative_url }}" class="flex items-center gap-3 shrink-0">
       <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="h-12 w-auto">
       <div class="leading-tight">
@@ -121,8 +140,9 @@
       </div>
     </a>
 
-    <!-- Mitte: Theme-Slider + Sprachschalter (zentriert) -->
-    <div class="flex-1 flex items-center justify-center gap-4 min-w-0">
+    <!-- Mitte: Theme + Language -->
+    <div class="flex-1 min-w-0 flex items-center justify-center gap-4">
+
       <!-- Theme -->
       <button id="themeSlider" class="relative inline-flex items-center select-none" type="button" aria-label="Design umschalten" aria-live="polite">
         <span id="themeTrack" class="relative h-9 w-24 rounded-full bg-slate-200/80 dark:bg-slate-700/80 shadow-inner overflow-hidden select-none">
@@ -132,67 +152,69 @@
         </span>
       </button>
 
-     <!-- Sprachschalter – Pill / Segmented -->
-<div class="flex items-center" role="group" aria-label="Language switcher">
-  <div class="relative inline-flex items-center bg-slate-100/80 dark:bg-slate-800/80 rounded-full p-1 shadow-inner">
-    <!-- DE -->
-    <a href="{{ page.url | replace_first:'/en','' | relative_url }}"
-       class="relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all
-              {% if page.lang == 'de' or page.url contains '/de/' %}
-                bg-white dark:bg-slate-700 text-emerald-600 shadow-sm
-              {% else %}
-                text-slate-700 dark:text-slate-300 hover:text-emerald-600
-              {% endif %}">
-      <svg viewBox="0 0 3 2" width="16" height="11" aria-hidden="true" class="opacity-90">
-        <rect width="3" height="2" fill="#000"/>
-        <rect width="3" height="1.333" y="0.667" fill="#DD0000"/>
-        <rect width="3" height="0.667" y="1.333" fill="#FFCE00"/>
-      </svg>
-      <span aria-hidden="true">DE</span><span class="sr-only">Deutsch</span>
-    </a>
+      <!-- Sprachschalter: echter Slider mit gleitendem Thumb -->
+      {%- assign is_en = page.lang == 'en' or page.url contains '/en/' -%}
+{%- assign base_url = page.url | replace_first:'/en','' -%}
+<div class="relative select-none" role="group" aria-label="Language switcher">
+  <!-- Track mit Glow -->
+  <div class="relative w-[128px] h-9 rounded-full bg-slate-100/90 dark:bg-slate-800/80 shadow-inner p-1 lang-glow lang-glow-anim">
+    <!-- Gleitender Thumb (50% breit) mit leichtem Glow -->
+    <span class="absolute top-1 left-1 h-[calc(100%-0.5rem)] w-[calc(50%-0.25rem)]
+                 rounded-full bg-white dark:bg-slate-700 shadow transition-transform duration-300 ease-out"
+          style="transform: translateX({% if is_en %}calc(100% + 0.5rem){% else %}0{% endif %}); box-shadow: 0 4px 12px rgba(0,0,0,.15), 0 0 14px rgba(16,185,129,.25);"></span>
 
-    <!-- EN -->
-    <a href="{{ '/en' | append: page.url | replace:'//en/','/en/' | relative_url }}"
-       class="relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all
-              {% if page.lang == 'en' or page.url contains '/en/' %}
-                bg-white dark:bg-slate-700 text-emerald-600 shadow-sm
-              {% else %}
-                text-slate-700 dark:text-slate-300 hover:text-emerald-600
-              {% endif %}">
-      <svg viewBox="0 0 7410 3900" width="16" height="11" aria-hidden="true" class="opacity-90">
-        <rect width="7410" height="3900" fill="#b22234"/>
-        <path d="M0,450H7410M0,1050H7410M0,1650H7410M0,2250H7410M0,2850H7410M0,3450H7410" stroke="#fff" stroke-width="300"/>
-        <rect width="2964" height="2100" fill="#3c3b6e"/>
-        <g fill="#fff">
-          {% for y in (0..9) %}
-            {% assign offset = y | modulo: 2 | times: 123 %}
-            {% for x in (0..5) %}
+    <!-- Klickflächen -->
+    <div class="grid grid-cols-2 relative z-10 h-full">
+      <!-- DE: immer /en entfernen -->
+      <a href="{{ base_url | relative_url }}"
+         class="flex items-center justify-center gap-1.5 rounded-full text-sm font-medium
+                {% unless is_en %} text-emerald-600 {% else %} text-slate-700 dark:text-slate-300 hover:text-emerald-600 {% endunless %}">
+        <svg viewBox="0 0 3 2" width="16" height="11" aria-hidden="true" class="opacity-90">
+          <rect width="3" height="2" fill="#000"/>
+          <rect width="3" height="1.333" y="0.667" fill="#DD0000"/>
+          <rect width="3" height="0.667" y="1.333" fill="#FFCE00"/>
+        </svg>
+        <span aria-hidden="true">DE</span><span class="sr-only">Deutsch</span>
+      </a>
+
+      <!-- EN: /en + basis-url (nie doppelt) -->
+      <a href="{{ '/en' | append: base_url | replace:'//','/' | relative_url }}"
+         class="flex items-center justify-center gap-1.5 rounded-full text-sm font-medium
+                {% if is_en %} text-emerald-600 {% else %} text-slate-700 dark:text-slate-300 hover:text-emerald-600 {% endif %}">
+        <svg viewBox="0 0 7410 3900" width="16" height="11" aria-hidden="true" class="opacity-90">
+          <rect width="7410" height="3900" fill="#b22234"/>
+          <path d="M0,450H7410M0,1050H7410M0,1650H7410M0,2250H7410M0,2850H7410M0,3450H7410" stroke="#fff" stroke-width="300"/>
+          <rect width="2964" height="2100" fill="#3c3b6e"/>
+          <g fill="#fff">
+            {% for y in (0..9) %}{% assign offset = y | modulo: 2 | times: 123 %}{% for x in (0..5) %}
               <circle cx="{{ 247 | plus: offset | plus: x | times: 412 }}" cy="{{ 210 | plus: y | times: 210 }}" r="90"/>
-            {% endfor %}
-          {% endfor %}
-        </g>
-      </svg>
-      <span aria-hidden="true">EN</span><span class="sr-only">English</span>
-    </a>
+            {% endfor %}{% endfor %}
+          </g>
+        </svg>
+        <span aria-hidden="true">EN</span><span class="sr-only">English</span>
+      </a>
+    </div>
   </div>
 </div>
 
-    <!-- Rechts: Schlange + „Menü/Menu“ (wie Footer-Rechts, mit Abstand) -->
-    <div class="flex items-center gap-3 shrink-0">
-      <button id="snakeBtn"
-        aria-controls="sideMenu" aria-expanded="false"
-        class="group inline-flex items-center gap-2 px-3 py-2 rounded-xl text-lg font-semibold text-slate-900 dark:text-slate-100 focus:outline-none">
-        <video autoplay loop muted playsinline preload="auto" class="menu-logo w-10 h-10 block" aria-hidden="true">
-          <source src="{{ '/assets/videos/menu-logo.webm?v=3' | relative_url }}" type="video/webm">
-          <source src="{{ '/assets/videos/menu-logo.mp4?v=3'  | relative_url }}" type="video/mp4">
-        </video>
-        
-       <!-- Menü-Text immer sichtbar -->
+      <!-- /Sprachschalter -->
+    </div>
+
+   <!-- Rechts: Schlange + „Menü/Menu“ (immer sichtbar, mit Abstand) -->
+<div class="shrink-0 flex items-center pl-2 sm:pl-4">
+  <button id="snakeBtn"
+    aria-controls="sideMenu" aria-expanded="false"
+    class="group inline-flex items-center gap-2 sm:gap-3 px-3 py-2 rounded-xl text-lg font-semibold text-slate-900 dark:text-slate-100 focus:outline-none whitespace-nowrap">
+    <video autoplay loop muted playsinline preload="auto" class="menu-logo w-10 h-10 block" aria-hidden="true">
+      <source src="{{ '/assets/videos/menu-logo.webm?v=3' | relative_url }}" type="video/webm">
+      <source src="{{ '/assets/videos/menu-logo.mp4?v=3'  | relative_url }}" type="video/mp4">
+    </video>
     <span class="inline transition-colors group-hover:text-emerald-500">
-      {% if page.lang == "en" %}Menu{% else %}Menü{% endif %}
+      {% if page.lang == 'en' or page.url contains '/en/' %}Menu{% else %}Menü{% endif %}
     </span>
   </button>
 </div>
+
 
   </div>
 </header>
