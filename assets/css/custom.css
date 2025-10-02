@@ -535,3 +535,17 @@ z-index: 0;
    einfach die <p> Zeile so anpassen: 
    <p class="attention-label ...">🚨 {{ page.warn_head }} 🚨</p>
 */
+
+/* ================================
+   SideMenu – Social Icons unten
+   ================================ */
+#sideMenu .border-t a {
+  color: #cbd5e1 !important;   /* slate-300 */
+  transition: color .25s ease;
+}
+
+#sideMenu .border-t a:hover,
+#sideMenu .border-t a:focus-visible {
+  color: #10b981 !important;   /* emerald-500 */
+}
+
