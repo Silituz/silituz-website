@@ -62,93 +62,98 @@
 
   <!-- Zusatzstyles -->
   <style>
-    .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);} 
-    .brand-card{transition:transform .15s ease, box-shadow .15s ease;} 
-    .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);} 
-    #sideMenu nav a { transition: background-color .25s ease, color .25s ease; } 
-    #sideMenu nav a:hover { background-color:#059669; color:#fff !important; } 
-    #sideMenu nav a.active { background-color:#d1fae5; color:#059669 !important; font-weight:600; } 
-    #themeThumb { transition: transform .22s cubic-bezier(.2,.9,.2,1); } 
-    .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;} 
-    .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;} 
-    .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;} 
-    .footer-left .logo{height:40px; width:auto;} 
-    .brand-texts{display:flex; flex-direction:column; line-height:1.2;} 
-    .brand-title{font-size:1.2rem; font-weight:800; color:#111;} 
-    .brand-sub{font-size:.85rem; color:#666;} 
-    .footer-center small{font-size:.9rem; color:#555;} 
-    .footer-right{display:flex; align-items:center; gap:12px;} 
-    .footer-right .icon{font-size:22px; color:#888; transition:color .3s ease;} 
-    .footer-more{transition:background-color .25s ease, color .25s ease, transform .25s ease; color:#374151;} 
-    .footer-more:hover{background-color:#059669; color:#fff !important; animation:footer-wobble .35s ease-in-out;} 
-    @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-0.6deg)}100%{transform:translateX(0) rotate(0)}} 
-    @media (prefers-reduced-motion: reduce){.footer-more:hover{animation:none;}} 
-    .dark .site-footer{background:#0f172a; color:#e5e7eb; border-top-color:#1f2937;} 
-    .dark .brand-title{color:#e5e7eb;} 
-    .dark .brand-sub{color:#94a3b8;} 
-    .dark .footer-center small{color:#cbd5e1;} 
+    .glass{backdrop-filter:saturate(140%) blur(6px); background:rgba(0,0,0,.35);}
+    .brand-card{transition:transform .15s ease, box-shadow .15s ease;}
+    .brand-card:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.12);}
+    #sideMenu nav a { transition: background-color .25s ease, color .25s ease; }
+    #sideMenu nav a:hover { background-color:#059669; color:#fff !important; }
+    #sideMenu nav a.active { background-color:#d1fae5; color:#059669 !important; font-weight:600; }
+    #themeThumb { transition: transform .22s cubic-bezier(.2,.9,.2,1); }
+    .site-footer{background:#fff; color:#333; border-top:1px solid #ddd;}
+    .footer-inner{max-width:1200px; margin:0 auto; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+    .footer-left .footer-brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
+    .footer-left .logo{height:40px; width:auto;}
+    .brand-texts{display:flex; flex-direction:column; line-height:1.2;}
+    .brand-title{font-size:1.2rem; font-weight:800; color:#111;}
+    .brand-sub{font-size:.85rem; color:#666;}
+    .footer-center small{font-size:.9rem; color:#555;}
+    .footer-right{display:flex; align-items:center; gap:12px;}
+    .footer-right .icon{font-size:22px; color:#888; transition:color .3s ease;}
+    .footer-more{transition:background-color .25s ease, color .25s ease, transform .25s ease; color:#374151;}
+    .footer-more:hover{background-color:#059669; color:#fff !important; animation:footer-wobble .35s ease-in-out;}
+    @keyframes footer-wobble{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.5px) rotate(-1.2deg)}50%{transform:translateX(1.5px) rotate(1.2deg)}75%{transform:translateX(-1px) rotate(-0.6deg)}100%{transform:translateX(0) rotate(0)}}
+    @media (prefers-reduced-motion: reduce){.footer-more:hover{animation:none;}}
+    .dark .site-footer{background:#0f172a; color:#e5e7eb; border-top-color:#1f2937;}
+    .dark .brand-title{color:#e5e7eb;}
+    .dark .brand-sub{color:#94a3b8;}
+    .dark .footer-center small{color:#cbd5e1;}
 
-  /* --- Language slider: frosted track + water drop thumb --- */
-.lang-track{
-  backdrop-filter: saturate(140%) blur(8px);
-  -webkit-backdrop-filter: saturate(140%) blur(8px);
-  background: linear-gradient(
-    180deg,
-    rgba(148,163,184,.18),
-    rgba(15,23,42,.20)
-  );
-  box-shadow: inset 0 2px 8px rgba(0,0,0,.12);
-}
-.dark .lang-track{
-  background: linear-gradient(180deg, rgba(30,41,59,.55), rgba(15,23,42,.65));
-}
+    /* === Language slider: transparent frosted track + water drop thumb === */
+    .lang-track{
+      background: transparent;
+      border-radius: 9999px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,.10);
+      backdrop-filter: saturate(140%) blur(8px);
+      -webkit-backdrop-filter: saturate(140%) blur(8px);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .dark .lang-track{
+      border-color: rgba(255,255,255,.12);
+      box-shadow: inset 0 2px 10px rgba(0,0,0,.25);
+    }
 
-.lang-thumb{
-  /* Regentropfen-Glasoptik */
-  background: radial-gradient(120% 140% at 20% 10%, rgba(255,255,255,.85), rgba(255,255,255,.5) 40%, rgba(255,255,255,.2) 60%) ,
-              linear-gradient(180deg, rgba(255,255,255,.8), rgba(255,255,255,.35));
-  box-shadow:
-    0 6px 16px rgba(0,0,0,.20),
-    inset 0 1px 0 rgba(255,255,255,.6),
-    inset 0 -2px 8px rgba(0,0,0,.08);
-  border-radius: 9999px;
-}
-.dark .lang-thumb{
-  background: radial-gradient(120% 140% at 20% 10%, rgba(255,255,255,.75), rgba(226,232,240,.28) 45%, rgba(226,232,240,.12) 70%) ,
-              linear-gradient(180deg, rgba(226,232,240,.55), rgba(241,245,249,.12));
-}
+    .lang-thumb{
+      background:
+        radial-gradient(120% 140% at 20% 10%, rgba(255,255,255,.9), rgba(255,255,255,.55) 40%, rgba(255,255,255,.22) 65%),
+        linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.38));
+      box-shadow:
+        0 6px 16px rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.65),
+        inset 0 -2px 10px rgba(0,0,0,.10);
+      border-radius: 9999px;
+    }
+    .dark .lang-thumb{
+      background:
+        radial-gradient(120% 140% at 20% 10%, rgba(255,255,255,.78), rgba(226,232,240,.32) 45%, rgba(226,232,240,.14) 70%),
+        linear-gradient(180deg, rgba(226,232,240,.58), rgba(241,245,249,.15));
+    }
 
-/* Soft Emerald Pulse NUR für aktiven Thumb */
-@keyframes langEmeraldPulse {
-  0%,100% { box-shadow:
-    0 6px 16px rgba(0,0,0,.20),
-    0 0 0 6px rgba(16,185,129,.12),
-    0 10px 34px rgba(16,185,129,.22); }
-  50%     { box-shadow:
-    0 6px 16px rgba(0,0,0,.20),
-    0 0 0 8px rgba(16,185,129,.18),
-    0 12px 42px rgba(16,185,129,.32); }
-}
-.lang-thumb--active{
-  animation: langEmeraldPulse 1.9s ease-in-out infinite;
-}
+    @keyframes langEmeraldPulse {
+      0%,100% { box-shadow:
+        0 6px 16px rgba(0,0,0,.18),
+        0 0 0 7px rgba(16,185,129,.18),
+        0 12px 42px rgba(16,185,129,.35); }
+      50%     { box-shadow:
+        0 6px 16px rgba(0,0,0,.18),
+        0 0 0 10px rgba(16,185,129,.26),
+        0 16px 54px rgba(16,185,129,.45); }
+    }
+    .lang-thumb--active{
+      animation: langEmeraldPulse 1.9s ease-in-out infinite;
+    }
 
-/* respektiere Reduce Motion */
-@media (prefers-reduced-motion: reduce){
-  .lang-thumb--active{ animation: none; }
-}
+    /* Glow für aktiven Text/Flagge */
+    .lang-active {
+      color: #10b981 !important; /* emerald-500 */
+      filter: drop-shadow(0 0 6px rgba(16,185,129,.55));
+    }
+    .dark .lang-active {
+      filter: drop-shadow(0 0 8px rgba(16,185,129,.6));
+    }
 
+    @media (prefers-reduced-motion: reduce){
+      .lang-thumb--active{ animation: none; }
+    }
   </style>
 
   {% include head-seo.html %}
 </head>
 
-  <script>
+<script>
   (function(){
     var a = document.querySelectorAll('a[href$=".html"]');
     a.forEach(function(link){
       var href = link.getAttribute('href');
-      // interne Links (beginnen mit /) umschreiben
       if (href && href.charAt(0)==='/' && !href.startsWith('/assets/')) {
         link.setAttribute('href', href.replace(/\.html$/, '/') );
       }
@@ -156,7 +161,6 @@
   })();
 </script>
 
-  
 <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
 
 <!-- ===== HEADER (Flex wie Footer) ===== -->
@@ -184,75 +188,59 @@
         </span>
       </button>
 
-     {%- assign is_en = page.lang == 'en' or page.url contains '/en/' -%}
-{%- assign base_url = page.url | replace_first:'/en','' -%}
+      {%- assign is_en = page.lang == 'en' or page.url contains '/en/' -%}
+      {%- assign base_url = page.url | replace_first:'/en','' -%}
 
-<!-- Sprachschalter – Glass/Water Toggle mit aktivem Glow -->
-<div class="relative select-none" role="group" aria-label="Language switcher" id="langSwitch" data-active="{% if is_en %}en{% else %}de{% endif %}">
-  <!-- Track -->
-  <div class="lang-track relative w-[128px] h-9 rounded-full shadow-inner p-1">
-    <!-- Thumb (gleitet) -->
-    <span id="langThumb"
-          class="lang-thumb absolute top-1 left-1 h-[calc(100%-0.5rem)] w-[calc(50%-0.25rem)] transition-transform duration-300 ease-out
-                 {% if is_en %} lang-thumb--active {% endif %}"
-          style="transform: translateX({% if is_en %}calc(100% + 0.5rem){% else %}0{% endif %});">
-    </span>
-
-    <!-- Klickflächen -->
-    <div class="grid grid-cols-2 relative z-10 h-full">
-      <!-- DE -->
-      <a id="langDE"
-         href="{{ base_url | relative_url }}"
-         class="flex items-center justify-center gap-1.5 rounded-full text-sm font-medium
-                {% unless is_en %} text-emerald-600 {% else %} text-slate-700 dark:text-slate-300 hover:text-emerald-600 {% endunless %}">
-        <svg viewBox="0 0 3 2" width="16" height="11" aria-hidden="true" class="opacity-90">
-          <rect width="3" height="2" fill="#000"/>
-          <rect width="3" height="1.333" y="0.667" fill="#DD0000"/>
-          <rect width="3" height="0.667" y="1.333" fill="#FFCE00"/>
-        </svg>
-        <span aria-hidden="true">DE</span><span class="sr-only">Deutsch</span>
-      </a>
-
-      <!-- EN -->
-      <a id="langEN"
-         href="{{ '/en' | append: base_url | replace:'//','/' | relative_url }}"
-         class="flex items-center justify-center gap-1.5 rounded-full text-sm font-medium
-                {% if is_en %} text-emerald-600 {% else %} text-slate-700 dark:text-slate-300 hover:text-emerald-600 {% endif %}">
-        <svg viewBox="0 0 7410 3900" width="16" height="11" aria-hidden="true" class="opacity-90">
-          <rect width="7410" height="3900" fill="#b22234"/>
-          <path d="M0,450H7410M0,1050H7410M0,1650H7410M0,2250H7410M0,2850H7410M0,3450H7410" stroke="#fff" stroke-width="300"/>
-          <rect width="2964" height="2100" fill="#3c3b6e"/>
-          <g fill="#fff">
-            {% for y in (0..9) %}{% assign offset = y | modulo: 2 | times: 123 %}{% for x in (0..5) %}
-              <circle cx="{{ 247 | plus: offset | plus: x | times: 412 }}" cy="{{ 210 | plus: y | times: 210 }}" r="90"/>
-            {% endfor %}{% endfor %}
-          </g>
-        </svg>
-        <span aria-hidden="true">EN</span><span class="sr-only">English</span>
-      </a>
-    </div>
-  </div>
-</div>
-
-
+      <!-- Sprachschalter – transparent/glassy + Tropfen-Thumb -->
+      <div class="relative select-none" role="group" aria-label="Language switcher" id="langSwitch" data-active="{% if is_en %}en{% else %}de{% endif %}">
+        <div class="lang-track relative w-[128px] h-9 rounded-full p-1">
+          <span id="langThumb"
+                class="lang-thumb absolute top-1 left-1 h-[calc(100%-0.5rem)] w-[calc(50%-0.25rem)] transition-transform duration-300 ease-out {% if is_en %}lang-thumb--active{% endif %}"
+                style="transform: translateX({% if is_en %}calc(100% + 0.5rem){% else %}0{% endif %});"></span>
+          <div class="grid grid-cols-2 relative z-10 h-full">
+            <a id="langDE" href="{{ base_url | relative_url }}"
+               class="flex items-center justify-center gap-1.5 rounded-full text-sm font-medium {% unless is_en %}lang-active{% else %}text-slate-700 dark:text-slate-300 hover:text-emerald-600{% endunless %}">
+              <svg viewBox="0 0 3 2" width="16" height="11" aria-hidden="true" class="opacity-90">
+                <rect width="3" height="2" fill="#000"/>
+                <rect width="3" height="1.333" y="0.667" fill="#DD0000"/>
+                <rect width="3" height="0.667" y="1.333" fill="#FFCE00"/>
+              </svg>
+              <span aria-hidden="true">DE</span><span class="sr-only">Deutsch</span>
+            </a>
+            <a id="langEN" href="{{ '/en' | append: base_url | replace:'//','/' | relative_url }}"
+               class="flex items-center justify-center gap-1.5 rounded-full text-sm font-medium {% if is_en %}lang-active{% else %}text-slate-700 dark:text-slate-300 hover:text-emerald-600{% endif %}">
+              <svg viewBox="0 0 7410 3900" width="16" height="11" aria-hidden="true" class="opacity-90">
+                <rect width="7410" height="3900" fill="#b22234"/>
+                <path d="M0,450H7410M0,1050H7410M0,1650H7410M0,2250H7410M0,2850H7410M0,3450H7410" stroke="#fff" stroke-width="300"/>
+                <rect width="2964" height="2100" fill="#3c3b6e"/>
+                <g fill="#fff">
+                  {% for y in (0..9) %}{% assign offset = y | modulo: 2 | times: 123 %}{% for x in (0..5) %}
+                    <circle cx="{{ 247 | plus: offset | plus: x | times: 412 }}" cy="{{ 210 | plus: y | times: 210 }}" r="90"/>
+                  {% endfor %}{% endfor %}
+                </g>
+              </svg>
+              <span aria-hidden="true">EN</span><span class="sr-only">English</span>
+            </a>
+          </div>
+        </div>
+      </div>
       <!-- /Sprachschalter -->
     </div>
 
-   <!-- Rechts: Schlange + „Menü/Menu“ (immer sichtbar, mit Abstand) -->
-<div class="shrink-0 flex items-center pl-2 sm:pl-4">
-  <button id="snakeBtn"
-    aria-controls="sideMenu" aria-expanded="false"
-    class="group inline-flex items-center gap-2 sm:gap-3 px-3 py-2 rounded-xl text-lg font-semibold text-slate-900 dark:text-slate-100 focus:outline-none whitespace-nowrap">
-    <video autoplay loop muted playsinline preload="auto" class="menu-logo w-10 h-10 block" aria-hidden="true">
-      <source src="{{ '/assets/videos/menu-logo.webm?v=3' | relative_url }}" type="video/webm">
-      <source src="{{ '/assets/videos/menu-logo.mp4?v=3'  | relative_url }}" type="video/mp4">
-    </video>
-    <span class="inline transition-colors group-hover:text-emerald-500">
-      {% if page.lang == 'en' or page.url contains '/en/' %}Menu{% else %}Menü{% endif %}
-    </span>
-  </button>
-</div>
-
+    <!-- Rechts: Schlange + „Menü/Menu“ -->
+    <div class="shrink-0 flex items-center pl-2 sm:pl-4">
+      <button id="snakeBtn"
+        aria-controls="sideMenu" aria-expanded="false"
+        class="group inline-flex items-center gap-2 sm:gap-3 px-3 py-2 rounded-xl text-lg font-semibold text-slate-900 dark:text-slate-100 focus:outline-none whitespace-nowrap">
+        <video autoplay loop muted playsinline preload="auto" class="menu-logo w-10 h-10 block" aria-hidden="true">
+          <source src="{{ '/assets/videos/menu-logo.webm?v=3' | relative_url }}" type="video/webm">
+          <source src="{{ '/assets/videos/menu-logo.mp4?v=3'  | relative_url }}" type="video/mp4">
+        </video>
+        <span class="inline transition-colors group-hover:text-emerald-500">
+          {% if page.lang == 'en' or page.url contains '/en/' %}Menu{% else %}Menü{% endif %}
+        </span>
+      </button>
+    </div>
 
   </div>
 </header>
@@ -264,7 +252,6 @@
   class="fixed right-0 top-0 h-full w-80 max-w-[86%] bg-white dark:bg-slate-900 shadow-2xl translate-x-full transition-transform duration-300 z-50"
   aria-hidden="true"
   aria-label="{% if page.lang == 'en' or page.url contains '/en/' %}Main menu{% else %}Hauptmenü{% endif %}">
-
   <!-- Kopf -->
   <div class="h-16 px-4 flex items-center justify-between border-b border-slate-200 dark:border-slate-800">
     <div class="flex items-center gap-2 font-extrabold text-slate-800 dark:text-slate-100">
@@ -277,10 +264,7 @@
   </div>
 
   <!-- Menü-Liste -->
-  {%- comment -%} Sprache lokal & robust bestimmen {%- endcomment -%}
-  {%- assign is_en_menu = false -%}
-  {%- if page.lang == 'en' or page.url contains '/en/' -%}{%- assign is_en_menu = true -%}{%- endif -%}
-
+  {%- assign is_en_menu = page.lang == 'en' or page.url contains '/en/' -%}
   {%- if is_en_menu -%}
     {%- assign nav_list = "Home:/,About:/about/,Gallery:/gallery/,Generators & more:/generators/,My Music:/music/,Socials:/socials/,Support:/support/,Shoutout:/shoutout/,Contact:/contact/,Imprint:/impressum/" | split: ',' -%}
   {%- else -%}
@@ -293,8 +277,6 @@
       {%- assign p = i | split: ':' -%}
       {%- assign title = p[0] -%}
       {%- assign href  = p[1] -%}
-
-      {%- comment -%} In EN: zuerst /en/<href> versuchen, sonst DE-Fallback {%- endcomment -%}
       {%- assign full = href -%}
       {%- if is_en_menu -%}
         {%- assign en_candidate = '/en' | append: href -%}
@@ -306,7 +288,6 @@
       {%- else -%}
         {%- if full | slice: 0,4 == '/en/' -%}{%- assign full = full | replace_first: '/en','' -%}{%- endif -%}
       {%- endif -%}
-
       {%- assign full_norm = full | replace:'index.html','' | replace:'//','/' -%}
       <a href="{{ full | relative_url }}"
          class="flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition
@@ -335,7 +316,6 @@
   </div>
 </aside>
 
-
 <!-- ===== Seiteninhalt ===== -->
 <main id="content">
   {{ content }}
@@ -354,17 +334,16 @@
       </a>
     </div>
 
-   <div class="footer-center">
-  <a href="{{ '/impressum/' | relative_url }}" 
-     class="text-sm text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition-colors cursor-pointer">
-    {% if page.lang == 'en' or page.url contains '/en/' %}
-      © {{ "now" | date: "%Y" }} Silituz — All rights reserved
-    {% else %}
-      © {{ "now" | date: "%Y" }} Silituz – Alle Rechte vorbehalten
-    {% endif %}
-  </a>
-</div>
-
+    <div class="footer-center">
+      <a href="{{ '/impressum/' | relative_url }}" 
+         class="text-sm text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition-colors cursor-pointer">
+        {% if page.lang == 'en' or page.url contains '/en/' %}
+          © {{ "now" | date: "%Y" }} Silituz — All rights reserved
+        {% else %}
+          © {{ "now" | date: "%Y" }} Silituz – Alle Rechte vorbehalten
+        {% endif %}
+      </a>
+    </div>
 
     <nav class="footer-right flex items-center gap-3" aria-label="Social Media">
       <a class="icon tiktok text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://www.tiktok.com/@silituz" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
@@ -374,19 +353,18 @@
       <a class="icon apple text-slate-600 hover:text-emerald-500 dark:text-slate-300 transition" href="https://music.apple.com/de/artist/silituz/1815637787" target="_blank" rel="noopener" aria-label="Apple Music">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/></svg>
       </a>
-     <a class="more footer-more text-base font-semibold px-3.5 py-2 rounded-lg bg-transparent
-   text-slate-600 dark:text-slate-300
-   hover:bg-emerald-500 hover:text-white transition"
-   href="{% if page.lang == 'en' or page.url contains '/en/' %}{{ '/en/socials/' | relative_url }}{% else %}{{ '/socials/' | relative_url }}{% endif %}"
-   aria-label="{% if page.lang == 'en' or page.url contains '/en/' %}More{% else %}Mehr{% endif %}">
-  {% if page.lang == 'en' or page.url contains '/en/' %}More{% else %}Mehr{% endif %}
-</a>
-
+      <a class="more footer-more text-base font-semibold px-3.5 py-2 rounded-lg bg-transparent
+         text-slate-600 dark:text-slate-300
+         hover:bg-emerald-500 hover:text-white transition"
+         href="{% if page.lang == 'en' or page.url contains '/en/' %}{{ '/en/socials/' | relative_url }}{% else %}{{ '/socials/' | relative_url }}{% endif %}"
+         aria-label="{% if page.lang == 'en' or page.url contains '/en/' %}More{% else %}Mehr{% endif %}">
+        {% if page.lang == 'en' or page.url contains '/en/' %}More{% else %}Mehr{% endif %}
+      </a>
     </nav>
   </div>
 </footer>
 
-<!-- ===== JS: Menü + Theme-Slider ===== -->
+<!-- ===== JS: Menü + Theme + Language ===== -->
 <script>
   // Off-canvas Menü
   (function () {
@@ -475,51 +453,60 @@
     applyThumbPosition();
   })();
 
-  <!-- ===== JS: Menü + Theme-Slider ===== -->
-<script>
-  // Off-canvas Menü
-  (function () { /* ...dein bestehender Code... */ })();
+  // Language-Slider: Glide + Glow
+  (function(){
+    const root   = document.getElementById('langSwitch');
+    const thumb  = document.getElementById('langThumb');
+    const linkDE = document.getElementById('langDE');
+    const linkEN = document.getElementById('langEN');
+    if(!root || !thumb || !linkDE || !linkEN) return;
 
-  // Theme-Slider
-  (function () { /* ...dein bestehender Code... */ })();
+    let animating = false;
+
+    function applyActiveClasses(isEN){
+      thumb.classList.toggle('lang-thumb--active', true); // Glow am aktiven Thumb
+      if(isEN){
+        linkEN.classList.add('lang-active');
+        linkDE.classList.remove('lang-active');
+      }else{
+        linkDE.classList.add('lang-active');
+        linkEN.classList.remove('lang-active');
+      }
+    }
+
+    function setThumb(to) {
+      const isEN = (to === 'en');
+      thumb.style.transform = isEN ? 'translateX(calc(100% + 0.5rem))' : 'translateX(0)';
+      applyActiveClasses(isEN);
+      root.setAttribute('data-active', isEN ? 'en' : 'de'); // Status im DOM setzen (stabil)
+    }
+
+    // Initial passend setzen
+    const active = root.getAttribute('data-active'); // 'de' | 'en'
+    setThumb(active);
+
+    function glideThenGo(target, href){
+      if(animating) return;
+      animating = true;
+      setThumb(target);                                 // sofort animieren + Status
+      setTimeout(()=>{ window.location.assign(href); }, 220); // nach Transition navigieren
+    }
+
+    linkDE.addEventListener('click', (e)=>{
+      const cur = root.getAttribute('data-active');
+      if(cur === 'de'){ e.preventDefault(); return; }  // schon aktiv → nix tun
+      e.preventDefault();
+      glideThenGo('de', linkDE.getAttribute('href'));
+    });
+
+    linkEN.addEventListener('click', (e)=>{
+      const cur = root.getAttribute('data-active');
+      if(cur === 'en'){ e.preventDefault(); return; }
+      e.preventDefault();
+      glideThenGo('en', linkEN.getAttribute('href'));
+    });
+  })();
 </script>
 
-<!-- Language Slider: Glide + Glow -->
-<script>
-(function(){
-  const root   = document.getElementById('langSwitch');
-  const thumb  = document.getElementById('langThumb');
-  const linkDE = document.getElementById('langDE');
-  const linkEN = document.getElementById('langEN');
-  if(!root || !thumb || !linkDE || !linkEN) return;
-
-  function setThumb(to) {
-    const isEN = (to === 'en');
-    thumb.style.transform = isEN ? 'translateX(calc(100% + 0.5rem))' : 'translateX(0)';
-    // Pulsierendes Leuchten am aktiven Thumb
-    thumb.classList.add('lang-thumb--active');
-  }
-
-  const active = root.getAttribute('data-active'); // 'de' | 'en'
-  setThumb(active);
-
-  function glideThenGo(target, href){
-    setThumb(target);
-    setTimeout(()=>{ window.location.href = href; }, 200);
-  }
-
-  linkDE.addEventListener('click', (e)=>{
-    if(root.getAttribute('data-active') === 'de') { e.preventDefault(); return; }
-    e.preventDefault();
-    glideThenGo('de', linkDE.getAttribute('href'));
-  });
-
-  linkEN.addEventListener('click', (e)=>{
-    if(root.getAttribute('data-active') === 'en') { e.preventDefault(); return; }
-    e.preventDefault();
-    glideThenGo('en', linkEN.getAttribute('href'));
-  });
-})();
-</script>
 </body>
 </html>
