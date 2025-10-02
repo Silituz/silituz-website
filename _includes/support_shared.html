@@ -27,16 +27,25 @@
       </div>
 
       <!-- Button -->
-      <div class="mt-6">
-        <a href="https://www.tipeeestream.com/silituz/donation" target="_blank" rel="noopener" id="tipeeeButton"
-           class="group relative inline-block px-6 py-2.5 rounded-lg bg-emerald-500 text-white font-semibold overflow-hidden">
-          <!-- Normal -->
-          <span class="block transition-opacity duration-300 group-hover:opacity-0">{{ page.tipeee_btn_normal }}</span>
-          <!-- Hover -->
-          <span class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            {{ page.tipeee_btn_hover }}
-          </span>
-        </a>
+<div class="mt-6">
+<a href="https://www.tipeeestream.com/silituz/donation" target="_blank" rel="noopener" id="tipeeeButton"
+class="group relative inline-block px-6 py-2.5 rounded-lg bg-emerald-500 font-semibold overflow-hidden">
+<!-- roter Füllbalken unter dem Text -->
+<span class="fillbar" aria-hidden="true"></span>
+
+
+<!-- Normalzustand -->
+<span class="label-normal relative z-10 block transition-opacity duration-300 group-hover:opacity-0">
+{{ page.tipeee_btn_normal }}
+</span>
+
+
+<!-- Hoverzustand -->
+<span class="label-hover absolute inset-0 z-10 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+{{ page.tipeee_btn_hover }}
+</span>
+</a>
+</div>
       </div>
     </div>
   </div>
