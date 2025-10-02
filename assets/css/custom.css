@@ -215,37 +215,54 @@ a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
   box-shadow: inset 0 0 0 1px rgba(16,185,129,.35);
 }
 
+/* (10) Sicherheitshalber: H-Überschriften nicht „weiß-leuchten“ */
+:is(h1,h2,h3,h4,h5,h6):hover { color:#10b981 !important; text-shadow:none !important; }
+
 /* ================================
-   Tab-Buttons (Index-Seite)
-   ================================ */
-.tab-btn {
-  color: #cbd5e1 !important; /* slate-300 */
-  background-color: rgba(255,255,255,0.15) !important; /* heller, glasiger Hintergrund */
+   GENERISCH: "Füll-auf-Hover" → Text immer slate-300
+================================== */
+.group:has(> .bg-emerald-500),
+.group:has(> .bg-emerald-500\/90),
+.group:has(> .bg-emerald-600),
+.group:has(> .bg-emerald-700),
+.group:has(> .fillbar-emerald) {}
+
+/* Hover-Regel */
+.group:hover:has(> .bg-emerald-500),
+.group:focus-within:has(> .bg-emerald-500),
+.group:hover:has(> .bg-emerald-500\/90),
+.group:focus-within:has(> .bg-emerald-500\/90),
+.group:hover:has(> .bg-emerald-600),
+.group:focus-within:has(> .bg-emerald-600),
+.group:hover:has(> .bg-emerald-700),
+.group:focus-within:has(> .bg-emerald-700),
+.group:hover:has(> .fillbar-emerald),
+.group:focus-within:has(> .fillbar-emerald) {
+  .relative, .z-10 { color: #cbd5e1 !important; } /* slate-300 */
 }
 
-.tab-btn .relative { 
-  transition: color .3s ease;
-}
-
-/* Hover = wenn Balken drübergeht → Schrift weiß */
-.tab-btn:hover .relative,
-.tab-btn:focus-visible .relative {
-  color: #ffffff !important;
-}
 /* ================================
    Willkommen-Buttons (Index)
-   ================================ */
+================================== */
 .welcome-btn {
-  background: transparent !important;   /* kein Hintergrund */
-  color: #cbd5e1 !important;            /* slate-300 */
+  background: transparent !important;
+  color: #cbd5e1 !important;
 }
-
-.welcome-btn .relative {
-  transition: color .3s ease;
-}
-
-/* Wenn Balken drüber: Text weiß */
+.welcome-btn .relative { transition: color .3s ease; }
 .welcome-btn:hover .relative,
 .welcome-btn:focus-visible .relative {
-  color: #ffffff !important;
+  color: #cbd5e1 !important;
+}
+
+/* ================================
+   Tabs "Über Silituz" & "Socials"
+================================== */
+.tab-btn {
+  background: transparent !important;
+  color: #cbd5e1 !important;
+}
+.tab-btn .relative { transition: color .3s ease; }
+.tab-btn:hover .relative,
+.tab-btn:focus-visible .relative {
+  color: #cbd5e1 !important;
 }
