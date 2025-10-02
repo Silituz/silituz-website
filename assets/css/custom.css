@@ -297,40 +297,42 @@ a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
 }
 
 /* =============================================================
-   GLOBAL HOVER-FILL HANDLING
+   GLOBAL HOVER-FILL HANDLING (v2 – robuster Match)
+   - Färbt Vordergrund-Text (Titel) → slate-300, WENN ein
+     emerald-Fülllayer in derselben .group existiert.
+   - Breite Erkennung via [class*="bg-emerald-…"] ODER .fillbar-emerald.
+   - Ausnahme: .keep-white bleibt weiß.
+   - Optionaler Fallback ohne :has(): .hover-fill (siehe unten)
    ============================================================= */
 
-:root {
-  --slate-300: #cbd5e1;   /* slate-300 */
-}
+:root { --slate-300:#cbd5e1; }
 
-/* Trigger: Hover/Focus-within auf group mit emerald-Fülllayer */
-.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald),
-.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) {
-  /* nur Trigger – kein Stil hier */
-}
+/* === Preferred: mit :has() (moderne Browser) === */
+.group:hover:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald),
+.group:focus-within:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) {}
 
-/* Text einfärben (relative/z-10/fg) */
-.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .fg,
-.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .fg,
-.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .relative,
-.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .relative,
-.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .z-10,
-.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .z-10 {
+/* Text-/Titel-Layer zuverlässig treffen */
+.group:hover:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) :is(.fg,.relative,.z-10,h1,h2,h3,h4,h5,h6,.btn-title),
+.group:focus-within:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) :is(.fg,.relative,.z-10,h1,h2,h3,h4,h5,h6,.btn-title){
   color: var(--slate-300) !important;
 }
 
-/* Fallback: wenn Text nicht in relative/z-10/fg liegt */
-.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) > *:not([class*="bg-emerald"]),
-.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) > *:not([class*="bg-emerald"]) {
+/* Ausnahme: bewusst weiß lassen */
+.group:hover:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) .keep-white,
+.group:focus-within:has([class*="bg-emerald-5"], [class*="bg-emerald-6"], [class*="bg-emerald-7"], .fillbar-emerald) .keep-white{
+  color:#ffffff !important;
+}
+
+/* Leucht-Reset auf Headings (verhindert Weiß-Schimmer) */
+:is(h1,h2,h3,h4,h5,h6):hover{ text-shadow:none !important; }
+
+/* === Optionaler Fallback ohne :has() ===
+   Falls dein Browser/Setup :has() blockt oder die Füll-Span
+   außerhalb der .group liegt: markiere die betroffenen Gruppen
+   einmalig mit .hover-fill im HTML.
+*/
+.hover-fill:hover :is(.fg,.relative,.z-10,h1,h2,h3,h4,h5,h6,.btn-title),
+.hover-fill:focus-within :is(.fg,.relative,.z-10,h1,h2,h3,h4,h5,h6,.btn-title){
   color: var(--slate-300) !important;
 }
-
-/* Ausnahme: keep-white */
-.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .keep-white,
-.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .keep-white {
-  color: #ffffff !important;
-}
-
-/* Überschriften: kein Weiß-Leuchten */
-:is(h1,h2,h3,h4,h5,h6):hover { text-shadow: none !important; }
+.hover-fill:hover .keep-white, .hover-fill:focus-within .keep-white{ color:#fff !important; }
