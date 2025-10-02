@@ -104,34 +104,31 @@
       text-shadow: 0 0 6px rgba(16,185,129,.6);
     }
 
-    /* === Menü-Button: Neon-Glow + sanftes Pulsieren, wenn aktiv === */
-    #snakeBtn {
-      transition: filter .25s ease, color .25s ease, text-shadow .25s ease, transform .25s ease;
-    }
-    #snakeBtn .menu-logo {
-      filter: drop-shadow(0 0 8px rgba(16,185,129,.35));
-      transition: filter .25s ease, transform .25s ease;
-    }
-    #snakeBtn:hover .menu-logo {
-      filter: drop-shadow(0 0 12px rgba(16,185,129,.55));
-    }
-    #snakeBtn:hover span,
-    #snakeBtn[aria-expanded="true"] span {
-      color: #10b981; /* emerald-500 */
-      text-shadow: 0 0 10px rgba(16,185,129,.65), 0 0 18px rgba(16,185,129,.35);
-    }
-    #snakeBtn[aria-expanded="true"] {
-      filter: drop-shadow(0 0 12px rgba(16,185,129,.45));
-      animation: neonPulse 1.6s ease-in-out infinite;
-    }
-    #snakeBtn[aria-expanded="true"] .menu-logo {
-      filter: drop-shadow(0 0 16px rgba(16,185,129,.6));
-    }
-    @keyframes neonPulse {
-      0%   { transform: translateZ(0) scale(1);   filter: drop-shadow(0 0 10px rgba(16,185,129,.35)); }
-      50%  { transform: translateZ(0) scale(1.03); filter: drop-shadow(0 0 16px rgba(16,185,129,.55)); }
-      100% { transform: translateZ(0) scale(1);   filter: drop-shadow(0 0 10px rgba(16,185,129,.35)); }
-    }
+   /* === Menü-Button: Neon-Glow + stärkeres Pulsieren, wenn aktiv === */
+#snakeBtn .menu-logo {
+  filter: drop-shadow(0 0 10px rgba(16,185,129,.5));
+}
+#snakeBtn:hover .menu-logo {
+  filter: drop-shadow(0 0 16px rgba(16,185,129,.75));
+}
+#snakeBtn:hover span,
+#snakeBtn[aria-expanded="true"] span {
+  color: #10b981; /* emerald-500 */
+  text-shadow: 0 0 14px rgba(16,185,129,.8), 0 0 24px rgba(16,185,129,.55);
+}
+#snakeBtn[aria-expanded="true"] {
+  filter: drop-shadow(0 0 18px rgba(16,185,129,.65));
+  animation: neonPulse 1.6s ease-in-out infinite;
+}
+#snakeBtn[aria-expanded="true"] .menu-logo {
+  filter: drop-shadow(0 0 22px rgba(16,185,129,.85));
+}
+@keyframes neonPulse {
+  0%   { transform: scale(1);   filter: drop-shadow(0 0 12px rgba(16,185,129,.55)); }
+  50%  { transform: scale(1.05); filter: drop-shadow(0 0 22px rgba(16,185,129,.85)); }
+  100% { transform: scale(1);   filter: drop-shadow(0 0 12px rgba(16,185,129,.55)); }
+}
+
     @media (prefers-reduced-motion: reduce) {
       #snakeBtn[aria-expanded="true"] { animation: none; }
     }
