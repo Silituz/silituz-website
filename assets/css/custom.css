@@ -505,3 +505,19 @@ z-index: 0;
   box-shadow: none;
 }
 */
+
+/* Slider-Menü: nur Text grün auf Hover; aktiver Link mit Emerald-BG */
+#sideMenu nav a { color:#cbd5e1 !important; background:transparent !important; }
+#sideMenu nav a * { color:inherit !important; } /* Pfeil/Icons erben die Farbe */
+
+/* Nur NICHT-aktive Links verändern sich auf Hover */
+#sideMenu nav a:not([aria-current="page"]):hover,
+#sideMenu nav a:not([aria-current="page"]):focus-visible {
+  color:#10b981 !important;       /* emerald-500 */
+  background:transparent !important;
+}
+
+/* Aktiver Link (per aria-current vom Template gesetzt) – Fallback, falls nötig */
+#sideMenu nav a[aria-current="page"] {
+  /* Klassen aus dem Anchor regeln das bereits; hier nur Reserve */
+}
