@@ -190,3 +190,18 @@ header video, header img, header svg{ background:transparent !important; }
   background: transparent !important;
   text-decoration: none;
 }
+
+/* Willkommen-Buttons (Index: Über Silituz & Socials) 
+   → komplett transparent, ohne Rahmen/Hintergrund */
+.welcome-btn {
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+.welcome-btn:hover,
+.welcome-btn:focus-visible {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
