@@ -295,3 +295,42 @@ a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
 .group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) > *:not([class*="bg-emerald"]) {
   color: #cbd5e1 !important;
 }
+
+/* =============================================================
+   GLOBAL HOVER-FILL HANDLING
+   ============================================================= */
+
+:root {
+  --slate-300: #cbd5e1;   /* slate-300 */
+}
+
+/* Trigger: Hover/Focus-within auf group mit emerald-Fülllayer */
+.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald),
+.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) {
+  /* nur Trigger – kein Stil hier */
+}
+
+/* Text einfärben (relative/z-10/fg) */
+.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .fg,
+.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .fg,
+.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .relative,
+.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .relative,
+.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .z-10,
+.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .z-10 {
+  color: var(--slate-300) !important;
+}
+
+/* Fallback: wenn Text nicht in relative/z-10/fg liegt */
+.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) > *:not([class*="bg-emerald"]),
+.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) > *:not([class*="bg-emerald"]) {
+  color: var(--slate-300) !important;
+}
+
+/* Ausnahme: keep-white */
+.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .keep-white,
+.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700, .fillbar-emerald) .keep-white {
+  color: #ffffff !important;
+}
+
+/* Überschriften: kein Weiß-Leuchten */
+:is(h1,h2,h3,h4,h5,h6):hover { text-shadow: none !important; }
