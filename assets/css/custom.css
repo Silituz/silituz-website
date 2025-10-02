@@ -459,3 +459,33 @@ z-index: 0;
   color: #fcd34d !important;
 }
 
+/* =============================================================
+   SLIDER-MENÜ STYLES
+   ============================================================= */
+
+/* Standard: Schrift slate-300, transparenter Hintergrund */
+#sideMenu nav a {
+  color: #cbd5e1 !important; /* slate-300 */
+  background: transparent !important;
+  border-radius: 0.5rem;
+  transition: color .2s ease, background-color .2s ease;
+}
+
+/* Hover: Nur Schrift emerald-500 */
+#sideMenu nav a:hover,
+#sideMenu nav a:focus-visible {
+  color: #10b981 !important; /* emerald-500 */
+  background: transparent !important;
+}
+
+/* Aktiver Eintrag (Seite aufgerufen) */
+#sideMenu nav a.active,
+#sideMenu nav a[aria-current="page"] {
+  background-color: rgba(16,185,129,.16) !important; /* emerald-500/16 – leicht transparent */
+  color: #d1fae5 !important;                         /* emerald-100 für guten Kontrast */
+  box-shadow: inset 0 0 0 1px rgba(16,185,129,.35);  /* dezenter Rand */
+}
+
+/* Optional: Wenn du lieber einen dunkleren vollen Emerald-Hintergrund willst */
+/* einfach die background-color hier austauschen, z.B. #047857 (emerald-700). */
+
