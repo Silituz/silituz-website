@@ -105,7 +105,12 @@ header video, header img, header svg{ background:transparent !important; }
 .cta-ig:hover, .cta-ig:focus-visible{ color:#ffffff !important; }
 
 /* 5.6) Footer Mitte & Icons rechts */
-.footer-center, .footer-center small, .footer-center a{ color:#cbd5e1 !important; }
+/* Footer – Mitte-Link Hover Emerald */
+.footer-center a:hover,
+.footer-center a:focus-visible {
+  color: #10b981 !important; /* emerald-500 */
+}
+
 .footer-right .icon{ color:#cbd5e1 !important; }
 .footer-right .icon:hover{ color:var(--brand) !important; }
 
@@ -170,3 +175,16 @@ header video, header img, header svg{ background:transparent !important; }
   animation: footer-wobble .35s ease-in-out;
 }
 /* keyframes footer-wobble sind bereits in deinem Projekt vorhanden – sonst hier ergänzen. */
+
+/* Index-Share Tabs (Über Silituz & Socials) transparent */
+.tab-btn {
+  background: transparent !important;
+  color: #cbd5e1 !important;           /* slate-300 */
+  border: none !important;
+}
+.tab-btn:hover,
+.tab-btn:focus-visible {
+  color: #ffffff !important;           /* weiß beim Hover */
+  background: transparent !important;
+  text-decoration: none;
+}
