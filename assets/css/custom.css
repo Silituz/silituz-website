@@ -215,3 +215,21 @@ a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
   box-shadow: inset 0 0 0 1px rgba(16,185,129,.35);
 }
 
+/* ================================
+   Tab-Buttons (Index-Seite)
+   ================================ */
+.tab-btn {
+  color: #cbd5e1 !important; /* slate-300 */
+  background-color: rgba(255,255,255,0.15) !important; /* heller, glasiger Hintergrund */
+}
+
+.tab-btn .relative { 
+  transition: color .3s ease;
+}
+
+/* Hover = wenn Balken drübergeht → Schrift weiß */
+.tab-btn:hover .relative,
+.tab-btn:focus-visible .relative {
+  color: #ffffff !important;
+}
+
