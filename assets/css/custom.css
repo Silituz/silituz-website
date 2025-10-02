@@ -62,7 +62,7 @@ header svg {
 }
 
 /* ================================
-   GLOBAL – TEXT & FARBSYSTEM
+   GLOBALES FARBSYSTEM (Dark Mode only)
    ================================ */
 
 /* Hintergrund & Standard-Text */
@@ -77,10 +77,12 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
 }
 
-/* Fließtext / Sekundärtext */
+/* Fließtext */
 p, li, dt, dd {
   color: #e2e8f0; /* slate-200 */
 }
+
+/* Unterschriften / Kleintexte */
 small, figcaption, .text-muted {
   color: #94a3b8; /* slate-400 */
 }
@@ -96,7 +98,7 @@ a:hover {
   text-decoration-color: #34d399;
 }
 
-/* Borders / Linien */
+/* Standard-Ränder */
 hr, .border-default {
   border-color: #1e293b; /* slate-800 */
 }
