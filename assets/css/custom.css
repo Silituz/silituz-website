@@ -266,3 +266,32 @@ a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
 .tab-btn:focus-visible .relative {
   color: #cbd5e1 !important;
 }
+
+/* =========================================================
+   GLOBAL: Für ALLE "Füll-auf-Hover"-Komponenten
+   Wenn innerhalb eines .group-Containers irgendwo ein
+   emerald-Füllbalken existiert, färbe beim Hover den
+   Vordergrundtext (relative/z-10) auf slate-300.
+   ========================================================= */
+
+/* Hover + Focus-within, breit gematcht (ohne >) */
+.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700),
+.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) {
+  /* nix – Containerzustand als Haken */
+}
+
+/* Vordergrundtext einfärben – mehrere gängige Layer-Namen abdecken */
+.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) .relative,
+.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) .relative,
+.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) .z-10,
+.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) .z-10 {
+  color: #cbd5e1 !important; /* slate-300 */
+}
+
+/* Fallback, falls kein .relative/.z-10 genutzt wurde
+   (z. B. Text direkt in <h3> oder <p>):
+   – wir nehmen "erste Textebene" innerhalb des Links/Containers. */
+.group:hover:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) > *:not([class*="bg-emerald"]),
+.group:focus-within:has(.bg-emerald-500, .bg-emerald-500\/90, .bg-emerald-600, .bg-emerald-700) > *:not([class*="bg-emerald"]) {
+  color: #cbd5e1 !important;
+}
