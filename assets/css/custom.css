@@ -140,3 +140,78 @@ a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
 
 /* (10) Sicherheitshalber: H-Überschriften nicht „weiß-leuchten“ */
 :is(h1,h2,h3,h4,h5,h6):hover { color:#10b981 !important; text-shadow:none !important; }
+
+/* ================================
+   (1) Header-Tabs "Über Silituz" & "Socials"
+   - transparent, Text slate-300
+   - Hover: Text weiß, KEIN Hintergrund
+================================== */
+.tab-btn {
+  background: transparent !important;
+  color: #cbd5e1 !important;           /* slate-300 */
+  border: none !important;
+}
+.tab-btn:hover,
+.tab-btn:focus-visible {
+  color: #ffffff !important;
+  background: transparent !important;
+  text-decoration: none;
+}
+
+/* ================================
+   (2) "Jetzt auf Instagram testen"
+   - Text slate-300; Hover weiß
+================================== */
+.cta-ig {
+  color: #cbd5e1 !important;           /* slate-300 */
+}
+.cta-ig:hover,
+.cta-ig:focus-visible {
+  color: #ffffff !important;
+}
+
+/* ================================
+   (3) Fußzeile – mittlere Spalte
+   - Standard: slate-300
+   - Hover: emerald-500
+================================== */
+.footer-center,
+.footer-center small,
+.footer-center a {
+  color: #cbd5e1 !important;           /* slate-300 */
+}
+.footer-center:hover,
+.footer-center small:hover,
+.footer-center a:hover {
+  color: #10b981 !important;           /* emerald-500 */
+}
+
+/* ================================
+   (4) Seiten-Menü Links
+   - Standard: slate-300
+   - Hover: emerald-500
+   - Aktiv (gewählte Seite): grüner BG + gut lesbarer Text
+================================== */
+#sideMenu nav a {
+  color: #cbd5e1 !important;           /* slate-300 */
+  background: transparent !important;
+  border-radius: 0.5rem;                /* etwas weicher */
+  transition: color .2s ease, background-color .2s ease;
+}
+#sideMenu nav a:hover,
+#sideMenu nav a:focus-visible {
+  color: #10b981 !important;           /* emerald-500 */
+  background: transparent !important;
+}
+
+/* Aktiver Eintrag – wähle EINE Variante:
+   a) nutze class="active"
+   b) oder setze aria-current="page"
+   Beide sind hier abgedeckt. */
+#sideMenu nav a.active,
+#sideMenu nav a[aria-current="page"] {
+  background-color: rgba(16,185,129,.16) !important; /* emerald-500/16 */
+  color: #d1fae5 !important;                         /* emerald-100 für guten Kontrast */
+  box-shadow: inset 0 0 0 1px rgba(16,185,129,.35);
+}
+
