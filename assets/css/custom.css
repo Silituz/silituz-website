@@ -459,33 +459,49 @@ z-index: 0;
   color: #fcd34d !important;
 }
 
-/* =============================================================
-   SLIDER-MENÜ STYLES
-   ============================================================= */
+/* ================================
+   SLIDER-MENÜ (robust v2)
+   ================================ */
 
-/* Standard: Schrift slate-300, transparenter Hintergrund */
-#sideMenu nav a {
-  color: #cbd5e1 !important; /* slate-300 */
+/* 0) Falls Kinder-Elemente (i, span) eigene Farben haben → erben */
+#sideMenu nav a * { color: inherit !important; }
+
+/* 1) Standard: Schrift slate-300, transparenter BG */
+#sideMenu nav a,
+#sideMenu .main-nav a {
+  color: #cbd5e1 !important;                /* slate-300 */
   background: transparent !important;
-  border-radius: 0.5rem;
+  border-radius: .5rem;
   transition: color .2s ease, background-color .2s ease;
 }
 
-/* Hover: Nur Schrift emerald-500 */
-#sideMenu nav a:hover,
-#sideMenu nav a:focus-visible {
-  color: #10b981 !important; /* emerald-500 */
+/* 2) Hover (nur NICHT-aktive Links): Schrift emerald-500, BG transparent */
+#sideMenu nav a:not(.active):not([aria-current="page"]):hover,
+#sideMenu .main-nav a:not(.active):not([aria-current="page"]):hover,
+#sideMenu nav a:not(.active):not([aria-current="page"]):focus-visible,
+#sideMenu .main-nav a:not(.active):not([aria-current="page"]):focus-visible {
+  color: #10b981 !important;                /* emerald-500 */
   background: transparent !important;
 }
 
-/* Aktiver Eintrag (Seite aufgerufen) */
+/* 3) Aktiv (aktuelle Seite): dezenter Emerald-Hintergrund + gut lesbarer Text */
 #sideMenu nav a.active,
-#sideMenu nav a[aria-current="page"] {
-  background-color: rgba(16,185,129,.16) !important; /* emerald-500/16 – leicht transparent */
-  color: #d1fae5 !important;                         /* emerald-100 für guten Kontrast */
-  box-shadow: inset 0 0 0 1px rgba(16,185,129,.35);  /* dezenter Rand */
+#sideMenu nav a[aria-current="page"],
+#sideMenu .main-nav a.active,
+#sideMenu .main-nav a[aria-current="page"] {
+  background-color: rgba(16,185,129,.16) !important; /* emerald-500/16 */
+  color: #d1fae5 !important;                          /* emerald-100 */
+  box-shadow: inset 0 0 0 1px rgba(16,185,129,.35);
 }
 
-/* Optional: Wenn du lieber einen dunkleren vollen Emerald-Hintergrund willst */
-/* einfach die background-color hier austauschen, z.B. #047857 (emerald-700). */
-
+/* 4) Optional: „dunkler Emerald“-Variante statt transparentem BG (einfach ent-kommentieren) */
+/*
+#sideMenu nav a.active,
+#sideMenu nav a[aria-current="page"],
+#sideMenu .main-nav a.active,
+#sideMenu .main-nav a[aria-current="page"] {
+  background-color: #065f46 !important;  // emerald-700
+  color: #ecfdf5 !important;             // emerald-50
+  box-shadow: none;
+}
+*/
