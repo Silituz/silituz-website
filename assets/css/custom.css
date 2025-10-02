@@ -339,3 +339,68 @@ a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
 
 <link rel="stylesheet" href="/assets/css/global-hover-fill.v2.css?v=20251002">
 
+<!-- ======= CSS: am Ende deiner global-hover-fill.v2.css anhängen ODER separat einbinden ======= -->
+<style>
+  /* SUPPORT-EXCEPTION: eigener Ablauf – überschreibt Global-Rule gezielt */
+  #tipeeeButton {
+    background-color: #10b981; /* emerald-500 */
+    color: #cbd5e1;            /* slate-300 */
+    isolation: isolate;        /* für saubere Z-Stacks innerhalb des Buttons */
+  }
+  /* roter Fülllayer */
+  #tipeeeButton .fillbar {
+    position: absolute;
+    inset: 0; left: 0;
+    width: 0;
+    background-color: #ef4444; /* red-500 */
+    transition: width .7s ease-out;
+    z-index: 0;
+  }
+  #tipeeeButton:hover .fillbar,
+  #tipeeeButton:focus-visible .fillbar {
+    width: 100%;
+  }
+
+  /* Textfarben (überschreibt global-hover-fill) */
+  #tipeeeButton .btn-title { color: #cbd5e1 !important; }  /* normal: slate-300 */
+  #tipeeeButton:hover .btn-title,
+  #tipeeeButton:focus-visible .btn-title { color: #000000 !important; } /* hover: schwarz */
+
+  /* Falls du weiterhin zwei Textebenen (normal/hover) austauschst, stelle sicher:
+     - Normal hat slate-300
+     - Hover-Label ist schwarz
+  */
+  #tipeeeButton .label-normal { color: #cbd5e1 !important; }
+  #tipeeeButton .label-hover  { color: #000000 !important; }
+</style>
+
+<!-- ======= HTML: Ersetze NUR den Button-Block unten durch diesen ======= -->
+<a href="https://www.tipeeestream.com/silituz/donation" target="_blank" rel="noopener" id="tipeeeButton"
+   class="group relative inline-block px-6 py-2.5 rounded-lg bg-emerald-500 font-semibold overflow-hidden">
+  <!-- roter Füllbalken unter dem Text -->
+  <span class="fillbar" aria-hidden="true"></span>
+
+  <!-- Optional: ikonisches Herzchen o.ä. könnte hier mit .z-10 rein -->
+
+  <!-- Textwechsel wie gehabt, aber mit festen Farben -->
+  <span class="label-normal relative z-10 block transition-opacity duration-300 group-hover:opacity-0">
+    {{ page.tipeee_btn_normal }}
+  </span>
+  <span class="label-hover absolute inset-0 z-10 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+    {{ page.tipeee_btn_hover }}
+  </span>
+</a>
+
+<!-- ===== Hinweise =====
+1) Der Button nutzt nun einen eigenen roten Fill (red-500) und bleibt vom global-hover-fill unabhängig.
+2) Normalzustand: Hintergrund grün (emerald-500), Schrift slate-300.
+3) Hover: roter Fill fährt voll, Schrift wird schwarz.
+4) Wenn du keinen Textwechsel brauchst, kannst du nur EINE Ebene verwenden. Gib ihr dann zusätzlich die Klasse .btn-title (die oben schon schwarz auf Hover bekommt):
+
+  <a id="tipeeeButton" class="group relative inline-block px-6 py-2.5 rounded-lg bg-emerald-500 font-semibold overflow-hidden">
+    <span class="fillbar"></span>
+    <span class="btn-title relative z-10">Jetzt unterstützen</span>
+  </a>
+
+5) Der Block nutzt !important nur auf den Textfarben im Scope #tipeeeButton, damit er garantiert stärker als die globale :has()-Regel ist. -->
+
