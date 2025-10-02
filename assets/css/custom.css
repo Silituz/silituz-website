@@ -336,3 +336,6 @@ a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
   color: var(--slate-300) !important;
 }
 .hover-fill:hover .keep-white, .hover-fill:focus-within .keep-white{ color:#fff !important; }
+
+<link rel="stylesheet" href="/assets/css/global-hover-fill.v2.css?v=20251002">
+
