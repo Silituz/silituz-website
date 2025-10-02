@@ -426,6 +426,25 @@ a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
 /* WICHTIG: global-hover-fill ignoriert diesen Button */
 #tipeeeButton * { --skip-hover-fill: true; }
 
+<!-- CSS dazu (in global-hover-fill.v2.css anhängen oder separat einbinden) -->
+<style>
+#tipeeeButton { position: relative; isolation: isolate; }
+#tipeeeButton .fillbar {
+position: absolute;
+inset: 0; left: 0;
+width: 0;
+background-color: #ef4444; /* rot */
+transition: width .7s ease-out;
+z-index: 0;
+}
+#tipeeeButton:hover .fillbar,
+#tipeeeButton:focus-visible .fillbar { width: 100%; }
+
+
+#tipeeeButton .label-normal { color: #cbd5e1 !important; } /* slate-300 */
+#tipeeeButton .label-hover { color: #000000 !important; } /* schwarz */
+</style>
+
 /* =============================================================
    GALLERY-PAGE EXCEPTION: Attention / Achtung Label
    ============================================================= */
