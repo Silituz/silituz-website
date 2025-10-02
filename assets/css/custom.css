@@ -15,146 +15,67 @@
 
 /* Schlange-Video (Menü-Logo) größer & ohne Kasten */
 .menu-logo {
-  width: 58px;   /* kannst du nach Geschmack 56–72px hochziehen */
+  width: 58px;   /* 56–72px nach Geschmack */
   height: 58px;
   display: block;
-  object-fit: contain;  /* skaliert das Video ohne Beschneidung */
+  object-fit: contain;
   background: transparent !important;
-  mix-blend-mode: normal; /* keine seltsamen Mischungen */
+  mix-blend-mode: normal;
 }
 
 /* Menü-Text etwas kräftiger */
 #snakeBtn span {
-  font-size: 1rem;   /* ca. 16px */
+  font-size: 1rem;   /* ~16px */
   font-weight: 600;
 }
+
 
 /* ================================
    THEME-SLIDER
    ================================ */
 
-/* Theme-Slider im Header vorübergehend verstecken */
-#themeSlider {
-  display: none !important;
-}
+#themeSlider { display: none !important; }
+#themeThumb { transition: transform .22s cubic-bezier(.2,.9,.2,1); }
 
-/* Thumb-Animation (falls Slider später wieder sichtbar) */
-#themeThumb {
-  transition: transform .22s cubic-bezier(.2,.9,.2,1);
-}
 
 /* ================================
    OPTIONAL – FEINTUNING
    ================================ */
 
-/* Header-Logo etwas größer als im Footer */
 header .logo,
-header img[alt="Silituz Logo"] {
-  height: 48px; /* war 32px (h-8), jetzt ~h-12 */
-  width: auto;
-}
+header img[alt="Silituz Logo"] { height: 48px; width: auto; }
 
-/* Falls irgendwo ein Rest-Hintergrund auftaucht */
 header video,
 header img,
-header svg {
-  background: transparent !important;
-}
+header svg { background: transparent !important; }
+
 
 /* ================================
-   GLOBALES FARBSYSTEM (Dark Mode only)
+   GLOBAL OVERRIDES (schlagen Tailwind-Utilities)
    ================================ */
 
-/* Hintergrund & Standard-Text */
-body {
-  background-color: #020617; /* slate-950 */
-  color: #e2e8f0;            /* slate-200 */
-}
-
-/* Überschriften – einheitlich Emerald */
-h1, h2, h3, h4, h5, h6 {
-  color: #10b981; /* emerald-500 */
-  font-weight: 700;
-}
-
-/* Fließtext */
-p, li, dt, dd {
-  color: #e2e8f0; /* slate-200 */
-}
-
-/* Unterschriften / Kleintexte */
-small, figcaption, .text-muted {
-  color: #94a3b8; /* slate-400 */
-}
-
-/* Links */
-a {
-  color: #34d399; /* emerald-400 */
-  text-decoration: underline;
-  text-decoration-color: rgba(52, 211, 153, 0.3);
-}
-a:hover {
-  color: #6ee7b7; /* emerald-300 */
-  text-decoration-color: #34d399;
-}
-
-/* Standard-Ränder */
-hr, .border-default {
-  border-color: #1e293b; /* slate-800 */
-}
-
-/* Karten / Boxen */
-.card {
-  background-color: rgba(15, 23, 42, 0.6); /* slate-900/60 */
-  border: 1px solid #1e293b;
-  border-radius: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  backdrop-filter: blur(6px);
-}
-
-/* ================================
-   GRÜN → WEISS HOVER
-   ================================ */
-
-/* Alle Links, die grün sind */
-a:hover {
-  color: #ffffff !important;
-}
-
-/* Alle Buttons mit grünem Hintergrund */
-.btn-primary:hover,
-.bg-emerald-500:hover,
-.bg-emerald-600:hover,
-.bg-emerald-700:hover {
-  background-color: #ffffff !important;
-  color: #000000 !important; /* Text dann schwarz, damit man es lesen kann */
-}
-
-/* Alle Texte, die grün sind (emerald) */
-.text-emerald-500:hover,
-.text-emerald-400:hover,
-.text-emerald-300:hover {
-  color: #ffffff !important;
-}
-
-
-/* ===== GLOBAL OVERRIDES (schlagen Tailwind-Utilities) ===== */
-
-/* Basis */
+/* Basis-Hintergrund + Standard-Text */
 body { background-color:#020617; color:#e2e8f0; } /* slate-950 / slate-200 */
 
 /* Überschriften überall Emerald – auch wenn Klassen dranhängen */
 :is(h1,h2,h3,h4,h5,h6) { color:#10b981 !important; font-weight:700; } /* emerald-500 */
 
-/* Fließtext standardisieren – schlägt text-slate-300 etc. */
+/* Fließtext standardisieren – schlägt text-slate-3xx etc. */
 :is(p,li,dt,dd) { color:#e2e8f0 !important; } /* slate-200 */
 
 /* Unterschriften / Kleinteile */
 small, figcaption, .text-muted { color:#94a3b8 !important; } /* slate-400 */
 
-/* Links */
-a { color:#34d399 !important; text-decoration:underline; text-decoration-color:rgba(52,211,153,.3); } /* emerald-400 */
-a:hover { color:#6ee7b7 !important; text-decoration-color:#34d399; } /* emerald-300 */
+/* Links (Standard) */
+a {
+  color:#34d399 !important; /* emerald-400 */
+  text-decoration: underline;
+  text-decoration-color: rgba(52,211,153,.3);
+}
+a:hover {
+  color:#6ee7b7 !important; /* emerald-300 */
+  text-decoration-color:#34d399;
+}
 
 /* Standard-Ränder */
 hr, .border-default { border-color:#1e293b !important; } /* slate-800 */
@@ -163,5 +84,59 @@ hr, .border-default { border-color:#1e293b !important; } /* slate-800 */
 .card {
   background-color:rgba(15,23,42,.6) !important; /* slate-900/60 */
   border:1px solid #1e293b !important;
-  border-radius:1rem; box-shadow:0 2px 6px rgba(0,0,0,.3); backdrop-filter:blur(6px);
+  border-radius:1rem;
+  box-shadow:0 2px 6px rgba(0,0,0,.3);
+  backdrop-filter: blur(6px);
 }
+
+
+/* ================================
+   ZIELGERICHTETE ANPASSUNGEN (1–10)
+   ================================ */
+
+/* (1) Überschriften nie weiß-hovern (statisch grün) */
+:is(h1,h2,h3,h4,h5,h6):hover { color:#10b981 !important; text-shadow:none !important; }
+
+/* (2) CTA "Auf Instagram testen" in slate-300 */
+.cta-ig { color:#cbd5e1 !important; }               /* slate-300 */
+.cta-ig:hover { color:#ffffff !important; }         /* optional weiß */
+
+/* (3) Footer: Mitte & Icons rechts slate-300; Hover emerald-500 */
+.footer-center small,
+.footer-right .icon { color:#cbd5e1 !important; }   /* slate-300 */
+.footer-right .icon:hover { color:#10b981 !important; } /* emerald-500 */
+
+/* (4) Sprachschalter DE/EN: aktiv grün, inaktiv slate-300 */
+a[data-lang][data-active] { color:#10b981 !important; }
+a[data-lang]:not([data-active]) { color:#cbd5e1 !important; }
+a[data-lang]:not([data-active]):hover { color:#10b981 !important; }
+
+/* (5) Menü-Register-Links standard slate-300; Hover grün */
+#sideMenu nav a { color:#cbd5e1 !important; background:transparent !important; }
+#sideMenu nav a:hover { color:#10b981 !important; }
+
+/* (6) Seitenmenü-Brand „SILITUZ“: slate-300 + dünner emerald-Glow */
+.side-brand {
+  color:#cbd5e1; /* slate-300 */
+  text-shadow:
+    0 0 1px #10b981,               /* hauchdünner Rand */
+    0 0 8px rgba(16,185,129,.45);  /* weicher Glow */
+}
+
+/* (7) Hauptnavigation/Seitennamen: slate-300; Hover emerald-500 */
+.main-nav a { color:#cbd5e1 !important; }
+.main-nav a:hover { color:#10b981 !important; }
+/* .main-nav a.active – lässt du wie definiert (aktuelle Seite) */
+
+/* (8) Galerie „Attention“ bleibt gelb (nicht hoverbar) */
+.attention { color:#fde047 !important; pointer-events:none; } /* yellow-300 */
+
+/* (9) Support-Button: grün mit slate-300 Text; Hover weiß + schwarz */
+.btn-support {
+  background-color:#10b981 !important; /* emerald-500 */
+  color:#cbd5e1 !important;            /* slate-300 */
+}
+.btn-support:hover { background-color:#ffffff !important; color:#000000 !important; }
+
+/* (10) Sicherheitshalber: H-Überschriften nicht „weiß-leuchten“ */
+:is(h1,h2,h3,h4,h5,h6):hover { color:#10b981 !important; text-shadow:none !important; }
