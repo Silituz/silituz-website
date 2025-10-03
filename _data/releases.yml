@@ -1,9 +1,5 @@
 # ==========================================
-# Release-Daten für die Website
-# Datum/Zeit: ISO-Format + Zeitzone (z.B. +02:00 für Berlin)
-# Titel: Deutsch & Englisch
-# Cover: Standard oder pro Sprache (cover_de / cover_en)
-# Optional: preview (MP3, Hörprobe)
+# Release-Daten (ISO + Offset, z. B. +02:00 für Berlin)
 # ==========================================
 
 - date: 2025-10-06 00:00 +02:00
@@ -12,13 +8,21 @@
   cover: "/assets/images/releases/crypt-choir.svg"
   preview: "/assets/audio/previews/crypt-choir.mp3"
 
+# Hanabi (DE)
 - date: 2025-10-09 20:00 +02:00
   title_de: "Hanabi des gebrochenen Herzens"
+  title_en: "Hanabi des gebrochenen Herzens"
+  cover: "/assets/images/releases/hanabi-ger.svg"
+  preview: "/assets/audio/previews/hanabi-ger.mp3"
+  cover_fit: contain  # zeigt das komplette Cover
+
+# Hanabi (EN)
+- date: 2025-10-09 20:00 +02:00
+  title_de: "Hanabi of a Broken Heart"
   title_en: "Hanabi of a Broken Heart"
-  cover_de: "/assets/images/releases/hanabi-ger.svg"
-  cover_en: "/assets/images/releases/hanabi-eng.svg"
-  preview: "/assets/audio/previews/hanabi.mp3"
-  cover_fit: contain   # Cover vollständig anzeigen
+  cover: "/assets/images/releases/hanabi-eng.svg"
+  preview: "/assets/audio/previews/hanabi-eng.mp3"
+  cover_fit: contain  # zeigt das komplette Cover
 
 - date: 2025-10-12 20:00 +02:00
   title_de: "Electric Rain"
