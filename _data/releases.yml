@@ -1,4 +1,11 @@
-# Datum/Zeit im ISO-Format MIT Offset (CEST = +02:00 im Oktober)
+# ==========================================
+# Release-Daten für die Website
+# Datum/Zeit: ISO-Format + Zeitzone (z.B. +02:00 für Berlin)
+# Titel: Deutsch & Englisch
+# Cover: Standard oder pro Sprache (cover_de / cover_en)
+# Optional: preview (MP3, Hörprobe)
+# ==========================================
+
 - date: 2025-10-06 00:00 +02:00
   title_de: "Crypt Choir"
   title_en: "Crypt Choir"
@@ -7,11 +14,11 @@
 
 - date: 2025-10-09 20:00 +02:00
   title_de: "Hanabi des gebrochenen Herzens"
-  title_en: "\"Hanabi of a Broken Heart\""
-  # sprachspezifische Cover (optional); fallback ist 'cover'
+  title_en: "Hanabi of a Broken Heart"
   cover_de: "/assets/images/releases/hanabi-ger.svg"
   cover_en: "/assets/images/releases/hanabi-eng.svg"
   preview: "/assets/audio/previews/hanabi.mp3"
+  cover_fit: contain   # Cover vollständig anzeigen
 
 - date: 2025-10-12 20:00 +02:00
   title_de: "Electric Rain"
@@ -24,11 +31,3 @@
   title_en: "Bassline Inferno"
   cover: "/assets/images/releases/bassline-inferno.svg"
   preview: "/assets/audio/previews/bassline-inferno.mp3"
-
- - date: 2025-10-09 20:00 +02:00
-  title_de: "Hanabi des gebrochenen Herzens"
-  title_en: "Hanabi of a Broken Heart"
-  cover_de: "/assets/images/releases/hanabi-ger.svg"
-  cover_en: "/assets/images/releases/hanabi-eng.svg"
-  preview: "/assets/audio/previews/hanabi.mp3"
-  cover_fit: contain   # ⟵ NEU, sorgt dafür dass das Cover nicht beschnitten wird
