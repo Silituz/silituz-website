@@ -228,3 +228,57 @@ header video, header img, header svg{ background:transparent !important; }
 
 /* VORERST NICHT KLICKBAR – später diese 2 Zeilen löschen */
 #music-platforms .platform-link{ pointer-events:none; cursor:default; }
+
+/* Musik Plattformen – Grundlook (wie zuvor) */
+#music-platforms .platform{
+  display:flex; align-items:center; gap:.65rem;
+  padding:.6rem .8rem; border-radius:.75rem;
+  background:transparent; color:#cbd5e1; /* Text */
+  transition: transform .2s ease, opacity .2s ease;
+}
+#music-platforms .platform .icon{ width:28px; height:28px; display:inline-grid; place-items:center; }
+#music-platforms .platform .label{ font-size:.95rem; }
+#music-platforms .platform:hover{ transform: translateY(-1px); }
+
+/* WICHTIG: Nur das Icon bekommt die Markenfarbe */
+#music-platforms .platform .icon { color: var(--brand, #cbd5e1); }
+
+/* Links – vorerst deaktiviert; später löschen, um klickbar zu machen */
+#music-platforms .platform-link{ pointer-events:none; cursor:default; }
+
+/* ===== Markenfarben (Primärfarben, pragmatisch gewählt) ===== */
+#music-platforms .brand-tiktok      .icon { --brand:#25F4EE; }  /* TikTok cyan (statt 2-Farbverlauf) */
+#music-platforms .brand-douyin      .icon { --brand:#FF0050; }  /* Douyin pink/rot Akzent */
+#music-platforms .brand-spotify     .icon { --brand:#1DB954; }
+#music-platforms .brand-applemusic  .icon { --brand:#FA233B; }  /* Apple Music Pink/Red */
+#music-platforms .brand-amazonmusic .icon { --brand:#232F3E; }  /* Amazon dunkelblau/grau */
+#music-platforms .brand-youtubemusic.icon { --brand:#FF0000; }  /* Falls ohne Leerzeichen geschrieben */
+#music-platforms .brand-youtubemusic .icon { --brand:#FF0000; }
+#music-platforms .brand-anghami     .icon { --brand:#6A1B9A; }  /* Violett (vereinfachte Brand) */
+#music-platforms .brand-awa         .icon { --brand:#111111; }  /* Schwarz */
+#music-platforms .brand-claromusica .icon { --brand:#ED1C24; }  /* Rot */
+#music-platforms .brand-deezer      .icon { --brand:#000000; }  /* Schwarz (Multi-Bar später möglich) */
+#music-platforms .brand-fizy        .icon { --brand:#FFD400; }  /* Gelbpunkt-Anmutung */
+#music-platforms .brand-gracenote   .icon { --brand:#0072BC; }
+#music-platforms .brand-iheartradio .icon { --brand:#C6002B; }
+#music-platforms .brand-jiosaavn    .icon { --brand:#20C997; }  /* Türkisgrün */
+#music-platforms .brand-joox        .icon { --brand:#00E676; }  /* Neon-grün */
+#music-platforms .brand-kkbox       .icon { --brand:#00A0FF; }
+#music-platforms .brand-kuack       .icon { --brand:#00AEEF; }
+#music-platforms .brand-linemusic   .icon { --brand:#00C300; }  /* LINE-Grün */
+#music-platforms .brand-lissen      .icon { --brand:#00B3FF; }  /* pragm. blau */
+#music-platforms .brand-netease     .icon { --brand:#D43C33; }  /* NetEase Cloud Music Rot */
+#music-platforms .brand-pandora     .icon { --brand:#005FF9; }  /* Blau */
+#music-platforms .brand-qobuz       .icon { --brand:#000000; }  /* Schwarz */
+#music-platforms .brand-tencent     .icon { --brand:#1DA1F2; }  /* Blau (vereinfachte TME-Anmutung) */
+#music-platforms .brand-tidal       .icon { --brand:#000000; }  /* Schwarz */
+#music-platforms .brand-touchtunes  .icon { --brand:#00E5FF; }  /* Cyan */
+#music-platforms .brand-trebel      .icon { --brand:#FFD400; }  /* Gelb */
+#music-platforms .brand-triller7digital .icon { --brand:#FF1CAE; } /* Pink/Magenta */
+#music-platforms .brand-wynkhungama .icon { --brand:#E60019; }  /* Rot (Wynk) */
+#music-platforms .brand-youseetelmore .icon { --brand:#39B54A; } /* Grün (YouSee) */
+#music-platforms .brand-zingmp3     .icon { --brand:#7A1EA1; }  /* Violett */
+
+/* Optional: Hover – Icon etwas heller ohne Brand zu verfälschen */
+#music-platforms .platform:hover .icon { filter: brightness(1.1); }
+
