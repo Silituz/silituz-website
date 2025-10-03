@@ -131,21 +131,15 @@
               <h3 class="release-title">
                 {% if is_en %}{{ r.title_en }}{% else %}{{ r.title_de }}{% endif %}
               </h3>
-              <p class="release-meta">
-                {% assign epoch = r.date | date: "%s" %}
-                {% assign time_suffix = page.time_suffix | default: (is_en | ternary: "", " Uhr") %}
-                <time
-                  class="js-release-time"
-                  data-epoch="{{ epoch }}"
-                  data-suffix="{{ time_suffix }}"
-                  datetime="{{ r.date | date: '%Y-%m-%dT%H:%M:%S%z' }}">
-                  {% if is_en %}
-                    {{ r.date | date: "%B %-d, %Y" }} · {{ r.date | date: "%H:%M" }}
-                  {% else %}
-                    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H:%M" }}{{ time_suffix }}
-                  {% endif %}
-                </time>
-              </p>
+            <p class="release-meta">
+  {% assign epoch = r.date | date: "%s" %}
+  <span class="meta-label">{% if is_en %}Date{% else %}Datum{% endif %}:</span>
+  <time class="js-rel-date" data-epoch="{{ epoch }}"></time>
+  <span class="sep"> · </span>
+  <span class="meta-label">{% if is_en %}Time{% else %}Uhrzeit{% endif %}:</span>
+  <time class="js-rel-time" data-epoch="{{ epoch }}"></time>
+</p>
+
               {% if r.preview %}
                 <audio class="release-audio" controls preload="none">
                   <source src="{{ r.preview }}" type="audio/mpeg">
@@ -173,53 +167,79 @@
     {% endif %}
   </div>
 
-  <!-- Timezone JS (mit Suffix-Unterstützung + LocalStorage) -->
-  <script>
-  (function(){
-    const SELECT_ID = 'tzSelect';
-    const STORE_KEY = 'silituz_tz_choice';
-    const $select = document.getElementById(SELECT_ID);
-    if(!$select) return;
+ <script>
+(function(){
+  const SELECT_ID = 'tzSelect';
+  const STORE_KEY = 'silituz_tz_choice';
+  const $select = document.getElementById(SELECT_ID);
+  if(!$select) return;
 
-    try {
-      const saved = localStorage.getItem(STORE_KEY);
-      if (saved) $select.value = saved;
-    } catch (e) {}
+  // gespeicherte Auswahl laden
+  try {
+    const saved = localStorage.getItem(STORE_KEY);
+    if (saved) $select.value = saved;
+  } catch (e) {}
 
-    function fmt(epochSec, timeZone, lang, suffix) {
-      const ms = Number(epochSec) * 1000;
-      const optDate = { year:'numeric', month:'short', day:'numeric', timeZone };
-      const optTime = { hour:'2-digit', minute:'2-digit', hour12:false, timeZone };
-      const d = new Intl.DateTimeFormat(lang || 'de', optDate).format(ms);
-      const t = new Intl.DateTimeFormat(lang || 'de', optTime).format(ms);
-      return suffix ? `${d} · ${t}${suffix}` : `${d} · ${t}`;
+  function fmtDate(epochSec, timeZone, lang) {
+    const ms = Number(epochSec) * 1000;
+    // DE: 06. Okt. 2025  |  EN: Oct 06, 2025
+    if ((lang || '').toLowerCase().startsWith('de')) {
+      const d = new Intl.DateTimeFormat('de', {
+        day:'2-digit', month:'short', year:'numeric', timeZone
+      }).format(ms);
+      // Sicherstellen, dass Punkt nach Tag vorhanden bleibt (manche Browser geben „06. Okt. 2025“ korrekt aus)
+      return d.replace(/\s+/g,' ').trim();
+    } else {
+      // EN: "Oct 6, 2025" → auf "Oct 06, 2025" normalisieren
+      const p = new Intl.DateTimeFormat('en', {
+        day:'numeric', month:'short', year:'numeric', timeZone
+      }).formatToParts(ms);
+      const month = p.find(x=>x.type==='month')?.value || '';
+      const day   = p.find(x=>x.type==='day')?.value || '';
+      const year  = p.find(x=>x.type==='year')?.value || '';
+      const day2  = day.length===1 ? '0'+day : day;
+      return `${month} ${day2}, ${year}`;
     }
+  }
 
-    function render() {
-      const choice = $select.value;
-      const lang = document.documentElement.lang || navigator.language || 'de';
-      const zone = (choice === 'local')
-        ? Intl.DateTimeFormat().resolvedOptions().timeZone
-        : choice;
+  function fmtTime(epochSec, timeZone, lang) {
+    const ms = Number(epochSec) * 1000;
+    // 24h, führende Nullen: 00:00
+    return new Intl.DateTimeFormat(lang || 'de', {
+      hour:'2-digit', minute:'2-digit', hour12:false, timeZone
+    }).format(ms);
+  }
 
-      document.querySelectorAll('#upcoming-releases .js-release-time').forEach(el => {
-        const epoch = el.getAttribute('data-epoch');
-        const suffix = el.getAttribute('data-suffix') || '';
-        if (!epoch) return;
-        try { el.textContent = fmt(epoch, zone, lang, suffix); }
-        catch(e){ el.textContent = fmt(epoch, 'UTC', lang, suffix); }
-      });
-    }
+  function render() {
+    const choice = $select.value;
+    const lang = document.documentElement.lang || navigator.language || 'de';
+    const zone = (choice === 'local')
+      ? Intl.DateTimeFormat().resolvedOptions().timeZone
+      : choice;
 
-    $select.addEventListener('change', () => {
-      render();
-      try { localStorage.setItem(STORE_KEY, $select.value); } catch(e){}
+    document.querySelectorAll('#upcoming-releases .js-rel-date').forEach(el => {
+      const epoch = el.getAttribute('data-epoch');
+      if (!epoch) return;
+      try { el.textContent = fmtDate(epoch, zone, lang); }
+      catch(e){ el.textContent = fmtDate(epoch, 'UTC', lang); }
     });
+    document.querySelectorAll('#upcoming-releases .js-rel-time').forEach(el => {
+      const epoch = el.getAttribute('data-epoch');
+      if (!epoch) return;
+      try { el.textContent = fmtTime(epoch, zone, lang); }
+      catch(e){ el.textContent = fmtTime(epoch, 'UTC', lang); }
+    });
+  }
 
+  $select.addEventListener('change', () => {
     render();
-  })();
-  </script>
-</section>
+    try { localStorage.setItem(STORE_KEY, $select.value); } catch(e){}
+  });
+
+  render();
+})();
+</script>
+
 
 
 <!-- Content: Musik-Embeds -->
