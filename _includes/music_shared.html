@@ -237,9 +237,23 @@
   });
 
   render();
+
+  <script>
+(function () {
+  // Säubert Labels im TZ-Dropdown von trailing "de"/"en"
+  const sel = document.getElementById('tzSelect');
+  if (!sel) return;
+
+  // Regex: entfernt am Zeilen-/Wortende einzelne "de" oder "en"
+  const TRIM_LANG = /\s*(?:-|,|:)?\s*(de|en)\s*$/i;
+
+  Array.from(sel.options).forEach(opt => {
+    const before = opt.textContent || '';
+    const after = before.replace(TRIM_LANG, '');
+    if (after !== before) opt.textContent = after;
+  });
 })();
 </script>
-
 
 
 <!-- Content: Musik-Embeds -->
