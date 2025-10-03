@@ -25,7 +25,6 @@
         {% if is_en %}Show times in:{% else %}Zeiten anzeigen in:{% endif %}
       </label>
       <select id="tzSelect" class="tz-select" aria-label="Timezone">
-        <!-- JS füllt Optionen dynamisch; Fallbacks unten -->
         <option value="local">🌍 {% if is_en %}Your device time{% else %}Deine Gerätezeit{% endif %}</option>
         <option value="Europe/Berlin">🇩🇪 Europe/Berlin</option>
         <option value="UTC">UTC</option>
@@ -35,17 +34,52 @@
       </small>
     </div>
 
-    <!-- filtern & sortieren -->
+    {%- comment -%}
+      GitHub Pages-sicher:
+      - Keine Arrays per |push aufbauen
+      - Wir rendern die <li>-Einträge in ein Capture, prüfen dann auf Leerstring
+    {%- endcomment -%}
     {% assign items = site.data.releases | sort: "date" %}
-    {% assign upcoming = "" | split: "" %}
-    {% for r in items %}
-      {% assign r_ts = r.date | date: "%s" %}
-      {% if r_ts >= now %}
-        {% assign upcoming = upcoming | push: r %}
-      {% endif %}
-    {% endfor %}
+    {% capture upcoming_list %}
+      {% for r in items %}
+        {% assign r_ts = r.date | date: "%s" %}
+        {% if r_ts >= now %}
+          <li class="release-card group">
+            {% if r.cover %}
+              <div class="release-cover">
+                <img src="{{ r.cover }}" alt="Cover: {% if is_en %}{{ r.title_en }}{% else %}{{ r.title_de }}{% endif %}" loading="lazy">
+              </div>
+            {% endif %}
+            <div class="release-body">
+              <h3 class="release-title">
+                {% if is_en %}{{ r.title_en }}{% else %}{{ r.title_de }}{% endif %}
+              </h3>
+              <p class="release-meta">
+                {% assign epoch = r.date | date: "%s" %}
+                <time
+                  class="js-release-time"
+                  data-epoch="{{ epoch }}"
+                  datetime="{{ r.date | date: '%Y-%m-%dT%H:%M:%S%z' }}">
+                  {% if is_en %}
+                    {{ r.date | date: "%B %-d, %Y" }} · {{ r.date | date: "%H:%M" }}
+                  {% else %}
+                    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H:%M" }} Uhr
+                  {% endif %}
+                </time>
+              </p>
+              {% if r.preview %}
+                <audio class="release-audio" controls preload="none">
+                  <source src="{{ r.preview }}" type="audio/mpeg">
+                </audio>
+              {% endif %}
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    {% endcapture %}
+    {% assign upcoming_list_stripped = upcoming_list | strip %}
 
-    {% if upcoming.size > 0 %}
+    {% if upcoming_list_stripped != "" %}
       <div class="text-center mb-8">
         <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-500">
           {% if is_en %}Upcoming Releases{% else %}Kommende Releases{% endif %}
@@ -58,63 +92,13 @@
           {% endif %}
         </p>
       </div>
-
       <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {% for r in upcoming %}
-          <li class="release-card group">
-            {% if r.cover %}
-              <div class="release-cover">
-                <img src="{{ r.cover }}" alt="Cover: {% if is_en %}{{ r.title_en }}{% else %}{{ r.title_de }}{% endif %}" loading="lazy">
-              </div>
-            {% endif %}
-
-            <div class="release-body">
-              <h3 class="release-title">
-                {% if is_en %}{{ r.title_en }}{% else %}{{ r.title_de }}{% endif %}
-              </h3>
-
-              <!-- ZEILE B: Datums-/Zeitangabe als <time> mit Epoch für JS -->
-              <p class="release-meta">
-                {% assign epoch = r.date | date: "%s" %}
-                <time
-                  class="js-release-time"
-                  data-epoch="{{ epoch }}"
-                  datetime="{{ r.date | date: '%Y-%m-%dT%H:%M:%S%z' }}">
-                  <!-- Fallback (Server-Render), wird per JS überschrieben -->
-                  {% if is_en %}
-                    {{ r.date | date: "%B %-d, %Y" }} · {{ r.date | date: "%H:%M" }}
-                  {% else %}
-                    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H:%M" }} Uhr
-                  {% endif %}
-                </time>
-              </p>
-
-              {% if r.preview %}
-                <audio class="release-audio" controls preload="none">
-                  <source src="{{ r.preview }}" type="audio/mpeg">
-                </audio>
-              {% endif %}
-
-              <!-- Optional: Buttons (deaktiviert; Links später setzen)
-              <div class="release-actions">
-                <a class="btn ghost" href="#" tabindex="-1" aria-disabled="true">
-                  {% if is_en %}Pre-save{% else %}Pre-Save{% endif %}
-                </a>
-                <a class="btn ghost" href="#" tabindex="-1" aria-disabled="true">
-                  {% if is_en %}Add to calendar{% else %}Zum Kalender{% endif %}
-                </a>
-              </div> -->
-            </div>
-          </li>
-        {% endfor %}
+        {{ upcoming_list }}
       </ul>
     {% endif %}
   </div>
 
-  <!-- Auto-Count (für Plattformen – lassen wir hier in Ruhe) -->
-  <!-- Dein vorhandenes platformCount-Script bleibt im anderen Abschnitt. -->
-
-  <!-- ZEILE C: Zeitzonen-JS -->
+  <!-- Zeitzonen-JS -->
   <script>
   (function(){
     const SELECT_ID = 'tzSelect';
@@ -122,38 +106,27 @@
     const $select = document.getElementById(SELECT_ID);
     if(!$select) return;
 
-    // 1) Alle verfügbaren Timezones (wenn Browser sie liefert)
     let tzList = [];
     if (typeof Intl.supportedValuesOf === 'function') {
       try { tzList = Intl.supportedValuesOf('timeZone'); } catch(e){}
     }
 
-    // 2) Dropdown befüllen (nur wenn Liste vorhanden)
     if (tzList && tzList.length) {
       const frag = document.createDocumentFragment();
       const favorites = ['Europe/Berlin','UTC','America/New_York','America/Los_Angeles','Asia/Tokyo','Australia/Sydney'];
       const favSet = new Set(favorites);
-      const mkOpt = (z) => {
-        const o = document.createElement('option');
-        o.value = z; o.textContent = z;
-        return o;
-      };
-      const sep = document.createElement('option');
-      sep.disabled = true; sep.textContent = '──────────';
-      frag.appendChild(sep);
+      const mkOpt = (z) => { const o = document.createElement('option'); o.value = z; o.textContent = z; return o; };
+      const sep = document.createElement('option'); sep.disabled = true; sep.textContent = '──────────'; frag.appendChild(sep);
       favorites.forEach(z => { if (tzList.includes(z)) frag.appendChild(mkOpt(z)); });
       tzList.filter(z => !favSet.has(z)).forEach(z => frag.appendChild(mkOpt(z)));
       $select.appendChild(frag);
     }
 
-    // 3) Vorbelegung: aus LocalStorage, sonst Gerätezone
     try {
       const saved = localStorage.getItem(STORE_KEY);
-      if (saved) $select.value = saved;
-      else $select.value = 'local';
+      if (saved) $select.value = saved; else $select.value = 'local';
     } catch(e){}
 
-    // 4) Formatter
     function fmt(epochSec, timeZone, lang) {
       const ms = Number(epochSec) * 1000;
       const optDate = { year:'numeric', month:'short', day:'numeric', timeZone };
@@ -163,7 +136,6 @@
       return `${d} · ${t}`;
     }
 
-    // 5) Render-Funktion
     function render() {
       const choice = $select.value;
       const userLang = document.documentElement.lang || (navigator.language || 'de');
@@ -171,23 +143,17 @@
       document.querySelectorAll('#upcoming-releases .js-release-time').forEach(el => {
         const epoch = el.getAttribute('data-epoch');
         if (!epoch) return;
-        try {
-          el.textContent = fmt(epoch, zone, userLang);
-        } catch(e) {
-          el.textContent = fmt(epoch, 'UTC', userLang);
-        }
+        try { el.textContent = fmt(epoch, zone, userLang); }
+        catch(e) { el.textContent = fmt(epoch, 'UTC', userLang); }
       });
     }
 
-    // 6) Events + Persistenz
     $select.addEventListener('change', () => {
       render();
       try { localStorage.setItem(STORE_KEY, $select.value); } catch(e){}
     });
 
-    // initial
     render();
   })();
   </script>
 </section>
-
