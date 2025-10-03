@@ -1,18 +1,32 @@
 # Datum/Zeit im ISO-Format (lokal), Titel, optional Cover & Hörprobe
-- date: 2025-10-15 18:00
-  title_de: "Neuer Trap Beat (Vol. 1)"
-  title_en: "New Trap Beat (Vol. 1)"
-  cover: "/assets/images/releases/trap-vol1.jpg"
-  preview: "/assets/audio/previews/trap-vol1-clip.mp3"
+- date: 2025-10-06 00:00
+  title_de: "Crypt Choir"
+  title_en: "Crypt Choir"
+  cover: "/assets/images/releases/crypt-choir.svg"
+  preview: "/assets/audio/previews/crypt-choir.mp3"
 
-- date: 2025-11-01 12:00
-  title_de: "Ambient Session #7"
-  title_en: "Ambient Session #7"
-  cover: "/assets/images/releases/ambient7.jpg"
-  preview: "/assets/audio/previews/ambient7-clip.mp3"
+- date: 2025-10-09 20:00
+  title_de: "Hanabi des gebrochenen Herzens"
+  title_en: "Hanabi des gebrochenen Herzens"
+  cover: "/assets/images/releases/hanabi-ger.svg"
+  preview: "/assets/audio/previews/hanabi-ger.mp3"
 
-- date: 2025-12-05 20:00
-  title_de: "Winter EP – Part I"
-  title_en: "Winter EP – Part I"
-  cover: "/assets/images/releases/winter-ep1.jpg"
+- date: 2025-10-09 20:00
+  title_de: ""Hanabi of a Broken Heart"
+  title_en: ""Hanabi of a Broken Heart"
+  cover: "/assets/images/releases/hanabi-eng.svg"
+  preview: "/assets/audio/previews/hanabi-eng.mp3"
+
+  - date: 2025-10-12 20:00
+  title_de: "Electric Rain"
+  title_en: "Electric Rain"
+  cover: "/assets/images/releases/electric-rain.svg"
+  preview: "/assets/audio/previews/electric-rain.mp3"
+
+ - date: 2025-10-16 20:00
+  title_de: "Bassline Inferno"
+  title_en: "Bassline Inferno"
+  cover: "/assets/images/releases/bassline-inferno.svg"
+  preview: "/assets/audio/previews/bassline-inferno.mp3"
+
   # preview: (optional)
