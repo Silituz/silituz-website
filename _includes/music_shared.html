@@ -45,15 +45,20 @@
         {% assign r_ts = r.date | date: "%s" %}
         {% if r_ts >= now %}
           <li class="release-card group">
-            {% assign cover_src = r.cover %}
+          {% assign cover_src = r.cover %}
 {% if is_en and r.cover_en %}{% assign cover_src = r.cover_en %}{% endif %}
 {% if not is_en and r.cover_de %}{% assign cover_src = r.cover_de %}{% endif %}
 
+{% assign fit = r.cover_fit | default: 'cover' %}
+{% assign fit_class = '' %}
+{% if fit == 'contain' %}{% assign fit_class = 'is-contain' %}{% endif %}
+
 {% if cover_src %}
-  <div class="release-cover">
+  <div class="release-cover {{ fit_class }}">
     <img src="{{ cover_src }}" alt="Cover: {% if is_en %}{{ r.title_en }}{% else %}{{ r.title_de }}{% endif %}" loading="lazy">
   </div>
 {% endif %}
+
 
             <div class="release-body">
               <h3 class="release-title">
