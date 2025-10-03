@@ -335,3 +335,24 @@ header video, header img, header svg{ background:transparent !important; }
 }
 #upcoming-releases .tz-select:focus{ outline:none; box-shadow:0 0 0 2px rgba(16,185,129,.35); }
 #upcoming-releases .tz-note{ color:#64748b; }          /* slate-500 */
+
+/* Releases – Cover-Handling */
+#upcoming-releases .release-cover{
+  background: rgba(2,6,23,.6);      /* dezenter dunkler Hintergrund */
+  aspect-ratio: 1 / 1;               /* quadratisches Fenster */
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+#upcoming-releases .release-cover img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;                 /* Standard: füllt, kann beschneiden */
+}
+
+/* Per-Item Opt-in: vollständiges Motiv zeigen */
+#upcoming-releases .release-cover.is-contain img{
+  object-fit: contain;               /* kein Beschnitt */
+  padding: 6%;                       /* minimaler Rand, wirkt hochwertig */
+  background: transparent;
+}
