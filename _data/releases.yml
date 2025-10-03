@@ -6,14 +6,14 @@
   title_de: "Crypt Choir"
   title_en: "Crypt Choir"
   cover: "/assets/images/releases/crypt-choir.svg"
-  preview: "/assets/audio/previews/crypt-choir.mp3"
+  preview: "/assets/audio/previews/crypt-choir.wav"
 
 # Hanabi (DE)
 - date: 2025-10-09 20:00 +02:00
   title_de: "Hanabi des gebrochenen Herzens"
   title_en: "Hanabi des gebrochenen Herzens"
   cover: "/assets/images/releases/hanabi-ger.svg"
-  preview: "/assets/audio/previews/hanabi-ger.mp3"
+  preview: "/assets/audio/previews/hanabi-ger.wav"
   cover_fit: contain  # zeigt das komplette Cover
 
 # Hanabi (EN)
@@ -21,17 +21,17 @@
   title_de: "Hanabi of a Broken Heart"
   title_en: "Hanabi of a Broken Heart"
   cover: "/assets/images/releases/hanabi-eng.svg"
-  preview: "/assets/audio/previews/hanabi-eng.mp3"
+  preview: "/assets/audio/previews/hanabi-eng.wav"
   cover_fit: contain  # zeigt das komplette Cover
 
 - date: 2025-10-12 20:00 +02:00
   title_de: "Electric Rain"
   title_en: "Electric Rain"
   cover: "/assets/images/releases/electric-rain.svg"
-  preview: "/assets/audio/previews/electric-rain.mp3"
+  preview: "/assets/audio/previews/electric-rain.wav"
 
 - date: 2025-10-16 20:00 +02:00
   title_de: "Bassline Inferno"
   title_en: "Bassline Inferno"
   cover: "/assets/images/releases/bassline-inferno.svg"
-  preview: "/assets/audio/previews/bassline-inferno.mp3"
+  preview: "/assets/audio/previews/bassline-inferno.wav"
