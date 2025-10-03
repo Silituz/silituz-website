@@ -13,6 +13,84 @@
   </div>
 </section>
 
+<!-- Kommende Releases -->
+<section class="py-14" id="upcoming-releases">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    {% assign is_en = page.lang == 'en' or page.url contains '/en/' %}
+    {% assign now = site.time | date: "%s" %}
+
+    <!-- filtern & sortieren -->
+    {% assign items = site.data.releases | sort: "date" %}
+    {% assign upcoming = "" | split: "" %}
+    {% for r in items %}
+      {% assign r_ts = r.date | date: "%s" %}
+      {% if r_ts >= now %}
+        {% assign upcoming = upcoming | push: r %}
+      {% endif %}
+    {% endfor %}
+
+    {% if upcoming.size > 0 %}
+      <div class="text-center mb-8">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-500">
+          {% if is_en %}Upcoming Releases{% else %}Kommende Releases{% endif %}
+        </h2>
+        <p class="mt-2 text-slate-300">
+          {% if is_en %}
+            Teasers, dates & optional audio previews
+          {% else %}
+            Termine, Infos & optional Hörproben
+          {% endif %}
+        </p>
+      </div>
+
+      <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {% for r in upcoming %}
+          <li class="release-card group">
+            {% if r.cover %}
+              <div class="release-cover">
+                <img src="{{ r.cover }}" alt="Cover: {{ r.title_de | default: r.title_en }}" loading="lazy">
+              </div>
+            {% endif %}
+
+            <div class="release-body">
+              <h3 class="release-title">
+                {{ is_en | ternary: r.title_en, r.title_de }}
+              </h3>
+
+              <p class="release-meta">
+                {% assign d = r.date | date: "%-d.%m.%Y" %}
+                {% assign t = r.date | date: "%H:%M" %}
+                {% if is_en %}
+                  {{ r.date | date: "%B %-d, %Y" }} · {{ r.date | date: "%H:%M" }}
+                {% else %}
+                  {{ d }} · {{ t }} Uhr
+                {% endif %}
+              </p>
+
+              {% if r.preview %}
+                <audio class="release-audio" controls preload="none">
+                  <source src="{{ r.preview }}" type="audio/mpeg">
+                </audio>
+              {% endif %}
+
+              <!-- Optional: Buttons (deaktiviert; Links später setzen)
+              <div class="release-actions">
+                <a class="btn ghost" href="#" tabindex="-1" aria-disabled="true">
+                  {% if is_en %}Pre-save{% else %}Pre-Save{% endif %}
+                </a>
+                <a class="btn ghost" href="#" tabindex="-1" aria-disabled="true">
+                  {% if is_en %}Add to calendar{% else %}Zum Kalender{% endif %}
+                </a>
+              </div> -->
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</section>
+
+
 <!-- Content: Musik-Embeds -->
 <section class="py-16">
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 grid sm:grid-cols-2 gap-10">
