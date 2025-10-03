@@ -2,9 +2,10 @@
 <section class="relative h-64">
   <img src="/assets/images/music-head.svg" alt="{{ page.hero_alt }}"
        class="absolute inset-0 w-full h-full object-cover" />
+
   <div class="absolute inset-0 flex items-center justify-center">
     <div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm 
-                rounded-2xl p-4 sm:p-6 shadow-md text-center">
+                rounded-2xl p-4 sm:px-6 shadow-md text-center">
       <h1 class="text-3xl md:text-4xl font-extrabold text-emerald-500">{{ page.hero_title }}</h1>
       <p class="mt-2 text-base md:text-lg text-slate-700 dark:text-slate-300 opacity-90">
         {{ page.hero_sub }}
@@ -20,7 +21,7 @@
     {% assign now = site.time | date: "%s" %}
 
     <!-- Timezone Switcher -->
-    <div class="tz-toolbar">
+    <div class="tz-toolbar mb-6">
       <label for="tzSelect" class="tz-label">
         {% if is_en %}Show times in:{% else %}Zeiten anzeigen in:{% endif %}
       </label>
@@ -29,60 +30,36 @@
         <option value="Europe/Berlin">🇩🇪 Europe/Berlin</option>
         <option value="UTC">UTC</option>
       </select>
-      <small class="tz-note">
-        {% if is_en %}Times update instantly when you change the timezone.{% else %}Beim Wechseln der Zeitzone aktualisieren sich die Zeiten sofort.{% endif %}
-      </small>
     </div>
 
-    {%- comment -%}
-      GitHub Pages-sicher:
-      - Keine Arrays per |push aufbauen
-      - Wir rendern die <li>-Einträge in ein Capture, prüfen dann auf Leerstring
-    {%- endcomment -%}
     {% assign items = site.data.releases | sort: "date" %}
     {% capture upcoming_list %}
       {% for r in items %}
         {% assign r_ts = r.date | date: "%s" %}
         {% if r_ts >= now %}
           <li class="release-card group">
-          {% assign cover_src = r.cover %}
-{% if is_en and r.cover_en %}{% assign cover_src = r.cover_en %}{% endif %}
-{% if not is_en and r.cover_de %}{% assign cover_src = r.cover_de %}{% endif %}
-
-{% assign fit = r.cover_fit | default: 'cover' %}
-{% assign fit_class = '' %}
-{% if fit == 'contain' %}{% assign fit_class = 'is-contain' %}{% endif %}
-
-{% if cover_src %}
-  <div class="release-cover {{ fit_class }}">
-    <img src="{{ cover_src }}" alt="Cover: {% if is_en %}{{ r.title_en }}{% else %}{{ r.title_de }}{% endif %}" loading="lazy">
-  </div>
-{% endif %}
-
-
+            {% if r.cover %}
+              <div class="release-cover {% if r.cover_fit == 'contain' %}is-contain{% endif %}">
+                <img src="{{ r.cover }}" alt="Cover: {% if is_en %}{{ r.title_en }}{% else %}{{ r.title_de }}{% endif %}" loading="lazy">
+              </div>
+            {% endif %}
             <div class="release-body">
               <h3 class="release-title">
                 {% if is_en %}{{ r.title_en }}{% else %}{{ r.title_de }}{% endif %}
               </h3>
-              {% assign lang = page.lang | default: 'de' %}
-{% assign suffix = site.data.time_suffix[lang] | default: "" %}
-
-<p class="release-meta">
-  {% if lang == "de" %}
-    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H:%M" }} {{ suffix }}
-  {% elsif lang == "en" %}
-    {{ r.date | date: "%B %-d, %Y" }} · {{ r.date | date: "%H:%M" }} {{ suffix }}
-  {% elsif lang == "fr" %}
-    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%Hh%M" }} {{ suffix }}
-  {% elsif lang == "es" %}
-    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H:%M" }} {{ suffix }}
-  {% elsif lang == "ja" %}
-    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H時%M分" }}
-  {% else %}
-    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H:%M" }}
-  {% endif %}
-</p>
-
+              <p class="release-meta">
+                {% assign epoch = r.date | date: "%s" %}
+                <time
+                  class="js-release-time"
+                  data-epoch="{{ epoch }}"
+                  datetime="{{ r.date | date: '%Y-%m-%dT%H:%M:%S%z' }}">
+                  {% if is_en %}
+                    {{ r.date | date: "%B %-d, %Y" }} · {{ r.date | date: "%H:%M" }}
+                  {% else %}
+                    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H:%M" }} Uhr
+                  {% endif %}
+                </time>
+              </p>
               {% if r.preview %}
                 <audio class="release-audio" controls preload="none">
                   <source src="{{ r.preview }}" type="audio/mpeg">
@@ -104,7 +81,7 @@
           {% if is_en %}
             Teasers, dates & optional audio previews
           {% else %}
-            Termine, Infos & optional Hörproben
+            Termine, Infos & optionale Hörproben
           {% endif %}
         </p>
       </div>
@@ -114,34 +91,13 @@
     {% endif %}
   </div>
 
-  <!-- Zeitzonen-JS -->
+  <!-- Timezone JS -->
   <script>
   (function(){
     const SELECT_ID = 'tzSelect';
     const STORE_KEY = 'silituz_tz_choice';
     const $select = document.getElementById(SELECT_ID);
     if(!$select) return;
-
-    let tzList = [];
-    if (typeof Intl.supportedValuesOf === 'function') {
-      try { tzList = Intl.supportedValuesOf('timeZone'); } catch(e){}
-    }
-
-    if (tzList && tzList.length) {
-      const frag = document.createDocumentFragment();
-      const favorites = ['Europe/Berlin','UTC','America/New_York','America/Los_Angeles','Asia/Tokyo','Australia/Sydney'];
-      const favSet = new Set(favorites);
-      const mkOpt = (z) => { const o = document.createElement('option'); o.value = z; o.textContent = z; return o; };
-      const sep = document.createElement('option'); sep.disabled = true; sep.textContent = '──────────'; frag.appendChild(sep);
-      favorites.forEach(z => { if (tzList.includes(z)) frag.appendChild(mkOpt(z)); });
-      tzList.filter(z => !favSet.has(z)).forEach(z => frag.appendChild(mkOpt(z)));
-      $select.appendChild(frag);
-    }
-
-    try {
-      const saved = localStorage.getItem(STORE_KEY);
-      if (saved) $select.value = saved; else $select.value = 'local';
-    } catch(e){}
 
     function fmt(epochSec, timeZone, lang) {
       const ms = Number(epochSec) * 1000;
@@ -164,12 +120,122 @@
       });
     }
 
-    $select.addEventListener('change', () => {
-      render();
-      try { localStorage.setItem(STORE_KEY, $select.value); } catch(e){}
-    });
-
+    $select.addEventListener('change', render);
     render();
   })();
+  </script>
+</section>
+
+<!-- Content: Musik-Embeds -->
+<section class="py-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 grid sm:grid-cols-2 gap-10">
+    <div class="p-6 rounded-2xl shadow-md bg-slate-800/90 text-white">
+      <h3 class="text-lg font-semibold mb-3">{{ page.spotify_head }}</h3>
+      <iframe style="border-radius:12px"
+        src="https://open.spotify.com/embed/artist/0l3OqhrDQ7No2fPCIP0i5h?utm_source=generator"
+        width="100%" height="380" frameborder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+    </div>
+
+    <div class="p-6 rounded-2xl shadow-md bg-slate-800/90 text-white">
+      <h3 class="text-lg font-semibold mb-3">{{ page.apple_head }}</h3>
+      <iframe allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+        frameborder="0" height="380"
+        style="width:100%;max-width:660px;overflow:hidden;background:transparent;"
+        sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+        src="{{ page.apple_embed_src }}"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- Plattformen Übersicht -->
+<section class="py-14" id="music-platforms">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    {% assign is_en = page.lang == 'en' or page.url contains '/en/' %}
+    <div class="text-center mb-8">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-500">
+        {% if is_en %}Everywhere you listen{% else %}Überall, wo du Musik hörst{% endif %}
+      </h2>
+      <p class="mt-2 text-slate-300">
+        {% if is_en %}Available on{% else %}Aktuell auf{% endif %}
+        <strong><span id="platformCount">32</span> {% if is_en %}platforms{% else %}Plattformen{% endif %}</strong>
+      </p>
+    </div>
+
+    <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <!-- 1 TikTok -->
+      <li><a class="platform brand-tiktok" href="https://www.tiktok.com/" target="_blank"><i class="fab fa-tiktok"></i><span>TikTok</span></a></li>
+      <!-- 2 Douyin -->
+      <li><a class="platform brand-douyin" href="https://www.douyin.com/" target="_blank"><span>Douyin</span></a></li>
+      <!-- 3 Spotify -->
+      <li><a class="platform brand-spotify" href="https://spotify.com/" target="_blank"><i class="fab fa-spotify"></i><span>Spotify</span></a></li>
+      <!-- 4 Apple Music -->
+      <li><a class="platform brand-apple" href="https://music.apple.com/" target="_blank"><i class="fab fa-apple"></i><span>Apple Music</span></a></li>
+      <!-- 5 Amazon Music -->
+      <li><a class="platform brand-amazon" href="https://music.amazon.com/" target="_blank"><i class="fab fa-amazon"></i><span>Amazon Music</span></a></li>
+      <!-- 6 YouTube Music -->
+      <li><a class="platform brand-youtube" href="https://music.youtube.com/" target="_blank"><i class="fab fa-youtube"></i><span>YouTube Music</span></a></li>
+      <!-- 7 Anghami -->
+      <li><a class="platform" href="https://www.anghami.com/" target="_blank"><span>Anghami</span></a></li>
+      <!-- 8 AWA -->
+      <li><a class="platform" href="https://awa.fm/" target="_blank"><span>AWA</span></a></li>
+      <!-- 9 ClaroMusica -->
+      <li><a class="platform" href="https://www.claromusica.com/" target="_blank"><span>ClaroMusica</span></a></li>
+      <!-- 10 Deezer -->
+      <li><a class="platform" href="https://www.deezer.com/" target="_blank"><span>Deezer</span></a></li>
+      <!-- 11 Fizy -->
+      <li><a class="platform" href="https://fizy.com/" target="_blank"><span>Fizy</span></a></li>
+      <!-- 12 Gracenote -->
+      <li><a class="platform" href="https://www.gracenote.com/" target="_blank"><span>Gracenote</span></a></li>
+      <!-- 13 iHeartRadio -->
+      <li><a class="platform" href="https://www.iheart.com/" target="_blank"><span>iHeartRadio</span></a></li>
+      <!-- 14 JioSaavn -->
+      <li><a class="platform" href="https://www.jiosaavn.com/" target="_blank"><span>JioSaavn</span></a></li>
+      <!-- 15 Joox -->
+      <li><a class="platform" href="https://www.joox.com/" target="_blank"><span>Joox</span></a></li>
+      <!-- 16 KKBox -->
+      <li><a class="platform" href="https://www.kkbox.com/" target="_blank"><span>KKBox</span></a></li>
+      <!-- 17 Kuack -->
+      <li><a class="platform" href="https://www.kuackmedia.com/" target="_blank"><span>Kuack</span></a></li>
+      <!-- 18 Line Music -->
+      <li><a class="platform" href="https://music.line.me/" target="_blank"><span>Line Music</span></a></li>
+      <!-- 19 Lissen -->
+      <li><a class="platform" href="https://lissen.to/" target="_blank"><span>Lissen</span></a></li>
+      <!-- 20 NetEase -->
+      <li><a class="platform" href="https://music.163.com/" target="_blank"><span>NetEase</span></a></li>
+      <!-- 21 Pandora -->
+      <li><a class="platform" href="https://www.pandora.com/" target="_blank"><span>Pandora</span></a></li>
+      <!-- 22 Qobuz -->
+      <li><a class="platform" href="https://www.qobuz.com/" target="_blank"><span>Qobuz</span></a></li>
+      <!-- 23 Tencent Music -->
+      <li><a class="platform" href="https://www.tencentmusic.com/" target="_blank"><span>Tencent Music</span></a></li>
+      <!-- 24 Tidal -->
+      <li><a class="platform" href="https://tidal.com/" target="_blank"><span>Tidal</span></a></li>
+      <!-- 25 TouchTunes -->
+      <li><a class="platform" href="https://www.touchtunes.com/" target="_blank"><span>TouchTunes</span></a></li>
+      <!-- 26 Trebel -->
+      <li><a class="platform" href="https://www.trebel.io/" target="_blank"><span>Trebel</span></a></li>
+      <!-- 27 Triller / 7Digital -->
+      <li><a class="platform" href="https://www.7digital.com/" target="_blank"><span>Triller / 7Digital</span></a></li>
+      <!-- 28 Wynk / Hungama -->
+      <li><a class="platform" href="https://wynk.in/" target="_blank"><span>Wynk / Hungama</span></a></li>
+      <!-- 29 YouSee / TelmoreMusik -->
+      <li><a class="platform" href="https://yousee.dk/musik" target="_blank"><span>YouSee / TelmoreMusik</span></a></li>
+      <!-- 30 Zing MP3 -->
+      <li><a class="platform" href="https://zingmp3.vn/" target="_blank"><span>Zing MP3</span></a></li>
+      <!-- 31 Facebook / Meta Audio -->
+      <li><a class="platform" href="https://www.facebook.com/" target="_blank"><span>Facebook Audio</span></a></li>
+      <!-- 32 Instagram Music -->
+      <li><a class="platform" href="https://www.instagram.com/" target="_blank"><span>Instagram Music</span></a></li>
+    </ul>
+  </div>
+
+  <!-- Auto Count -->
+  <script>
+    (function(){
+      var c = document.querySelectorAll('#music-platforms .platform').length;
+      var el = document.getElementById('platformCount');
+      if(el && c) el.textContent = c.toString();
+    })();
   </script>
 </section>
