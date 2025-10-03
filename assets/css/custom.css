@@ -323,3 +323,15 @@ header video, header img, header svg{ background:transparent !important; }
   border:1px dashed #334155; color:#cbd5e1; background:transparent;
   pointer-events:none; opacity:.6; /* deaktiviert, bis Links da sind */
 }
+/* Timezone Switcher – schlicht */
+#upcoming-releases .tz-toolbar{
+  display:flex; flex-wrap:wrap; align-items:center; gap:.6rem .8rem;
+  justify-content:center; margin-bottom:1rem;
+}
+#upcoming-releases .tz-label{ color:#94a3b8; }         /* slate-400 */
+#upcoming-releases .tz-select{
+  background:#0b1220; color:#e2e8f0; border:1px solid #1e293b;
+  border-radius:.6rem; padding:.4rem .6rem; min-width: 220px;
+}
+#upcoming-releases .tz-select:focus{ outline:none; box-shadow:0 0 0 2px rgba(16,185,129,.35); }
+#upcoming-releases .tz-note{ color:#64748b; }          /* slate-500 */
