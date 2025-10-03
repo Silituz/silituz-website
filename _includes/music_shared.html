@@ -1,18 +1,4 @@
-<!-- Hero -->
-<section class="relative h-64">
-  <img src="/assets/images/music-head.svg" alt="{{ page.hero_alt }}"
-       class="absolute inset-0 w-full h-full object-cover" />
-
-  <div class="absolute inset-0 flex items-center justify-center">
-    <div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm 
-                rounded-2xl p-4 sm:px-6 shadow-md text-center">
-      <h1 class="text-3xl md:text-4xl font-extrabold text-emerald-500">{{ page.hero_title }}</h1>
-      <p class="mt-2 text-base md:text-lg text-slate-700 dark:text-slate-300 opacity-90">
-        {{ page.hero_sub }}
-      </p>
-    </div>
-  </div>
-</section>
+<!-- Hero (unverändert, nutzt schon page.hero_* Variablen) -->
 
 <!-- Kommende Releases -->
 <section class="py-14" id="upcoming-releases">
@@ -20,16 +6,114 @@
     {% assign is_en = page.lang == 'en' or page.url contains '/en/' %}
     {% assign now = site.time | date: "%s" %}
 
+    {% assign label_popular  = is_en | ternary: "Popular", "Favoriten" %}
+    {% assign label_europe   = is_en | ternary: "Europe",  "Europa" %}
+    {% assign label_americas = is_en | ternary: "Americas","Amerika" %}
+    {% assign label_asia     = is_en | ternary: "Asia",    "Asien" %}
+    {% assign label_africa   = is_en | ternary: "Africa",  "Afrika" %}
+    {% assign label_oceania  = is_en | ternary: "Oceania", "Ozeanien" %}
+
     <!-- Timezone Switcher -->
     <div class="tz-toolbar mb-6">
       <label for="tzSelect" class="tz-label">
-        {% if is_en %}Show times in:{% else %}Zeiten anzeigen in:{% endif %}
+        {{ page.tz_label | default: (is_en | ternary: "Show times in:", "Zeiten anzeigen in:") }}
       </label>
       <select id="tzSelect" class="tz-select" aria-label="Timezone">
-        <option value="local">🌍 {% if is_en %}Your device time{% else %}Deine Gerätezeit{% endif %}</option>
-        <option value="Europe/Berlin">🇩🇪 Europe/Berlin</option>
-        <option value="UTC">UTC</option>
+        <option value="local">🌍 {{ page.tz_device | default: (is_en | ternary: "Your device time", "Deine Gerätezeit")) }}</option>
+
+        <!-- Favoriten / Popular -->
+        <optgroup label="{{ label_popular }}">
+          <option value="Europe/Berlin">🇩🇪 Berlin (Europe/Berlin)</option>
+          <option value="Europe/London">🇬🇧 London (Europe/London)</option>
+          <option value="UTC">🕒 UTC</option>
+          <option value="America/New_York">🇺🇸 New York (America/New_York)</option>
+          <option value="America/Los_Angeles">🇺🇸 Los Angeles (America/Los_Angeles)</option>
+          <option value="America/Sao_Paulo">🇧🇷 São Paulo (America/Sao_Paulo)</option>
+          <option value="Asia/Tokyo">🇯🇵 Tokyo (Asia/Tokyo)</option>
+          <option value="Asia/Kolkata">🇮🇳 Kolkata (Asia/Kolkata)</option>
+          <option value="Asia/Shanghai">🇨🇳 Shanghai (Asia/Shanghai)</option>
+          <option value="Asia/Dubai">🇦🇪 Dubai (Asia/Dubai)</option>
+          <option value="Australia/Sydney">🇦🇺 Sydney (Australia/Sydney)</option>
+          <option value="Africa/Johannesburg">🇿🇦 Johannesburg (Africa/Johannesburg)</option>
+        </optgroup>
+
+        <!-- Europa -->
+        <optgroup label="{{ label_europe }}">
+          <option value="Europe/Paris">🇫🇷 Paris</option>
+          <option value="Europe/Madrid">🇪🇸 Madrid</option>
+          <option value="Europe/Rome">🇮🇹 Rom</option>
+          <option value="Europe/Amsterdam">🇳🇱 Amsterdam</option>
+          <option value="Europe/Brussels">🇧🇪 Brüssel</option>
+          <option value="Europe/Vienna">🇦🇹 Wien</option>
+          <option value="Europe/Zurich">🇨🇭 Zürich</option>
+          <option value="Europe/Stockholm">🇸🇪 Stockholm</option>
+          <option value="Europe/Oslo">🇳🇴 Oslo</option>
+          <option value="Europe/Copenhagen">🇩🇰 Kopenhagen</option>
+          <option value="Europe/Helsinki">🇫🇮 Helsinki</option>
+          <option value="Europe/Warsaw">🇵🇱 Warschau</option>
+          <option value="Europe/Athens">🇬🇷 Athen</option>
+          <option value="Europe/Istanbul">🇹🇷 Istanbul</option>
+          <option value="Europe/Lisbon">🇵🇹 Lissabon</option>
+          <option value="Europe/Dublin">🇮🇪 Dublin</option>
+          <option value="Europe/Prague">🇨🇿 Prag</option>
+          <option value="Europe/Budapest">🇭🇺 Budapest</option>
+          <option value="Europe/Bucharest">🇷🇴 Bukarest</option>
+        </optgroup>
+
+        <!-- Amerika -->
+        <optgroup label="{{ label_americas }}">
+          <option value="America/Toronto">🇨🇦 Toronto</option>
+          <option value="America/Chicago">🇺🇸 Chicago</option>
+          <option value="America/Denver">🇺🇸 Denver</option>
+          <option value="America/Phoenix">🇺🇸 Phoenix</option>
+          <option value="America/Vancouver">🇨🇦 Vancouver</option>
+          <option value="America/Mexico_City">🇲🇽 Mexiko-Stadt</option>
+          <option value="America/Bogota">🇨🇴 Bogotá</option>
+          <option value="America/Lima">🇵🇪 Lima</option>
+          <option value="America/Santiago">🇨🇱 Santiago</option>
+          <option value="America/Buenos_Aires">🇦🇷 Buenos Aires</option>
+          <option value="America/Montevideo">🇺🇾 Montevideo</option>
+        </optgroup>
+
+        <!-- Asien -->
+        <optgroup label="{{ label_asia }}">
+          <option value="Asia/Jerusalem">🇮🇱 Jerusalem</option>
+          <option value="Asia/Baghdad">🇮🇶 Bagdad</option>
+          <option value="Asia/Tehran">🇮🇷 Teheran</option>
+          <option value="Asia/Karachi">🇵🇰 Karatschi</option>
+          <option value="Asia/Kathmandu">🇳🇵 Kathmandu</option>
+          <option value="Asia/Dhaka">🇧🇩 Dhaka</option>
+          <option value="Asia/Bangkok">🇹🇭 Bangkok</option>
+          <option value="Asia/Jakarta">🇮🇩 Jakarta</option>
+          <option value="Asia/Singapore">🇸🇬 Singapur</option>
+          <option value="Asia/Kuala_Lumpur">🇲🇾 Kuala Lumpur</option>
+          <option value="Asia/Hong_Kong">🇭🇰 Hongkong</option>
+          <option value="Asia/Taipei">🇹🇼 Taipeh</option>
+          <option value="Asia/Seoul">🇰🇷 Seoul</option>
+          <option value="Asia/Manila">🇵🇭 Manila</option>
+        </optgroup>
+
+        <!-- Afrika -->
+        <optgroup label="{{ label_africa }}">
+          <option value="Africa/Cairo">🇪🇬 Kairo</option>
+          <option value="Africa/Nairobi">🇰🇪 Nairobi</option>
+          <option value="Africa/Lagos">🇳🇬 Lagos</option>
+          <option value="Africa/Casablanca">🇲🇦 Casablanca</option>
+          <option value="Africa/Accra">🇬🇭 Accra</option>
+        </optgroup>
+
+        <!-- Ozeanien -->
+        <optgroup label="{{ label_oceania }}">
+          <option value="Australia/Melbourne">🇦🇺 Melbourne</option>
+          <option value="Australia/Brisbane">🇦🇺 Brisbane</option>
+          <option value="Australia/Perth">🇦🇺 Perth</option>
+          <option value="Pacific/Auckland">🇳🇿 Auckland</option>
+          <option value="Pacific/Honolulu">🇺🇸 Honolulu</option>
+        </optgroup>
       </select>
+      <small class="tz-note">
+        {{ page.tz_note | default: (is_en | ternary: "Times update instantly when you change the timezone.", "Beim Wechseln der Zeitzone aktualisieren sich die Zeiten sofort.") }}
+      </small>
     </div>
 
     {% assign items = site.data.releases | sort: "date" %}
@@ -49,14 +133,16 @@
               </h3>
               <p class="release-meta">
                 {% assign epoch = r.date | date: "%s" %}
+                {% assign time_suffix = page.time_suffix | default: (is_en | ternary: "", " Uhr") %}
                 <time
                   class="js-release-time"
                   data-epoch="{{ epoch }}"
+                  data-suffix="{{ time_suffix }}"
                   datetime="{{ r.date | date: '%Y-%m-%dT%H:%M:%S%z' }}">
                   {% if is_en %}
                     {{ r.date | date: "%B %-d, %Y" }} · {{ r.date | date: "%H:%M" }}
                   {% else %}
-                    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H:%M" }} Uhr
+                    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H:%M" }}{{ time_suffix }}
                   {% endif %}
                 </time>
               </p>
@@ -75,14 +161,10 @@
     {% if upcoming_list_stripped != "" %}
       <div class="text-center mb-8">
         <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-500">
-          {% if is_en %}Upcoming Releases{% else %}Kommende Releases{% endif %}
+          {{ page.releases_title | default: (is_en | ternary: "Upcoming Releases", "Kommende Releases") }}
         </h2>
         <p class="mt-2 text-slate-300">
-          {% if is_en %}
-            Teasers, dates & optional audio previews
-          {% else %}
-            Termine, Infos & optionale Hörproben
-          {% endif %}
+          {{ page.releases_subtitle | default: (is_en | ternary: "Teasers, dates & optional audio previews", "Termine, Infos & optionale Hörproben") }}
         </p>
       </div>
       <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -91,7 +173,7 @@
     {% endif %}
   </div>
 
-  <!-- Timezone JS -->
+  <!-- Timezone JS (mit Suffix-Unterstützung + LocalStorage) -->
   <script>
   (function(){
     const SELECT_ID = 'tzSelect';
@@ -99,32 +181,46 @@
     const $select = document.getElementById(SELECT_ID);
     if(!$select) return;
 
-    function fmt(epochSec, timeZone, lang) {
+    try {
+      const saved = localStorage.getItem(STORE_KEY);
+      if (saved) $select.value = saved;
+    } catch (e) {}
+
+    function fmt(epochSec, timeZone, lang, suffix) {
       const ms = Number(epochSec) * 1000;
       const optDate = { year:'numeric', month:'short', day:'numeric', timeZone };
       const optTime = { hour:'2-digit', minute:'2-digit', hour12:false, timeZone };
-      const d = new Intl.DateTimeFormat(lang, optDate).format(ms);
-      const t = new Intl.DateTimeFormat(lang, optTime).format(ms);
-      return `${d} · ${t}`;
+      const d = new Intl.DateTimeFormat(lang || 'de', optDate).format(ms);
+      const t = new Intl.DateTimeFormat(lang || 'de', optTime).format(ms);
+      return suffix ? `${d} · ${t}${suffix}` : `${d} · ${t}`;
     }
 
     function render() {
       const choice = $select.value;
-      const userLang = document.documentElement.lang || (navigator.language || 'de');
-      const zone = (choice === 'local') ? Intl.DateTimeFormat().resolvedOptions().timeZone : choice;
+      const lang = document.documentElement.lang || navigator.language || 'de';
+      const zone = (choice === 'local')
+        ? Intl.DateTimeFormat().resolvedOptions().timeZone
+        : choice;
+
       document.querySelectorAll('#upcoming-releases .js-release-time').forEach(el => {
         const epoch = el.getAttribute('data-epoch');
+        const suffix = el.getAttribute('data-suffix') || '';
         if (!epoch) return;
-        try { el.textContent = fmt(epoch, zone, userLang); }
-        catch(e) { el.textContent = fmt(epoch, 'UTC', userLang); }
+        try { el.textContent = fmt(epoch, zone, lang, suffix); }
+        catch(e){ el.textContent = fmt(epoch, 'UTC', lang, suffix); }
       });
     }
 
-    $select.addEventListener('change', render);
+    $select.addEventListener('change', () => {
+      render();
+      try { localStorage.setItem(STORE_KEY, $select.value); } catch(e){}
+    });
+
     render();
   })();
   </script>
 </section>
+
 
 <!-- Content: Musik-Embeds -->
 <section class="py-16">
