@@ -41,7 +41,7 @@
   </div>
 </section>
 
-<!-- Plattformen Übersicht mit Inline-Icons -->
+<!-- Plattformen Übersicht (Brandfarben) -->
 <section class="py-14" id="music-platforms">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -57,253 +57,138 @@
     </div>
 
     <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-      <!-- TikTok -->
-      <li>
-        <a class="platform platform-link" href="https://www.tiktok.com/" target="_blank" rel="noopener" aria-label="TikTok">
-          <span class="icon"><i class="fab fa-tiktok"></i></span>
-          <span class="label">TikTok</span>
-        </a>
-      </li>
+      <!-- Hilfs-Icon (Inline-Note) -->
+      {% capture note_svg %}
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+        <path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/>
+      </svg>
+      {% endcapture %}
 
-      <!-- Douyin -->
-      <li>
-        <a class="platform platform-link" href="https://www.douyin.com/" target="_blank" rel="noopener" aria-label="Douyin">
-          <span class="icon"><i class="fab fa-youtube"></i></span> <!-- Platzhalter-Icon -->
-          <span class="label">Douyin</span>
-        </a>
-      </li>
+      <!-- 1 TikTok -->
+      <li><a class="platform platform-link brand-tiktok" href="https://www.tiktok.com/" target="_blank" rel="noopener" aria-label="TikTok">
+        <span class="icon"><i class="fab fa-tiktok"></i></span><span class="label">TikTok</span></a></li>
 
-      <!-- Spotify -->
-      <li>
-        <a class="platform platform-link" href="https://spotify.com/" target="_blank" rel="noopener" aria-label="Spotify">
-          <span class="icon"><i class="fab fa-spotify"></i></span>
-          <span class="label">Spotify</span>
-        </a>
-      </li>
+      <!-- 2 Douyin (Platzhalter-Icon, Markenfarbe) -->
+      <li><a class="platform platform-link brand-douyin" href="https://www.douyin.com/" target="_blank" rel="noopener" aria-label="Douyin">
+        <span class="icon">{{ note_svg }}</span><span class="label">Douyin</span></a></li>
 
-      <!-- Apple Music -->
-      <li>
-        <a class="platform platform-link" href="https://music.apple.com/" target="_blank" rel="noopener" aria-label="Apple Music">
-          <span class="icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
-              <path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/>
-            </svg>
-          </span>
-          <span class="label">Apple Music</span>
-        </a>
-      </li>
+      <!-- 3 Spotify -->
+      <li><a class="platform platform-link brand-spotify" href="https://spotify.com/" target="_blank" rel="noopener" aria-label="Spotify">
+        <span class="icon"><i class="fab fa-spotify"></i></span><span class="label">Spotify</span></a></li>
 
-      <!-- Amazon Music -->
-      <li>
-        <a class="platform platform-link" href="https://music.amazon.com/" target="_blank" rel="noopener" aria-label="Amazon Music">
-          <span class="icon"><i class="fab fa-amazon"></i></span>
-          <span class="label">Amazon Music</span>
-        </a>
-      </li>
+      <!-- 4 Apple Music (Inline-SVG) -->
+      <li><a class="platform platform-link brand-applemusic" href="https://music.apple.com/" target="_blank" rel="noopener" aria-label="Apple Music">
+        <span class="icon">{{ note_svg }}</span><span class="label">Apple Music</span></a></li>
 
-      <!-- YouTube Music -->
-      <li>
-        <a class="platform platform-link" href="https://music.youtube.com/" target="_blank" rel="noopener" aria-label="YouTube Music">
-          <span class="icon"><i class="fab fa-youtube"></i></span>
-          <span class="label">YouTube Music</span>
-        </a>
-      </li>
+      <!-- 5 Amazon Music -->
+      <li><a class="platform platform-link brand-amazonmusic" href="https://music.amazon.com/" target="_blank" rel="noopener" aria-label="Amazon Music">
+        <span class="icon"><i class="fab fa-amazon"></i></span><span class="label">Amazon Music</span></a></li>
 
-      <!-- Anghami -->
-      <li>
-        <a class="platform platform-link" href="https://www.anghami.com/" target="_blank" rel="noopener" aria-label="Anghami">
-          <span class="icon"><i class="fab fa-spotify"></i></span> <!-- Platzhalter -->
-          <span class="label">Anghami</span>
-        </a>
-      </li>
+      <!-- 6 YouTube Music -->
+      <li><a class="platform platform-link brand-youtubemusic" href="https://music.youtube.com/" target="_blank" rel="noopener" aria-label="YouTube Music">
+        <span class="icon"><i class="fab fa-youtube"></i></span><span class="label">YouTube Music</span></a></li>
 
-      <!-- AWA -->
-      <li>
-        <a class="platform platform-link" href="https://awa.fm/" target="_blank" rel="noopener" aria-label="AWA">
-          <span class="icon"><i class="fab fa-spotify"></i></span>
-          <span class="label">AWA</span>
-        </a>
-      </li>
+      <!-- 7 Anghami -->
+      <li><a class="platform platform-link brand-anghami" href="https://www.anghami.com/" target="_blank" rel="noopener" aria-label="Anghami">
+        <span class="icon">{{ note_svg }}</span><span class="label">Anghami</span></a></li>
 
-      <!-- ClaroMusica -->
-      <li>
-        <a class="platform platform-link" href="https://www.claromusica.com/" target="_blank" rel="noopener" aria-label="ClaroMusica">
-          <span class="icon"><i class="fab fa-music"></i></span>
-          <span class="label">ClaroMusica</span>
-        </a>
-      </li>
+      <!-- 8 AWA -->
+      <li><a class="platform platform-link brand-awa" href="https://awa.fm/" target="_blank" rel="noopener" aria-label="AWA">
+        <span class="icon">{{ note_svg }}</span><span class="label">AWA</span></a></li>
 
-      <!-- Deezer -->
-      <li>
-        <a class="platform platform-link" href="https://www.deezer.com/" target="_blank" rel="noopener" aria-label="Deezer">
-          <span class="icon"><i class="fab fa-deezer"></i></span>
-          <span class="label">Deezer</span>
-        </a>
-      </li>
+      <!-- 9 ClaroMusica -->
+      <li><a class="platform platform-link brand-claromusica" href="https://www.claromusica.com/" target="_blank" rel="noopener" aria-label="ClaroMusica">
+        <span class="icon">{{ note_svg }}</span><span class="label">ClaroMusica</span></a></li>
 
-      <!-- Fizy -->
-      <li>
-        <a class="platform platform-link" href="https://fizy.com/" target="_blank" rel="noopener" aria-label="Fizy">
-          <span class="icon"><i class="fab fa-music"></i></span>
-          <span class="label">Fizy</span>
-        </a>
-      </li>
+      <!-- 10 Deezer -->
+      <li><a class="platform platform-link brand-deezer" href="https://www.deezer.com/" target="_blank" rel="noopener" aria-label="Deezer">
+        <span class="icon">{{ note_svg }}</span><span class="label">Deezer</span></a></li>
 
-      <!-- Gracenote -->
-      <li>
-        <a class="platform platform-link" href="https://www.gracenote.com/" target="_blank" rel="noopener" aria-label="Gracenote">
-          <span class="icon"><i class="fab fa-music"></i></span>
-          <span class="label">Gracenote</span>
-        </a>
-      </li>
+      <!-- 11 Fizy -->
+      <li><a class="platform platform-link brand-fizy" href="https://fizy.com/" target="_blank" rel="noopener" aria-label="Fizy">
+        <span class="icon">{{ note_svg }}</span><span class="label">Fizy</span></a></li>
 
-      <!-- iHeartRadio -->
-      <li>
-        <a class="platform platform-link" href="https://www.iheart.com/" target="_blank" rel="noopener" aria-label="iHeartRadio">
-          <span class="icon"><i class="fas fa-broadcast-tower"></i></span>
-          <span class="label">iHeartRadio</span>
-        </a>
-      </li>
+      <!-- 12 Gracenote -->
+      <li><a class="platform platform-link brand-gracenote" href="https://www.gracenote.com/" target="_blank" rel="noopener" aria-label="Gracenote">
+        <span class="icon">{{ note_svg }}</span><span class="label">Gracenote</span></a></li>
 
-      <!-- JioSaavn -->
-      <li>
-        <a class="platform platform-link" href="https://www.jiosaavn.com/" target="_blank" rel="noopener" aria-label="JioSaavn">
-          <span class="icon"><i class="fab fa-music"></i></span>
-          <span class="label">JioSaavn</span>
-        </a>
-      </li>
+      <!-- 13 iHeartRadio -->
+      <li><a class="platform platform-link brand-iheartradio" href="https://www.iheart.com/" target="_blank" rel="noopener" aria-label="iHeartRadio">
+        <span class="icon">{{ note_svg }}</span><span class="label">iHeartRadio</span></a></li>
 
-      <!-- Joox -->
-      <li>
-        <a class="platform platform-link" href="https://www.joox.com/" target="_blank" rel="noopener" aria-label="Joox">
-          <span class="icon"><i class="fab fa-music"></i></span>
-          <span class="label">Joox</span>
-        </a>
-      </li>
+      <!-- 14 JioSaavn -->
+      <li><a class="platform platform-link brand-jiosaavn" href="https://www.jiosaavn.com/" target="_blank" rel="noopener" aria-label="JioSaavn">
+        <span class="icon">{{ note_svg }}</span><span class="label">JioSaavn</span></a></li>
 
-      <!-- KKBox -->
-      <li>
-        <a class="platform platform-link" href="https://www.kkbox.com/" target="_blank" rel="noopener" aria-label="KKBox">
-          <span class="icon"><i class="fab fa-music"></i></span>
-          <span class="label">KKBox</span>
-        </a>
-      </li>
+      <!-- 15 Joox -->
+      <li><a class="platform platform-link brand-joox" href="https://www.joox.com/" target="_blank" rel="noopener" aria-label="Joox">
+        <span class="icon">{{ note_svg }}</span><span class="label">Joox</span></a></li>
 
-      <!-- Kuack -->
-      <li>
-        <a class="platform platform-link" href="https://www.kuackmedia.com/" target="_blank" rel="noopener" aria-label="Kuack">
-          <span class="icon"><i class="fab fa-music"></i></span>
-          <span class="label">Kuack</span>
-        </a>
-      </li>
+      <!-- 16 KKBox -->
+      <li><a class="platform platform-link brand-kkbox" href="https://www.kkbox.com/" target="_blank" rel="noopener" aria-label="KKBox">
+        <span class="icon">{{ note_svg }}</span><span class="label">KKBox</span></a></li>
 
-      <!-- Line Music -->
-      <li>
-        <a class="platform platform-link" href="https://music.line.me/" target="_blank" rel="noopener" aria-label="Line Music">
-          <span class="icon"><i class="fab fa-line"></i></span>
-          <span class="label">Line Music</span>
-        </a>
-      </li>
+      <!-- 17 Kuack -->
+      <li><a class="platform platform-link brand-kuack" href="https://www.kuackmedia.com/" target="_blank" rel="noopener" aria-label="Kuack">
+        <span class="icon">{{ note_svg }}</span><span class="label">Kuack</span></a></li>
 
-      <!-- Lissen -->
-      <li>
-        <a class="platform platform-link" href="https://lissen.to/" target="_blank" rel="noopener" aria-label="Lissen">
-          <span class="icon"><i class="fab fa-music"></i></span>
-          <span class="label">Lissen</span>
-        </a>
-      </li>
+      <!-- 18 Line Music -->
+      <li><a class="platform platform-link brand-linemusic" href="https://music.line.me/" target="_blank" rel="noopener" aria-label="Line Music">
+        <span class="icon">{{ note_svg }}</span><span class="label">Line Music</span></a></li>
 
-      <!-- NetEase -->
-      <li>
-        <a class="platform platform-link" href="https://music.163.com/" target="_blank" rel="noopener" aria-label="NetEase">
-          <span class="icon"><i class="fab fa-music"></i></span>
-          <span class="label">NetEase</span>
-        </a>
-      </li>
+      <!-- 19 Lissen -->
+      <li><a class="platform platform-link brand-lissen" href="https://lissen.to/" target="_blank" rel="noopener" aria-label="Lissen">
+        <span class="icon">{{ note_svg }}</span><span class="label">Lissen</span></a></li>
 
-      <!-- Pandora -->
-      <li>
-        <a class="platform platform-link" href="https://www.pandora.com/" target="_blank" rel="noopener" aria-label="Pandora">
-          <span class="icon"><i class="fab fa-pagelines"></i></span>
-          <span class="label">Pandora</span>
-        </a>
-      </li>
+      <!-- 20 NetEase Cloud Music -->
+      <li><a class="platform platform-link brand-netease" href="https://music.163.com/" target="_blank" rel="noopener" aria-label="NetEase Cloud Music">
+        <span class="icon">{{ note_svg }}</span><span class="label">NetEase</span></a></li>
 
-      <!-- Qobuz -->
-      <li>
-        <a class="platform platform-link" href="https://www.qobuz.com/" target="_blank" rel="noopener" aria-label="Qobuz">
-          <span class="icon"><i class="fab fa-music"></i></span>
-          <span class="label">Qobuz</span>
-        </a>
-      </li>
+      <!-- 21 Pandora -->
+      <li><a class="platform platform-link brand-pandora" href="https://www.pandora.com/" target="_blank" rel="noopener" aria-label="Pandora">
+        <span class="icon">{{ note_svg }}</span><span class="label">Pandora</span></a></li>
 
-      <!-- Tencent -->
-      <li>
-        <a class="platform platform-link" href="https://www.tencentmusic.com/" target="_blank" rel="noopener" aria-label="Tencent">
-          <span class="icon"><i class="fab fa-qq"></i></span>
-          <span class="label">Tencent</span>
-        </a>
-      </li>
+      <!-- 22 Qobuz -->
+      <li><a class="platform platform-link brand-qobuz" href="https://www.qobuz.com/" target="_blank" rel="noopener" aria-label="Qobuz">
+        <span class="icon">{{ note_svg }}</span><span class="label">Qobuz</span></a></li>
 
-      <!-- Tidal -->
-      <li>
-        <a class="platform platform-link" href="https://tidal.com/" target="_blank" rel="noopener" aria-label="Tidal">
-          <span class="icon"><i class="fab fa-tidal"></i></span>
-          <span class="label">Tidal</span>
-        </a>
-      </li>
+      <!-- 23 Tencent Music -->
+      <li><a class="platform platform-link brand-tencent" href="https://www.tencentmusic.com/" target="_blank" rel="noopener" aria-label="Tencent Music">
+        <span class="icon">{{ note_svg }}</span><span class="label">Tencent</span></a></li>
 
-      <!-- TouchTunes / PlayNetwork -->
-      <li>
-        <a class="platform platform-link" href="https://www.touchtunes.com/" target="_blank" rel="noopener" aria-label="TouchTunes / PlayNetwork">
-          <span class="icon"><i class="fas fa-music"></i></span>
-          <span class="label">TouchTunes / PlayNetwork</span>
-        </a>
-      </li>
+      <!-- 24 Tidal -->
+      <li><a class="platform platform-link brand-tidal" href="https://tidal.com/" target="_blank" rel="noopener" aria-label="Tidal">
+        <span class="icon">{{ note_svg }}</span><span class="label">Tidal</span></a></li>
 
-      <!-- Trebel -->
-      <li>
-        <a class="platform platform-link" href="https://www.trebel.io/" target="_blank" rel="noopener" aria-label="Trebel">
-          <span class="icon"><i class="fas fa-music"></i></span>
-          <span class="label">Trebel</span>
-        </a>
-      </li>
+      <!-- 25 TouchTunes / PlayNetwork -->
+      <li><a class="platform platform-link brand-touchtunes" href="https://www.touchtunes.com/" target="_blank" rel="noopener" aria-label="TouchTunes / PlayNetwork">
+        <span class="icon">{{ note_svg }}</span><span class="label">TouchTunes / PlayNetwork</span></a></li>
 
-      <!-- Triller / 7Digital -->
-      <li>
-        <a class="platform platform-link" href="https://www.7digital.com/" target="_blank" rel="noopener" aria-label="Triller / 7Digital">
-          <span class="icon"><i class="fas fa-music"></i></span>
-          <span class="label">Triller / 7Digital</span>
-        </a>
-      </li>
+      <!-- 26 Trebel -->
+      <li><a class="platform platform-link brand-trebel" href="https://www.trebel.io/" target="_blank" rel="noopener" aria-label="Trebel">
+        <span class="icon">{{ note_svg }}</span><span class="label">Trebel</span></a></li>
 
-      <!-- Wynk / Hungama -->
-      <li>
-        <a class="platform platform-link" href="https://wynk.in/" target="_blank" rel="noopener" aria-label="Wynk / Hungama">
-          <span class="icon"><i class="fas fa-music"></i></span>
-          <span class="label">Wynk / Hungama</span>
-        </a>
-      </li>
+      <!-- 27 Triller / 7Digital -->
+      <li><a class="platform platform-link brand-triller7digital" href="https://www.7digital.com/" target="_blank" rel="noopener" aria-label="Triller / 7Digital">
+        <span class="icon">{{ note_svg }}</span><span class="label">Triller / 7Digital</span></a></li>
 
-      <!-- YouSee Musik / TelmoreMusik -->
-      <li>
-        <a class="platform platform-link" href="https://yousee.dk/musik" target="_blank" rel="noopener" aria-label="YouSee Musik / TelmoreMusik">
-          <span class="icon"><i class="fas fa-music"></i></span>
-          <span class="label">YouSee Musik / TelmoreMusik</span>
-        </a>
-      </li>
+      <!-- 28 Wynk / Hungama -->
+      <li><a class="platform platform-link brand-wynkhungama" href="https://wynk.in/" target="_blank" rel="noopener" aria-label="Wynk / Hungama">
+        <span class="icon">{{ note_svg }}</span><span class="label">Wynk / Hungama</span></a></li>
 
-      <!-- Zing MP3 -->
-      <li>
-        <a class="platform platform-link" href="https://zingmp3.vn/" target="_blank" rel="noopener" aria-label="Zing MP3">
-          <span class="icon"><i class="fas fa-music"></i></span>
-          <span class="label">Zing MP3</span>
-        </a>
-      </li>
+      <!-- 29 YouSee Musik / TelmoreMusik -->
+      <li><a class="platform platform-link brand-youseetelmore" href="https://yousee.dk/musik" target="_blank" rel="noopener" aria-label="YouSee Musik / TelmoreMusik">
+        <span class="icon">{{ note_svg }}</span><span class="label">YouSee Musik / TelmoreMusik</span></a></li>
 
+      <!-- 30 Zing MP3 -->
+      <li><a class="platform platform-link brand-zingmp3" href="https://zingmp3.vn/" target="_blank" rel="noopener" aria-label="Zing MP3">
+        <span class="icon">{{ note_svg }}</span><span class="label">Zing MP3</span></a></li>
+
+      <!-- 31 iHeartRadio? (bereits 13) + 32 AWA? (bereits 8) – Zähler passt via Script -->
     </ul>
   </div>
 
+  <!-- Auto-Count -->
   <script>
     (function(){
       var c = document.querySelectorAll('#music-platforms .platform').length;
@@ -312,4 +197,3 @@
     })();
   </script>
 </section>
-
