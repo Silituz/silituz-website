@@ -282,3 +282,44 @@ header video, header img, header svg{ background:transparent !important; }
 /* Optional: Hover – Icon etwas heller ohne Brand zu verfälschen */
 #music-platforms .platform:hover .icon { filter: brightness(1.1); }
 
+/* Upcoming Releases */
+#upcoming-releases .release-card{
+  background-color: rgba(15,23,42,.9); /* slate-900/90 */
+  border: 1px solid #1e293b;           /* slate-800 */
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,.18);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+#upcoming-releases .release-card:hover{
+  transform: translateY(-2px);
+  border-color: rgba(16,185,129,.45);  /* emerald-500/45 */
+  box-shadow: 0 10px 26px rgba(0,0,0,.22);
+}
+#upcoming-releases .release-cover img{
+  display:block; width:100%; height:200px; object-fit:cover;
+}
+#upcoming-releases .release-body{ padding: .9rem 1rem 1rem; }
+#upcoming-releases .release-title{
+  font-weight: 800; font-size: 1.05rem; line-height:1.25;
+  color:#10b981; /* emerald-500 */
+  margin: .25rem 0 .35rem;
+}
+#upcoming-releases .release-meta{
+  color:#94a3b8; /* slate-400 */
+  font-size:.9rem; margin-bottom:.6rem;
+}
+#upcoming-releases .release-audio{
+  width: 100%; height: 36px; margin:.25rem 0 .25rem;
+  filter: saturate(110%);
+}
+/* optionale Buttons (derzeit auskommentiert im HTML) */
+#upcoming-releases .release-actions{
+  margin-top:.65rem; display:flex; gap:.5rem; flex-wrap:wrap;
+}
+#upcoming-releases .btn.ghost{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.4rem .7rem; border-radius:.6rem;
+  border:1px dashed #334155; color:#cbd5e1; background:transparent;
+  pointer-events:none; opacity:.6; /* deaktiviert, bis Links da sind */
+}
