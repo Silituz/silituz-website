@@ -41,11 +41,10 @@
   </div>
 </section>
 
-<!-- Plattformen-Übersicht -->
+<!-- Plattformen Übersicht mit Inline-Icons -->
 <section class="py-14" id="music-platforms">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <!-- Headline (auto DE/EN) -->
     {% assign is_en = page.lang == 'en' or page.url contains '/en/' %}
     <div class="text-center mb-8">
       <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-500">
@@ -53,114 +52,264 @@
       </h2>
       <p class="mt-2 text-slate-300">
         {% if is_en %}Available on{% else %}Aktuell auf{% endif %}
-        <strong><span id="platformCount">30+</span> {% if is_en %}platforms{% else %}Plattformen{% endif %}</strong> – Streaming & Social.
+        <strong><span id="platformCount">32</span> {% if is_en %}platforms{% else %}Plattformen{% endif %}</strong> – Streaming & Social.
       </p>
     </div>
 
-    <!-- Grid -->
     <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-      <!-- Streaming -->
-      <li><a class="platform platform-link" href="https://spotify.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/spotify.svg" alt="Spotify"></span><span class="label">Spotify</span></a></li>
+      <!-- TikTok -->
+      <li>
+        <a class="platform platform-link" href="https://www.tiktok.com/" target="_blank" rel="noopener" aria-label="TikTok">
+          <span class="icon"><i class="fab fa-tiktok"></i></span>
+          <span class="label">TikTok</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://music.apple.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/apple-music.svg" alt="Apple Music"></span><span class="label">Apple Music</span></a></li>
+      <!-- Douyin -->
+      <li>
+        <a class="platform platform-link" href="https://www.douyin.com/" target="_blank" rel="noopener" aria-label="Douyin">
+          <span class="icon"><i class="fab fa-youtube"></i></span> <!-- Platzhalter-Icon -->
+          <span class="label">Douyin</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://music.amazon.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/amazon-music.svg" alt="Amazon Music"></span><span class="label">Amazon Music</span></a></li>
+      <!-- Spotify -->
+      <li>
+        <a class="platform platform-link" href="https://spotify.com/" target="_blank" rel="noopener" aria-label="Spotify">
+          <span class="icon"><i class="fab fa-spotify"></i></span>
+          <span class="label">Spotify</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://music.youtube.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/youtube-music.svg" alt="YouTube Music"></span><span class="label">YouTube Music</span></a></li>
+      <!-- Apple Music -->
+      <li>
+        <a class="platform platform-link" href="https://music.apple.com/" target="_blank" rel="noopener" aria-label="Apple Music">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+              <path d="M16 3v11.6a3.3 3.3 0 1 1-1.5-2.8V7.2l-7 1.6v8.8a3.3 3.3 0 1 1-1.5-2.8V6L16 3z"/>
+            </svg>
+          </span>
+          <span class="label">Apple Music</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.anghami.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/anghami.svg" alt="Anghami"></span><span class="label">Anghami</span></a></li>
+      <!-- Amazon Music -->
+      <li>
+        <a class="platform platform-link" href="https://music.amazon.com/" target="_blank" rel="noopener" aria-label="Amazon Music">
+          <span class="icon"><i class="fab fa-amazon"></i></span>
+          <span class="label">Amazon Music</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://awa.fm" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/awa.svg" alt="AWA"></span><span class="label">AWA</span></a></li>
+      <!-- YouTube Music -->
+      <li>
+        <a class="platform platform-link" href="https://music.youtube.com/" target="_blank" rel="noopener" aria-label="YouTube Music">
+          <span class="icon"><i class="fab fa-youtube"></i></span>
+          <span class="label">YouTube Music</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.claromusica.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/claromusica.svg" alt="ClaroMusica"></span><span class="label">ClaroMusica</span></a></li>
+      <!-- Anghami -->
+      <li>
+        <a class="platform platform-link" href="https://www.anghami.com/" target="_blank" rel="noopener" aria-label="Anghami">
+          <span class="icon"><i class="fab fa-spotify"></i></span> <!-- Platzhalter -->
+          <span class="label">Anghami</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.deezer.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/deezer.svg" alt="Deezer"></span><span class="label">Deezer</span></a></li>
+      <!-- AWA -->
+      <li>
+        <a class="platform platform-link" href="https://awa.fm/" target="_blank" rel="noopener" aria-label="AWA">
+          <span class="icon"><i class="fab fa-spotify"></i></span>
+          <span class="label">AWA</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://fizy.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/fizy.svg" alt="Fizy"></span><span class="label">Fizy</span></a></li>
+      <!-- ClaroMusica -->
+      <li>
+        <a class="platform platform-link" href="https://www.claromusica.com/" target="_blank" rel="noopener" aria-label="ClaroMusica">
+          <span class="icon"><i class="fab fa-music"></i></span>
+          <span class="label">ClaroMusica</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.gracenote.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/gracenote.svg" alt="Gracenote"></span><span class="label">Gracenote</span></a></li>
+      <!-- Deezer -->
+      <li>
+        <a class="platform platform-link" href="https://www.deezer.com/" target="_blank" rel="noopener" aria-label="Deezer">
+          <span class="icon"><i class="fab fa-deezer"></i></span>
+          <span class="label">Deezer</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.iheart.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/iheartradio.svg" alt="iHeartRadio"></span><span class="label">iHeartRadio</span></a></li>
+      <!-- Fizy -->
+      <li>
+        <a class="platform platform-link" href="https://fizy.com/" target="_blank" rel="noopener" aria-label="Fizy">
+          <span class="icon"><i class="fab fa-music"></i></span>
+          <span class="label">Fizy</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.jiosaavn.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/jiosaavn.svg" alt="JioSaavn"></span><span class="label">JioSaavn</span></a></li>
+      <!-- Gracenote -->
+      <li>
+        <a class="platform platform-link" href="https://www.gracenote.com/" target="_blank" rel="noopener" aria-label="Gracenote">
+          <span class="icon"><i class="fab fa-music"></i></span>
+          <span class="label">Gracenote</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.joox.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/joox.svg" alt="Joox"></span><span class="label">Joox</span></a></li>
+      <!-- iHeartRadio -->
+      <li>
+        <a class="platform platform-link" href="https://www.iheart.com/" target="_blank" rel="noopener" aria-label="iHeartRadio">
+          <span class="icon"><i class="fas fa-broadcast-tower"></i></span>
+          <span class="label">iHeartRadio</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.kkbox.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/kkbox.svg" alt="KKBox"></span><span class="label">KKBox</span></a></li>
+      <!-- JioSaavn -->
+      <li>
+        <a class="platform platform-link" href="https://www.jiosaavn.com/" target="_blank" rel="noopener" aria-label="JioSaavn">
+          <span class="icon"><i class="fab fa-music"></i></span>
+          <span class="label">JioSaavn</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.kuackmedia.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/kuack.svg" alt="Kuack"></span><span class="label">Kuack</span></a></li>
+      <!-- Joox -->
+      <li>
+        <a class="platform platform-link" href="https://www.joox.com/" target="_blank" rel="noopener" aria-label="Joox">
+          <span class="icon"><i class="fab fa-music"></i></span>
+          <span class="label">Joox</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://music.line.me" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/line-music.svg" alt="Line Music"></span><span class="label">Line Music</span></a></li>
+      <!-- KKBox -->
+      <li>
+        <a class="platform platform-link" href="https://www.kkbox.com/" target="_blank" rel="noopener" aria-label="KKBox">
+          <span class="icon"><i class="fab fa-music"></i></span>
+          <span class="label">KKBox</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://lissen.to" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/lissen.svg" alt="Lissen"></span><span class="label">Lissen</span></a></li>
+      <!-- Kuack -->
+      <li>
+        <a class="platform platform-link" href="https://www.kuackmedia.com/" target="_blank" rel="noopener" aria-label="Kuack">
+          <span class="icon"><i class="fab fa-music"></i></span>
+          <span class="label">Kuack</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://music.163.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/netease.svg" alt="NetEase"></span><span class="label">NetEase</span></a></li>
+      <!-- Line Music -->
+      <li>
+        <a class="platform platform-link" href="https://music.line.me/" target="_blank" rel="noopener" aria-label="Line Music">
+          <span class="icon"><i class="fab fa-line"></i></span>
+          <span class="label">Line Music</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.pandora.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/pandora.svg" alt="Pandora"></span><span class="label">Pandora</span></a></li>
+      <!-- Lissen -->
+      <li>
+        <a class="platform platform-link" href="https://lissen.to/" target="_blank" rel="noopener" aria-label="Lissen">
+          <span class="icon"><i class="fab fa-music"></i></span>
+          <span class="label">Lissen</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.qobuz.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/qobuz.svg" alt="Qobuz"></span><span class="label">Qobuz</span></a></li>
+      <!-- NetEase -->
+      <li>
+        <a class="platform platform-link" href="https://music.163.com/" target="_blank" rel="noopener" aria-label="NetEase">
+          <span class="icon"><i class="fab fa-music"></i></span>
+          <span class="label">NetEase</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.tencentmusic.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/tencent.svg" alt="Tencent"></span><span class="label">Tencent</span></a></li>
+      <!-- Pandora -->
+      <li>
+        <a class="platform platform-link" href="https://www.pandora.com/" target="_blank" rel="noopener" aria-label="Pandora">
+          <span class="icon"><i class="fab fa-pagelines"></i></span>
+          <span class="label">Pandora</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://tidal.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/tidal.svg" alt="Tidal"></span><span class="label">Tidal</span></a></li>
+      <!-- Qobuz -->
+      <li>
+        <a class="platform platform-link" href="https://www.qobuz.com/" target="_blank" rel="noopener" aria-label="Qobuz">
+          <span class="icon"><i class="fab fa-music"></i></span>
+          <span class="label">Qobuz</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.touchtunes.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/touchtunes.svg" alt="TouchTunes / PlayNetwork"></span><span class="label">TouchTunes / PlayNetwork</span></a></li>
+      <!-- Tencent -->
+      <li>
+        <a class="platform platform-link" href="https://www.tencentmusic.com/" target="_blank" rel="noopener" aria-label="Tencent">
+          <span class="icon"><i class="fab fa-qq"></i></span>
+          <span class="label">Tencent</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.trebel.io" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/trebel.svg" alt="Trebel"></span><span class="label">Trebel</span></a></li>
+      <!-- Tidal -->
+      <li>
+        <a class="platform platform-link" href="https://tidal.com/" target="_blank" rel="noopener" aria-label="Tidal">
+          <span class="icon"><i class="fab fa-tidal"></i></span>
+          <span class="label">Tidal</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.7digital.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/triller-7digital.svg" alt="Triller / 7Digital"></span><span class="label">Triller / 7Digital</span></a></li>
+      <!-- TouchTunes / PlayNetwork -->
+      <li>
+        <a class="platform platform-link" href="https://www.touchtunes.com/" target="_blank" rel="noopener" aria-label="TouchTunes / PlayNetwork">
+          <span class="icon"><i class="fas fa-music"></i></span>
+          <span class="label">TouchTunes / PlayNetwork</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://wynk.in" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/wynk-hungama.svg" alt="Wynk / Hungama"></span><span class="label">Wynk / Hungama</span></a></li>
+      <!-- Trebel -->
+      <li>
+        <a class="platform platform-link" href="https://www.trebel.io/" target="_blank" rel="noopener" aria-label="Trebel">
+          <span class="icon"><i class="fas fa-music"></i></span>
+          <span class="label">Trebel</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://yousee.dk/musik" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/yousee-telmore.svg" alt="YouSee Musik / TelmoreMusik"></span><span class="label">YouSee Musik / TelmoreMusik</span></a></li>
+      <!-- Triller / 7Digital -->
+      <li>
+        <a class="platform platform-link" href="https://www.7digital.com/" target="_blank" rel="noopener" aria-label="Triller / 7Digital">
+          <span class="icon"><i class="fas fa-music"></i></span>
+          <span class="label">Triller / 7Digital</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://zingmp3.vn" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/zingmp3.svg" alt="Zing MP3"></span><span class="label">Zing MP3</span></a></li>
+      <!-- Wynk / Hungama -->
+      <li>
+        <a class="platform platform-link" href="https://wynk.in/" target="_blank" rel="noopener" aria-label="Wynk / Hungama">
+          <span class="icon"><i class="fas fa-music"></i></span>
+          <span class="label">Wynk / Hungama</span>
+        </a>
+      </li>
 
-      <!-- Social / UGC -->
-      <li><a class="platform platform-link" href="https://www.tiktok.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/tiktok.svg" alt="TikTok"></span><span class="label">TikTok</span></a></li>
+      <!-- YouSee Musik / TelmoreMusik -->
+      <li>
+        <a class="platform platform-link" href="https://yousee.dk/musik" target="_blank" rel="noopener" aria-label="YouSee Musik / TelmoreMusik">
+          <span class="icon"><i class="fas fa-music"></i></span>
+          <span class="label">YouSee Musik / TelmoreMusik</span>
+        </a>
+      </li>
 
-      <li><a class="platform platform-link" href="https://www.douyin.com" target="_blank" rel="noopener">
-        <span class="icon"><img src="/assets/logos/douyin.svg" alt="Douyin"></span><span class="label">Douyin</span></a></li>
+      <!-- Zing MP3 -->
+      <li>
+        <a class="platform platform-link" href="https://zingmp3.vn/" target="_blank" rel="noopener" aria-label="Zing MP3">
+          <span class="icon"><i class="fas fa-music"></i></span>
+          <span class="label">Zing MP3</span>
+        </a>
+      </li>
+
     </ul>
   </div>
 
-  <!-- Auto-Count -->
   <script>
     (function(){
-      try{
-        var c = document.querySelectorAll('#music-platforms .platform').length;
-        var el = document.getElementById('platformCount');
-        if(el && c) el.textContent = c.toString();
-      }catch(e){}
+      var c = document.querySelectorAll('#music-platforms .platform').length;
+      var el = document.getElementById('platformCount');
+      if(el && c) el.textContent = c.toString();
     })();
   </script>
 </section>
+
