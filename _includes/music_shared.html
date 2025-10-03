@@ -64,19 +64,25 @@
               <h3 class="release-title">
                 {% if is_en %}{{ r.title_en }}{% else %}{{ r.title_de }}{% endif %}
               </h3>
-              <p class="release-meta">
-                {% assign epoch = r.date | date: "%s" %}
-                <time
-                  class="js-release-time"
-                  data-epoch="{{ epoch }}"
-                  datetime="{{ r.date | date: '%Y-%m-%dT%H:%M:%S%z' }}">
-                  {% if is_en %}
-                    {{ r.date | date: "%B %-d, %Y" }} · {{ r.date | date: "%H:%M" }}
-                  {% else %}
-                    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H:%M" }} Uhr
-                  {% endif %}
-                </time>
-              </p>
+              {% assign lang = page.lang | default: 'de' %}
+{% assign suffix = site.data.time_suffix[lang] | default: "" %}
+
+<p class="release-meta">
+  {% if lang == "de" %}
+    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H:%M" }} {{ suffix }}
+  {% elsif lang == "en" %}
+    {{ r.date | date: "%B %-d, %Y" }} · {{ r.date | date: "%H:%M" }} {{ suffix }}
+  {% elsif lang == "fr" %}
+    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%Hh%M" }} {{ suffix }}
+  {% elsif lang == "es" %}
+    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H:%M" }} {{ suffix }}
+  {% elsif lang == "ja" %}
+    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H時%M分" }}
+  {% else %}
+    {{ r.date | date: "%-d.%m.%Y" }} · {{ r.date | date: "%H:%M" }}
+  {% endif %}
+</p>
+
               {% if r.preview %}
                 <audio class="release-audio" controls preload="none">
                   <source src="{{ r.preview }}" type="audio/mpeg">
