@@ -14,15 +14,13 @@
   title_en: "Hanabi des gebrochenen Herzens"
   cover: "/assets/images/releases/hanabi-ger.svg"
   preview: "/assets/audio/previews/hanabi-ger.mp3"
-  cover_fit: contain  # zeigt das komplette Cover
-
+ 
 # Hanabi (EN)
 - date: 2025-10-09 20:00 +02:00
   title_de: "Hanabi of a Broken Heart"
   title_en: "Hanabi of a Broken Heart"
   cover: "/assets/images/releases/hanabi-eng.svg"
   preview: "/assets/audio/previews/hanabi-eng.mp3"
-  cover_fit: contain  # zeigt das komplette Cover
 
 - date: 2025-10-12 20:00 +02:00
   title_de: "Electric Rain"
