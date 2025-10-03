@@ -19,6 +19,23 @@
     {% assign is_en = page.lang == 'en' or page.url contains '/en/' %}
     {% assign now = site.time | date: "%s" %}
 
+<!-- Timezone Switcher -->
+<div class="tz-toolbar">
+  <label for="tzSelect" class="tz-label">
+    {% if is_en %}Show times in:{% else %}Zeiten anzeigen in:{% endif %}
+  </label>
+  <select id="tzSelect" class="tz-select" aria-label="Timezone">
+    <!-- JS füllt Optionen dynamisch; Fallbacks unten -->
+    <option value="local">🌍 {% if is_en %}Your device time{% else %}Deine Gerätezeit{% endif %}</option>
+    <option value="Europe/Berlin">🇩🇪 Europe/Berlin</option>
+    <option value="UTC">UTC</option>
+  </select>
+  <small class="tz-note">
+    {% if is_en %}Times update instantly when you change the timezone.{% else %}Beim Wechseln der Zeitzone aktualisieren sich die Zeiten sofort.{% endif %}
+  </small>
+</div>
+
+    
     <!-- filtern & sortieren -->
     {% assign items = site.data.releases | sort: "date" %}
     {% assign upcoming = "" | split: "" %}
