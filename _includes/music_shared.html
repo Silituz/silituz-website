@@ -1,17 +1,43 @@
-<!-- Kommende Releases -->
+{% comment %}=== Language Flag (robust) ==={% endcomment %}
+{% assign is_en = false %}
+{% if page.lang == 'en' or page.url contains '/en/' %}
+  {% assign is_en = true %}
+{% endif %}
+
+<!-- =========================
+     HERO
+     ========================= -->
+<section class="relative h-64">
+  <img src="/assets/images/music-head.svg" alt="{{ page.hero_alt }}"
+       class="absolute inset-0 w-full h-full object-cover" />
+
+  <div class="absolute inset-0 flex items-center justify-center">
+    <div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm 
+                rounded-2xl p-4 sm:p-6 shadow-md text-center">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-emerald-500">{{ page.hero_title }}</h1>
+      <p class="mt-2 text-base md:text-lg text-slate-700 dark:text-slate-300 opacity-90">
+        {{ page.hero_sub }}
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     UPCOMING RELEASES (+ TZ Select)
+     ========================= -->
 <section class="py-14" id="upcoming-releases">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    {% assign is_en = page.lang == 'en' or page.url contains '/en/' %}
+
     {% assign now_s = site.time | date: "%s" %}
     {% assign now_i = now_s | plus: 0 %}
 
-    <!-- Timezone Switcher -->
+    <!-- TZ switcher -->
     <div class="tz-toolbar mb-6">
       <label for="tzSelect" class="tz-label">
         {% if is_en %}Show times in:{% else %}Zeiten anzeigen in:{% endif %}
       </label>
 
-      <select id="tzSelect" class="tz-select" aria-label="Timezone">
+      <select id="tzSelect" class="tz-select" aria-label="{% if is_en %}Timezone{% else %}Zeitzone{% endif %}">
         <option value="local">🌍 {% if is_en %}Your device time{% else %}Deine Gerätezeit{% endif %}</option>
 
         <optgroup label="{% if is_en %}Popular{% else %}Favoriten{% endif %}">
@@ -113,7 +139,7 @@
       </p>
     </div>
 
-    <!-- Liste -->
+    <!-- List (future only) -->
     {% assign items = site.data.releases | sort: "date" %}
     {% assign found = 0 %}
     <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -160,12 +186,18 @@
     {% endif %}
   </div>
 
-  <!-- Render Script -->
+  <!-- Render script for localized date/time -->
   <script>
   (function(){
     const sel = document.getElementById('tzSelect');
     if (!sel) return;
     const STORE = 'silituz_tz_choice';
+
+    function currentLang(){
+      const htmlLang = (document.documentElement.getAttribute('lang') || '').toLowerCase();
+      if (htmlLang.startsWith('en')) return 'en';
+      return 'de';
+    }
 
     try {
       const saved = localStorage.getItem(STORE);
@@ -182,33 +214,32 @@
 
     function fmtDate(epochSec, timeZone, lang) {
       const ms = Number(epochSec) * 1000;
-      const isDE = (lang || '').toLowerCase().startsWith('de');
-      if (isDE) {
-        return new Intl.DateTimeFormat('de', {
-          day:'2-digit', month:'short', year:'numeric', timeZone
-        }).format(ms).replace(/\s+/g,' ').trim();
+      if (lang === 'de') {
+        // "06. Okt. 2025"
+        const d = new Intl.DateTimeFormat('de', { day:'2-digit', month:'short', year:'numeric', timeZone }).format(ms);
+        return d.replace(/\s+/g,' ').trim();
       } else {
-        const parts = new Intl.DateTimeFormat('en', {
-          day:'numeric', month:'short', year:'numeric', timeZone
-        }).formatToParts(ms);
+        // "Oct 06, 2025"
+        const dtf = new Intl.DateTimeFormat('en', { day:'2-digit', month:'short', year:'numeric', timeZone });
+        const parts = dtf.formatToParts(ms);
         const m = parts.find(p=>p.type==='month')?.value || '';
-        let d   = parts.find(p=>p.type==='day')?.value || '';
+        const d = parts.find(p=>p.type==='day')?.value || '';
         const y = parts.find(p=>p.type==='year')?.value || '';
-        if (d.length === 1) d = '0' + d;
         return `${m} ${d}, ${y}`;
       }
     }
 
     function fmtTime(epochSec, timeZone, lang) {
       const ms = Number(epochSec) * 1000;
-      return new Intl.DateTimeFormat(lang || 'de', {
+      return new Intl.DateTimeFormat(lang === 'en' ? 'en' : 'de', {
         hour:'2-digit', minute:'2-digit', hour12:false, timeZone
       }).format(ms);
     }
 
     function render(){
-      const lang = document.documentElement.lang || navigator.language || 'de';
+      const lang = currentLang();
       const zone = tzFrom(sel.value);
+
       document.querySelectorAll('#upcoming-releases .js-rel-date').forEach(el => {
         const e = el.getAttribute('data-epoch'); if (!e) return;
         try { el.textContent = fmtDate(e, zone, lang); }
@@ -231,35 +262,41 @@
   </script>
 </section>
 
-
-
-
-<!-- Content: Musik-Embeds -->
+<!-- =========================
+     SPOTIFY + APPLE MUSIC
+     ========================= -->
 <section class="py-16">
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 grid sm:grid-cols-2 gap-10">
+
+    <!-- Spotify -->
     <div class="p-6 rounded-2xl shadow-md bg-slate-800/90 text-white">
       <h3 class="text-lg font-semibold mb-3">{{ page.spotify_head }}</h3>
       <iframe style="border-radius:12px"
         src="https://open.spotify.com/embed/artist/0l3OqhrDQ7No2fPCIP0i5h?utm_source=generator"
         width="100%" height="380" frameborder="0"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+      </iframe>
     </div>
 
+    <!-- Apple Music -->
     <div class="p-6 rounded-2xl shadow-md bg-slate-800/90 text-white">
       <h3 class="text-lg font-semibold mb-3">{{ page.apple_head }}</h3>
       <iframe allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
         frameborder="0" height="380"
         style="width:100%;max-width:660px;overflow:hidden;background:transparent;"
         sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-        src="{{ page.apple_embed_src }}"></iframe>
+        src="{{ page.apple_embed_src }}">
+      </iframe>
     </div>
+
   </div>
 </section>
 
-<!-- Plattformen Übersicht -->
+<!-- =========================
+     PLATTFORMEN (32)
+     ========================= -->
 <section class="py-14" id="music-platforms">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    {% assign is_en = page.lang == 'en' or page.url contains '/en/' %}
     <div class="text-center mb-8">
       <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-500">
         {% if is_en %}Everywhere you listen{% else %}Überall, wo du Musik hörst{% endif %}
@@ -271,70 +308,39 @@
     </div>
 
     <ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-      <!-- 1 TikTok -->
-      <li><a class="platform brand-tiktok" href="https://www.tiktok.com/" target="_blank"><i class="fab fa-tiktok"></i><span>TikTok</span></a></li>
-      <!-- 2 Douyin -->
-      <li><a class="platform brand-douyin" href="https://www.douyin.com/" target="_blank"><span>Douyin</span></a></li>
-      <!-- 3 Spotify -->
-      <li><a class="platform brand-spotify" href="https://spotify.com/" target="_blank"><i class="fab fa-spotify"></i><span>Spotify</span></a></li>
-      <!-- 4 Apple Music -->
-      <li><a class="platform brand-apple" href="https://music.apple.com/" target="_blank"><i class="fab fa-apple"></i><span>Apple Music</span></a></li>
-      <!-- 5 Amazon Music -->
-      <li><a class="platform brand-amazon" href="https://music.amazon.com/" target="_blank"><i class="fab fa-amazon"></i><span>Amazon Music</span></a></li>
-      <!-- 6 YouTube Music -->
-      <li><a class="platform brand-youtube" href="https://music.youtube.com/" target="_blank"><i class="fab fa-youtube"></i><span>YouTube Music</span></a></li>
-      <!-- 7 Anghami -->
-      <li><a class="platform" href="https://www.anghami.com/" target="_blank"><span>Anghami</span></a></li>
-      <!-- 8 AWA -->
-      <li><a class="platform" href="https://awa.fm/" target="_blank"><span>AWA</span></a></li>
-      <!-- 9 ClaroMusica -->
-      <li><a class="platform" href="https://www.claromusica.com/" target="_blank"><span>ClaroMusica</span></a></li>
-      <!-- 10 Deezer -->
-      <li><a class="platform" href="https://www.deezer.com/" target="_blank"><span>Deezer</span></a></li>
-      <!-- 11 Fizy -->
-      <li><a class="platform" href="https://fizy.com/" target="_blank"><span>Fizy</span></a></li>
-      <!-- 12 Gracenote -->
-      <li><a class="platform" href="https://www.gracenote.com/" target="_blank"><span>Gracenote</span></a></li>
-      <!-- 13 iHeartRadio -->
-      <li><a class="platform" href="https://www.iheart.com/" target="_blank"><span>iHeartRadio</span></a></li>
-      <!-- 14 JioSaavn -->
-      <li><a class="platform" href="https://www.jiosaavn.com/" target="_blank"><span>JioSaavn</span></a></li>
-      <!-- 15 Joox -->
-      <li><a class="platform" href="https://www.joox.com/" target="_blank"><span>Joox</span></a></li>
-      <!-- 16 KKBox -->
-      <li><a class="platform" href="https://www.kkbox.com/" target="_blank"><span>KKBox</span></a></li>
-      <!-- 17 Kuack -->
-      <li><a class="platform" href="https://www.kuackmedia.com/" target="_blank"><span>Kuack</span></a></li>
-      <!-- 18 Line Music -->
-      <li><a class="platform" href="https://music.line.me/" target="_blank"><span>Line Music</span></a></li>
-      <!-- 19 Lissen -->
-      <li><a class="platform" href="https://lissen.to/" target="_blank"><span>Lissen</span></a></li>
-      <!-- 20 NetEase -->
-      <li><a class="platform" href="https://music.163.com/" target="_blank"><span>NetEase</span></a></li>
-      <!-- 21 Pandora -->
-      <li><a class="platform" href="https://www.pandora.com/" target="_blank"><span>Pandora</span></a></li>
-      <!-- 22 Qobuz -->
-      <li><a class="platform" href="https://www.qobuz.com/" target="_blank"><span>Qobuz</span></a></li>
-      <!-- 23 Tencent Music -->
-      <li><a class="platform" href="https://www.tencentmusic.com/" target="_blank"><span>Tencent Music</span></a></li>
-      <!-- 24 Tidal -->
-      <li><a class="platform" href="https://tidal.com/" target="_blank"><span>Tidal</span></a></li>
-      <!-- 25 TouchTunes -->
-      <li><a class="platform" href="https://www.touchtunes.com/" target="_blank"><span>TouchTunes</span></a></li>
-      <!-- 26 Trebel -->
-      <li><a class="platform" href="https://www.trebel.io/" target="_blank"><span>Trebel</span></a></li>
-      <!-- 27 Triller / 7Digital -->
-      <li><a class="platform" href="https://www.7digital.com/" target="_blank"><span>Triller / 7Digital</span></a></li>
-      <!-- 28 Wynk / Hungama -->
-      <li><a class="platform" href="https://wynk.in/" target="_blank"><span>Wynk / Hungama</span></a></li>
-      <!-- 29 YouSee / TelmoreMusik -->
-      <li><a class="platform" href="https://yousee.dk/musik" target="_blank"><span>YouSee / TelmoreMusik</span></a></li>
-      <!-- 30 Zing MP3 -->
-      <li><a class="platform" href="https://zingmp3.vn/" target="_blank"><span>Zing MP3</span></a></li>
-      <!-- 31 Facebook / Meta Audio -->
-      <li><a class="platform" href="https://www.facebook.com/" target="_blank"><span>Facebook Audio</span></a></li>
-      <!-- 32 Instagram Music -->
-      <li><a class="platform" href="https://www.instagram.com/" target="_blank"><span>Instagram Music</span></a></li>
+      <!-- 1–32 -->
+      <li><a class="platform brand-tiktok"        href="https://www.tiktok.com/"        target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i><span>TikTok</span></a></li>
+      <li><a class="platform brand-douyin"        href="https://www.douyin.com/"        target="_blank" rel="noopener" aria-label="Douyin"><span>Douyin</span></a></li>
+      <li><a class="platform brand-spotify"       href="https://spotify.com/"           target="_blank" rel="noopener" aria-label="Spotify"><i class="fab fa-spotify"></i><span>Spotify</span></a></li>
+      <li><a class="platform brand-apple"         href="https://music.apple.com/"       target="_blank" rel="noopener" aria-label="Apple Music"><i class="fab fa-apple"></i><span>Apple Music</span></a></li>
+      <li><a class="platform brand-amazon"        href="https://music.amazon.com/"      target="_blank" rel="noopener" aria-label="Amazon Music"><i class="fab fa-amazon"></i><span>Amazon Music</span></a></li>
+      <li><a class="platform brand-youtube"       href="https://music.youtube.com/"     target="_blank" rel="noopener" aria-label="YouTube Music"><i class="fab fa-youtube"></i><span>YouTube Music</span></a></li>
+      <li><a class="platform" href="https://www.anghami.com/"       target="_blank" rel="noopener"><span>Anghami</span></a></li>
+      <li><a class="platform" href="https://awa.fm/"                 target="_blank" rel="noopener"><span>AWA</span></a></li>
+      <li><a class="platform" href="https://www.claromusica.com/"   target="_blank" rel="noopener"><span>ClaroMusica</span></a></li>
+      <li><a class="platform" href="https://www.deezer.com/"        target="_blank" rel="noopener"><span>Deezer</span></a></li>
+      <li><a class="platform" href="https://fizy.com/"              target="_blank" rel="noopener"><span>Fizy</span></a></li>
+      <li><a class="platform" href="https://www.gracenote.com/"     target="_blank" rel="noopener"><span>Gracenote</span></a></li>
+      <li><a class="platform" href="https://www.iheart.com/"        target="_blank" rel="noopener"><span>iHeartRadio</span></a></li>
+      <li><a class="platform" href="https://www.jiosaavn.com/"      target="_blank" rel="noopener"><span>JioSaavn</span></a></li>
+      <li><a class="platform" href="https://www.joox.com/"          target="_blank" rel="noopener"><span>Joox</span></a></li>
+      <li><a class="platform" href="https://www.kkbox.com/"         target="_blank" rel="noopener"><span>KKBox</span></a></li>
+      <li><a class="platform" href="https://www.kuackmedia.com/"    target="_blank" rel="noopener"><span>Kuack</span></a></li>
+      <li><a class="platform" href="https://music.line.me/"         target="_blank" rel="noopener"><span>Line Music</span></a></li>
+      <li><a class="platform" href="https://lissen.to/"             target="_blank" rel="noopener"><span>Lissen</span></a></li>
+      <li><a class="platform" href="https://music.163.com/"         target="_blank" rel="noopener"><span>NetEase</span></a></li>
+      <li><a class="platform" href="https://www.pandora.com/"       target="_blank" rel="noopener"><span>Pandora</span></a></li>
+      <li><a class="platform" href="https://www.qobuz.com/"         target="_blank" rel="noopener"><span>Qobuz</span></a></li>
+      <li><a class="platform" href="https://www.tencentmusic.com/"  target="_blank" rel="noopener"><span>Tencent Music</span></a></li>
+      <li><a class="platform" href="https://tidal.com/"             target="_blank" rel="noopener"><span>Tidal</span></a></li>
+      <li><a class="platform" href="https://www.touchtunes.com/"    target="_blank" rel="noopener"><span>TouchTunes</span></a></li>
+      <li><a class="platform" href="https://www.trebel.io/"         target="_blank" rel="noopener"><span>Trebel</span></a></li>
+      <li><a class="platform" href="https://www.7digital.com/"      target="_blank" rel="noopener"><span>Triller / 7Digital</span></a></li>
+      <li><a class="platform" href="https://wynk.in/"               target="_blank" rel="noopener"><span>Wynk / Hungama</span></a></li>
+      <li><a class="platform" href="https://yousee.dk/musik"        target="_blank" rel="noopener"><span>YouSee / TelmoreMusik</span></a></li>
+      <li><a class="platform" href="https://zingmp3.vn/"            target="_blank" rel="noopener"><span>Zing MP3</span></a></li>
+      <li><a class="platform" href="https://www.facebook.com/"      target="_blank" rel="noopener"><span>Facebook Audio</span></a></li>
+      <li><a class="platform" href="https://www.instagram.com/"     target="_blank" rel="noopener"><span>Instagram Music</span></a></li>
     </ul>
   </div>
 
