@@ -22,6 +22,7 @@
 
      <!-- Kontaktformular (Formspree aktiv) -->
 <form
+  id="contactForm"
   action="https://formspree.io/f/mqaygong"
   method="POST"
   class="space-y-5">
@@ -74,6 +75,44 @@
     </button>
   </div>
 </form>
+
+      <script>
+(function () {
+  var form = document.getElementById('contactForm');
+  if (!form) return;
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault(); // Browser-Redirect stoppen
+
+    // Optional: Captcha-Fehler zurücksetzen
+    var capErr = document.getElementById('captchaError');
+    if (capErr) capErr.classList.add('hidden');
+
+    var data = new FormData(form);
+
+    try {
+      // Wichtig: Accept JSON -> Formspree liefert JSON statt eigene Danke-Seite
+      var resp = await fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
+
+      if (resp.ok) {
+        // Sprachabhängige Zielseite
+        var to = (document.documentElement.getAttribute('lang') === 'en')
+          ? '/en/success/'     // deine englische Seite
+          : '/sucess/';        // deine deutsche Seite (Dateiname ohne "c")
+
+        window.location.href = to;
+      } else {
+        // Antwort lesen und Fehler anzeigen
+        var out = await resp.json().catch(() => ({}));
+        var msg = (out && out.errors && out.errors[0] && out.errors[0].message) ? out.errors[0].message : 'Senden fehlgeschlagen. Bitte später erneut versuchen.';
+        alert(msg);
+      }
+    } catch (err) {
+      alert('Netzwerkfehler beim Senden. Bitte später nochmal versuchen.');
+    }
+  });
+})();
+</script>
 
 
       <!-- Mailto fallback -->
