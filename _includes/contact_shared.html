@@ -27,7 +27,8 @@
   class="space-y-5">
 
   <!-- Weiterleitung nach Erfolg -->
-  <input type="hidden" name="_next" value="https://silituz.de/sucess/">
+<input type="hidden" name="_next"
+  value="{% if page.lang == 'en' %}{{ '/en/success/' | relative_url }}{% else %}{{ '/sucess/' | relative_url }}{% endif %}">
   <!-- Betreff deiner E-Mail -->
   <input type="hidden" name="_subject" value="Kontakt über silituz.de">
   <!-- Honeypot gegen Bots -->
