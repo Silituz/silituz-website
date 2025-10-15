@@ -42,26 +42,34 @@
   </div>
 </section>
 
-<!-- TikTok: Neueste Clips (Auto-Update) -->
+<!-- TikTok: Neueste/Latest Clips (Auto-Update) -->
 <section class="py-12">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h2 class="text-2xl font-bold text-emerald-500 mb-4">TikTok • Neueste Clips</h2>
 
-    <!-- Offizielles TikTok Profil-Embed -->
-    <blockquote class="tiktok-embed"
-                cite="https://www.tiktok.com/@silituz"
-                data-unique-id="silituz"
-                data-embed-type="creator"
-                style="max-width: 720px; min-width: 288px;">
-      <section>
-        <a target="_blank" href="https://www.tiktok.com/@silituz?refer=creator_embed">@silituz</a>
-      </section>
-    </blockquote>
+    {% assign is_en = page.lang == 'en' or page.url contains '/en/' %}
+    <h2 class="text-2xl font-bold text-emerald-500 mb-4 text-center">
+      {% if is_en %}TikTok • Latest Clips{% else %}TikTok • Neueste Clips{% endif %}
+    </h2>
 
-    <!-- TikTok Embed Script (nur 1x pro Seite nötig) -->
+    <!-- Dunkle Karte als Rahmen um das Embed -->
+    <div class="rounded-2xl p-4 md:p-6 bg-gray-900/70 ring-1 ring-white/10 backdrop-blur">
+      <!-- Offizielles TikTok Profil-Embed -->
+      <blockquote class="tiktok-embed"
+                  cite="https://www.tiktok.com/@silituz"
+                  data-unique-id="silituz"
+                  data-embed-type="creator"
+                  style="max-width: 720px; min-width: 288px; margin: 0 auto;">
+        <section>
+          <a target="_blank" href="https://www.tiktok.com/@silituz?refer=creator_embed">@silituz</a>
+        </section>
+      </blockquote>
+    </div>
+
+    <!-- TikTok Script (einmal pro Seite) -->
     <script async src="https://www.tiktok.com/embed.js"></script>
   </div>
 </section>
+
 
 <!-- Galerie -->
 <section class="py-16">
