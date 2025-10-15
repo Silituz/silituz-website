@@ -72,9 +72,22 @@
 </section>
 
 
-<!-- Galerie -->
+{%- assign is_en = page.lang == 'en' or page.url contains '/en/' -%}
+
 <section class="py-16">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+    <!-- Überschrift -->
+    <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-500">
+      {{ page.gallery_title | default: (is_en ? 'Gallery' : 'Galerie') }}
+    </h2>
+
+    <!-- Hinweis -->
+    <p class="mt-2 text-slate-500 dark:text-slate-400 text-base italic">
+      {{ page.gallery_note | default: (is_en ? 'This gallery grows over time 🌱' : 'Diese Galerie wird stetig erweitert 🌱') }}
+    </p>
+
+    <!-- Bilder -->
     <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-gallery="main">
       <img class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
            src="/assets/images/gallery1.webp" alt="{{ page.img1_alt }}" />
@@ -91,6 +104,7 @@
     </div>
   </div>
 </section>
+
 
 <!-- Lightbox Overlay -->
 <div id="lightbox"
