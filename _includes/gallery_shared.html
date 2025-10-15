@@ -23,9 +23,10 @@ gallery_note: "Diese Galerie wird stetig erweitert 🌱"
   </div>
 </section>
 
-
+{% comment %}
+<section role="status" aria-live="polite"
+         class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 md:mt-12 mb-10">
 <!-- Hinweis (Bau-Style) -->
-<!-- zum wieder anzeigen diese Zeile löschen!
 <section role="status" aria-live="polite"
          class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 md:mt-12 mb-10">
   <div class="group relative overflow-hidden rounded-2xl shadow-md"
@@ -52,7 +53,7 @@ gallery_note: "Diese Galerie wird stetig erweitert 🌱"
     </div>
   </div>
 </section>
-
+{% endcomment %}
 
 <!-- TikTok: Neueste/Latest Clips (Auto-Update) -->
 <section class="py-12">
@@ -88,12 +89,20 @@ gallery_note: "Diese Galerie wird stetig erweitert 🌱"
 
     <!-- Überschrift -->
     <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-500">
-      {{ page.gallery_title | default: (is_en ? 'Gallery' : 'Galerie') }}
+      {% if page.gallery_title %}
+        {{ page.gallery_title }}
+      {% else %}
+        {% if is_en %}Gallery{% else %}Galerie{% endif %}
+      {% endif %}
     </h2>
 
     <!-- Hinweis -->
     <p class="mt-2 text-slate-500 dark:text-slate-400 text-base italic">
-      {{ page.gallery_note | default: (is_en ? 'This gallery grows over time 🌱' : 'Diese Galerie wird stetig erweitert 🌱') }}
+      {% if page.gallery_note %}
+        {{ page.gallery_note }}
+      {% else %}
+        {% if is_en %}This gallery grows over time 🌱{% else %}Diese Galerie wird stetig erweitert 🌱{% endif %}
+      {% endif %}
     </p>
 
     <!-- Bilder -->
@@ -113,6 +122,7 @@ gallery_note: "Diese Galerie wird stetig erweitert 🌱"
     </div>
   </div>
 </section>
+
 
 
 <!-- Lightbox Overlay -->
