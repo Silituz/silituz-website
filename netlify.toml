@@ -4,3 +4,16 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+# 1) Functions zuerst & erzwingen
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
+# 2) Dein SPA/Jekyll-Fallback (catch-all) NACH den Functions
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
