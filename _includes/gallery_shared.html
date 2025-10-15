@@ -46,9 +46,9 @@
 <section class="py-12">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    {% assign is_en = page.lang == 'en' or page.url contains '/en/' %}
+   <!-- Überschrift aus der jeweiligen gallery*.html -->
     <h2 class="text-2xl font-bold text-emerald-500 mb-4 text-center">
-      {% if is_en %}TikTok • Latest Clips{% else %}TikTok • Neueste Clips{% endif %}
+      {{ page.tiktok_heading | default: "TikTok • Clips" }}
     </h2>
 
       <!-- Offizielles TikTok Profil-Embed -->
