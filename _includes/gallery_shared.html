@@ -71,14 +71,114 @@
 
 <!-- Galerie -->
 <section class="py-16">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
-    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <img class="rounded-xl shadow object-cover w-full h-72" src="/assets/images/gallery1.webp" alt="{{ page.img1_alt }}" />
-      <img class="rounded-xl shadow object-cover w-full h-72" src="/assets/images/gallery2.webp" alt="{{ page.img2_alt }}" />
-      <img class="rounded-xl shadow object-cover w-full h-72" src="/assets/images/gallery3.webp" alt="{{ page.img3_alt }}" />
-      <img class="rounded-xl shadow object-cover w-full h-72" src="/assets/images/gallery4.webp" alt="{{ page.img4_alt }}" />
-      <img class="rounded-xl shadow object-cover w-full h-72" src="/assets/images/gallery5.webp" alt="{{ page.img5_alt }}" />
-      <img class="rounded-xl shadow object-cover w-full h-72" src="/assets/images/gallery6.webp" alt="{{ page.img6_alt }}" />
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-gallery="main">
+      <img class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
+           src="/assets/images/gallery1.webp" alt="{{ page.img1_alt }}" />
+      <img class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
+           src="/assets/images/gallery2.webp" alt="{{ page.img2_alt }}" />
+      <img class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
+           src="/assets/images/gallery3.webp" alt="{{ page.img3_alt }}" />
+      <img class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
+           src="/assets/images/gallery4.webp" alt="{{ page.img4_alt }}" />
+      <img class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
+           src="/assets/images/gallery5.webp" alt="{{ page.img5_alt }}" />
+      <img class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
+           src="/assets/images/gallery6.webp" alt="{{ page.img6_alt }}" />
     </div>
   </div>
 </section>
+
+<!-- Lightbox Overlay -->
+<div id="lightbox"
+     class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/80 p-4">
+  <button id="lightboxClose"
+          class="absolute top-4 right-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur px-3 py-2 text-white"
+          aria-label="Schließen (Esc)">✕</button>
+
+  <button id="lightboxPrev"
+          class="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur px-3 py-2 text-white"
+          aria-label="Vorheriges (←)">‹</button>
+  <button id="lightboxNext"
+          class="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur px-3 py-2 text-white"
+          aria-label="Nächstes (→)">›</button>
+
+  <img id="lightboxImg"
+       class="max-h-[85vh] max-w-[92vw] rounded-xl shadow-2xl"
+       alt="">
+</div>
+
+<script>
+(() => {
+  const galleryRoot = document.querySelector('[data-gallery="main"]');
+  if (!galleryRoot) return;
+
+  const items = Array.from(galleryRoot.querySelectorAll('img'));
+  const lightbox = document.getElementById('lightbox');
+  const img = document.getElementById('lightboxImg');
+  const btnClose = document.getElementById('lightboxClose');
+  const btnPrev = document.getElementById('lightboxPrev');
+  const btnNext = document.getElementById('lightboxNext');
+
+  let index = -1;
+  let lastFocus = null;
+
+  function openAt(i) {
+    index = i;
+    const el = items[index];
+    const src = el.getAttribute('data-full') || el.getAttribute('src');
+    img.src = src;
+    img.alt = el.alt || '';
+    lastFocus = document.activeElement;
+
+    lightbox.classList.remove('hidden');
+    lightbox.classList.add('flex');
+    document.documentElement.classList.add('overflow-y-hidden');
+    btnClose.focus();
+  }
+
+  function close() {
+    lightbox.classList.add('hidden');
+    lightbox.classList.remove('flex');
+    document.documentElement.classList.remove('overflow-y-hidden');
+    img.removeAttribute('src');
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  function prev() {
+    if (!items.length) return;
+    index = (index - 1 + items.length) % items.length;
+    openAt(index);
+  }
+
+  function next() {
+    if (!items.length) return;
+    index = (index + 1) % items.length;
+    openAt(index);
+  }
+
+  items.forEach((el, i) => {
+    el.addEventListener('click', () => openAt(i));
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openAt(i); }
+    });
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('role', 'button');
+  });
+
+  btnClose.addEventListener('click', close);
+  btnPrev.addEventListener('click', (e) => { e.stopPropagation(); prev(); });
+  btnNext.addEventListener('click', (e) => { e.stopPropagation(); next(); });
+
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) close();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.classList.contains('hidden')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') prev();
+    else if (e.key === 'ArrowRight') next();
+  });
+})();
+</script>
