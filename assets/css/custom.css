@@ -356,3 +356,41 @@ header video, header img, header svg{ background:transparent !important; }
   padding: 6%;                       /* minimaler Rand, wirkt hochwertig */
   background: transparent;
 }
+
+/* =============================
+   9) MUSIC PLATFORMS – ICON & ARROW FIX
+   ============================= */
+
+/* 1) Standard-Fallback: Pfeil anzeigen */
+#music-platforms .platform::before{
+  content:'›';
+  margin-right:.5rem;
+  opacity:.6;
+}
+
+/* 2) Wenn ein Icon vorhanden ist, Pfeil ausblenden (moderne Browser) */
+#music-platforms .platform:has(i),
+#music-platforms .platform:has(img),
+#music-platforms .platform:has(svg){
+  padding-left: 0; /* falls du vorher Platz für den Pfeil gelassen hast */
+}
+#music-platforms .platform:has(i)::before,
+#music-platforms .platform:has(img)::before,
+#music-platforms .platform:has(svg)::before{
+  content: none;
+}
+
+/* 3) Einheitliche Icon-Größen (an deine 28px angepasst) */
+#music-platforms .platform i,
+#music-platforms .platform img,
+#music-platforms .platform svg,
+#music-platforms .platform .icon{
+  width:28px; height:28px;
+  margin-right:.65rem;
+  display:inline-block;
+  vertical-align:middle;
+  object-fit:contain;
+}
+
+/* Optional: leichte Aufhellung beim Hover */
+#music-platforms .platform:hover .icon { filter: brightness(1.1); }
