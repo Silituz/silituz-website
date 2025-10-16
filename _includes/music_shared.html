@@ -370,6 +370,51 @@
 </ul>
   </div>
 
+  <script>
+  (function(){
+    const sec = document.getElementById('music-platforms');
+    if(!sec) return;
+    const ul = sec.querySelector('ul');
+    if(!ul) return;
+
+    // 1) "intern" erkennen: relative URLs oder gleiche Domain
+    ul.querySelectorAll('a.platform').forEach(a=>{
+      const href = a.getAttribute('href') || '';
+      if (href.startsWith('/') || href.includes(location.host) || a.classList.contains('is-local')) {
+        a.classList.add('is-local');
+      }
+    });
+
+    // 2) interne zuerst anzeigen (Reihenfolge beibehalten)
+    const locals = Array.from(ul.querySelectorAll('a.is-local')).map(a=>a.closest('li'));
+    // reverse(), damit die ursprüngliche Reihenfolge beim Einfügen oben erhalten bleibt
+    locals.reverse().forEach(li => ul.insertBefore(li, ul.firstChild));
+
+    // 3) Konfetti bei Hover (leicht gedrosselt)
+    ul.addEventListener('mouseenter', function(e){
+      const a = e.target.closest('a.is-local');
+      if(!a || !ul.contains(a)) return;
+
+      const now = Date.now();
+      const last = Number(a.dataset.burst || 0);
+      if (now - last < 300) return;      // Anti-Spam (0.3s)
+      a.dataset.burst = now;
+
+      const n = 12;
+      for(let i=0;i<n;i++){
+        const s = document.createElement('span');
+        s.className = 'confetti';
+        s.style.setProperty('--x', (Math.random()*60-30)+'px');
+        s.style.setProperty('--y', (-10 - Math.random()*40)+'px');
+        s.style.setProperty('--r', (Math.random()*360)+'deg');
+        s.style.setProperty('--d', (400+Math.random()*500)+'ms');
+        a.appendChild(s);
+        setTimeout(()=>s.remove(), 1000);
+      }
+    }, true);
+  })();
+  </script>
+  
   <!-- Auto Count -->
   <script>
     (function(){
