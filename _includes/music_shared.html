@@ -367,157 +367,78 @@
     <img class="icon" src="/assets/icons/yousee.svg" alt="YouSee / TelmoreMusik" onerror="this.remove();"><span>YouSee / TelmoreMusik</span></a></li>
   <li><a class="platform" href="https://zingmp3.vn/" target="_blank" rel="noopener" aria-label="Zing MP3">
     <img class="icon" src="/assets/icons/zingmp3.svg" alt="Zing MP3" onerror="this.remove();"><span>Zing MP3</span></a></li>
-<script>
-(function(){
-  const sec = document.getElementById('music-platforms');
-  if(!sec) return;
-  const ul = sec.querySelector('ul');
-  if(!ul) return;
-
-  // 1) Interne erkennen (optional; nicht nötig, wenn du manuell markierst)
-  ul.querySelectorAll('a.platform').forEach(a=>{
-    const href = a.getAttribute('href') || '';
-    if (href.startsWith('/') || href.includes(location.host) || a.classList.contains('is-local')) {
-      a.classList.add('is-local');
-    }
-  });
-
-  // 2) Interne nach oben sortieren (optional)
-  const locals = Array.from(ul.querySelectorAll('a.is-local')).map(a=>a.closest('li'));
-  locals.reverse().forEach(li => ul.insertBefore(li, ul.firstChild));
-
-  // 3) KONFETTI aktivieren
-  // EINE der beiden Varianten verwenden:
-
-  // Variante A: nur interne Links
-  // ul.querySelectorAll('a.is-local').forEach(a => a.classList.add('confetti-enabled'));
-
-  // Variante B: alle Plattform-Links (EMPFOHLEN für dich)
-  ul.querySelectorAll('a.platform').forEach(a => a.classList.add('confetti-enabled'));
-
-  // 4) Konfetti + „Wackelstoß“ beim Hover in Cursor-Nähe
-  ul.addEventListener('mousemove', function(e){
-    const a = e.target.closest('a.confetti-enabled');
-    if(!a || !ul.contains(a)) return;
-
-    // Drosselung, damit es nicht spamt
-    const now = Date.now();
-    const last = Number(a.dataset.burst || 0);
-    if (now - last < 120) return;
-    a.dataset.burst = now;
-
-    // Kurz anstupsen (Wackel-Animation via CSS-Klasse)
-    a.classList.remove('shake-once'); // restart
-    void a.offsetWidth;               // reflow
-    a.classList.add('shake-once');
-    setTimeout(()=>a.classList.remove('shake-once'), 350);
-
-    // Startpunkt leicht ÜBER dem Cursor → wirkt wie „aus der Tütenöffnung oben“
-    const rect = a.getBoundingClientRect();
-    const mx = e.clientX - rect.left + 2;
-    const my = e.clientY - rect.top  - 10;
-
-    const colors = ['#10b981','#fcd34d','#60a5fa','#f472b6','#fb7185','#a78bfa']; // bunt 🌈
-    const n = 14;
-    for (let i=0;i<n;i++){
-      const s = document.createElement('span');
-      s.className = 'confetti';
-      s.style.left = (mx + (Math.random()*12 - 6)) + 'px';
-      s.style.top  = (my + (Math.random()*4  - 2)) + 'px';
-      // Flug nach OBEN/seitlich
-      s.style.setProperty('--x', (Math.random()*120 - 60)+'px');
-      s.style.setProperty('--y', (-20 - Math.random()*80)+'px');
-      s.style.setProperty('--r', (Math.random()*360)+'deg');
-      s.style.setProperty('--d', (400+Math.random()*600)+'ms');
-      s.style.background = colors[Math.floor(Math.random()*colors.length)];
-      a.appendChild(s);
-      setTimeout(()=>s.remove(), 1000);
-    }
-  }, true);
-})();
-</script>
-
 </ul>
+   <!-- Mini-CSS nur für Wackelstoß + 🎉-Cursor (damit es sofort funktioniert) -->
+    <style>
+      #music-platforms a.confetti-enabled { cursor: url("data:image/svg+xml;utf8,<?xml version='1.0'?><svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><text x='0' y='36' font-size='36'>🎉</text></svg>") 6 6, auto; }
+      @keyframes shakeOnce { 0%{transform:translate(0,0) rotate(0)} 25%{transform:translate(.5px,-.5px) rotate(-1deg)} 50%{transform:translate(-.5px,.5px) rotate(1deg)} 75%{transform:translate(.4px,-.4px) rotate(-0.6deg)} 100%{transform:translate(0,0) rotate(0)} }
+      .shake-once { animation: shakeOnce .28s ease; }
+    </style>
+
+    <!-- EINZIGER Script-Block: Reihenfolge + Konfetti (bunt) + Zähler -->
+    <script>
+    (function(){
+      const sec = document.getElementById('music-platforms');
+      if(!sec) return;
+      const ul = sec.querySelector('ul');
+      if(!ul) return;
+
+      // 1) Interne erkennen (optional)
+      ul.querySelectorAll('a.platform').forEach(a=>{
+        const href = a.getAttribute('href') || '';
+        if (href.startsWith('/') || href.includes(location.host) || a.classList.contains('is-local')) {
+          a.classList.add('is-local');
+        }
+      });
+
+      // 2) Interne nach oben einsortieren (optional)
+      const locals = Array.from(ul.querySelectorAll('a.is-local')).map(a=>a.closest('li'));
+      locals.reverse().forEach(li => ul.insertBefore(li, ul.firstChild));
+
+      // 3) Konfetti für ALLE Plattform-Links aktivieren (oder nur .is-local, wenn du willst)
+      ul.querySelectorAll('a.platform').forEach(a => a.classList.add('confetti-enabled'));
+
+      // 4) Konfetti am Cursor (leicht oberhalb → wirkt wie aus der Tütenöffnung)
+      ul.addEventListener('mousemove', function(e){
+        const a = e.target.closest('a.confetti-enabled');
+        if(!a || !ul.contains(a)) return;
+
+        // Drosselung
+        const now = Date.now();
+        const last = Number(a.dataset.burst || 0);
+        if (now - last < 120) return;
+        a.dataset.burst = now;
+
+        // Wackelstoß
+        a.classList.remove('shake-once'); void a.offsetWidth; a.classList.add('shake-once');
+
+        // Startpunkt: minimal über Cursor
+        const rect = a.getBoundingClientRect();
+        const mx = e.clientX - rect.left + 2;
+        const my = e.clientY - rect.top  - 10;
+
+        // bunte Partikel
+        const colors = ['#10b981','#fcd34d','#60a5fa','#f472b6','#fb7185','#a78bfa'];
+        const count = 14;
+        for (let i=0;i<count;i++){
+          const s = document.createElement('span');
+          s.className = 'confetti';
+          s.style.left = (mx + (Math.random()*12 - 6)) + 'px';
+          s.style.top  = (my + (Math.random()*4  - 2)) + 'px';
+          s.style.setProperty('--x', (Math.random()*120 - 60)+'px');
+          s.style.setProperty('--y', (-20 - Math.random()*80)+'px');
+          s.style.setProperty('--r', (Math.random()*360)+'deg');
+          s.style.setProperty('--d', (400+Math.random()*600)+'ms');
+          s.style.background = colors[Math.floor(Math.random()*colors.length)];
+          a.appendChild(s);
+          setTimeout(()=>s.remove(), 1000);
+        }
+      }, true);
+
+      // 5) Auto-Count
+      const counterEl = document.getElementById('platformCount');
+      if(counterEl) counterEl.textContent = String(ul.querySelectorAll('a.platform').length);
+    })();
+    </script>
   </div>
-
-  <!-- EINZIGER Script-Block für Reihenfolge + Konfetti + Zähler -->
-<script>
-(function(){
-  const sec = document.getElementById('music-platforms');
-  if(!sec) return;
-  const ul = sec.querySelector('ul');
-  if(!ul) return;
-
-  // 1) "intern" erkennen (Links, die auf deine eigene Seite zeigen)
-  ul.querySelectorAll('a.platform').forEach(a=>{
-    const href = a.getAttribute('href') || '';
-    if (href.startsWith('/') || href.includes(location.host) || a.classList.contains('is-local')) {
-      a.classList.add('is-local');
-    }
-  });
-
-  // 2) Interne zuerst oben einsortieren (ursprüngliche Reihenfolge pro Gruppe beibehalten)
-  const locals = Array.from(ul.querySelectorAll('a.is-local')).map(a=>a.closest('li'));
-  locals.reverse().forEach(li => ul.insertBefore(li, ul.firstChild));
-
-  // 3) Konfetti aktivieren – STANDARD: nur für interne Links
-  ul.querySelectorAll('a.is-local').forEach(a => a.classList.add('confetti-enabled'));
-
-  // // Optional: Konfetti für alle Plattform-Links:
-  // ul.querySelectorAll('a.platform').forEach(a => a.classList.add('confetti-enabled'));
-
-  // 4) Konfetti bei Mausbewegung in Cursor-Nähe
-  ul.addEventListener('mousemove', function(e){
-    const a = e.target.closest('a.confetti-enabled');
-    if(!a || !ul.contains(a)) return;
-
-    // leichte Drosselung
-    const now = Date.now();
-    const last = Number(a.dataset.burst || 0);
-    if (now - last < 120) return;
-    a.dataset.burst = now;
-
-    const rect = a.getBoundingClientRect();
-    // 🎉 Position leicht nach oben & nach außen versetzen (Tütenöffnung)
-const mx = e.clientX - rect.left + 2;
-const my = e.clientY - rect.top - 10;
-
-// etwas breiter streuen, damit es "aus der Öffnung" fliegt
-const n = 14; // mehr Partikel pro Burst
-for(let i=0;i<n;i++){
-  const s = document.createElement('span');
-  s.className = 'confetti';
-  s.style.left = (mx + (Math.random()*12 - 6)) + 'px';
-  s.style.top  = (my + (Math.random()*4  - 2)) + 'px';
-  s.style.setProperty('--x', (Math.random()*120 - 60)+'px');
-  s.style.setProperty('--y', (-20 - Math.random()*80)+'px');
-  s.style.setProperty('--r', (Math.random()*360)+'deg');
-  s.style.setProperty('--d', (400+Math.random()*600)+'ms');
-  // 🎨 Bunte Farben
-  s.style.background = ['#10b981','#fcd34d','#60a5fa','#f472b6','#fb7185','#a78bfa'][Math.floor(Math.random()*6)];
-  a.appendChild(s);
-  setTimeout(()=>s.remove(), 1000);
-}
-
-
-    const n = 10; // Partikel pro Burst
-    for(let i=0;i<n;i++){
-      const s = document.createElement('span');
-      s.className = 'confetti';
-      s.style.left = (mx + (Math.random()*8-4)) + 'px';
-      s.style.top  = (my + (Math.random()*6-3)) + 'px';
-      s.style.setProperty('--x', (Math.random()*90-45)+'px');
-      s.style.setProperty('--y', (-20 - Math.random()*60)+'px');
-      s.style.setProperty('--r', (Math.random()*360)+'deg');
-      s.style.setProperty('--d', (450+Math.random()*550)+'ms');
-      a.appendChild(s);
-      setTimeout(()=>s.remove(), 1000);
-    }
-  }, true);
-
-  // 5) Auto-Count aktualisieren
-  const count = ul.querySelectorAll('a.platform').length;
-  const counterEl = document.getElementById('platformCount');
-  if(counterEl) counterEl.textContent = String(count);
-})();
-</script>
+</section>
