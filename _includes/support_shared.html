@@ -89,16 +89,24 @@ class="group relative inline-block px-6 py-2.5 rounded-lg bg-emerald-500 font-se
           <span class="relative z-10 flex items-center"><i class="fa-brands fa-amazon mr-2"></i>Amazon MP3</span>
         </a>
 
-{% assign is_en = page.lang == 'en' or page.url contains '/en/' %}
-<li>
-  <a class="platform has-icon confetti-enabled"
-     href="https://www.qobuz.com/{{ is_en ? 'us-en' : 'de-de' }}/search?q=silituz"
+ <!-- Qobuz (Hi-Res Kauf) -->
+  <a href="{% if page.lang == 'en' or page.url contains '/en/' %}
+             https://www.qobuz.com/us-en/search?q=silituz
+           {% else %}
+             https://www.qobuz.com/de-de/search?q=silituz
+           {% endif %}"
      target="_blank" rel="noopener"
-     aria-label="{{ is_en ? 'Qobuz (Hi-Res store)' : 'Qobuz (Hi-Res Käufe)' }}">
-    <img class="icon" src="/assets/icons/qobuz.svg" alt="Qobuz" onerror="this.remove();">
-    <span>{{ is_en ? 'Qobuz (Hi-Res Store)' : 'Qobuz (Hi-Res Kauf)' }}</span>
+     class="group relative inline-block px-5 py-2 rounded-lg text-slate-200 overflow-hidden">
+    <span class="absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-700 ease-out group-hover:w-full"></span>
+    <span class="relative z-10 flex items-center">
+      <img src="/assets/icons/qobuz.svg" alt="Qobuz" class="h-5 w-5 mr-2" onerror="this.remove();">
+      {% if page.lang == 'en' or page.url contains '/en/' %}
+        Qobuz (Hi-Res Store)
+      {% else %}
+        Qobuz (Hi-Res Kauf)
+      {% endif %}
+    </span>
   </a>
-</li>
 
         
         <!-- 7digital -->
