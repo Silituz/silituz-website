@@ -370,25 +370,7 @@
 </ul>
   </div>
 
-  <script>
-  (function(){
-    const sec = document.getElementById('music-platforms');
-    if(!sec) return;
-    const ul = sec.querySelector('ul');
-    if(!ul) return;
-
-    // 1) "intern" erkennen: relative URLs oder gleiche Domain
-    ul.querySelectorAll('a.platform').forEach(a=>{
-      const href = a.getAttribute('href') || '';
-      if (href.startsWith('/') || href.includes(location.host) || a.classList.contains('is-local')) {
-        a.classList.add('is-local');
-      }
-    });
-
-    // 2) interne zuerst anzeigen (Reihenfolge beibehalten)
-    const locals = Array.from(ul.querySelectorAll('a.is-local')).map(a=>a.closest('li'));
-    // reverse(), damit die ursprüngliche Reihenfolge beim Einfügen oben erhalten bleibt
-    locals.reverse().forEach(li => ul.insertBefore(li, ul.firstChild));
+  <!-- EINZIGER Script-Block für Reihenfolge + Konfetti + Zähler -->
 <script>
 (function(){
   const sec = document.getElementById('music-platforms');
@@ -396,58 +378,57 @@
   const ul = sec.querySelector('ul');
   if(!ul) return;
 
-  // 1) Welche Links bekommen Konfetti?
-  // Variante 1: Alle Plattform-Links
-  ul.querySelectorAll('a.platform').forEach(a => a.classList.add('confetti-enabled'));
+  // 1) "intern" erkennen (Links, die auf deine eigene Seite zeigen)
+  ul.querySelectorAll('a.platform').forEach(a=>{
+    const href = a.getAttribute('href') || '';
+    if (href.startsWith('/') || href.includes(location.host) || a.classList.contains('is-local')) {
+      a.classList.add('is-local');
+    }
+  });
 
-  // // Variante 2: Nur bestimmte manuell:
-  // ul.querySelector('a[aria-label="Spotify"]')?.classList.add('confetti-enabled');
-  // ul.querySelector('a[aria-label="Apple Music"]')?.classList.add('confetti-enabled');
-  // ... etc.
+  // 2) Interne zuerst oben einsortieren (ursprüngliche Reihenfolge pro Gruppe beibehalten)
+  const locals = Array.from(ul.querySelectorAll('a.is-local')).map(a=>a.closest('li'));
+  locals.reverse().forEach(li => ul.insertBefore(li, ul.firstChild));
 
-  // 2) Konfetti bei Hover in Mausnähe
-  ul.addEventListener('mouseover', function(e){
+  // 3) Konfetti aktivieren – STANDARD: nur für interne Links
+  ul.querySelectorAll('a.is-local').forEach(a => a.classList.add('confetti-enabled'));
+
+  // // Optional: Konfetti für alle Plattform-Links:
+  // ul.querySelectorAll('a.platform').forEach(a => a.classList.add('confetti-enabled'));
+
+  // 4) Konfetti bei Mausbewegung in Cursor-Nähe
+  ul.addEventListener('mousemove', function(e){
     const a = e.target.closest('a.confetti-enabled');
     if(!a || !ul.contains(a)) return;
 
-    // leichte Drosselung, damit es nicht spamt
+    // leichte Drosselung
     const now = Date.now();
     const last = Number(a.dataset.burst || 0);
-    if (now - last < 250) return;
+    if (now - last < 120) return;
     a.dataset.burst = now;
 
     const rect = a.getBoundingClientRect();
-    const mx = (e.clientX - rect.left);   // Maus relativ zum Link
-    const my = (e.clientY - rect.top);
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
 
-    const n = 12; // Partikel pro Burst
+    const n = 10; // Partikel pro Burst
     for(let i=0;i<n;i++){
       const s = document.createElement('span');
       s.className = 'confetti';
-      // Startposition nahe Cursor:
       s.style.left = (mx + (Math.random()*8-4)) + 'px';
       s.style.top  = (my + (Math.random()*6-3)) + 'px';
-      // Flugvektor + Dauer:
-      s.style.setProperty('--x', (Math.random()*80-40)+'px');
-      s.style.setProperty('--y', (-10 - Math.random()*50)+'px');
+      s.style.setProperty('--x', (Math.random()*90-45)+'px');
+      s.style.setProperty('--y', (-20 - Math.random()*60)+'px');
       s.style.setProperty('--r', (Math.random()*360)+'deg');
-      s.style.setProperty('--d', (380+Math.random()*520)+'ms');
-
+      s.style.setProperty('--d', (450+Math.random()*550)+'ms');
       a.appendChild(s);
       setTimeout(()=>s.remove(), 1000);
     }
   }, true);
+
+  // 5) Auto-Count aktualisieren
+  const count = ul.querySelectorAll('a.platform').length;
+  const counterEl = document.getElementById('platformCount');
+  if(counterEl) counterEl.textContent = String(count);
 })();
 </script>
-
-  
-  <!-- Auto Count -->
-  <script>
-    (function(){
-      var c = document.querySelectorAll('#music-platforms .platform').length;
-      var el = document.getElementById('platformCount');
-      if(el && c) el.textContent = c.toString();
-    })();
-  </script>
-</section>
-
