@@ -391,7 +391,7 @@
     locals.reverse().forEach(li => ul.insertBefore(li, ul.firstChild));
 
     // 3) Konfetti bei Hover (leicht gedrosselt)
-    ul.addEventListener('mouseenter', function(e){
+  ul.addEventListener('mouseover', function(e){
       const a = e.target.closest('a.is-local');
       if(!a || !ul.contains(a)) return;
 
