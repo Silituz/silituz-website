@@ -413,3 +413,36 @@ header video, header img, header svg{ background:transparent !important; }
   cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🎉%3C/text%3E%3C/svg%3E") 6 20, auto;
 }
 
+/* 🎉 Konfetti-Basis */
+#music-platforms a.confetti-enabled{
+  position: relative; /* Bezugsbox für Partikel */
+  overflow: visible;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🎉%3C/text%3E%3C/svg%3E") 6 20, auto;
+}
+
+#music-platforms a.confetti-enabled .confetti{
+  position:absolute;
+  width:6px; height:6px; border-radius:2px;
+  background: currentColor; /* wird per JS auf bunt überschrieben */
+  opacity:1; transform: translate(0,0) rotate(0);
+  animation: confetti-fly var(--d) cubic-bezier(.2,.8,.2,1) forwards;
+  pointer-events:none;
+  z-index:5;
+}
+
+@keyframes confetti-fly{
+  to{ transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity:0; }
+}
+
+/* ✨ kurzer „Wackelstoß“ beim Burst */
+#music-platforms a.confetti-enabled.shake-once{
+  animation: confetti-wobble .28s ease-out;
+}
+@keyframes confetti-wobble{
+  0%   { transform: rotate(0deg); }
+  25%  { transform: rotate(-3.5deg); }
+  60%  { transform: rotate(2.5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+
