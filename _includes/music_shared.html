@@ -395,8 +395,9 @@
       const locals = Array.from(ul.querySelectorAll('a.is-local')).map(a=>a.closest('li'));
       locals.reverse().forEach(li => ul.insertBefore(li, ul.firstChild));
 
-      // 3) Konfetti für ALLE Plattform-Links aktivieren (oder nur .is-local, wenn du willst)
-      ul.querySelectorAll('a.platform').forEach(a => a.classList.add('confetti-enabled'));
+      // 3) Konfetti NUR für bestimmte Plattformen aktivieren (z. B. TikTok & Spotify)
+ul.querySelectorAll('a.brand-tiktok, a.brand-spotify').forEach(a => a.classList.add('confetti-enabled'));
+
 
       // 4) Konfetti am Cursor (leicht oberhalb → wirkt wie aus der Tütenöffnung)
       ul.addEventListener('mousemove', function(e){
