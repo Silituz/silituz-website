@@ -1,22 +1,17 @@
 ---
 layout: default
-title: Cursor Test
+title: Cursor Test – Emerald Glow
 lang: de
 ---
 
-<!-- Hero-Bereich (vereinfacht für Cursor-Test) -->
-<section class="relative w-full h-screen overflow-hidden flex flex-col items-center justify-center bg-gray-900">
-  <!-- Hintergrundbild -->
-  <img
-    src="/assets/images/welcome-head.svg"
-    alt="Silituz Background"
-    class="absolute inset-0 w-full h-full object-cover opacity-30"
-  />
+<section class="relative w-full h-screen flex flex-col items-center justify-center bg-gray-900 overflow-hidden">
+  <img src="/assets/images/welcome-head.svg"
+       alt="Silituz Background"
+       class="absolute inset-0 w-full h-full object-cover opacity-25" />
 
-  <!-- Text / Buttons -->
   <div class="relative z-10 text-center">
-    <h1 class="text-4xl font-extrabold text-emerald-500 mb-6">Cursor Testbereich</h1>
-    <p class="text-slate-300 mb-8">Hier kannst du verschiedene Cursor-Effekte ausprobieren 👇</p>
+    <h1 class="text-4xl font-extrabold text-emerald-500 mb-6">Emerald Glow Cursor</h1>
+    <p class="text-slate-300 mb-8">Leuchtender Cursor mit sanftem Glow ✨</p>
 
     <div class="flex gap-6 justify-center">
       <button class="cursor-btn bg-emerald-500/90 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl shadow transition">
@@ -29,53 +24,57 @@ lang: de
   </div>
 </section>
 
-<!-- Experimenteller Cursor -->
 <style>
-/* Basis */
 body {
-  cursor: none; /* Standard-Cursor ausblenden */
+  cursor: none;
   overflow-x: hidden;
+  background: #0f172a;
 }
 
-/* Kreis-Cursor */
+/* Leuchtender Emerald Cursor */
 .custom-cursor {
   position: fixed;
   top: 0;
   left: 0;
-  width: 24px;
-  height: 24px;
-  border: 2px solid #10b981;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
+  background: radial-gradient(circle, rgba(16,185,129,0.9) 0%, rgba(16,185,129,0.4) 60%, rgba(16,185,129,0) 100%);
   pointer-events: none;
-  transform: translate(-50%, -50%);
-  transition: transform 0.12s ease-out, width 0.25s, height 0.25s, background 0.25s;
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 0.15s ease-out, opacity 0.3s ease;
+  mix-blend-mode: screen;
   z-index: 9999;
-  mix-blend-mode: difference;
+  box-shadow:
+    0 0 8px rgba(16,185,129,0.8),
+    0 0 20px rgba(16,185,129,0.6),
+    0 0 40px rgba(16,185,129,0.3);
 }
 
-/* Hover-Effekt auf Buttons */
+/* Hover-Glow */
 .cursor-hover {
-  width: 60px;
-  height: 60px;
-  background: rgba(16, 185, 129, 0.3);
-  border-color: rgba(16, 185, 129, 0.6);
+  transform: translate(-50%, -50%) scale(2.2);
+  opacity: 0.9;
+  box-shadow:
+    0 0 10px rgba(16,185,129,0.9),
+    0 0 25px rgba(16,185,129,0.7),
+    0 0 60px rgba(16,185,129,0.4);
 }
 </style>
 
 <script>
-  // Custom Cursor Script
-  const cursor = document.createElement("div");
-  cursor.classList.add("custom-cursor");
-  document.body.appendChild(cursor);
+const cursor = document.createElement("div");
+cursor.classList.add("custom-cursor");
+document.body.appendChild(cursor);
 
-  document.addEventListener("mousemove", (e) => {
-    cursor.style.left = e.clientX + "px";
-    cursor.style.top = e.clientY + "px";
-  });
+document.addEventListener("mousemove", e => {
+  cursor.style.left = e.clientX + "px";
+  cursor.style.top = e.clientY + "px";
+});
 
-  // Hover-Effekt bei Buttons
-  document.querySelectorAll(".cursor-btn").forEach(btn => {
-    btn.addEventListener("mouseenter", () => cursor.classList.add("cursor-hover"));
-    btn.addEventListener("mouseleave", () => cursor.classList.remove("cursor-hover"));
-  });
+// Hover auf Buttons
+document.querySelectorAll(".cursor-btn").forEach(btn => {
+  btn.addEventListener("mouseenter", () => cursor.classList.add("cursor-hover"));
+  btn.addEventListener("mouseleave", () => cursor.classList.remove("cursor-hover"));
+});
 </script>
