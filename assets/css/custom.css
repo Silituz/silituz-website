@@ -390,4 +390,6 @@ header video, header img, header svg{ background:transparent !important; }
 @keyframes confetti-fly{
   to{ transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity:0; }
 }
+/* Sichtbarkeit der Konfetti-Partikel erhöhen */
+#music-platforms .confetti { z-index: 5; }
 
