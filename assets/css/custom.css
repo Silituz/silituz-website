@@ -358,39 +358,58 @@ header video, header img, header svg{ background:transparent !important; }
 }
 
 /* =============================
-   9) MUSIC PLATFORMS – ICON & ARROW FIX
+   9) MUSIC PLATFORMS – CLEAN GRID FIX
    ============================= */
 
-/* 1) Standard-Fallback: Pfeil anzeigen */
-#music-platforms .platform::before{
-  content:'›';
-  margin-right:.5rem;
-  opacity:.6;
+/* Einheitliches Layout */
+#music-platforms .platform {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .55rem .8rem;
+  border-radius: .75rem;
+  color: #cbd5e1; /* slate-300 */
+  background: transparent;
+  transition: color .2s ease, transform .2s ease, opacity .2s ease;
+  justify-content: flex-start;
 }
 
-/* 2) Wenn ein Icon vorhanden ist, Pfeil ausblenden (moderne Browser) */
-#music-platforms .platform:has(i),
-#music-platforms .platform:has(img),
-#music-platforms .platform:has(svg){
-  padding-left: 0; /* falls du vorher Platz für den Pfeil gelassen hast */
-}
-#music-platforms .platform:has(i)::before,
-#music-platforms .platform:has(img)::before,
-#music-platforms .platform:has(svg)::before{
-  content: none;
+/* Einheitliche Iconbox, auch wenn leer */
+#music-platforms .platform::before {
+  content: "";
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: inline-block;
 }
 
-/* 3) Einheitliche Icon-Größen (an deine 28px angepasst) */
+/* Wenn echtes Icon vorhanden */
 #music-platforms .platform i,
 #music-platforms .platform img,
-#music-platforms .platform svg,
-#music-platforms .platform .icon{
-  width:28px; height:28px;
-  margin-right:.65rem;
-  display:inline-block;
-  vertical-align:middle;
-  object-fit:contain;
+#music-platforms .platform svg {
+  width: 28px;
+  height: 28px;
+  display: inline-block;
+  object-fit: contain;
+  vertical-align: middle;
 }
 
-/* Optional: leichte Aufhellung beim Hover */
-#music-platforms .platform:hover .icon { filter: brightness(1.1); }
+/* Entfernt Pfeile komplett */
+#music-platforms .platform::before {
+  content: "";
+}
+
+/* Hover-Effekt */
+#music-platforms .platform:hover {
+  transform: translateY(-1px);
+  color: var(--brand);
+}
+
+/* Defekte Bilder verschwinden */
+#music-platforms .platform img:empty,
+#music-platforms .platform img[onerror],
+#music-platforms .platform img[src=""],
+#music-platforms .platform img:not([src]) {
+  display: none;
+}
+
