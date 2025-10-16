@@ -90,23 +90,29 @@ class="group relative inline-block px-6 py-2.5 rounded-lg bg-emerald-500 font-se
         </a>
 
  <!-- Qobuz (Hi-Res Kauf) -->
-  <a href="{% if page.lang == 'en' or page.url contains '/en/' %}
-             https://www.qobuz.com/us-en/interpreter/silituz/27009289
-           {% else %}
-             https://www.qobuz.com/de-de/interpreter/silituz/27009289
-           {% endif %}"
-     target="_blank" rel="noopener"
-     class="group relative inline-block px-5 py-2 rounded-lg text-slate-200 overflow-hidden">
-    <span class="absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-700 ease-out group-hover:w-full"></span>
-    <span class="relative z-10 flex items-center">
-      <img src="/assets/icons/qobuz.svg" alt="Qobuz" class="h-5 w-5 mr-2" onerror="this.remove();">
-      {% if page.lang == 'en' or page.url contains '/en/' %}
-        Qobuz (Hi-Res Store)
-      {% else %}
-        Qobuz (Hi-Res Kauf)
-      {% endif %}
-    </span>
-  </a>
+<a href="{% if page.lang == 'en' or page.url contains '/en/' %}
+           https://www.qobuz.com/us-en/interpreter/silituz/27009289
+         {% else %}
+           https://www.qobuz.com/de-de/interpreter/silituz/27009289
+         {% endif %}"
+   target="_blank" rel="noopener"
+   class="group relative inline-block px-5 py-2 rounded-lg text-slate-200 overflow-hidden">
+  <span class="absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-700 ease-out group-hover:w-full"></span>
+  <span class="relative z-10 flex items-center">
+    <!-- Qobuz-Logo (grau, im Kreis) -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
+         class="h-5 w-5 mr-2" fill="currentColor" aria-hidden="true">
+      <circle cx="128" cy="128" r="110" stroke="currentColor" stroke-width="22" fill="none"/>
+      <circle cx="128" cy="128" r="38" fill="currentColor"/>
+    </svg>
+    {% if page.lang == 'en' or page.url contains '/en/' %}
+      Qobuz (Hi-Res Store)
+    {% else %}
+      Qobuz (Hi-Res Kauf)
+    {% endif %}
+  </span>
+</a>
+
 
         
         <!-- 7digital -->
