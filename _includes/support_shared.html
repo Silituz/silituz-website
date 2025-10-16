@@ -89,13 +89,13 @@ class="group relative inline-block px-6 py-2.5 rounded-lg bg-emerald-500 font-se
           <span class="relative z-10 flex items-center"><i class="fa-brands fa-amazon mr-2"></i>Amazon MP3</span>
         </a>
 
-        <!-- Bandcamp -->
-        <a href="{{ page.bandcamp_url | default: site.social.bandcamp_url }}" target="_blank" rel="noopener"
-           class="group relative inline-block px-5 py-2 rounded-lg text-slate-200 overflow-hidden">
-          <span class="absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-700 ease-out group-hover:w-full"></span>
-          <span class="relative z-10 flex items-center"><i class="fa-brands fa-bandcamp mr-2"></i>Bandcamp</span>
-        </a>
-      </div>
+        <!-- 7digital -->
+<a href="{{ page.bandcamp_url | default: site.social.bandcamp_url }}" target="_blank" rel="noopener"
+   class="group relative inline-block px-5 py-2 rounded-lg text-slate-200 overflow-hidden">
+  <span class="absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-700 ease-out group-hover:w-full"></span>
+  <span class="relative z-10 flex items-center"><i class="fa-solid fa-compact-disc mr-2"></i>7digital</span>
+</a>
+
 
       <p class="mt-4 text-xs text-slate-400">
         {% if page.lang == 'en' or page.url contains '/en/' %}
