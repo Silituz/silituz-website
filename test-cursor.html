@@ -1,80 +1,195 @@
 ---
 layout: default
-title: Cursor Test – Emerald Glow
+title: Cursor Test – Silituz Snake
 lang: de
 ---
 
-<section class="relative w-full h-screen flex flex-col items-center justify-center bg-gray-900 overflow-hidden">
+<section class="relative w-full h-screen flex flex-col items-center justify-center bg-gray-900 overflow-hidden select-none">
   <img src="/assets/images/welcome-head.svg"
        alt="Silituz Background"
        class="absolute inset-0 w-full h-full object-cover opacity-25" />
 
-  <div class="relative z-10 text-center">
-    <h1 class="text-4xl font-extrabold text-emerald-500 mb-6">Emerald Glow Cursor</h1>
-    <p class="text-slate-300 mb-8">Leuchtender Cursor mit sanftem Glow ✨</p>
+  <div class="relative z-10 text-center px-6">
+    <h1 class="text-4xl font-extrabold text-emerald-500 mb-4">Silituz Snake Cursor</h1>
+    <p class="text-slate-300 mb-8">Minimalistische „S“-Schlange mit Emerald-Glow ✨</p>
 
     <div class="flex gap-6 justify-center">
-      <button class="cursor-btn bg-emerald-500/90 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl shadow transition">
+      <button class="cursor-target bg-emerald-500/90 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl shadow transition">
         Hover mich!
       </button>
-      <button class="cursor-btn bg-slate-700 hover:bg-slate-600 text-white font-semibold px-6 py-3 rounded-xl shadow transition">
+      <a href="/socials/" class="cursor-target bg-slate-700 hover:bg-slate-600 text-white font-semibold px-6 py-3 rounded-xl shadow transition">
         Oder mich!
-      </button>
+      </a>
+    </div>
+
+    <!-- Kleine Steuerleiste -->
+    <div class="mt-10 inline-flex items-center gap-4 text-slate-300/90">
+      <label class="inline-flex items-center gap-2">
+        <input id="toggle-cursor" type="checkbox" class="h-4 w-4" checked>
+        Custom Cursor aktiv
+      </label>
+      <span class="text-xs opacity-70">respektiert „prefers-reduced-motion“ & Touch-Geräte</span>
     </div>
   </div>
 </section>
 
 <style>
-body {
-  cursor: none;
+/* ===== Basis / Accessibility ===== */
+:root {
+  --emerald: #10b981;
+  --glow-1: rgba(16,185,129,0.95);
+  --glow-2: rgba(16,185,129,0.55);
+  --glow-3: rgba(16,185,129,0.25);
+}
+html, body { height: 100%; }
+body.custom-cursor-enabled {
+  cursor: none;               /* nativen Cursor ausblenden */
   overflow-x: hidden;
-  background: #0f172a;
 }
 
-/* Leuchtender Emerald Cursor */
-.custom-cursor {
+/* ===== Snake Cursor ===== */
+#snake-cursor {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(16,185,129,0.9) 0%, rgba(16,185,129,0.4) 60%, rgba(16,185,129,0) 100%);
+  top: 0; left: 0;
+  width: 44px; height: 44px;  /* Grundgröße (skalierbar) */
   pointer-events: none;
   transform: translate(-50%, -50%) scale(1);
-  transition: transform 0.15s ease-out, opacity 0.3s ease;
-  mix-blend-mode: screen;
+  transition: opacity .25s ease;
   z-index: 9999;
-  box-shadow:
-    0 0 8px rgba(16,185,129,0.8),
-    0 0 20px rgba(16,185,129,0.6),
-    0 0 40px rgba(16,185,129,0.3);
+  opacity: 1;
+  filter:
+    drop-shadow(0 0 6px var(--glow-1))
+    drop-shadow(0 0 18px var(--glow-2))
+    drop-shadow(0 0 40px var(--glow-3));
+  mix-blend-mode: screen;      /* hübsch auf dunklem & hellem Hintergrund */
 }
 
-/* Hover-Glow */
-.cursor-hover {
-  transform: translate(-50%, -50%) scale(2.2);
-  opacity: 0.9;
-  box-shadow:
-    0 0 10px rgba(16,185,129,0.9),
-    0 0 25px rgba(16,185,129,0.7),
-    0 0 60px rgba(16,185,129,0.4);
+/* Pfade im SVG */
+#snake-cursor .snake-stroke {
+  stroke: var(--emerald);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+#snake-cursor .snake-head {
+  fill: var(--emerald);
+  opacity: .95;
+}
+
+/* Hover-Verhalten über interaktiven Zielen */
+#snake-cursor.is-hovering {
+  transform: translate(-50%, -50%) scale(1.25);
+  filter:
+    drop-shadow(0 0 8px var(--glow-1))
+    drop-shadow(0 0 22px var(--glow-2))
+    drop-shadow(0 0 60px var(--glow-3));
+}
+
+/* Optional: „Atmen“ (dezentes Pulsieren) */
+@keyframes snake-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.03); }
+}
+#snake-cursor { animation: snake-breathe 3.2s ease-in-out infinite; }
+
+/* Reduced motion respektieren */
+@media (prefers-reduced-motion: reduce) {
+  #snake-cursor { animation: none; }
+}
+
+/* Touch-Geräte: nativer Cursor und SVG ausblenden */
+@media (hover: none) and (pointer: coarse) {
+  #snake-cursor { display: none; }
+  body.custom-cursor-enabled { cursor: auto; }
 }
 </style>
 
+<!-- ===== Inline-SVG Cursor (S-förmige Schlange) ===== -->
+<svg id="snake-cursor" viewBox="0 0 44 44" aria-hidden="true">
+  <!-- S-Kurve (Körper) -->
+  <path class="snake-stroke"
+        d="M8,30
+           C12,22 20,26 23,20
+           C26,14 18,12 19,8
+           C19.5,5.5 24,6 26,8" />
+  <!-- kleine „Bauch“-Kontur -->
+  <path class="snake-stroke" opacity=".45"
+        d="M9.5,29
+           C13,23 20,25 22,21
+           C24,17 18,14 19,10.5" />
+  <!-- Kopf (kleiner Tropfenkreis am oberen Ende) -->
+  <circle class="snake-head" cx="27" cy="8" r="2.8" />
+  <!-- Mini-Auge als Glanz -->
+  <circle cx="28.1" cy="7.2" r="0.6" fill="#ffffff" opacity=".9"/>
+</svg>
+
 <script>
-const cursor = document.createElement("div");
-cursor.classList.add("custom-cursor");
-document.body.appendChild(cursor);
+(() => {
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cursorEl = document.getElementById('snake-cursor');
+  const toggle = document.getElementById('toggle-cursor');
 
-document.addEventListener("mousemove", e => {
-  cursor.style.left = e.clientX + "px";
-  cursor.style.top = e.clientY + "px";
-});
+  // Interaktive Ziele (fühlbar „aufleuchten“)
+  const hoverTargets = () => Array.from(document.querySelectorAll('.cursor-target, a, button, [role="button"], .welcome-btn'));
 
-// Hover auf Buttons
-document.querySelectorAll(".cursor-btn").forEach(btn => {
-  btn.addEventListener("mouseenter", () => cursor.classList.add("cursor-hover"));
-  btn.addEventListener("mouseleave", () => cursor.classList.remove("cursor-hover"));
-});
+  // State
+  let enabled = true;
+  let hovering = false;
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let x = mouseX, y = mouseY;
+  const ease = prefersReduced ? 1 : 0.18; // 1 = sofort, sonst weiches Nachziehen
+
+  // Aktivierung/Deaktivierung
+  function setEnabled(on) {
+    enabled = on;
+    document.body.classList.toggle('custom-cursor-enabled', on);
+    cursorEl.style.opacity = on ? '1' : '0';
+  }
+
+  // Mausposition tracken
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  // Hover-Feedback
+  function bindHoverTargets() {
+    hoverTargets().forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        hovering = true;
+        cursorEl.classList.add('is-hovering');
+      });
+      el.addEventListener('mouseleave', () => {
+        hovering = false;
+        cursorEl.classList.remove('is-hovering');
+      });
+    });
+  }
+  bindHoverTargets();
+
+  // Soft follow Loop
+  function raf() {
+    if (enabled) {
+      x += (mouseX - x) * ease;
+      y += (mouseY - y) * ease;
+
+      // leichte Rotation in Bewegungsrichtung (dezent)
+      const dx = mouseX - x, dy = mouseY - y;
+      const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+      cursorEl.style.transform =
+        `translate(${x - 22}px, ${y - 22}px) rotate(${angle * 0.08}deg) scale(${hovering ? 1.25 : 1})`;
+    }
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // Toggle
+  toggle.addEventListener('change', (e) => setEnabled(e.target.checked));
+
+  // Initial aktivieren (außer auf Touch)
+  const isTouch = matchMedia('(hover: none) and (pointer: coarse)').matches;
+  setEnabled(!isTouch);
+})();
 </script>
