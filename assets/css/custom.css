@@ -380,3 +380,19 @@ header video, header img, header svg{ background:transparent !important; }
 #music-platforms .platform i,
 #music-platforms .platform img,
 #music-platforms .platform svg{ display:none !important; }
+
+/* Konfetti-Partikel */
+#music-platforms a.is-local{ position:relative; }
+#music-platforms a.is-local:hover{ color:var(--brand, #10b981); } /* färbt Text & Konfetti */
+#music-platforms a.is-local .confetti{
+  position:absolute; left:12px; top:50%;
+  width:6px; height:6px; border-radius:2px;
+  background: currentColor;            /* gleiche Farbe wie Text = Marke */
+  opacity:1; transform: translate(0,0) rotate(0);
+  animation: confetti-fly var(--d) cubic-bezier(.2,.8,.2,1) forwards;
+  pointer-events:none;
+}
+@keyframes confetti-fly{
+  to{ transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity:0; }
+}
+
