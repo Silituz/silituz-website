@@ -361,55 +361,22 @@ header video, header img, header svg{ background:transparent !important; }
    9) MUSIC PLATFORMS – CLEAN GRID FIX
    ============================= */
 
-/* Einheitliches Layout */
-#music-platforms .platform {
-  display: flex;
-  align-items: center;
-  gap: .65rem;
-  padding: .55rem .8rem;
-  border-radius: .75rem;
-  color: #cbd5e1; /* slate-300 */
-  background: transparent;
-  transition: color .2s ease, transform .2s ease, opacity .2s ease;
-  justify-content: flex-start;
+/* Clean text-only list mit Markenpunkt */
+#music-platforms .platform{
+  --dot: var(--brand, #94a3b8);        /* fällt auf die Markenfarbe zurück */
+  display:flex; align-items:center; gap:.65rem;
+  padding:.55rem .8rem; border-radius:.75rem;
+  color:#cbd5e1; background:transparent;
+  transition: color .2s ease, transform .2s ease;
 }
-
-/* Einheitliche Iconbox, auch wenn leer */
-#music-platforms .platform::before {
-  content: "";
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  display: inline-block;
+#music-platforms .platform::before{
+  content:""; width:10px; height:10px; flex:0 0 10px;
+  border-radius:9999px; background:var(--dot);
+  box-shadow:0 0 0 2px rgba(255,255,255,.05) inset;
 }
+#music-platforms .platform:hover{ transform:translateY(-1px); color:var(--brand, #10b981); }
 
-/* Wenn echtes Icon vorhanden */
+/* Falls irgendwo noch <i>/<img>/<svg> drin ist: verstecken */
 #music-platforms .platform i,
 #music-platforms .platform img,
-#music-platforms .platform svg {
-  width: 28px;
-  height: 28px;
-  display: inline-block;
-  object-fit: contain;
-  vertical-align: middle;
-}
-
-/* Entfernt Pfeile komplett */
-#music-platforms .platform::before {
-  content: "";
-}
-
-/* Hover-Effekt */
-#music-platforms .platform:hover {
-  transform: translateY(-1px);
-  color: var(--brand);
-}
-
-/* Defekte Bilder verschwinden */
-#music-platforms .platform img:empty,
-#music-platforms .platform img[onerror],
-#music-platforms .platform img[src=""],
-#music-platforms .platform img:not([src]) {
-  display: none;
-}
-
+#music-platforms .platform svg{ display:none !important; }
