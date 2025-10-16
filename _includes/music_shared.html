@@ -408,8 +408,27 @@
     a.dataset.burst = now;
 
     const rect = a.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
+    // 🎉 Position leicht nach oben & nach außen versetzen (Tütenöffnung)
+const mx = e.clientX - rect.left + 2;
+const my = e.clientY - rect.top - 10;
+
+// etwas breiter streuen, damit es "aus der Öffnung" fliegt
+const n = 14; // mehr Partikel pro Burst
+for(let i=0;i<n;i++){
+  const s = document.createElement('span');
+  s.className = 'confetti';
+  s.style.left = (mx + (Math.random()*12 - 6)) + 'px';
+  s.style.top  = (my + (Math.random()*4  - 2)) + 'px';
+  s.style.setProperty('--x', (Math.random()*120 - 60)+'px');
+  s.style.setProperty('--y', (-20 - Math.random()*80)+'px');
+  s.style.setProperty('--r', (Math.random()*360)+'deg');
+  s.style.setProperty('--d', (400+Math.random()*600)+'ms');
+  // 🎨 Bunte Farben
+  s.style.background = ['#10b981','#fcd34d','#60a5fa','#f472b6','#fb7185','#a78bfa'][Math.floor(Math.random()*6)];
+  a.appendChild(s);
+  setTimeout(()=>s.remove(), 1000);
+}
+
 
     const n = 10; // Partikel pro Burst
     for(let i=0;i<n;i++){
