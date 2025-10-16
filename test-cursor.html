@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Cursor Test – Snake Multi-State v4.2
+title: Cursor Test – Snake Multi-State v4.3
 lang: de
 ---
 
@@ -11,7 +11,9 @@ lang: de
 
   <div class="relative z-10 text-center px-6 space-y-6">
     <h1 class="text-4xl font-extrabold text-emerald-500">Silituz Multi-State Snake Cursor</h1>
-    <p class="text-slate-300">Arrow → <strong>Pointer (Zeigefinger)</strong> • <strong>Vertical Pill</strong> (Scroll, Ball rutscht) • I-Beam (Text) • Pulse (Klick)</p>
+    <p class="text-slate-300">
+      Arrow → <strong>Pointer</strong> → <strong>Pointer-Hover (größer + Ziel-Ring)</strong> • Vertical Pill (Scroll) • I-Beam (Text) • Pulse (Klick)
+    </p>
 
     <div class="flex gap-6 justify-center">
       <a href="/gallery/" class="cursor-target px-6 py-3 rounded-xl bg-emerald-500/90 hover:bg-emerald-600 text-white font-semibold shadow transition">Zu Galerie</a>
@@ -42,11 +44,10 @@ lang: de
 }
 html,body{height:100%}
 
-/* Systemcursor global aus (auch auf Links, Inputs etc.) */
-body.custom-cursor-enabled, 
-body.custom-cursor-enabled * { cursor:none !important; }
-
-body.custom-cursor-enabled{overflow-x:hidden}
+/* Systemcursor überall aus */
+body.custom-cursor-enabled,
+body.custom-cursor-enabled *{ cursor:none !important; }
+body.custom-cursor-enabled{ overflow-x:hidden }
 
 /* Cursor Container */
 #snake-cursor{
@@ -58,19 +59,19 @@ body.custom-cursor-enabled{overflow-x:hidden}
     drop-shadow(0 0 40px var(--g3));
   mix-blend-mode:screen;
 }
-
-/* Zeichnungsstile */
+/* Grundstile */
 #snake-cursor .stroke{stroke:var(--emerald); stroke-width:2.3; stroke-linecap:round; stroke-linejoin:round; fill:none}
 #snake-cursor .fill{fill:var(--emerald)}
 
 /* Variantenumschalter */
 #snake-cursor [data-variant]{display:none}
-#snake-cursor[data-state="arrow"]   [data-variant="arrow"]{display:block}
-#snake-cursor[data-state="pointer"] [data-variant="pointer"]{display:block}
-#snake-cursor[data-state="pill"]    [data-variant="pill"]{display:block}
-#snake-cursor[data-state="ibeam"]   [data-variant="ibeam"]{display:block}
+#snake-cursor[data-state="arrow"]         [data-variant="arrow"]{display:block}
+#snake-cursor[data-state="pointer"]       [data-variant="pointer"]{display:block}
+#snake-cursor[data-state="pointer-hover"] [data-variant="pointer-hover"]{display:block}
+#snake-cursor[data-state="pill"]          [data-variant="pill"]{display:block}
+#snake-cursor[data-state="ibeam"]         [data-variant="ibeam"]{display:block}
 
-/* Hover-Boost */
+/* Hover-Boost (zusätzlicher Glow) */
 #snake-cursor.is-hovering{
   filter:
     drop-shadow(0 0 8px var(--g1))
@@ -78,7 +79,7 @@ body.custom-cursor-enabled{overflow-x:hidden}
     drop-shadow(0 0 60px var(--g3));
 }
 
-/* Click Pulse */
+/* Klick-Pulse */
 #snake-cursor.click-pulse::after{
   content:""; position:absolute; inset:0; border-radius:50%;
   box-shadow:0 0 0 0 rgba(16,185,129,.6);
@@ -89,56 +90,56 @@ body.custom-cursor-enabled{overflow-x:hidden}
   100%{box-shadow:0 0 0 20px rgba(16,185,129,0); opacity:0}
 }
 
-/* Pill – Kugel Bewegung */
-.pill-ball{
-  transition: transform .28s cubic-bezier(.2,.8,.2,1);
-}
-.pill-ball.down{ transform: translateY(9px); }
-.pill-ball.up{   transform: translateY(-9px); }
-
-/* Reduced Motion */
-@media (prefers-reduced-motion:reduce){
-  #snake-cursor{animation:none}
-}
+/* Pill – Ball Bewegung (senkrecht) */
+.pill-ball{ transition: transform .28s cubic-bezier(.2,.8,.2,1); }
+.pill-ball.down{ transform: translateY(10px); }
+.pill-ball.up{   transform: translateY(-10px); }
 
 /* Touch: nativer Cursor */
 @media (hover:none) and (pointer:coarse){
   #snake-cursor{display:none}
-  body.custom-cursor-enabled, body.custom-cursor-enabled * { cursor:auto !important; }
+  body.custom-cursor-enabled, body.custom-cursor-enabled *{ cursor:auto !important; }
 }
 </style>
 
-<!-- Inline SVG mit 4 Varianten -->
+<!-- Inline SVG mit 5 Varianten (neu: pointer-hover) -->
 <svg id="snake-cursor" viewBox="0 0 48 48" aria-hidden="true" data-state="arrow">
   <!-- ARROW (Standard) -->
   <g data-variant="arrow">
     <path class="stroke" d="M10,34 C16,26 22,28 26.5,21.5 C29,17.8 25.5,14 22.5,11" />
-    <!-- Pfeilspitze als Kopf -->
     <path class="fill" d="M22.5,9.6 l4.3,2.4 l-4.3,2.4 q1.4-2.3 0-4.8z" />
-    <path class="stroke" d="M26.8,12 l2.8,0" />
+    <path class="stroke" d="M26.8,12 h2.8" />
   </g>
 
-  <!-- POINTER (Zeigefinger-Schlange für Links/Buttons) -->
+  <!-- POINTER (Zeigefinger-Schlange – Basis) -->
   <g data-variant="pointer">
-    <!-- „Handfläche“ (Bogen) -->
     <path class="stroke" d="M13,31 C17.5,27 21,27.5 23.8,25.8" />
-    <!-- ausgestreckter „Finger“ -->
     <path class="stroke" d="M24,16 v10" />
-    <!-- Kopf an der Fingerspitze -->
-    <circle class="fill" cx="24" cy="14.2" r="2.2"/>
+    <circle class="fill" cx="24" cy="14.2" r="2.1"/>
     <path class="stroke" d="M26.2,14.2 h1.8" />
-    <!-- leichte Körperlinie -->
     <path class="stroke" d="M14.5,30 C18,27.8 21.5,27.8 23.6,26.5" opacity=".5" />
   </g>
 
-  <!-- PILL (senkrecht) – mit innerer Kugel -->
+  <!-- POINTER-HOVER (größer + Ziel-Ring an der Spitze) -->
+  <g data-variant="pointer-hover">
+    <!-- etwas stärkere Handkurve -->
+    <path class="stroke" d="M12.6,31.4 C18,26.6 21.8,27.2 24.5,25.4" />
+    <!-- längerer Finger -->
+    <path class="stroke" d="M24,15 v11.5" />
+    <!-- Kopf kleiner/spitzer -->
+    <circle class="fill" cx="24" cy="13.7" r="1.9"/>
+    <path class="stroke" d="M26,13.7 h1.8" />
+    <!-- Ziel-Ring (pulsierend) -->
+    <circle cx="24" cy="13.7" r="4.8" class="stroke" opacity=".45"/>
+    <circle cx="24" cy="13.7" r="6.8" class="stroke" opacity=".2"/>
+  </g>
+
+  <!-- PILL (senkrecht, Scroll) -->
   <g data-variant="pill">
-    <!-- senkrechte Kapsel -->
     <rect class="stroke" x="20.5" y="11" width="7" height="26" rx="3.5" ry="3.5"/>
     <rect class="fill"   x="20.5" y="11" width="7" height="26" rx="3.5" ry="3.5" opacity=".2"/>
-    <!-- Kugel (Mitte) – bewegt sich hoch/runter -->
     <g class="pill-ball" transform="translate(0,0)">
-      <circle class="fill" cx="24" cy="24" r="3.1"/>
+      <circle class="fill" cx="24" cy="24" r="3.2"/>
       <circle cx="25" cy="23" r="0.7" fill="#fff" opacity=".95"/>
     </g>
   </g>
@@ -164,8 +165,17 @@ body.custom-cursor-enabled{overflow-x:hidden}
   let x = mouseX, y = mouseY;
   const ease = prefersReduced ? 1 : 0.18;
 
-  const STATE = { ARROW:'arrow', POINTER:'pointer', PILL:'pill', IBEAM:'ibeam' };
+  // States
+  const STATE = {
+    ARROW:'arrow',
+    POINTER:'pointer',
+    POINTER_HOVER:'pointer-hover',
+    PILL:'pill',
+    IBEAM:'ibeam'
+  };
   let state = STATE.ARROW;
+  let hoverInTimer = null, hoverOutTimer = null, pillTimer = null;
+  let isHoveringInteractive = false;
 
   function setState(next){
     if(state === next) return;
@@ -178,19 +188,29 @@ body.custom-cursor-enabled{overflow-x:hidden}
     cursor.style.opacity = on ? '1' : '0';
   }
 
+  // Mouse tracking
   addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
 
-  // Hover-Ziele → POINTER
+  // Interactive hover → zweistufig: POINTER → POINTER-HOVER
   const selectorTargets = 'a, button, [role="button"], .cursor-target, .welcome-btn';
   function bindHover(){
     document.querySelectorAll(selectorTargets).forEach(el=>{
       el.addEventListener('mouseenter', ()=>{
+        isHoveringInteractive = true;
         cursor.classList.add('is-hovering');
+        clearTimeout(hoverOutTimer);
         setState(STATE.POINTER);
+        // kleine Verzögerung fürs „Vorfreude-Gefühl“
+        clearTimeout(hoverInTimer);
+        hoverInTimer = setTimeout(()=> setState(STATE.POINTER_HOVER), 90);
       });
       el.addEventListener('mouseleave', ()=>{
+        isHoveringInteractive = false;
         cursor.classList.remove('is-hovering');
-        setState(STATE.ARROW);
+        clearTimeout(hoverInTimer);
+        // kurz im Hover-Look „ausfaden“, dann zurück zu Arrow
+        clearTimeout(hoverOutTimer);
+        hoverOutTimer = setTimeout(()=> setState(STATE.ARROW), 80);
       });
     });
   }
@@ -200,57 +220,69 @@ body.custom-cursor-enabled{overflow-x:hidden}
   const textSelector = 'input[type="text"], input[type="search"], textarea, [contenteditable=""], [contenteditable="true"]';
   function bindText(){
     document.querySelectorAll(textSelector).forEach(el=>{
-      el.addEventListener('mouseenter', ()=> setState(STATE.IBEAM));
-      el.addEventListener('mouseleave', ()=> setState(STATE.ARROW));
-      el.addEventListener('focus',     ()=> setState(STATE.IBEAM));
-      el.addEventListener('blur',      ()=> setState(STATE.ARROW));
+      el.addEventListener('mouseenter', ()=> { clearTimers(); setState(STATE.IBEAM); });
+      el.addEventListener('mouseleave', ()=> { setState(STATE.ARROW); });
+      el.addEventListener('focus',     ()=> { clearTimers(); setState(STATE.IBEAM); });
+      el.addEventListener('blur',      ()=> { setState(STATE.ARROW); });
     });
   }
   bindText();
 
-  // Scroll → PILL (mit Kugel-Bewegung je Richtung)
+  function clearTimers(){
+    clearTimeout(hoverInTimer);
+    clearTimeout(hoverOutTimer);
+  }
+
+  // Scroll → PILL (mit Ballrichtung)
   const pillBall = () => cursor.querySelector('.pill-ball');
-  let pillTimer = null;
   function triggerPill(deltaY){
+    if(isHoveringInteractive) return; // nicht stören, wenn man gerade klicken will
     setState(STATE.PILL);
     const ball = pillBall();
     if(ball){
-      ball.classList.remove('up','down'); // reset, um Transition zu retriggern
-      void ball.offsetWidth;
+      ball.classList.remove('up','down');
+      void ball.offsetWidth; // reflow für retrigger
       ball.classList.add(deltaY > 0 ? 'down' : 'up');
     }
     clearTimeout(pillTimer);
-    pillTimer = setTimeout(()=> {
-      if(ball){ ball.classList.remove('up','down'); }
+    pillTimer = setTimeout(()=>{
+      if(ball) ball.classList.remove('up','down');
       setState(STATE.ARROW);
-    }, 600); // Pill etwas länger sichtbar
+    }, 650);
   }
   addEventListener('wheel', (e)=> triggerPill(e.deltaY), {passive:true});
-  // Falls via Keyboard/PageScroll:
   addEventListener('scroll', ()=> triggerPill(1), {passive:true});
 
   // Click Pulse
   addEventListener('mousedown', ()=>{
-    cursor.classList.remove('click-pulse');
-    void cursor.offsetWidth;
-    cursor.classList.add('click-pulse');
+    cursor.classList.remove('click-pulse'); void cursor.offsetWidth; cursor.classList.add('click-pulse');
   });
 
-  // Render Loop
+  // Render-Loop (mit Scale-Boost bei pointer-hover)
   function raf(){
     if(enabled){
       x += (mouseX - x) * ease;
       y += (mouseY - y) * ease;
+
       const dx = mouseX - x, dy = mouseY - y;
       const angle = Math.atan2(dy, dx) * (180/Math.PI) * 0.08;
-      cursor.style.transform = `translate(${x - 24}px, ${y - 24}px) rotate(${angle}deg)`;
+
+      const scale =
+        state === STATE.POINTER_HOVER ? 1.15 :
+        state === STATE.PILL ? 1.08 :
+        1;
+
+      cursor.style.transform = `translate(${x - 24}px, ${y - 24}px) rotate(${angle}deg) scale(${scale})`;
     }
     requestAnimationFrame(raf);
   }
   requestAnimationFrame(raf);
 
-  toggle.addEventListener('change', e=> setEnabled(e.target.checked));
+  // Toggle
+  const toggleEl = document.getElementById('toggle-cursor');
+  toggleEl.addEventListener('change', e=> setEnabled(e.target.checked));
 
+  // Start
   setEnabled(!isTouch);
 })();
 </script>
