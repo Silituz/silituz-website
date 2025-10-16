@@ -369,11 +369,6 @@ header video, header img, header svg{ background:transparent !important; }
   color:#cbd5e1; background:transparent;
   transition: color .2s ease, transform .2s ease;
 }
-#music-platforms .platform::before{
-  content:""; width:10px; height:10px; flex:0 0 10px;
-  border-radius:9999px; background:var(--dot);
-  box-shadow:0 0 0 2px rgba(255,255,255,.05) inset;
-}
 #music-platforms .platform:hover{ transform:translateY(-1px); color:var(--brand, #10b981); }
 
 /* Falls irgendwo noch <i>/<img>/<svg> drin ist: verstecken */
