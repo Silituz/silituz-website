@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Cursor Test – Silituz Snake
+title: Cursor Test – Silituz Snake (Hotfix)
 lang: de
 ---
 
@@ -22,7 +22,6 @@ lang: de
       </a>
     </div>
 
-    <!-- Kleine Steuerleiste -->
     <div class="mt-10 inline-flex items-center gap-4 text-slate-300/90">
       <label class="inline-flex items-center gap-2">
         <input id="toggle-cursor" type="checkbox" class="h-4 w-4" checked>
@@ -34,26 +33,26 @@ lang: de
 </section>
 
 <style>
-/* ===== Basis / Accessibility ===== */
 :root {
   --emerald: #10b981;
   --glow-1: rgba(16,185,129,0.95);
   --glow-2: rgba(16,185,129,0.55);
   --glow-3: rgba(16,185,129,0.25);
+  --snake-scale: 1; /* wird für leichtes Pulsieren genutzt */
 }
 html, body { height: 100%; }
 body.custom-cursor-enabled {
-  cursor: none;               /* nativen Cursor ausblenden */
+  cursor: none;
   overflow-x: hidden;
 }
 
-/* ===== Snake Cursor ===== */
+/* Snake Cursor Container */
 #snake-cursor {
   position: fixed;
   top: 0; left: 0;
-  width: 44px; height: 44px;  /* Grundgröße (skalierbar) */
+  width: 44px; height: 44px;
   pointer-events: none;
-  transform: translate(-50%, -50%) scale(1);
+  /* WICHTIG: Nur JS setzt transform. CSS nutzt hier KEIN transform mehr! */
   transition: opacity .25s ease;
   z-index: 9999;
   opacity: 1;
@@ -61,10 +60,10 @@ body.custom-cursor-enabled {
     drop-shadow(0 0 6px var(--glow-1))
     drop-shadow(0 0 18px var(--glow-2))
     drop-shadow(0 0 40px var(--glow-3));
-  mix-blend-mode: screen;      /* hübsch auf dunklem & hellem Hintergrund */
+  mix-blend-mode: screen;
 }
 
-/* Pfade im SVG */
+/* Pfade */
 #snake-cursor .snake-stroke {
   stroke: var(--emerald);
   stroke-width: 2.2;
@@ -77,86 +76,86 @@ body.custom-cursor-enabled {
   opacity: .95;
 }
 
-/* Hover-Verhalten über interaktiven Zielen */
+/* Hover-Verhalten – über Klasse vom JS gesteuert */
 #snake-cursor.is-hovering {
-  transform: translate(-50%, -50%) scale(1.25);
+  /* Skaliert im JS über transform, nicht hier */
   filter:
     drop-shadow(0 0 8px var(--glow-1))
     drop-shadow(0 0 22px var(--glow-2))
     drop-shadow(0 0 60px var(--glow-3));
 }
 
-/* Optional: „Atmen“ (dezentes Pulsieren) */
-@keyframes snake-breathe {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50%      { transform: translate(-50%, -50%) scale(1.03); }
+/* Dezentes „Pulsieren“ via scale-Variable – NICHT über transform */
+@keyframes breathe {
+  0%, 100% { --snake-scale: 1; }
+  50%      { --snake-scale: 1.03; }
 }
-#snake-cursor { animation: snake-breathe 3.2s ease-in-out infinite; }
+#snake-cursor[data-breathe="on"] { animation: breathe 3.2s ease-in-out infinite; }
 
-/* Reduced motion respektieren */
+/* Motion-Reduce */
 @media (prefers-reduced-motion: reduce) {
-  #snake-cursor { animation: none; }
+  #snake-cursor { animation: none !important; }
 }
 
-/* Touch-Geräte: nativer Cursor und SVG ausblenden */
+/* Touch: ausblenden */
 @media (hover: none) and (pointer: coarse) {
   #snake-cursor { display: none; }
   body.custom-cursor-enabled { cursor: auto; }
 }
 </style>
 
-<!-- ===== Inline-SVG Cursor (S-förmige Schlange) ===== -->
-<svg id="snake-cursor" viewBox="0 0 44 44" aria-hidden="true">
-  <!-- S-Kurve (Körper) -->
+<!-- Inline-SVG Cursor -->
+<svg id="snake-cursor" viewBox="0 0 44 44" aria-hidden="true" data-breathe="on">
   <path class="snake-stroke"
         d="M8,30
            C12,22 20,26 23,20
            C26,14 18,12 19,8
            C19.5,5.5 24,6 26,8" />
-  <!-- kleine „Bauch“-Kontur -->
   <path class="snake-stroke" opacity=".45"
         d="M9.5,29
            C13,23 20,25 22,21
            C24,17 18,14 19,10.5" />
-  <!-- Kopf (kleiner Tropfenkreis am oberen Ende) -->
   <circle class="snake-head" cx="27" cy="8" r="2.8" />
-  <!-- Mini-Auge als Glanz -->
   <circle cx="28.1" cy="7.2" r="0.6" fill="#ffffff" opacity=".9"/>
 </svg>
 
 <script>
 (() => {
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const cursorEl = document.getElementById('snake-cursor');
-  const toggle = document.getElementById('toggle-cursor');
+  const toggle   = document.getElementById('toggle-cursor');
 
-  // Interaktive Ziele (fühlbar „aufleuchten“)
-  const hoverTargets = () => Array.from(document.querySelectorAll('.cursor-target, a, button, [role="button"], .welcome-btn'));
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch        = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+  // Interaktive Ziele
+  const getTargets = () => Array.from(document.querySelectorAll('.cursor-target, a, button, [role="button"], .welcome-btn'));
 
   // State
-  let enabled = true;
+  let enabled  = true;
   let hovering = false;
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
+  let mouseX   = window.innerWidth / 2;
+  let mouseY   = window.innerHeight / 2;
   let x = mouseX, y = mouseY;
-  const ease = prefersReduced ? 1 : 0.18; // 1 = sofort, sonst weiches Nachziehen
 
-  // Aktivierung/Deaktivierung
+  const ease = prefersReduced ? 1 : 0.18; // weich nachziehen
+  const baseSize = 44; // px
+  let scale = 1;
+
   function setEnabled(on) {
     enabled = on;
     document.body.classList.toggle('custom-cursor-enabled', on);
     cursorEl.style.opacity = on ? '1' : '0';
   }
 
-  // Mausposition tracken
+  // Mausposition
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
   });
 
-  // Hover-Feedback
+  // Hover-Bindings
   function bindHoverTargets() {
-    hoverTargets().forEach(el => {
+    getTargets().forEach(el => {
       el.addEventListener('mouseenter', () => {
         hovering = true;
         cursorEl.classList.add('is-hovering');
@@ -169,17 +168,23 @@ body.custom-cursor-enabled {
   }
   bindHoverTargets();
 
-  // Soft follow Loop
+  // Render-Loop: nur JS setzt transform
   function raf() {
     if (enabled) {
       x += (mouseX - x) * ease;
       y += (mouseY - y) * ease;
 
-      // leichte Rotation in Bewegungsrichtung (dezent)
+      // scale kombiniert: Basis (1) * Atem (CSS-Variable) * Hover-Boost
+      const cssScale = getComputedStyle(cursorEl).getPropertyValue('--snake-scale').trim();
+      const breatheScale = cssScale ? parseFloat(cssScale) || 1 : 1;
+      scale = breatheScale * (hovering ? 1.25 : 1);
+
+      // kleine Ausrichtung in Bewegungsrichtung
       const dx = mouseX - x, dy = mouseY - y;
-      const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+      const angle = Math.atan2(dy, dx) * 180 / Math.PI * 0.08;
+
       cursorEl.style.transform =
-        `translate(${x - 22}px, ${y - 22}px) rotate(${angle * 0.08}deg) scale(${hovering ? 1.25 : 1})`;
+        `translate(${x - baseSize/2}px, ${y - baseSize/2}px) rotate(${angle}deg) scale(${scale})`;
     }
     requestAnimationFrame(raf);
   }
@@ -189,7 +194,6 @@ body.custom-cursor-enabled {
   toggle.addEventListener('change', (e) => setEnabled(e.target.checked));
 
   // Initial aktivieren (außer auf Touch)
-  const isTouch = matchMedia('(hover: none) and (pointer: coarse)').matches;
   setEnabled(!isTouch);
 })();
 </script>
