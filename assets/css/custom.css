@@ -393,3 +393,20 @@ header video, header img, header svg{ background:transparent !important; }
 /* Sichtbarkeit der Konfetti-Partikel erhöhen */
 #music-platforms .confetti { z-index: 5; }
 
+/* Konfetti nur bei Links mit .confetti-enabled */
+#music-platforms a.confetti-enabled { position: relative; }
+
+/* Partikel-Style */
+#music-platforms a.confetti-enabled .confetti{
+  position:absolute;
+  width:6px; height:6px; border-radius:2px;
+  background: currentColor;             /* nimmt die Text-/Hoverfarbe */
+  opacity:1; transform: translate(0,0) rotate(0);
+  animation: confetti-fly var(--d) cubic-bezier(.2,.8,.2,1) forwards;
+  pointer-events:none;
+  z-index:5;
+}
+@keyframes confetti-fly{
+  to{ transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity:0; }
+}
+
