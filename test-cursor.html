@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Cursor Test – Silituz Snake (Hotfix)
+title: Cursor Test – Snake Multi-State
 lang: de
 ---
 
@@ -9,191 +9,235 @@ lang: de
        alt="Silituz Background"
        class="absolute inset-0 w-full h-full object-cover opacity-25" />
 
-  <div class="relative z-10 text-center px-6">
-    <h1 class="text-4xl font-extrabold text-emerald-500 mb-4">Silituz Snake Cursor</h1>
-    <p class="text-slate-300 mb-8">Minimalistische „S“-Schlange mit Emerald-Glow ✨</p>
+  <div class="relative z-10 text-center px-6 space-y-6">
+    <h1 class="text-4xl font-extrabold text-emerald-500">Silituz Multi-State Snake Cursor</h1>
+    <p class="text-slate-300">Arrow → Hand/Hook (Links) • Pill (Scroll) • I-Beam (Text) • Pulse (Klick)</p>
 
     <div class="flex gap-6 justify-center">
-      <button class="cursor-target bg-emerald-500/90 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl shadow transition">
-        Hover mich!
-      </button>
-      <a href="/socials/" class="cursor-target bg-slate-700 hover:bg-slate-600 text-white font-semibold px-6 py-3 rounded-xl shadow transition">
-        Oder mich!
-      </a>
+      <a href="/gallery/" class="cursor-target px-6 py-3 rounded-xl bg-emerald-500/90 hover:bg-emerald-600 text-white font-semibold shadow transition">Zu Galerie</a>
+      <button class="cursor-target px-6 py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-semibold shadow transition">Button testen</button>
     </div>
 
-    <div class="mt-10 inline-flex items-center gap-4 text-slate-300/90">
+    <div class="max-w-md mx-auto grid grid-cols-1 gap-3 pt-6">
+      <input type="text" placeholder="Feld für I-Beam testen" class="px-4 py-3 rounded-xl bg-slate-800/70 text-slate-100 placeholder-slate-400 outline-none ring-0" />
+      <textarea rows="3" placeholder="Noch ein Textfeld…" class="px-4 py-3 rounded-xl bg-slate-800/70 text-slate-100 placeholder-slate-400 outline-none ring-0"></textarea>
+    </div>
+
+    <div class="inline-flex items-center gap-4 text-slate-300/90 pt-6">
       <label class="inline-flex items-center gap-2">
         <input id="toggle-cursor" type="checkbox" class="h-4 w-4" checked>
         Custom Cursor aktiv
       </label>
-      <span class="text-xs opacity-70">respektiert „prefers-reduced-motion“ & Touch-Geräte</span>
+      <span class="text-xs opacity-70">Respektiert „prefers-reduced-motion“ & Touch</span>
     </div>
   </div>
 </section>
 
 <style>
-:root {
+:root{
   --emerald: #10b981;
-  --glow-1: rgba(16,185,129,0.95);
-  --glow-2: rgba(16,185,129,0.55);
-  --glow-3: rgba(16,185,129,0.25);
-  --snake-scale: 1; /* wird für leichtes Pulsieren genutzt */
+  --g1: rgba(16,185,129,.95);
+  --g2: rgba(16,185,129,.55);
+  --g3: rgba(16,185,129,.25);
+  --scale: 1;
 }
-html, body { height: 100%; }
-body.custom-cursor-enabled {
-  cursor: none;
-  overflow-x: hidden;
-}
+html,body{height:100%}
+body.custom-cursor-enabled{cursor:none;overflow-x:hidden}
 
-/* Snake Cursor Container */
-#snake-cursor {
-  position: fixed;
-  top: 0; left: 0;
-  width: 44px; height: 44px;
-  pointer-events: none;
-  /* WICHTIG: Nur JS setzt transform. CSS nutzt hier KEIN transform mehr! */
-  transition: opacity .25s ease;
-  z-index: 9999;
-  opacity: 1;
+/* Cursor Container (Transform nur via JS) */
+#snake-cursor{
+  position:fixed; top:0; left:0;
+  width:46px; height:46px; pointer-events:none; z-index:9999; opacity:1;
+  transition:opacity .25s ease;
   filter:
-    drop-shadow(0 0 6px var(--glow-1))
-    drop-shadow(0 0 18px var(--glow-2))
-    drop-shadow(0 0 40px var(--glow-3));
-  mix-blend-mode: screen;
+    drop-shadow(0 0 6px var(--g1))
+    drop-shadow(0 0 18px var(--g2))
+    drop-shadow(0 0 40px var(--g3));
+  mix-blend-mode:screen;
 }
 
-/* Pfade */
-#snake-cursor .snake-stroke {
-  stroke: var(--emerald);
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
-}
-#snake-cursor .snake-head {
-  fill: var(--emerald);
-  opacity: .95;
+/* Globale Stroke/Fill */
+#snake-cursor .stroke{stroke:var(--emerald); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; fill:none}
+#snake-cursor .fill{fill:var(--emerald)}
+
+/* STATES via data-state: arrow | hand | pill | ibeam */
+#snake-cursor [data-variant]{display:none}
+#snake-cursor[data-state="arrow"] [data-variant="arrow"]{display:block}
+#snake-cursor[data-state="hand"]  [data-variant="hand"]{display:block}
+#snake-cursor[data-state="pill"]  [data-variant="pill"]{display:block}
+#snake-cursor[data-state="ibeam"] [data-variant="ibeam"]{display:block}
+
+/* Hover-Boost */
+#snake-cursor.is-hovering{filter:
+  drop-shadow(0 0 8px var(--g1))
+  drop-shadow(0 0 22px var(--g2))
+  drop-shadow(0 0 60px var(--g3))
 }
 
-/* Hover-Verhalten – über Klasse vom JS gesteuert */
-#snake-cursor.is-hovering {
-  /* Skaliert im JS über transform, nicht hier */
-  filter:
-    drop-shadow(0 0 8px var(--glow-1))
-    drop-shadow(0 0 22px var(--glow-2))
-    drop-shadow(0 0 60px var(--glow-3));
+/* Click Pulse (ring) */
+#snake-cursor.click-pulse::after{
+  content:""; position:absolute; inset:0; border-radius:50%;
+  box-shadow:0 0 0 0 rgba(16,185,129,.6);
+  animation:pulse .38s ease-out;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(16,185,129,.6); opacity:1}
+  100%{box-shadow:0 0 0 18px rgba(16,185,129,0); opacity:0}
 }
 
-/* Dezentes „Pulsieren“ via scale-Variable – NICHT über transform */
-@keyframes breathe {
-  0%, 100% { --snake-scale: 1; }
-  50%      { --snake-scale: 1.03; }
-}
-#snake-cursor[data-breathe="on"] { animation: breathe 3.2s ease-in-out infinite; }
-
-/* Motion-Reduce */
-@media (prefers-reduced-motion: reduce) {
-  #snake-cursor { animation: none !important; }
+/* Reduced Motion */
+@media (prefers-reduced-motion:reduce){
+  #snake-cursor{animation:none}
 }
 
-/* Touch: ausblenden */
-@media (hover: none) and (pointer: coarse) {
-  #snake-cursor { display: none; }
-  body.custom-cursor-enabled { cursor: auto; }
+/* Touch: nativer Cursor */
+@media (hover:none) and (pointer:coarse){
+  #snake-cursor{display:none}
+  body.custom-cursor-enabled{cursor:auto}
 }
 </style>
 
-<!-- Inline-SVG Cursor -->
-<svg id="snake-cursor" viewBox="0 0 44 44" aria-hidden="true" data-breathe="on">
-  <path class="snake-stroke"
-        d="M8,30
-           C12,22 20,26 23,20
-           C26,14 18,12 19,8
-           C19.5,5.5 24,6 26,8" />
-  <path class="snake-stroke" opacity=".45"
-        d="M9.5,29
-           C13,23 20,25 22,21
-           C24,17 18,14 19,10.5" />
-  <circle class="snake-head" cx="27" cy="8" r="2.8" />
-  <circle cx="28.1" cy="7.2" r="0.6" fill="#ffffff" opacity=".9"/>
+<!-- Inline SVG mit 4 Varianten -->
+<svg id="snake-cursor" viewBox="0 0 46 46" aria-hidden="true" data-state="arrow">
+  <!-- ARROW: Schlange als Pfeil (Spitze + kurviger Körper) -->
+  <g data-variant="arrow">
+    <!-- Körper (S-Kurve) -->
+    <path class="stroke" d="M10,33 C16,24 22,28 26,21 C28,17 24,14 22,11" />
+    <!-- Pfeilspitze (Schlangenkopf) -->
+    <path class="fill" d="M22,9.5 l4,2.2 l-4,2.2 q1.2-2.1 0-4.4z" />
+    <!-- kleine Zunge -->
+    <path class="stroke" d="M26,11.7 l3,0" />
+  </g>
+
+  <!-- HAND/HOOK: Greif-Geste (für Links/Buttons) -->
+  <g data-variant="hand">
+    <!-- geschwungener Haken -->
+    <path class="stroke" d="M13,30 C18,25 23,26 26,23 C28.5,20.8 28,18 25.5,17" />
+    <!-- Kopf leicht nach unten -->
+    <circle class="fill" cx="27.8" cy="16.5" r="2.2"/>
+    <path class="stroke" d="M29.9,16.5 l1.8,0" />
+  </g>
+
+  <!-- PILL: gestreckter „Lauf“-Zustand beim Scroll -->
+  <g data-variant="pill">
+    <rect class="fill" x="12" y="14" rx="8" ry="8" width="22" height="10" />
+    <path class="stroke" d="M12,19 h22" opacity=".45"/>
+  </g>
+
+  <!-- I-BEAM: schmal vertikal (für Texteingaben) -->
+  <g data-variant="ibeam">
+    <path class="stroke" d="M23,10 v26" />
+    <path class="stroke" d="M18,14 h10" />
+    <path class="stroke" d="M18,32 h10" />
+  </g>
 </svg>
 
 <script>
 (() => {
-  const cursorEl = document.getElementById('snake-cursor');
-  const toggle   = document.getElementById('toggle-cursor');
+  const cursor = document.getElementById('snake-cursor');
+  const toggle = document.getElementById('toggle-cursor');
 
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isTouch        = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch = matchMedia('(hover: none) and (pointer: coarse)').matches;
 
-  // Interaktive Ziele
-  const getTargets = () => Array.from(document.querySelectorAll('.cursor-target, a, button, [role="button"], .welcome-btn'));
-
-  // State
-  let enabled  = true;
-  let hovering = false;
-  let mouseX   = window.innerWidth / 2;
-  let mouseY   = window.innerHeight / 2;
+  // Bewegung
+  let enabled = true;
+  let mouseX = innerWidth/2, mouseY = innerHeight/2;
   let x = mouseX, y = mouseY;
+  const ease = prefersReduced ? 1 : 0.18; // weiches Nachziehen
 
-  const ease = prefersReduced ? 1 : 0.18; // weich nachziehen
-  const baseSize = 44; // px
-  let scale = 1;
+  // Zustände
+  const STATE = { ARROW:'arrow', HAND:'hand', PILL:'pill', IBEAM:'ibeam' };
+  let state = STATE.ARROW;
+  let hoverTimer = null, scrollTimer = null;
 
-  function setEnabled(on) {
-    enabled = on;
-    document.body.classList.toggle('custom-cursor-enabled', on);
-    cursorEl.style.opacity = on ? '1' : '0';
+  // Utility: State setzen
+  function setState(next){
+    if(state === next) return;
+    state = next;
+    cursor.setAttribute('data-state', next);
   }
 
-  // Mausposition
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
+  // Aktivierung
+  function setEnabled(on){
+    enabled = on;
+    document.body.classList.toggle('custom-cursor-enabled', on);
+    cursor.style.opacity = on ? '1' : '0';
+  }
 
-  // Hover-Bindings
-  function bindHoverTargets() {
-    getTargets().forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        hovering = true;
-        cursorEl.classList.add('is-hovering');
+  // Maus-Tracking
+  addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+
+  // Hover-Ziele (Hand/Hook)
+  const selectorTargets = 'a, button, [role="button"], .cursor-target, .welcome-btn';
+  function bindHover(){
+    document.querySelectorAll(selectorTargets).forEach(el=>{
+      el.addEventListener('mouseenter', ()=>{
+        cursor.classList.add('is-hovering');
+        setState(STATE.HAND);
       });
-      el.addEventListener('mouseleave', () => {
-        hovering = false;
-        cursorEl.classList.remove('is-hovering');
+      el.addEventListener('mouseleave', ()=>{
+        cursor.classList.remove('is-hovering');
+        // nach dem Hover sanft zurück in Arrow
+        clearTimeout(hoverTimer);
+        hoverTimer = setTimeout(()=>setState(STATE.ARROW), 60);
       });
     });
   }
-  bindHoverTargets();
+  bindHover();
 
-  // Render-Loop: nur JS setzt transform
-  function raf() {
-    if (enabled) {
+  // Textfelder (I-Beam)
+  const textSelector = 'input[type="text"], input[type="search"], textarea, [contenteditable=""], [contenteditable="true"]';
+  function bindText(){
+    document.querySelectorAll(textSelector).forEach(el=>{
+      el.addEventListener('mouseenter', ()=> setState(STATE.IBEAM));
+      el.addEventListener('mouseleave', ()=> setState(STATE.ARROW));
+      el.addEventListener('focus',     ()=> setState(STATE.IBEAM));
+      el.addEventListener('blur',      ()=> setState(STATE.ARROW));
+    });
+  }
+  bindText();
+
+  // Scroll → Pill (kurz anzeigen)
+  let lastScrollTime = 0;
+  function triggerPill(){
+    const now = performance.now();
+    if(now - lastScrollTime < 120) return; // debounce
+    lastScrollTime = now;
+    setState(STATE.PILL);
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(()=> setState(STATE.ARROW), 420);
+  }
+  addEventListener('wheel', triggerPill, {passive:true});
+  addEventListener('scroll', triggerPill, {passive:true});
+
+  // Click Pulse
+  addEventListener('mousedown', ()=>{
+    cursor.classList.remove('click-pulse'); // retrigger
+    void cursor.offsetWidth;
+    cursor.classList.add('click-pulse');
+  });
+
+  // Render-Loop (nur JS setzt transform)
+  function raf(){
+    if(enabled){
       x += (mouseX - x) * ease;
       y += (mouseY - y) * ease;
 
-      // scale kombiniert: Basis (1) * Atem (CSS-Variable) * Hover-Boost
-      const cssScale = getComputedStyle(cursorEl).getPropertyValue('--snake-scale').trim();
-      const breatheScale = cssScale ? parseFloat(cssScale) || 1 : 1;
-      scale = breatheScale * (hovering ? 1.25 : 1);
-
-      // kleine Ausrichtung in Bewegungsrichtung
+      // dezente Ausrichtung in Bewegungsrichtung
       const dx = mouseX - x, dy = mouseY - y;
-      const angle = Math.atan2(dy, dx) * 180 / Math.PI * 0.08;
+      const angle = Math.atan2(dy, dx) * (180/Math.PI) * 0.08;
 
-      cursorEl.style.transform =
-        `translate(${x - baseSize/2}px, ${y - baseSize/2}px) rotate(${angle}deg) scale(${scale})`;
+      cursor.style.transform = `translate(${x - 23}px, ${y - 23}px) rotate(${angle}deg) scale(1)`;
     }
     requestAnimationFrame(raf);
   }
   requestAnimationFrame(raf);
 
   // Toggle
-  toggle.addEventListener('change', (e) => setEnabled(e.target.checked));
+  toggle.addEventListener('change', e=> setEnabled(e.target.checked));
 
-  // Initial aktivieren (außer auf Touch)
+  // Initial
   setEnabled(!isTouch);
 })();
 </script>
