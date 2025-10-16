@@ -375,38 +375,35 @@ header video, header img, header svg{ background:transparent !important; }
 #music-platforms .platform i,
 #music-platforms .platform img,
 #music-platforms .platform svg{ display:none !important; }
-
-/* Konfetti-Partikel */
-#music-platforms a.is-local{ position:relative; }
-#music-platforms a.is-local:hover{ color:var(--brand, #10b981); } /* färbt Text & Konfetti */
-#music-platforms a.is-local .confetti{
-  position:absolute; left:12px; top:50%;
-  width:6px; height:6px; border-radius:2px;
-  background: currentColor;            /* gleiche Farbe wie Text = Marke */
-  opacity:1; transform: translate(0,0) rotate(0);
-  animation: confetti-fly var(--d) cubic-bezier(.2,.8,.2,1) forwards;
-  pointer-events:none;
+/* =============================
+   MUSIC PLATFORMS – KONFETTI (final)
+   ============================= */
+#music-platforms a.confetti-enabled{
+  position: relative;   /* Bezugsbox */
+  overflow: visible;
 }
-@keyframes confetti-fly{
-  to{ transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity:0; }
-}
-/* Sichtbarkeit der Konfetti-Partikel erhöhen */
-#music-platforms .confetti { z-index: 5; }
 
-/* Konfetti nur bei Links mit .confetti-enabled */
-#music-platforms a.confetti-enabled { position: relative; }
-
-/* Partikel-Style */
 #music-platforms a.confetti-enabled .confetti{
-  position:absolute;
-  width:6px; height:6px; border-radius:2px;
-  background: currentColor;             /* nimmt die Text-/Hoverfarbe */
-  opacity:1; transform: translate(0,0) rotate(0);
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 2px;
+  background: currentColor;     /* nimmt Text-/Hoverfarbe */
+  opacity: 1;
+  transform: translate(0,0) rotate(0);
   animation: confetti-fly var(--d) cubic-bezier(.2,.8,.2,1) forwards;
-  pointer-events:none;
-  z-index:5;
-}
-@keyframes confetti-fly{
-  to{ transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity:0; }
+  pointer-events: none;
+  z-index: 5;
 }
 
+@keyframes confetti-fly{
+  to{
+    transform: translate(var(--x), var(--y)) rotate(var(--r));
+    opacity: 0;
+  }
+}
+
+/* OPTIONAL: nur Namen, keine Punkte/Icons */
+#music-platforms .platform::before{ content: none !important; }
+#music-platforms .platform i,
+#music-platforms .platform img,
+#music-platforms .platform svg{ display:none !important; }
