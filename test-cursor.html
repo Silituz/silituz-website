@@ -50,7 +50,12 @@ body.custom-cursor-enabled{ overflow-x:hidden }
     drop-shadow(0 0 18px var(--g2))
     drop-shadow(0 0 40px var(--g3));
   mix-blend-mode:screen;
+
+  /* 🔧 Performance + flüssigere Bewegung */
+  will-change: transform;
+  transform: translateZ(0);
 }
+
 /* Grundstile */
 #snake-cursor .stroke{stroke:var(--emerald); stroke-width:2.3; stroke-linecap:round; stroke-linejoin:round; fill:none}
 #snake-cursor .fill{fill:var(--emerald)}
