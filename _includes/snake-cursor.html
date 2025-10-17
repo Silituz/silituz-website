@@ -7,13 +7,12 @@ html,body{height:100%}
 body.custom-cursor-enabled { cursor: none !important; }
 
 
-/* … aber NICHT auf confetti-enabled Links */
-body.custom-cursor-enabled a.confetti-enabled,
-body.custom-cursor-enabled a.confetti-enabled *,
-body.custom-cursor-enabled [data-confetti],
-body.custom-cursor-enabled [data-confetti] * {
-  cursor: inherit !important;
+/* Globale Ausblendung des Systemcursors (damit kein Pfeil über der Schlange liegt) */
+body.custom-cursor-enabled,
+body.custom-cursor-enabled * {
+  cursor: none !important;
 }
+
 
 body.custom-cursor-enabled{ overflow-x:hidden }
 
