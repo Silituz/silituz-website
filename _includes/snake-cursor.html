@@ -1,0 +1,150 @@
+<!-- _includes/snake-cursor.html -->
+<style>
+:root{ --emerald:#10b981; --g1:rgba(16,185,129,.95); --g2:rgba(16,185,129,.55); --g3:rgba(16,185,129,.25); }
+html,body{height:100%}
+body.custom-cursor-enabled, body.custom-cursor-enabled *{ cursor:none !important; }
+body.custom-cursor-enabled{ overflow-x:hidden }
+
+#snake-cursor{
+  position:fixed; top:0; left:0; width:48px; height:48px;
+  pointer-events:none; z-index:9999; opacity:1; transition:opacity .25s ease;
+  filter: drop-shadow(0 0 6px var(--g1)) drop-shadow(0 0 18px var(--g2)) drop-shadow(0 0 40px var(--g3));
+  mix-blend-mode:screen;
+  transform-box: fill-box;                /* Hotspot/Origin per Var */
+  transform-origin: var(--ox) var(--oy);
+  will-change: transform; transform: translateZ(0);
+}
+#snake-cursor .stroke{stroke:var(--emerald); stroke-width:2.3; stroke-linecap:round; stroke-linejoin:round; fill:none}
+#snake-cursor .fill{fill:var(--emerald)}
+#snake-cursor [data-variant]{display:none}
+#snake-cursor[data-state="arrow"]         [data-variant="arrow"]{display:block}
+#snake-cursor[data-state="pointer"]       [data-variant="pointer"]{display:block}
+#snake-cursor[data-state="pointer-hover"] [data-variant="pointer-hover"]{display:block}
+#snake-cursor[data-state="pill"]          [data-variant="pill"]{display:block}
+#snake-cursor[data-state="ibeam"]         [data-variant="ibeam"]{display:block}
+#snake-cursor.is-hovering{
+  filter: drop-shadow(0 0 8px var(--g1)) drop-shadow(0 0 22px var(--g2)) drop-shadow(0 0 60px var(--g3));
+}
+#snake-cursor.click-pulse::after{
+  content:""; position:absolute; inset:0; border-radius:50%;
+  box-shadow:0 0 0 0 rgba(16,185,129,.55); animation:pulse .38s ease-out;
+}
+@keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(16,185,129,.55);opacity:1} 100%{box-shadow:0 0 0 18px rgba(16,185,129,0);opacity:0} }
+.pill-ball{ transition: transform .28s cubic-bezier(.2,.8,.2,1); }
+.pill-ball.down{ transform: translateY(10px); } .pill-ball.up{ transform: translateY(-10px); }
+@keyframes wiggle { 0%,100%{transform:rotate(0)} 25%{transform:rotate(1.8deg)} 75%{transform:rotate(-1.8deg)} }
+@keyframes tail-wave { 0%,100%{stroke-dashoffset:0} 50%{stroke-dashoffset:10} }
+@media (hover:none) and (pointer:coarse){ #snake-cursor{display:none} body.custom-cursor-enabled, body.custom-cursor-enabled *{ cursor:auto !important; } }
+</style>
+
+<svg id="snake-cursor" viewBox="0 0 48 48" aria-hidden="true" data-state="arrow">
+  <!-- ARROW -->
+  <g data-variant="arrow">
+    <path class="stroke" d="M10,34 C16,26 22,28 26.5,21.5 C29,17.8 25.5,14 22.5,11" />
+    <path class="fill"   d="M22.4,9.7 l4.4,2.4 l-4.4,2.4 q1.45-2.35 0-4.8z" />
+    <path class="stroke" d="M26.9,12 h2.7" />
+  </g>
+  <!-- POINTER (Basis) -->
+  <g data-variant="pointer">
+    <path class="stroke" d="M13,31 C17.5,27 21,27.6 23.8,25.8" />
+    <path class="stroke tail" d="M14.4,30 C18,27.8 21.5,27.8 23.6,26.5" opacity=".55"/>
+    <path class="stroke" d="M24,16 v10" />
+    <circle class="fill" cx="24" cy="14.2" r="2.05"/>
+    <path class="stroke" d="M26.2,14.2 h1.8" />
+  </g>
+  <!-- POINTER-HOVER -->
+  <g data-variant="pointer-hover" transform-origin="24px 14px">
+    <path class="stroke" d="M12.4,31.6 C18.2,26.2 21.9,26.9 24.8,25.0" />
+    <path class="stroke tail" d="M13.6,30.4 C18.4,27.6 21.9,27.6 24.2,26.1" opacity=".6" style="stroke-dasharray:40 14; stroke-dashoffset:0;" />
+    <path class="stroke" d="M24,15 v11.8" />
+    <circle class="fill" cx="24" cy="13.5" r="1.85"/>
+    <path class="stroke" d="M26.1,13.5 h2.0 M27.1,13.0 v1.0" />
+  </g>
+  <!-- PILL (Scroll) -->
+  <g data-variant="pill">
+    <rect class="stroke" x="20.5" y="11" width="7" height="26" rx="3.5" ry="3.5"/>
+    <rect class="fill"   x="20.5" y="11" width="7" height="26" rx="3.5" ry="3.5" opacity=".2"/>
+    <g class="pill-ball" transform="translate(0,0)"><circle class="fill" cx="24" cy="24" r="3.2"/><circle cx="25" cy="23" r="0.7" fill="#fff" opacity=".95"/></g>
+  </g>
+  <!-- I-BEAM -->
+  <g data-variant="ibeam">
+    <path class="stroke" d="M24,12 v24" /><path class="stroke" d="M19,16 h10" /><path class="stroke" d="M19,32 h10" />
+  </g>
+</svg>
+
+<script>
+(()=> {
+  const cursor = document.getElementById('snake-cursor');
+  const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch        = matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+  const EASE= prefersReduced?1:0.28, SNAP=80, ROT=0.06;
+  let enabled=true, mouseX=innerWidth/2, mouseY=innerHeight/2, x=mouseX, y=mouseY;
+
+  const ORIGIN = {
+    arrow:{x:26.9,y:12.0}, pointer:{x:24.0,y:14.2}, 'pointer-hover':{x:24.0,y:13.5}, pill:{x:24.0,y:24.0}, ibeam:{x:24.0,y:24.0}
+  };
+  const STATE={ARROW:'arrow',POINTER:'pointer',POINTER_HOVER:'pointer-hover',PILL:'pill',IBEAM:'ibeam'};
+  let state=STATE.ARROW, hoverInT=null, hoverOutT=null, pillT=null, hoveringInteractive=false;
+
+  function originFor(k){ const o=ORIGIN[k]||ORIGIN.arrow; cursor.style.setProperty('--ox',o.x+'px'); cursor.style.setProperty('--oy',o.y+'px'); return o; }
+  function setState(next){
+    if(state===next) return; state=next; cursor.setAttribute('data-state', next); originFor(next);
+    const ph=cursor.querySelector('[data-variant="pointer-hover"]'); const tail=ph?.querySelector('.tail');
+    if(ph){ if(next===STATE.POINTER_HOVER){ ph.style.animation='wiggle .5s ease-in-out infinite'; if(tail){tail.style.animation='tail-wave .9s ease-in-out infinite';} }
+            else { ph.style.animation='none'; if(tail){tail.style.animation='none';} } }
+  }
+  function setEnabled(on){ enabled=on; document.body.classList.toggle('custom-cursor-enabled', on); cursor.style.opacity=on?'1':'0'; }
+  addEventListener('mousemove',e=>{mouseX=e.clientX; mouseY=e.clientY;});
+
+  const hoverSel='a,button,[role="button"],.cursor-target,.welcome-btn';
+  document.addEventListener('mouseenter',e=>{
+    if(!e.target.closest) return;
+  },true);
+  function bindHover(){
+    document.querySelectorAll(hoverSel).forEach(el=>{
+      el.addEventListener('mouseenter',()=>{ hoveringInteractive=true; cursor.classList.add('is-hovering'); clearTimeout(hoverOutT); setState(STATE.POINTER); clearTimeout(hoverInT); hoverInT=setTimeout(()=>setState(STATE.POINTER_HOVER),60); });
+      el.addEventListener('mouseleave',()=>{ hoveringInteractive=false; cursor.classList.remove('is-hovering'); clearTimeout(hoverInT); clearTimeout(hoverOutT); hoverOutT=setTimeout(()=>setState(STATE.ARROW),60); });
+    });
+  }
+  function bindText(){
+    const sel='input[type="text"],input[type="search"],textarea,[contenteditable],[contenteditable="true"]';
+    document.querySelectorAll(sel).forEach(el=>{
+      el.addEventListener('mouseenter',()=>{ clearTimeout(hoverInT); clearTimeout(hoverOutT); setState(STATE.IBEAM); });
+      el.addEventListener('mouseleave',()=> setState(STATE.ARROW));
+      el.addEventListener('focus',    ()=>{ clearTimeout(hoverInT); clearTimeout(hoverOutT); setState(STATE.IBEAM); });
+      el.addEventListener('blur',     ()=> setState(STATE.ARROW));
+    });
+  }
+  bindHover(); bindText();
+
+  const pillBallEl=()=>cursor.querySelector('.pill-ball');
+  function triggerPill(dir){
+    if(hoveringInteractive) return;
+    setState(STATE.PILL);
+    const b=pillBallEl(); if(b){ b.classList.remove('up','down'); void b.offsetWidth; b.classList.add(dir>0?'down':'up'); }
+    clearTimeout(pillT); pillT=setTimeout(()=>{ if(b){b.classList.remove('up','down');} setState(STATE.ARROW); },650);
+  }
+  addEventListener('wheel',e=>triggerPill(e.deltaY),{passive:true});
+  addEventListener('scroll',()=>triggerPill(1),{passive:true});
+  addEventListener('mousedown',()=>{ cursor.classList.remove('click-pulse'); void cursor.offsetWidth; cursor.classList.add('click-pulse'); });
+
+  function raf(){
+    if(enabled){
+      const dx=mouseX-x, dy=mouseY-y, d=Math.hypot(dx,dy);
+      if(d>SNAP){ x=mouseX; y=mouseY; } else { x+=dx*EASE; y+=dy*EASE; }
+      const angle=Math.atan2(mouseY-y,mouseX-x)*(180/Math.PI)*ROT;
+      const scale = state===STATE.POINTER_HOVER?1.22 : state===STATE.POINTER?1.08 : state===STATE.PILL?1.08 : 1;
+      const o=ORIGIN[state]||ORIGIN.arrow;
+      cursor.style.transform=`translate(${x-o.x}px, ${y-o.y}px) rotate(${angle}deg) scale(${scale}) translateZ(0)`;
+    }
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  setEnabled(!isTouch); originFor('arrow');
+
+  // Wenn Content via AJAX nachlädt, Hover-Bindings nachziehen:
+  new MutationObserver(()=>{ bindHover(); bindText(); }).observe(document.body,{subtree:true,childList:true});
+})();
+</script>
