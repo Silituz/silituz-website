@@ -194,6 +194,11 @@
   })();
 </script>
 
+{% unless page.disable_snake_cursor %}
+  {% include snake-cursor.html %}
+{% endunless %}
+
+  
 <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
 
 <!-- Language Switcher Logic: vermeidet /en/en/... -->
