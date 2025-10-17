@@ -2,11 +2,10 @@
 <style>
 :root{ --emerald:#10b981; --g1:rgba(16,185,129,.95); --g2:rgba(16,185,129,.55); --g3:rgba(16,185,129,.25); }
 html,body{height:100%}
-/* Systemcursor überall aus … */
-body.custom-cursor-enabled,
-body.custom-cursor-enabled * {
-  cursor: none !important;
-}
+
+/* Systemcursor nur auf dem Body verstecken – NICHT pauschal auf alle Kinder */
+body.custom-cursor-enabled { cursor: none !important; }
+
 
 /* … aber NICHT auf confetti-enabled Links */
 body.custom-cursor-enabled a.confetti-enabled,
