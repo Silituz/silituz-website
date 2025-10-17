@@ -370,7 +370,17 @@
 </ul>
    <!-- Mini-CSS nur für Wackelstoß + 🎉-Cursor (damit es sofort funktioniert) -->
     <style>
-      #music-platforms a.confetti-enabled { cursor: url("data:image/svg+xml;utf8,<?xml version='1.0'?><svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><text x='0' y='36' font-size='36'>🎉</text></svg>") 6 6, auto; }
+     /* Auf <a> UND alle Kinder anwenden, damit kein Kind-Element den Cursor „klaut“ */
+#music-platforms a.confetti-enabled,
+#music-platforms a.confetti-enabled * {
+  cursor:
+    /* Fallback-PNG (optional, falls SVG/Emoji auf einem Browser zickt) */
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAA...trunkiert...") 6 6,
+    /* Sauber URL-kodiertes SVG (Emoji im Text) */
+    url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Ctext x='0' y='36' font-size='36'%3E%F0%9F%8E%89%3C/text%3E%3C/svg%3E") 6 6,
+    auto !important;
+}
+
       @keyframes shakeOnce { 0%{transform:translate(0,0) rotate(0)} 25%{transform:translate(.5px,-.5px) rotate(-1deg)} 50%{transform:translate(-.5px,.5px) rotate(1deg)} 75%{transform:translate(.4px,-.4px) rotate(-0.6deg)} 100%{transform:translate(0,0) rotate(0)} }
       .shake-once { animation: shakeOnce .28s ease; }
     </style>
