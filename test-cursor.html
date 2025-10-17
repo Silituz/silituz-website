@@ -155,7 +155,6 @@ body.custom-cursor-enabled{ overflow-x:hidden }
     <path class="stroke" d="M19,32 h10" />
   </g>
 </svg>
-
 <script>
 (()=>{
   const cursor = document.getElementById('snake-cursor');
@@ -164,10 +163,15 @@ body.custom-cursor-enabled{ overflow-x:hidden }
   const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isTouch = matchMedia('(hover: none) and (pointer: coarse)').matches;
 
+  // 🔧 Tuning
+  const BASE_SIZE   = 48;                 // Größe des SVG-Containers
+  const EASE        = prefersReduced ? 1 : 0.28;  // höher = direkter (vorher ~0.18)
+  const SNAP_DIST   = 80;                 // bei großem Abstand "snappen"
+  const ROTATE_GAIN = 0.06;               // etwas weniger Rotations-Trägheit
+
   let enabled = true;
   let mouseX = innerWidth/2, mouseY = innerHeight/2;
   let x = mouseX, y = mouseY;
-  const ease = prefersReduced ? 1 : 0.18;
 
   const STATE = {
     ARROW:'arrow',
@@ -185,7 +189,7 @@ body.custom-cursor-enabled{ overflow-x:hidden }
     state = next;
     cursor.setAttribute('data-state', next);
 
-    // Wiggle nur im pointer-hover aktivieren
+    // Wiggle nur im pointer-hover aktiv
     const ph = cursor.querySelector('[data-variant="pointer-hover"]');
     const tail = ph?.querySelector('.tail');
     if(ph){
@@ -198,6 +202,7 @@ body.custom-cursor-enabled{ overflow-x:hidden }
       }
     }
   }
+
   function setEnabled(on){
     enabled = on;
     document.body.classList.toggle('custom-cursor-enabled', on);
@@ -216,14 +221,14 @@ body.custom-cursor-enabled{ overflow-x:hidden }
         clearTimeout(hoverOutTimer);
         setState(STATE.POINTER);
         clearTimeout(hoverInTimer);
-        hoverInTimer = setTimeout(()=> setState(STATE.POINTER_HOVER), 90);
+        hoverInTimer = setTimeout(()=> setState(STATE.POINTER_HOVER), 60); // schneller rein
       });
       el.addEventListener('mouseleave', ()=>{
         isHoveringInteractive = false;
         cursor.classList.remove('is-hovering');
         clearTimeout(hoverInTimer);
         clearTimeout(hoverOutTimer);
-        hoverOutTimer = setTimeout(()=> setState(STATE.ARROW), 80);
+        hoverOutTimer = setTimeout(()=> setState(STATE.ARROW), 60); // schneller raus
       });
     });
   }
@@ -241,15 +246,15 @@ body.custom-cursor-enabled{ overflow-x:hidden }
   }
   bindText();
 
-  // Scroll → Pill (Ball rutscht je Richtung)
+  // Scroll → PILL (Ball rutscht je Richtung)
   const pillBall = () => cursor.querySelector('.pill-ball');
   function triggerPill(deltaY){
-    if(isHoveringInteractive) return;
+    if(isHoveringInteractive) return; // Hover-Klicks nicht stören
     setState(STATE.PILL);
     const ball = pillBall();
     if(ball){
       ball.classList.remove('up','down');
-      void ball.offsetWidth; // reflow
+      void ball.offsetWidth; // reflow retrigger
       ball.classList.add(deltaY > 0 ? 'down' : 'up');
     }
     clearTimeout(pillTimer);
@@ -266,15 +271,31 @@ body.custom-cursor-enabled{ overflow-x:hidden }
     cursor.classList.remove('click-pulse'); void cursor.offsetWidth; cursor.classList.add('click-pulse');
   });
 
-  // Render Loop (mit Scale-Boost nur im pointer-hover)
+  // Render Loop — reaktiver + Snap
   function raf(){
     if(enabled){
-      x += (mouseX - x) * ease;
-      y += (mouseY - y) * ease;
       const dx = mouseX - x, dy = mouseY - y;
-      const angle = Math.atan2(dy, dx) * (180/Math.PI) * 0.08;
-      const scale = (state === STATE.POINTER_HOVER) ? 1.14 : (state === STATE.PILL ? 1.06 : 1);
-      cursor.style.transform = `translate(${x - 24}px, ${y - 24}px) rotate(${angle}deg) scale(${scale})`;
+      const dist = Math.hypot(dx, dy);
+
+      // großer Sprung → sofort zur Maus (fühlt sich präziser an)
+      if(dist > SNAP_DIST){
+        x = mouseX; y = mouseY;
+      } else {
+        x += dx * EASE;
+        y += dy * EASE;
+      }
+
+      // dezente Ausrichtung in Bewegungsrichtung
+      const angle = Math.atan2(mouseY - y, mouseX - x) * (180/Math.PI) * ROTATE_GAIN;
+
+      // 🔎 Größer auf Hover: deutlicher als zuvor
+      const scale =
+        state === STATE.POINTER_HOVER ? 1.22 :   // vorher ~1.14
+        state === STATE.POINTER       ? 1.08 :
+        state === STATE.PILL          ? 1.08 :
+        1;
+
+      cursor.style.transform = `translate(${x - BASE_SIZE/2}px, ${y - BASE_SIZE/2}px) rotate(${angle}deg) scale(${scale}) translateZ(0)`;
     }
     requestAnimationFrame(raf);
   }
@@ -287,3 +308,4 @@ body.custom-cursor-enabled{ overflow-x:hidden }
   setEnabled(!isTouch);
 })();
 </script>
+
