@@ -85,7 +85,7 @@ body.custom-cursor-enabled{ overflow-x:hidden }
     arrow:{x:26.9,y:12.0}, pointer:{x:24.0,y:14.2}, 'pointer-hover':{x:24.0,y:13.5}, pill:{x:24.0,y:24.0}, ibeam:{x:24.0,y:24.0}
   };
   const STATE={ARROW:'arrow',POINTER:'pointer',POINTER_HOVER:'pointer-hover',PILL:'pill',IBEAM:'ibeam'};
-  let state=STATE.ARROW, hoverInT=null, hoverOutT=null, pillT=null, hoveringInteractive=false;
+  let state=STATE.ARROW, hoverInT=null, hoverOutT=null, pillT=null, hoveringInteractive=false, suspended=false;
 
   function originFor(k){ const o=ORIGIN[k]||ORIGIN.arrow; cursor.style.setProperty('--ox',o.x+'px'); cursor.style.setProperty('--oy',o.y+'px'); return o; }
   function setState(next){
@@ -94,42 +94,74 @@ body.custom-cursor-enabled{ overflow-x:hidden }
     if(ph){ if(next===STATE.POINTER_HOVER){ ph.style.animation='wiggle .5s ease-in-out infinite'; if(tail){tail.style.animation='tail-wave .9s ease-in-out infinite';} }
             else { ph.style.animation='none'; if(tail){tail.style.animation='none';} } }
   }
-  function setEnabled(on){ enabled=on; document.body.classList.toggle('custom-cursor-enabled', on); cursor.style.opacity=on?'1':'0'; }
-  addEventListener('mousemove',e=>{mouseX=e.clientX; mouseY=e.clientY;});
+  function setEnabled(on){ enabled=on; document.body.classList.toggle('custom-cursor-enabled', on); if(!suspended) cursor.style.opacity=on?'1':'0'; }
 
-  const hoverSel='a,button,[role="button"],.cursor-target,.welcome-btn';
-  document.addEventListener('mouseenter',e=>{
-    if(!e.target.closest) return;
-  },true);
+  addEventListener('mousemove', e=>{ mouseX=e.clientX; mouseY=e.clientY; });
+
+  /* ===== Hover-Ziele: EXKLUSIVE confetti-enabled ===== */
+  const selectorInteractive = 'a:not(.confetti-enabled), button, [role="button"], .cursor-target, .welcome-btn';
   function bindHover(){
-    document.querySelectorAll(hoverSel).forEach(el=>{
-      el.addEventListener('mouseenter',()=>{ hoveringInteractive=true; cursor.classList.add('is-hovering'); clearTimeout(hoverOutT); setState(STATE.POINTER); clearTimeout(hoverInT); hoverInT=setTimeout(()=>setState(STATE.POINTER_HOVER),60); });
-      el.addEventListener('mouseleave',()=>{ hoveringInteractive=false; cursor.classList.remove('is-hovering'); clearTimeout(hoverInT); clearTimeout(hoverOutT); hoverOutT=setTimeout(()=>setState(STATE.ARROW),60); });
+    document.querySelectorAll(selectorInteractive).forEach(el=>{
+      el.addEventListener('mouseenter', ()=>{
+        if(suspended) return; // wenn Confetti aktiv ist, Snake pausieren
+        hoveringInteractive = true;
+        cursor.classList.add('is-hovering');
+        clearTimeout(hoverOutT);
+        setState(STATE.POINTER);
+        clearTimeout(hoverInT);
+        hoverInT = setTimeout(()=> setState(STATE.POINTER_HOVER), 60);
+      });
+      el.addEventListener('mouseleave', ()=>{
+        if(suspended) return;
+        hoveringInteractive = false;
+        cursor.classList.remove('is-hovering');
+        clearTimeout(hoverInT); clearTimeout(hoverOutT);
+        hoverOutT = setTimeout(()=> setState(STATE.ARROW), 60);
+      });
     });
   }
+
+  /* ===== Textfelder (wie gehabt) ===== */
   function bindText(){
     const sel='input[type="text"],input[type="search"],textarea,[contenteditable],[contenteditable="true"]';
     document.querySelectorAll(sel).forEach(el=>{
-      el.addEventListener('mouseenter',()=>{ clearTimeout(hoverInT); clearTimeout(hoverOutT); setState(STATE.IBEAM); });
-      el.addEventListener('mouseleave',()=> setState(STATE.ARROW));
-      el.addEventListener('focus',    ()=>{ clearTimeout(hoverInT); clearTimeout(hoverOutT); setState(STATE.IBEAM); });
-      el.addEventListener('blur',     ()=> setState(STATE.ARROW));
+      el.addEventListener('mouseenter', ()=>{ if(suspended) return; clearTimeout(hoverInT); clearTimeout(hoverOutT); setState(STATE.IBEAM); });
+      el.addEventListener('mouseleave', ()=>{ if(suspended) return; setState(STATE.ARROW); });
+      el.addEventListener('focus',     ()=>{ if(suspended) return; clearTimeout(hoverInT); clearTimeout(hoverOutT); setState(STATE.IBEAM); });
+      el.addEventListener('blur',      ()=>{ if(suspended) return; setState(STATE.ARROW); });
     });
   }
-  bindHover(); bindText();
 
-  const pillBallEl=()=>cursor.querySelector('.pill-ball');
-  function triggerPill(dir){
-    if(hoveringInteractive) return;
-    setState(STATE.PILL);
-    const b=pillBallEl(); if(b){ b.classList.remove('up','down'); void b.offsetWidth; b.classList.add(dir>0?'down':'up'); }
-    clearTimeout(pillT); pillT=setTimeout(()=>{ if(b){b.classList.remove('up','down');} setState(STATE.ARROW); },650);
+  /* ===== NEU: Confetti-Ziele – Snake ausblenden ===== */
+  function bindConfetti(){
+    document.querySelectorAll('a.confetti-enabled').forEach(el=>{
+      el.addEventListener('mouseenter', ()=>{
+        suspended = true;
+        cursor.style.opacity = '0';    // Snake weg → dein 🎉 sichtbar
+        setState(STATE.ARROW);         // neutralisieren
+      });
+      el.addEventListener('mouseleave', ()=>{
+        suspended = false;
+        cursor.style.opacity = '1';    // Snake zurück
+      });
+    });
   }
-  addEventListener('wheel',e=>triggerPill(e.deltaY),{passive:true});
-  addEventListener('scroll',()=>triggerPill(1),{passive:true});
-  addEventListener('mousedown',()=>{ cursor.classList.remove('click-pulse'); void cursor.offsetWidth; cursor.classList.add('click-pulse'); });
 
-  function raf(){
+  bindHover(); bindText(); bindConfetti();
+
+  /* Scroll → Pill, Klick-Pulse wie gehabt (beides ignoriert, wenn suspended) */
+  const pillBallEl=()=>cursor.querySelector('.pill-ball');
+  addEventListener('wheel', e=>{
+    if(suspended) return;
+    setState(STATE.PILL);
+    const b=pillBallEl(); if(b){ b.classList.remove('up','down'); void b.offsetWidth; b.classList.add(e.deltaY>0?'down':'up'); }
+    clearTimeout(pillT); pillT=setTimeout(()=>{ if(b){b.classList.remove('up','down');} setState(STATE.ARROW); },650);
+  },{passive:true});
+  addEventListener('scroll', ()=>{ if(!suspended){ setState(STATE.PILL); clearTimeout(pillT); pillT=setTimeout(()=>setState(STATE.ARROW),650); } },{passive:true});
+  addEventListener('mousedown', ()=>{ if(!suspended){ cursor.classList.remove('click-pulse'); void cursor.offsetWidth; cursor.classList.add('click-pulse'); } });
+
+  /* Render-Loop */
+  (function raf(){
     if(enabled){
       const dx=mouseX-x, dy=mouseY-y, d=Math.hypot(dx,dy);
       if(d>SNAP){ x=mouseX; y=mouseY; } else { x+=dx*EASE; y+=dy*EASE; }
@@ -139,12 +171,12 @@ body.custom-cursor-enabled{ overflow-x:hidden }
       cursor.style.transform=`translate(${x-o.x}px, ${y-o.y}px) rotate(${angle}deg) scale(${scale}) translateZ(0)`;
     }
     requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
+  })();
 
   setEnabled(!isTouch); originFor('arrow');
 
-  // Wenn Content via AJAX nachlädt, Hover-Bindings nachziehen:
-  new MutationObserver(()=>{ bindHover(); bindText(); }).observe(document.body,{subtree:true,childList:true});
+  /* Falls DOM nachlädt (AJAX): Rebind */
+  new MutationObserver(()=>{ bindHover(); bindText(); bindConfetti(); })
+    .observe(document.body,{subtree:true,childList:true});
 })();
 </script>
