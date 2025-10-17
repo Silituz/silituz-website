@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Cursor Test – Snake Multi-State v4.4
+title: Cursor Test – Snake Multi-State v4.4 (Head Hotspot)
 lang: de
 ---
 
@@ -51,7 +51,11 @@ body.custom-cursor-enabled{ overflow-x:hidden }
     drop-shadow(0 0 40px var(--g3));
   mix-blend-mode:screen;
 
-  /* 🔧 Performance + flüssigere Bewegung */
+  /* Hotspot/Origin wird per JS (CSS-Variablen) auf den Kopf gesetzt */
+  transform-box: fill-box;
+  transform-origin: var(--ox) var(--oy);
+
+  /* Performance */
   will-change: transform;
   transform: translateZ(0);
 }
@@ -68,7 +72,7 @@ body.custom-cursor-enabled{ overflow-x:hidden }
 #snake-cursor[data-state="pill"]          [data-variant="pill"]{display:block}
 #snake-cursor[data-state="ibeam"]         [data-variant="ibeam"]{display:block}
 
-/* Hover-Glow etwas stärker, aber ohne Zusatz-UI */
+/* Hover-Glow etwas stärker */
 #snake-cursor.is-hovering{
   filter:
     drop-shadow(0 0 8px var(--g1))
@@ -92,16 +96,9 @@ body.custom-cursor-enabled{ overflow-x:hidden }
 .pill-ball.down{ transform: translateY(10px); }
 .pill-ball.up{   transform: translateY(-10px); }
 
-/* HOVER WIGGLE (kein Ring, nur dezente Bewegung) */
-@keyframes wiggle {
-  0%,100% { transform: rotate(0deg) }
-  25%     { transform: rotate(1.8deg) }
-  75%     { transform: rotate(-1.8deg) }
-}
-@keyframes tail-wave {
-  0%,100% { stroke-dashoffset: 0 }
-  50%     { stroke-dashoffset: 10 }
-}
+/* HOVER WIGGLE */
+@keyframes wiggle { 0%,100%{transform:rotate(0)} 25%{transform:rotate(1.8deg)} 75%{transform:rotate(-1.8deg)} }
+@keyframes tail-wave { 0%,100%{stroke-dashoffset:0} 50%{stroke-dashoffset:10} }
 
 /* Touch: nativer Cursor */
 @media (hover:none) and (pointer:coarse){
@@ -110,7 +107,7 @@ body.custom-cursor-enabled{ overflow-x:hidden }
 }
 </style>
 
-<!-- SVG mit 5 Varianten (Pointer-Hover ohne Ring, mit Wiggle + Tail-Wave) -->
+<!-- SVG mit 5 Varianten -->
 <svg id="snake-cursor" viewBox="0 0 48 48" aria-hidden="true" data-state="arrow">
   <!-- ARROW (Standard) -->
   <g data-variant="arrow">
@@ -128,18 +125,12 @@ body.custom-cursor-enabled{ overflow-x:hidden }
     <path class="stroke" d="M26.2,14.2 h1.8" />
   </g>
 
-  <!-- POINTER-HOVER (größer + Schlängel-Wiggle + Zunge sichtbar) -->
+  <!-- POINTER-HOVER (größer + Wiggle + Zunge) -->
   <g data-variant="pointer-hover" transform-origin="24px 14px">
-    <!-- Handkurve leicht ausgeprägter -->
     <path class="stroke" d="M12.4,31.6 C18.2,26.2 21.9,26.9 24.8,25.0" />
-    <!-- animierte Tail-Wave (nur Strich) -->
-    <path class="stroke tail" d="M13.6,30.4 C18.4,27.6 21.9,27.6 24.2,26.1" opacity=".6"
-          style="stroke-dasharray:40 14; stroke-dashoffset:0;" />
-    <!-- längerer Finger -->
+    <path class="stroke tail" d="M13.6,30.4 C18.4,27.6 21.9,27.6 24.2,26.1" opacity=".6" style="stroke-dasharray:40 14; stroke-dashoffset:0;" />
     <path class="stroke" d="M24,15 v11.8" />
-    <!-- spitzerer Kopf -->
     <circle class="fill" cx="24" cy="13.5" r="1.85"/>
-    <!-- kleine sichtbare Zunge -->
     <path class="stroke" d="M26.1,13.5 h2.0 M27.1,13.0 v1.0" />
   </g>
 
@@ -160,6 +151,7 @@ body.custom-cursor-enabled{ overflow-x:hidden }
     <path class="stroke" d="M19,32 h10" />
   </g>
 </svg>
+
 <script>
 (()=>{
   const cursor = document.getElementById('snake-cursor');
@@ -169,14 +161,22 @@ body.custom-cursor-enabled{ overflow-x:hidden }
   const isTouch = matchMedia('(hover: none) and (pointer: coarse)').matches;
 
   // 🔧 Tuning
-  const BASE_SIZE   = 48;                 // Größe des SVG-Containers
-  const EASE        = prefersReduced ? 1 : 0.28;  // höher = direkter (vorher ~0.18)
-  const SNAP_DIST   = 80;                 // bei großem Abstand "snappen"
-  const ROTATE_GAIN = 0.06;               // etwas weniger Rotations-Trägheit
+  const EASE        = prefersReduced ? 1 : 0.28;
+  const SNAP_DIST   = 80;
+  const ROTATE_GAIN = 0.06;
 
   let enabled = true;
   let mouseX = innerWidth/2, mouseY = innerHeight/2;
   let x = mouseX, y = mouseY;
+
+  // Hotspot (Kopf) je Variante – SVG-Koordinaten
+  const ORIGIN = {
+    arrow:          { x: 26.9, y: 12.0 }, // Zungen-Linie bei Arrow
+    pointer:        { x: 24.0, y: 14.2 }, // Kopf-Kreis
+    'pointer-hover':{ x: 24.0, y: 13.5 }, // Kopf-Kreis (Hover)
+    pill:           { x: 24.0, y: 24.0 }, // Pill Mitte
+    ibeam:          { x: 24.0, y: 24.0 }  // I-Beam Mitte
+  };
 
   const STATE = {
     ARROW:'arrow',
@@ -189,10 +189,18 @@ body.custom-cursor-enabled{ overflow-x:hidden }
   let hoverInTimer = null, hoverOutTimer = null, pillTimer = null;
   let isHoveringInteractive = false;
 
+  function applyOriginFor(stateKey){
+    const o = ORIGIN[stateKey] || ORIGIN.arrow;
+    cursor.style.setProperty('--ox', o.x + 'px');
+    cursor.style.setProperty('--oy', o.y + 'px');
+    return o;
+  }
+
   function setState(next){
     if(state === next) return;
     state = next;
     cursor.setAttribute('data-state', next);
+    applyOriginFor(next);
 
     // Wiggle nur im pointer-hover aktiv
     const ph = cursor.querySelector('[data-variant="pointer-hover"]');
@@ -226,14 +234,14 @@ body.custom-cursor-enabled{ overflow-x:hidden }
         clearTimeout(hoverOutTimer);
         setState(STATE.POINTER);
         clearTimeout(hoverInTimer);
-        hoverInTimer = setTimeout(()=> setState(STATE.POINTER_HOVER), 60); // schneller rein
+        hoverInTimer = setTimeout(()=> setState(STATE.POINTER_HOVER), 60);
       });
       el.addEventListener('mouseleave', ()=>{
         isHoveringInteractive = false;
         cursor.classList.remove('is-hovering');
         clearTimeout(hoverInTimer);
         clearTimeout(hoverOutTimer);
-        hoverOutTimer = setTimeout(()=> setState(STATE.ARROW), 60); // schneller raus
+        hoverOutTimer = setTimeout(()=> setState(STATE.ARROW), 60);
       });
     });
   }
@@ -254,12 +262,12 @@ body.custom-cursor-enabled{ overflow-x:hidden }
   // Scroll → PILL (Ball rutscht je Richtung)
   const pillBall = () => cursor.querySelector('.pill-ball');
   function triggerPill(deltaY){
-    if(isHoveringInteractive) return; // Hover-Klicks nicht stören
+    if(isHoveringInteractive) return;
     setState(STATE.PILL);
     const ball = pillBall();
     if(ball){
       ball.classList.remove('up','down');
-      void ball.offsetWidth; // reflow retrigger
+      void ball.offsetWidth;
       ball.classList.add(deltaY > 0 ? 'down' : 'up');
     }
     clearTimeout(pillTimer);
@@ -276,31 +284,23 @@ body.custom-cursor-enabled{ overflow-x:hidden }
     cursor.classList.remove('click-pulse'); void cursor.offsetWidth; cursor.classList.add('click-pulse');
   });
 
-  // Render Loop — reaktiver + Snap
+  // Render Loop — Hotspot = Kopf
   function raf(){
     if(enabled){
       const dx = mouseX - x, dy = mouseY - y;
       const dist = Math.hypot(dx, dy);
+      if(dist > 80){ x = mouseX; y = mouseY; } else { x += dx * EASE; y += dy * EASE; }
 
-      // großer Sprung → sofort zur Maus (fühlt sich präziser an)
-      if(dist > SNAP_DIST){
-        x = mouseX; y = mouseY;
-      } else {
-        x += dx * EASE;
-        y += dy * EASE;
-      }
-
-      // dezente Ausrichtung in Bewegungsrichtung
       const angle = Math.atan2(mouseY - y, mouseX - x) * (180/Math.PI) * ROTATE_GAIN;
 
-      // 🔎 Größer auf Hover: deutlicher als zuvor
       const scale =
-        state === STATE.POINTER_HOVER ? 1.22 :   // vorher ~1.14
+        state === STATE.POINTER_HOVER ? 1.22 :
         state === STATE.POINTER       ? 1.08 :
-        state === STATE.PILL          ? 1.08 :
-        1;
+        state === STATE.PILL          ? 1.08 : 1;
 
-      cursor.style.transform = `translate(${x - BASE_SIZE/2}px, ${y - BASE_SIZE/2}px) rotate(${angle}deg) scale(${scale}) translateZ(0)`;
+      const o = ORIGIN[state] || ORIGIN.arrow;
+      cursor.style.transform =
+        `translate(${x - o.x}px, ${y - o.y}px) rotate(${angle}deg) scale(${scale}) translateZ(0)`;
     }
     requestAnimationFrame(raf);
   }
@@ -309,8 +309,8 @@ body.custom-cursor-enabled{ overflow-x:hidden }
   // Toggle
   document.getElementById('toggle-cursor').addEventListener('change', e=> setEnabled(e.target.checked));
 
-  // Start
+  // Start – Origin initial setzen
+  applyOriginFor('arrow');
   setEnabled(!isTouch);
 })();
 </script>
-
