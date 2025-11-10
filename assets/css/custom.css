@@ -445,4 +445,10 @@ header video, header img, header svg{ background:transparent !important; }
   100% { transform: rotate(0deg); }
 }
 
+.site-footer {
+  background-color: #020617 !important;  /* gleich wie Header/Shoutout */
+  color: var(--text) !important;
+  border-top: 1px solid #1e293b !important;
+}
+
 
