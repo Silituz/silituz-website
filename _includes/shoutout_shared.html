@@ -13,8 +13,8 @@
   </div>
 </section>
 
-<!-- Coco Intro (above Featured) -->
-<section class="py-14 bg-slate-800">
+<!-- Coco Intro (same background tone as Gallery) -->
+<section class="py-14 bg-slate-900/70">
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
     <h2 class="text-3xl md:text-4xl font-extrabold text-purple-500">
       {{ page.coco_shout_title | default: "Coco • Eine weitere kreative Seele" }}
@@ -25,23 +25,24 @@
   </div>
 </section>
 
-<!-- Coco -->
+<!-- Coco (bigger avatar + unified bar background) -->
 <a href="https://www.tiktok.com/@coco_x0x0_?_t=ZN-908w48ZmTKQ&_r=1"
    target="_blank" rel="noopener"
-   class="group block max-w-xs mx-auto rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
-  <div class="w-300 h-300 md:w-350 md:h-350 mx-auto bg-gray-800 rounded-full overflow-hidden">
+   class="group block max-w-md mx-auto rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+  <!-- Bild deutlich größer -->
+  <div class="w-72 h-72 md:w-80 md:h-80 mx-auto bg-slate-900 rounded-full overflow-hidden">
     <img src="{{ '/assets/images/shoutout/coco.svg' | relative_url }}" 
          alt="Coco"
          class="w-full h-full object-cover rounded-full" />
   </div>
-  <div class="relative bg-slate-800 text-slate-100 rounded-b-2xl overflow-hidden mt-3">
-    <!-- Füll-Animation jetzt lila -->
+  <!-- Balken in gleichem Ton wie Gallery-Abschnitte, Füllung lila -->
+  <div class="relative bg-slate-900/70 text-slate-100 rounded-b-2xl overflow-hidden mt-4">
     <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-purple-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
-    <div class="relative z-10 p-4 text-center">
-      <h3 class="text-base md:text-lg font-semibold text-purple-500 group-hover:text-slate-100 transition-colors duration-300">
+    <div class="relative z-10 p-5 text-center">
+      <h3 class="text-lg md:text-xl font-semibold text-purple-500 group-hover:text-slate-100 transition-colors duration-300">
         🐆💜🍪Coco🍪💜🐆
       </h3>
-      <p class="mt-1 text-sm text-slate-100/85">🩷</p>
+      <p class="mt-2 text-base text-slate-100/85">🩷</p>
     </div>
   </div>
 </a>
@@ -73,7 +74,7 @@
         </div>
       </a>
 
- <!-- Scooter -->
+      <!-- Scooter -->
       <a href="https://www.tiktok.com/@itsmrsoju?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener"
          class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
         <div class="aspect-square w-full bg-gray-800 rounded-full overflow-hidden">
@@ -85,10 +86,10 @@
           <div class="relative z-10 p-5 text-center space-y-2">
             <h3 class="text-lg font-semibold text-emerald-500 group-hover:text-slate-100 transition-colors duration-300">Mr. Soju</h3>
             <p class="text-sm text-slate-100/85">Going with the flow</p>
-       </div>
+          </div>
         </div>
       </a>
-      
+
       <!-- Marketingfutzi -->
       <a href="https://www.tiktok.com/@marketingfutzi?_t=ZN-908ugDh8gfS&_r=1" target="_blank" rel="noopener"
          class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
@@ -137,8 +138,7 @@
           </div>
         </div>
       </a> 
-      
-                    
+
       <!-- Wolf / Polina -->
       <a href="https://www.tiktok.com/@wolf_05555?_t=ZN-908vu0DqPX4&_r=1" target="_blank" rel="noopener"
          class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
@@ -171,7 +171,7 @@
         </div>
       </a>
 
-  <!-- Eunice -->
+      <!-- Eunice -->
       <a href="https://www.tiktok.com/@_.eunice16._?_t=ZN-908wMyrdMdq&_r=1" target="_blank" rel="noopener"
          class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
         <div class="aspect-square w-full bg-gray-800 rounded-full overflow-hidden">
@@ -186,7 +186,7 @@
         </div>
       </a>
       
- <!-- Shorty -->
+      <!-- Shorty -->
       <a href="https://www.tiktok.com/@shorty_426?is_from_webapp=1&sender_device=pc"_blank" rel="noopener"
          class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
         <div class="aspect-square w-full bg-gray-800 rounded-full overflow-hidden">
@@ -202,7 +202,7 @@
         </div>
       </a>
 
- <!-- Marty Ann -->
+      <!-- Marty Ann -->
       <a href="https://www.tiktok.com/@marty.ann.tx?_t=ZN-908wZflMIze&_r=1" target="_blank" rel="noopener"
          class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
         <div class="aspect-square w-full bg-gray-800 rounded-full overflow-hidden">
@@ -219,7 +219,7 @@
         </div>
       </a>
 
-    <!-- Green Eyed Gem -->
+      <!-- Green Eyed Gem -->
       <a href="https://www.tiktok.com/@greeneyedgem69?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener"
          class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
         <div class="aspect-square w-full bg-gray-800 rounded-full overflow-hidden">
@@ -234,7 +234,7 @@
         </div>
       </a>
 
-   <!-- Crypt Cutie -->
+      <!-- Crypt Cutie -->
       <a href="https://www.tiktok.com/@silent.reaperx_x?_t=ZN-908wRUHPJMk&_r=1" target="_blank" rel="noopener"
          class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
         <div class="aspect-square w-full bg-gray-800 rounded-full overflow-hidden">
@@ -267,7 +267,7 @@
         </div>
       </a>
 
-<!-- Rachellyn -->
+      <!-- Rachellyn -->
       <a href="https://www.tiktok.com/@rachellynnn97?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener"
          class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
         <div class="aspect-square w-full bg-gray-800 rounded-full overflow-hidden">
@@ -300,7 +300,7 @@
         </div>
       </a>
       
- <!-- Janine -->
+      <!-- Janine -->
       <a href="https://www.tiktok.com/@janinebbert?is_from_webapp=1&sender_device=pc" rel="noopener"
          class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
         <div class="aspect-square w-full bg-gray-800 rounded-full overflow-hidden">
@@ -316,7 +316,7 @@
         </div>
       </a>
 
- <!-- Krümelchen -->
+      <!-- Krümelchen -->
       <a href="https://www.tiktok.com/@kruemelchen2016?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener"
          class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
         <div class="aspect-square w-full bg-gray-800 rounded-full overflow-hidden">
@@ -332,7 +332,6 @@
         </div>
       </a>
     
-
       <!-- Kawaiisade -->
       <a href="https://www.tiktok.com/@kawaiisade?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener"
          class="group block rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
