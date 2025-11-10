@@ -78,43 +78,42 @@
 <section class="py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 
-    <!-- Überschrift -->
-   <h2 class="text-xl md:text-2xl font-extrabold text-emerald-500">
-      {% if page.gallery_title %}
-        {{ page.gallery_title }}
-      {% else %}
-        {% if is_en %}Gallery{% else %}Galerie{% endif %}
-      {% endif %}
+    <!-- Silituz -->
+    <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-500 mb-2">
+      Silituz • Gallery
     </h2>
-
-    <!-- Hinweis -->
-    <p class="mt-2 text-slate-500 dark:text-slate-400 text-base italic">
-      {% if page.gallery_note %}
-        {{ page.gallery_note }}
-      {% else %}
-        {% if is_en %}This gallery grows over time 🌱{% else %}Diese Galerie wird stetig erweitert 🌱{% endif %}
-      {% endif %}
+    <p class="text-slate-500 dark:text-slate-400 text-base italic mb-8">
+      A small selection of Silituz artworks 🌱
     </p>
 
-    <!-- Bilder -->
-    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-gallery="main">
-      <img class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
-           src="/assets/images/gallery1.webp" alt="{{ page.img1_alt }}" />
-      <img class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
-           src="/assets/images/gallery2.webp" alt="{{ page.img2_alt }}" />
-      <img class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
-           src="/assets/images/gallery3.webp" alt="{{ page.img3_alt }}" />
-      <img class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
-           src="/assets/images/gallery4.webp" alt="{{ page.img4_alt }}" />
-      <img class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
-           src="/assets/images/gallery5.webp" alt="{{ page.img5_alt }}" />
-      <img class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]"
-           src="/assets/images/gallery6.webp" alt="{{ page.img6_alt }}" />
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16" data-gallery="silituz">
+      <img src="/assets/images/silituz1.webp" alt="Silituz Artwork 1" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in hover:scale-[1.02] transition-transform duration-200" />
+      <img src="/assets/images/silituz2.webp" alt="Silituz Artwork 2" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in hover:scale-[1.02] transition-transform duration-200" />
+      <img src="/assets/images/silituz3.webp" alt="Silituz Artwork 3" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in hover:scale-[1.02] transition-transform duration-200" />
+      <img src="/assets/images/silituz4.webp" alt="Silituz Artwork 4" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in hover:scale-[1.02] transition-transform duration-200" />
+      <img src="/assets/images/silituz5.webp" alt="Silituz Artwork 5" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in hover:scale-[1.02] transition-transform duration-200" />
+      <img src="/assets/images/silituz6.webp" alt="Silituz Artwork 6" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in hover:scale-[1.02] transition-transform duration-200" />
     </div>
+
+    <!-- Coco -->
+    <h2 class="text-2xl md:text-3xl font-extrabold text-purple-500 mb-2">
+      Coco • Gallery
+    </h2>
+    <p class="text-slate-500 dark:text-slate-400 text-base italic mb-8">
+      A small selection of Coco artworks 🌸
+    </p>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-gallery="coco">
+      <img src="/assets/images/coco1.webp" alt="Coco Artwork 1" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in hover:scale-[1.02] transition-transform duration-200" />
+      <img src="/assets/images/coco2.webp" alt="Coco Artwork 2" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in hover:scale-[1.02] transition-transform duration-200" />
+      <img src="/assets/images/coco3.webp" alt="Coco Artwork 3" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in hover:scale-[1.02] transition-transform duration-200" />
+      <img src="/assets/images/coco4.webp" alt="Coco Artwork 4" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in hover:scale-[1.02] transition-transform duration-200" />
+      <img src="/assets/images/coco5.webp" alt="Coco Artwork 5" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in hover:scale-[1.02] transition-transform duration-200" />
+      <img src="/assets/images/coco6.webp" alt="Coco Artwork 6" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in hover:scale-[1.02] transition-transform duration-200" />
+    </div>
+
   </div>
 </section>
-
-
 
 <!-- Lightbox Overlay -->
 <div id="lightbox"
@@ -137,10 +136,8 @@
 
 <script>
 (() => {
-  const galleryRoot = document.querySelector('[data-gallery="main"]');
-  if (!galleryRoot) return;
-
-  const items = Array.from(galleryRoot.querySelectorAll('img'));
+const items = Array.from(document.querySelectorAll('[data-gallery] img'));
+if (!items.length) return;
   const lightbox = document.getElementById('lightbox');
   const img = document.getElementById('lightboxImg');
   const btnClose = document.getElementById('lightboxClose');
