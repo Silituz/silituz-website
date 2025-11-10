@@ -25,19 +25,25 @@
   </div>
 </section>
 
-<!-- Coco (bigger avatar + unified bar background) -->
+<!-- Coco -->
 <a href="https://www.tiktok.com/@coco_x0x0_?_t=ZN-908w48ZmTKQ&_r=1"
    target="_blank" rel="noopener"
-   class="group block max-w-md mx-auto rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
-  <!-- Bild deutlich größer -->
-  <div class="w-72 h-72 md:w-80 md:h-80 mx-auto bg-slate-900 rounded-full overflow-hidden">
-    <img src="{{ '/assets/images/shoutout/coco.svg' | relative_url }}" 
+   class="group block mx-auto w-fit rounded-2xl overflow-visible transition hover:shadow-lg">
+
+  <!-- großes, rundes Bild -->
+  <div class="mx-auto rounded-full overflow-hidden shadow-md
+              w-[22rem] h-[22rem] md:w-[26rem] md:h-[26rem]">
+    <img src="{{ '/assets/images/shoutout/coco.svg' | relative_url }}"
          alt="Coco"
          class="w-full h-full object-cover rounded-full" />
   </div>
-  <!-- Balken in gleichem Ton wie Gallery-Abschnitte, Füllung lila -->
-  <div class="relative bg-slate-900/70 text-slate-100 rounded-b-2xl overflow-hidden mt-4">
-    <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-purple-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+
+  <!-- Name/Balken: gleiche Breite wie das Bild, lila Füllung -->
+  <div class="relative mx-auto mt-4 text-slate-100 rounded-b-2xl overflow-hidden
+              bg-slate-900/70
+              w-[22rem] md:w-[26rem]">
+    <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-purple-500
+                 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
     <div class="relative z-10 p-5 text-center">
       <h3 class="text-lg md:text-xl font-semibold text-purple-500 group-hover:text-slate-100 transition-colors duration-300">
         🐆💜🍪Coco🍪💜🐆
