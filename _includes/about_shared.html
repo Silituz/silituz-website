@@ -125,30 +125,22 @@
   </div>
 </section>
 
-<!-- Info-Karten (Purple, identisch zu Silituz, aber mit lila Akzenten) -->
+<!-- CoCo: Info-Karten (Purple, identischer Aufbau wie oben) -->
 <section class="pb-16 pt-4">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-8">
 
-    <!-- Box 1 – Was mich inspiriert -->
-    <div class="relative block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 
-                border border-gray-100 dark:border-gray-700 transition hover:shadow-lg">
+    <!-- Box 1 – nutzt exakt Silituz' Texte -->
+    <div class="relative block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition hover:shadow-lg">
       <div class="relative z-10 p-6">
-        <h3 class="text-xl font-bold dark:text-purple-500 text-purple-500">
-          {{ page.box1_title }}
-        </h3>
-        <p class="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-          {{ page.box1_text }}
-        </p>
+        <h3 class="text-xl font-bold text-purple-500">{{ page.box1_title }}</h3>
+        <p class="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">{{ page.box1_text }}</p>
       </div>
     </div>
 
-    <!-- Box 2 – Was ich mache -->
-    <div class="relative block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 
-                border border-gray-100 dark:border-gray-700 transition hover:shadow-lg">
+    <!-- Box 2 – nutzt exakt Silituz' Texte -->
+    <div class="relative block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition hover:shadow-lg">
       <div class="relative z-10 p-6">
-        <h3 class="text-xl font-bold dark:text-purple-500 text-purple-500">
-          {{ page.box2_title }}
-        </h3>
+        <h3 class="text-xl font-bold text-purple-500">{{ page.box2_title }}</h3>
         <ul class="mt-3 text-sm leading-relaxed list-disc pl-5 text-gray-700 dark:text-gray-300">
           <li>{{ page.box2_li1 }}</li>
           <li>{{ page.box2_li2 }}</li>
@@ -157,41 +149,38 @@
       </div>
     </div>
 
-    <!-- Box 3 – Steckbrief -->
-    <div class="relative block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 
-                border border-gray-100 dark:border-gray-700 transition hover:shadow-lg">
+    <!-- Box 3 – Steckbrief: CoCo-Felder, mit Fallback auf Silituz -->
+    <div class="relative block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition hover:shadow-lg">
       <div class="relative z-10 p-6">
-        <h3 class="text-xl font-bold dark:text-purple-500 text-purple-500">
-          {{ page.box3_title }}
-        </h3>
+        <h3 class="text-xl font-bold text-purple-500">{{ page.s2_box3_title | default: page.box3_title | default: "Steckbrief" }}</h3>
         <dl class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
           <div>
             <dt class="text-gray-500 dark:text-gray-400">{{ page.alias_label }}</dt>
-            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.alias_val }}</dd>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.coco_alias_val | default: page.alias_val }}</dd>
           </div>
           <div>
             <dt class="text-gray-500 dark:text-gray-400">{{ page.eyecolor_label }}</dt>
-            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.eyecolor_val }}</dd>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.coco_eyecolor_val | default: page.eyecolor_val }}</dd>
           </div>
           <div>
             <dt class="text-gray-500 dark:text-gray-400">{{ page.favcolor_label }}</dt>
-            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.favcolor_val }}</dd>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.coco_favcolor_val | default: page.favcolor_val }}</dd>
           </div>
           <div>
             <dt class="text-gray-500 dark:text-gray-400">{{ page.zodiac_label }}</dt>
-            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.zodiac_val }}</dd>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.coco_zodiac_val | default: page.zodiac_val }}</dd>
           </div>
           <div>
             <dt class="text-gray-500 dark:text-gray-400">{{ page.czodiac_label }}</dt>
-            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.czodiac_val }}</dd>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.coco_czodiac_val | default: page.czodiac_val }}</dd>
           </div>
           <div>
             <dt class="text-gray-500 dark:text-gray-400">{{ page.mbti_label }}</dt>
-            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.mbti_val }}</dd>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.coco_mbti_val | default: page.mbti_val }}</dd>
           </div>
           <div class="sm:col-span-2">
             <dt class="text-gray-500 dark:text-gray-400">{{ page.motto_label }}</dt>
-            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.motto_val }}</dd>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.coco_motto_val | default: page.motto_val }}</dd>
           </div>
         </dl>
       </div>
