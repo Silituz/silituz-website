@@ -46,38 +46,57 @@
 </section>
 {% endcomment %}
 
-<!-- TikTok: Neueste/Latest Clips (Auto-Update) -->
+<!-- TikTok: Neueste/Latest Clips (Auto-Update für Silituz & Coco) -->
 <section class="py-12">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-
-   <!-- Überschrift aus der jeweiligen gallery*.html -->
-   <h2 class="text-xl md:text-2xl font-bold text-emerald-500 mb-4 text-center">
-      {{ page.tiktok_heading | default: "TikTok • Clips" }}
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Überschrift -->
+    <h2 class="text-xl md:text-2xl font-bold text-emerald-500 mb-8 text-center">
+      {{ page.tiktok_heading | default: "TikTok • Neueste Clips" }}
     </h2>
 
-      <!-- Offizielles TikTok Profil-Embed -->
-      <blockquote class="tiktok-embed"
-                  cite="https://www.tiktok.com/@silituz"
-                  data-unique-id="silituz"
-                  data-embed-type="creator"
-                  style="max-width: 720px; min-width: 288px; margin: 0 auto;">
-        <section>
-          <a target="_blank" href="https://www.tiktok.com/@silituz?refer=creator_embed">@silituz</a>
-        </section>
-      </blockquote>
-    </div>
+    <!-- Zwei Spalten: Silituz & Coco -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <!-- Silituz -->
+      <div class="flex flex-col items-center">
+        <h3 class="text-lg md:text-xl font-semibold text-emerald-400 mb-4 text-center">
+          {{ page.tiktok_heading_silituz | default: "Silituz • Clips" }}
+        </h3>
+        <blockquote class="tiktok-embed"
+                    cite="https://www.tiktok.com/@silituz"
+                    data-unique-id="silituz"
+                    data-embed-type="creator"
+                    style="max-width: 720px; min-width: 288px; margin: 0 auto;">
+          <section>
+            <a target="_blank" href="https://www.tiktok.com/@silituz?refer=creator_embed">@silituz</a>
+          </section>
+        </blockquote>
+      </div>
 
-    <!-- TikTok Script (einmal pro Seite) -->
-    <script async src="https://www.tiktok.com/embed.js"></script>
+      <!-- Coco -->
+      <div class="flex flex-col items-center">
+        <h3 class="text-lg md:text-xl font-semibold text-emerald-400 mb-4 text-center">
+          {{ page.tiktok_heading_coco | default: "Coco • Clips" }}
+        </h3>
+        <blockquote class="tiktok-embed"
+                    cite="https://www.tiktok.com/@coco_x0x0_"
+                    data-unique-id="coco_x0x0_"
+                    data-embed-type="creator"
+                    style="max-width: 720px; min-width: 288px; margin: 0 auto;">
+          <section>
+            <a target="_blank" href="https://www.tiktok.com/@coco_x0x0_?refer=creator_embed">@coco_x0x0_</a>
+          </section>
+        </blockquote>
+      </div>
+
+    </div>
   </div>
 </section>
 
-<blockquote class="tiktok-embed" cite="https://www.tiktok.com/@coco_x0x0_" data-unique-id="coco_x0x0_" data-embed-type="creator" style="max-width: 780px; min-width: 288px;" > <section> <a target="_blank" href="https://www.tiktok.com/@coco_x0x0_?refer=creator_embed">@coco_x0x0_</a> </section> </blockquote> <script async src="https://www.tiktok.com/embed.js"></script>
-  
-{%- assign is_en = page.lang == 'en' or page.url contains '/en/' -%}
+<!-- TikTok Script (nur einmal einbinden!) -->
+<script async src="https://www.tiktok.com/embed.js"></script>
 
-<section class="py-16">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 
     <!-- Silituz -->
     <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-500 mb-2">
