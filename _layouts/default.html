@@ -368,9 +368,9 @@
   {%- if page.lang == 'en' or page.url contains '/en/' -%}{%- assign is_en_menu = true -%}{%- endif -%}
 
   {%- if is_en_menu -%}
-    {%- assign nav_list = "Home:/,About:/about/,Gallery:/gallery/,Generators & more:/generators/,My Music:/music/,Socials:/socials/,Support:/support/,Shoutout:/shoutout/,Contact:/contact/,Imprint:/impressum/" | split: ',' -%}
+    {%- assign nav_list = "Home:/,About Us:/about/,Gallery:/gallery/,Generators & more:/generators/,My Music:/music/,Socials:/socials/,Support:/support/,Shoutout:/shoutout/,Contact:/contact/,Imprint:/impressum/" | split: ',' -%}
   {%- else -%}
-    {%- assign nav_list = "Home:/,Über Silituz:/about/,Galerie:/gallery/,Generatoren & mehr:/generators/,Meine Musik:/music/,Socials:/socials/,Unterstützung:/support/,Shoutout:/shoutout/,Kontakt:/contact/,Impressum:/impressum/" | split: ',' -%}
+    {%- assign nav_list = "Home:/,Über Uns:/about/,Galerie:/gallery/,Generatoren & mehr:/generators/,Meine Musik:/music/,Socials:/socials/,Unterstützung:/support/,Shoutout:/shoutout/,Kontakt:/contact/,Impressum:/impressum/" | split: ',' -%}
   {%- endif -%}
 
   {%- assign cur = page.url | replace:'index.html','' | replace:'//','/' -%}
