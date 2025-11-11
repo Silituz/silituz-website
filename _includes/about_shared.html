@@ -125,48 +125,75 @@
   </div>
 </section>
 
-<!-- Info-Karten (Purple, an Coco-Stil angelehnt) -->
+<!-- Info-Karten (Purple, identischer Inhalt/Aufbau wie Silituz) -->
 <section class="pb-16 pt-4">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-8">
 
-    <!-- Purple Box 1 -->
-    <div class="relative block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition hover:shadow-lg">
-      <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-purple-500/90 transition-all duration-[1200ms] ease-out hover:w-full"></span>
+    <!-- Purple Box 1 – Was mich inspiriert -->
+    <div class="group relative block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition hover:shadow-lg">
+      <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-purple-500/90 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
       <div class="relative z-10 p-6">
         <h3 class="text-xl font-bold text-purple-500 group-hover:text-slate-100 transition-colors duration-300">
-          {{ page.s2_box1_title }}
+          {{ page.box1_title }}
         </h3>
         <p class="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-          {{ page.s2_box1_text }}
+          {{ page.box1_text }}
         </p>
       </div>
     </div>
 
-    <!-- Purple Box 2 -->
-    <div class="relative block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition hover:shadow-lg">
-      <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-purple-500/90 transition-all duration-[1200ms] ease-out hover:w-full"></span>
+    <!-- Purple Box 2 – Was ich mache -->
+    <div class="group relative block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition hover:shadow-lg">
+      <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-purple-500/90 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
       <div class="relative z-10 p-6">
         <h3 class="text-xl font-bold text-purple-500 group-hover:text-slate-100 transition-colors duration-300">
-          {{ page.s2_box2_title }}
+          {{ page.box2_title }}
         </h3>
         <ul class="mt-3 text-sm leading-relaxed list-disc pl-5 text-gray-700 dark:text-gray-300">
-          <li>{{ page.s2_box2_li1 }}</li>
-          <li>{{ page.s2_box2_li2 }}</li>
-          <li>{{ page.s2_box2_li3 }}</li>
+          <li>{{ page.box2_li1 }}</li>
+          <li>{{ page.box2_li2 }}</li>
+          <li>{{ page.box2_li3 }}</li>
         </ul>
       </div>
     </div>
 
-    <!-- Purple Box 3 -->
-    <div class="relative block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition hover:shadow-lg">
-      <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-purple-500/90 transition-all duration-[1200ms] ease-out hover:w-full"></span>
+    <!-- Purple Box 3 – Steckbrief -->
+    <div class="group relative block overflow-hidden rounded-2xl shadow-md bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition hover:shadow-lg">
+      <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-purple-500/90 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
       <div class="relative z-10 p-6">
         <h3 class="text-xl font-bold text-purple-500 group-hover:text-slate-100 transition-colors duration-300">
-          {{ page.s2_box3_title }}
+          {{ page.box3_title }}
         </h3>
-        <p class="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-          {{ page.s2_box3_text }}
-        </p>
+        <dl class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
+          <div>
+            <dt class="text-gray-500 dark:text-gray-400">{{ page.alias_label }}</dt>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.alias_val }}</dd>
+          </div>
+          <div>
+            <dt class="text-gray-500 dark:text-gray-400">{{ page.eyecolor_label }}</dt>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.eyecolor_val }}</dd>
+          </div>
+          <div>
+            <dt class="text-gray-500 dark:text-gray-400">{{ page.favcolor_label }}</dt>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.favcolor_val }}</dd>
+          </div>
+          <div>
+            <dt class="text-gray-500 dark:text-gray-400">{{ page.zodiac_label }}</dt>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.zodiac_val }}</dd>
+          </div>
+          <div>
+            <dt class="text-gray-500 dark:text-gray-400">{{ page.czodiac_label }}</dt>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.czodiac_val }}</dd>
+          </div>
+          <div>
+            <dt class="text-gray-500 dark:text-gray-400">{{ page.mbti_label }}</dt>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.mbti_val }}</dd>
+          </div>
+          <div class="sm:col-span-2">
+            <dt class="text-gray-500 dark:text-gray-400">{{ page.motto_label }}</dt>
+            <dd class="font-medium text-gray-900 dark:text-gray-100">{{ page.motto_val }}</dd>
+          </div>
+        </dl>
       </div>
     </div>
 
