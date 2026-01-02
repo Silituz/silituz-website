@@ -1,330 +1,131 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>World Friends Map</title>
+<!-- Leaflet (Map) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Leaflet (Map) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root{
+    --bg:#0b0f1a;
+    --text:#e9eefc;
+    --muted:#a9b4d0;
+    --accent:#7aa7ff;
+    --danger:#ff6b6b;
+    --line:rgba(255,255,255,.08);
+    --shadow: 0 14px 40px rgba(0,0,0,.35);
+    --radius:18px;
+  }
 
-  <style>
-    :root{
-      --bg:#0b0f1a;
-      --card:#121a2b;
-      --text:#e9eefc;
-      --muted:#a9b4d0;
-      --accent:#7aa7ff;
-      --danger:#ff6b6b;
-      --line:rgba(255,255,255,.08);
-      --shadow: 0 14px 40px rgba(0,0,0,.35);
-      --radius:18px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: radial-gradient(1200px 600px at 15% 10%, rgba(122,167,255,.18), transparent 55%),
-                  radial-gradient(900px 500px at 80% 20%, rgba(125,255,178,.12), transparent 55%),
-                  linear-gradient(180deg, #070a12, #0b0f1a 40%, #070a12);
-      color:var(--text);
-    }
-    header{
-      padding:18px 18px 10px;
-      display:flex;
-      gap:12px;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .brand{display:flex; align-items:center; gap:10px; user-select:none;}
-    .dot{
-      width:14px;height:14px;border-radius:999px;
-      background: radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,.2) 32%, transparent 60%),
-                  linear-gradient(135deg, rgba(122,167,255,1), rgba(125,255,178,1));
-      box-shadow: 0 0 20px rgba(122,167,255,.35);
-    }
-    h1{font-size:16px; margin:0; letter-spacing:.2px}
-    .sub{font-size:12px;color:var(--muted); margin-top:2px}
-    .wrap{
-      display:grid;
-      grid-template-columns: 460px 1fr;
-      gap:14px;
-      padding:0 18px 18px;
-      height: calc(100% - 64px);
-    }
-    @media (max-width: 980px){
-      .wrap{grid-template-columns:1fr; height:auto}
-      #map{height:55vh}
-    }
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .panel{
-      padding:14px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-    .row{display:flex; gap:10px}
-    .row > *{flex:1}
-    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px;}
-    input, textarea, select{
-      width:100%;
-      padding:10px 10px;
-      border-radius: 12px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(10,14,24,.65);
-      color: var(--text);
-      outline:none;
-    }
-    textarea{min-height:90px; resize: vertical}
-    .hint{font-size:12px; color: var(--muted); line-height:1.35;}
-    .zodiacBox{
-      margin-top:8px;
-      padding:10px 10px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.12);
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .zodiacItem{
-      font-size:12px;
-      color: var(--muted);
-      white-space:nowrap;
-    }
-    .zodiacItem b{color:var(--text)}
-    .btns{display:flex; gap:10px; flex-wrap:wrap}
-    button{
-      border:none;
-      border-radius: 999px;
-      padding:10px 14px;
-      background: rgba(122,167,255,.16);
-      color: var(--text);
-      cursor:pointer;
-      transition: .15s ease;
-      border:1px solid rgba(122,167,255,.28);
-    }
-    button:hover{transform: translateY(-1px); background: rgba(122,167,255,.24)}
-    button.secondary{background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10)}
-    button.danger{background: rgba(255,107,107,.16); border-color: rgba(255,107,107,.28)}
-    button:disabled{opacity:.5; cursor:not-allowed; transform:none}
+  *{box-sizing:border-box}
 
-    .list{
-      border-top:1px solid var(--line);
-      padding:0;
-      margin:0;
-      list-style:none;
-      max-height: 36vh;
-      overflow:auto;
-    }
-    .item{
-      padding:12px 14px;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
-      justify-content:space-between;
-      background: rgba(0,0,0,.05);
-    }
-    .item:hover{background: rgba(0,0,0,.12)}
-    .meta{min-width:0}
-    .nick{font-weight:700; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-    .tiny{font-size:12px; color:var(--muted); margin-top:3px}
-    .actions{display:flex; gap:8px; align-items:center}
-    .pill{
-      padding:6px 10px;
-      border-radius:999px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      font-size:12px;
-      color: var(--muted);
-      white-space:nowrap;
-    }
-    #map{height:100%; min-height: 420px}
-    .footer-tools{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      padding:10px 14px;
-      border-top:1px solid var(--line);
-      background: rgba(0,0,0,.06);
-    }
-    .toast{
-      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
-      background: rgba(18,26,43,.92);
-      border:1px solid rgba(255,255,255,.12);
-      color: var(--text);
-      padding:10px 12px;
-      border-radius: 999px;
-      box-shadow: var(--shadow);
-      font-size: 13px;
-      opacity:0;
-      pointer-events:none;
-      transition: .18s ease;
-    }
-    .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px)}
-    .kbd{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:12px;
-      padding:2px 6px;
-      border-radius: 8px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.25);
-      color: var(--text);
-    }
-    .hr{height:1px; background: var(--line); margin: 2px 0}
-    .popup{
-      color:#0b0f1a;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-    }
-    .popup .pname{font-weight:800; font-size:14px; margin:0 0 6px}
-    .popup .pline{font-size:12px; margin:3px 0; color:#1a2133}
-    .popup img{width:100%; max-width:220px; border-radius:12px; display:block; margin-top:8px}
-    .popup .ptime{font-weight:700}
-    .preview{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      margin-top:6px;
-    }
-    .preview img{
-      width:48px;height:48px;border-radius:12px; object-fit:cover;
-      border:1px solid rgba(255,255,255,.12);
-    }
-  </style>
-</head>
+  .wrap{
+    display:grid;
+    grid-template-columns:480px 1fr;
+    gap:14px;
+    padding:18px;
+  }
 
-<body>
-<header>
-  <div class="brand">
-    <div class="dot" aria-hidden="true"></div>
-    <div>
-      <h1>World Friends Map</h1>
-      <div class="sub">Markers + notes + local time per person (timezone) + image upload</div>
-    </div>
-  </div>
-  <div class="pill" id="nowHere">Here: —</div>
-</header>
+  @media (max-width:980px){
+    .wrap{grid-template-columns:1fr}
+    #map{height:55vh}
+  }
+
+  .card{
+    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+
+  .panel{padding:14px;display:flex;flex-direction:column;gap:12px}
+  .row{display:flex;gap:10px}
+  .row>*{flex:1}
+
+  label{font-size:12px;color:var(--muted)}
+  input,textarea{
+    width:100%;
+    padding:10px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.1);
+    background:rgba(10,14,24,.65);
+    color:var(--text);
+  }
+
+  textarea{min-height:90px}
+  .btns{display:flex;gap:10px;flex-wrap:wrap}
+
+  button{
+    border-radius:999px;
+    padding:10px 14px;
+    background:rgba(122,167,255,.16);
+    border:1px solid rgba(122,167,255,.28);
+    color:var(--text);
+    cursor:pointer;
+  }
+
+  button.secondary{background:rgba(255,255,255,.06)}
+  button.danger{background:rgba(255,107,107,.16)}
+
+  .list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+  .item{padding:12px;border-bottom:1px solid var(--line);cursor:pointer}
+  .item:hover{background:rgba(255,255,255,.05)}
+
+  #map{min-height:420px}
+
+  .toast{
+    position:fixed;
+    left:50%;
+    bottom:18px;
+    transform:translateX(-50%);
+    background:#121a2b;
+    color:white;
+    padding:10px 14px;
+    border-radius:999px;
+    opacity:0;
+    transition:.2s;
+    z-index:9999;
+  }
+  .toast.show{opacity:1}
+</style>
+
+<section style="padding:18px 18px 0">
+  <h1 style="margin:0">World Friends Map</h1>
+  <p style="margin:6px 0 0;opacity:.7">
+    Private map with notes, timezones & images
+  </p>
+</section>
 
 <div class="wrap">
   <div class="card">
     <div class="panel">
       <div class="row">
         <div>
-          <label>Nickname *</label>
-          <input id="nickname" placeholder="e.g. Sun / Polina / ..." />
+          <label>Nickname</label>
+          <input id="nickname">
         </div>
         <div>
-          <label>Birthdate (optional)</label>
-          <input id="birthdate" type="date" />
-          <div class="zodiacBox" id="zodiacBox">
-            <div class="zodiacItem">Zodiac: <b id="zodiacWestern">—</b></div>
-            <div class="zodiacItem">Chinese zodiac: <b id="zodiacChinese">—</b></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>Birthplace (optional)</label>
-          <input id="birthplace" placeholder="e.g. Warsaw, Poland" />
-        </div>
-        <div>
-          <label>Met on (date, optional)</label>
-          <input id="metOn" type="date" />
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>Current address (optional)</label>
-          <input id="currentAddress" placeholder="e.g. Los Angeles, CA" />
-          <div class="hint">Used for map coordinates (auto geocode) if coordinates are empty.</div>
-        </div>
-        <div>
-          <label>Timezone (IANA) *</label>
-          <input id="timezone" placeholder="e.g. America/Los_Angeles" list="tzlist" />
-          <datalist id="tzlist"></datalist>
-          <div class="hint">Examples: <span class="kbd">Europe/Berlin</span>, <span class="kbd">America/Los_Angeles</span>, <span class="kbd">Asia/Tokyo</span></div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>Native language (optional)</label>
-          <input id="nativeLang" placeholder="e.g. Spanish" />
-        </div>
-        <div>
-          <label>Other languages (optional)</label>
-          <input id="otherLangs" placeholder="e.g. English, Russian" />
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>Image (upload, optional)</label>
-          <input id="imageFile" type="file" accept="image/*" />
-          <div class="hint">Saved locally (compressed). No external hosting needed.</div>
-          <div class="preview" id="imgPreview" style="display:none">
-            <img id="imgPreviewEl" alt="Preview"/>
-            <div class="hint" id="imgPreviewText">—</div>
-          </div>
-        </div>
-        <div>
-          <label>Coordinates (optional)</label>
-          <input id="coords" placeholder="lat, lon (or click on the map)" />
-          <div class="hint">You can click on the map to set the location.</div>
+          <label>Timezone</label>
+          <input id="timezone" placeholder="Europe/Berlin">
         </div>
       </div>
 
       <div class="row">
         <div>
           <label>Notes</label>
-          <textarea id="notes" placeholder="Important: preferences, reminders, links, key info …"></textarea>
+          <textarea id="notes"></textarea>
         </div>
       </div>
 
       <div class="btns">
-        <button id="saveBtn">Save / Set marker</button>
+        <button id="saveBtn">Save</button>
         <button id="newBtn" class="secondary">New</button>
-        <button id="deleteBtn" class="danger" disabled>Delete</button>
-        <button id="removeImgBtn" class="secondary" title="Remove image from entry">Remove image</button>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="hint">
-        • Current address can be auto-geocoded via OpenStreetMap (Nominatim).<br>
-        • For correct local time, use an <b>IANA timezone</b>.<br>
-        • Everything is stored in <b>localStorage</b> (this browser). Use Export/Import to move data between devices, or add cloud sync later.
+        <button id="deleteBtn" class="danger">Delete</button>
       </div>
     </div>
 
     <ul class="list" id="list"></ul>
-
-    <div class="footer-tools">
-      <div class="btns">
-        <button id="exportBtn" class="secondary">Export JSON</button>
-        <button id="importBtn" class="secondary">Import JSON</button>
-        <button id="clearAllBtn" class="danger">Delete all</button>
-      </div>
-      <div class="pill" id="countPill">0 entries</div>
-    </div>
   </div>
 
-  <div class="card" style="overflow:hidden">
+  <div class="card">
     <div id="map"></div>
   </div>
 </div>
@@ -332,681 +133,81 @@
 <div class="toast" id="toast">—</div>
 
 <script>
-  // ==============================
-  // Utilities
-  // ==============================
-  const LS_KEY = "world_friends_map_v3_en_birthfields";
-  const $ = (id) => document.getElementById(id);
+  const LS_KEY = "friends_map_shared_v1";
+  const $ = id => document.getElementById(id);
+  let entries = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
+  let selected = null;
 
-  function toast(msg){
-    const t = $("toast");
-    t.textContent = msg;
-    t.classList.add("show");
-    setTimeout(()=> t.classList.remove("show"), 2200);
-  }
-  function safeParseJSON(str){ try{ return JSON.parse(str); }catch{ return null; } }
-  function uuid(){ return (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+"_"+Math.random().toString(16).slice(2))); }
-  function escapeHTML(s){
-    return String(s ?? "").replace(/[&<>\"']/g, (c)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-  }
-  function escapeAttr(s){ return String(s ?? "").replace(/"/g, "%22"); }
-  function parseCoords(text){
-    const m = String(text).trim().match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/);
-    if(!m) return [NaN, NaN];
-    return [Number(m[1]), Number(m[2])];
-  }
-  function fmtDate(iso){
-    if(!iso) return "";
-    const d = new Date(iso+"T00:00:00");
-    if(Number.isNaN(d.getTime())) return iso;
-    return d.toLocaleDateString(undefined, {year:"numeric", month:"2-digit", day:"2-digit"});
-  }
-  function personLocalTime(tz){
-    if(!tz) return null;
-    try{
-      const dtf = new Intl.DateTimeFormat(undefined, {
-        hour:"2-digit", minute:"2-digit", second:"2-digit",
-        weekday:"short", year:"numeric", month:"2-digit", day:"2-digit",
-        timeZone: tz
-      });
-      return dtf.format(new Date());
-    }catch{ return null; }
-  }
-  function myLocalTime(){
-    return new Intl.DateTimeFormat(undefined, {
-      hour:"2-digit", minute:"2-digit", second:"2-digit",
-      weekday:"short", year:"numeric", month:"2-digit", day:"2-digit"
-    }).format(new Date());
+  const map = L.map("map").setView([20,0],2);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+  const markers = L.layerGroup().addTo(map);
+
+  function toast(t){
+    $("toast").textContent=t;
+    $("toast").classList.add("show");
+    setTimeout(()=>$("toast").classList.remove("show"),2000);
   }
 
-  // ==============================
-  // Zodiac calculation
-  // ==============================
-  function westernZodiac(month, day){
-    // month: 1-12
-    // Using standard sun-sign date ranges
-    const signs = [
-      { name:"Capricorn",  start:[12,22], end:[1,19] },
-      { name:"Aquarius",   start:[1,20],  end:[2,18] },
-      { name:"Pisces",     start:[2,19],  end:[3,20] },
-      { name:"Aries",      start:[3,21],  end:[4,19] },
-      { name:"Taurus",     start:[4,20],  end:[5,20] },
-      { name:"Gemini",     start:[5,21],  end:[6,20] },
-      { name:"Cancer",     start:[6,21],  end:[7,22] },
-      { name:"Leo",        start:[7,23],  end:[8,22] },
-      { name:"Virgo",      start:[8,23],  end:[9,22] },
-      { name:"Libra",      start:[9,23],  end:[10,22] },
-      { name:"Scorpio",    start:[10,23], end:[11,21] },
-      { name:"Sagittarius",start:[11,22], end:[12,21] }
-    ];
-
-    // handle Capricorn split across year
-    if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return "Capricorn";
-
-    for(const s of signs){
-      const [sm, sd] = s.start;
-      const [em, ed] = s.end;
-      // normal ranges not crossing year
-      if ((month === sm && day >= sd) || (month === em && day <= ed) || (month > sm && month < em)){
-        // The middle condition works only if sm < em (which is true except Capricorn handled above)
-        if(sm < em) return s.name;
-      }
-    }
-    // fallback
-    return "—";
-  }
-
-  function chineseZodiac(year){
-    // Common mapping for Gregorian year to Chinese zodiac animal (12-year cycle)
-    const animals = ["Rat","Ox","Tiger","Rabbit","Dragon","Snake","Horse","Goat","Monkey","Rooster","Dog","Pig"];
-    // 2008 was a Rat year, so index = (year - 2008) % 12
-    const idx = ((year - 2008) % 12 + 12) % 12;
-    return animals[idx];
-  }
-
-  function updateZodiacUI(){
-    const bd = $("birthdate").value;
-    if(!bd){
-      $("zodiacWestern").textContent = "—";
-      $("zodiacChinese").textContent = "—";
-      return;
-    }
-    const d = new Date(bd+"T00:00:00");
-    if(Number.isNaN(d.getTime())){
-      $("zodiacWestern").textContent = "—";
-      $("zodiacChinese").textContent = "—";
-      return;
-    }
-    const m = d.getMonth()+1;
-    const day = d.getDate();
-    const y = d.getFullYear();
-    $("zodiacWestern").textContent = westernZodiac(m, day);
-    $("zodiacChinese").textContent = chineseZodiac(y);
-  }
-  $("birthdate").addEventListener("change", updateZodiacUI);
-
-  // ==============================
-  // Image upload (compress + base64)
-  // ==============================
-  let pendingImageData = null;
-
-  function showPreview(base64, name){
-    const box = $("imgPreview");
-    const img = $("imgPreviewEl");
-    const txt = $("imgPreviewText");
-    if(!base64){
-      box.style.display = "none";
-      img.src = "";
-      txt.textContent = "";
-      return;
-    }
-    box.style.display = "flex";
-    img.src = base64;
-    txt.textContent = name ? `Selected: ${name}` : "Selected";
-  }
-  function clearPendingImage(alsoInput=true){
-    pendingImageData = null;
-    showPreview(null, null);
-    if(alsoInput) $("imageFile").value = "";
-  }
-
-  async function fileToCompressedBase64(file, opts={}){
-    const maxW = opts.maxWidth ?? 560;
-    const maxH = opts.maxHeight ?? 560;
-    const quality = opts.quality ?? 0.78;
-    const outType = opts.type ?? "image/jpeg";
-
-    const dataUrl = await new Promise((resolve, reject)=>{
-      const r = new FileReader();
-      r.onload = () => resolve(r.result);
-      r.onerror = reject;
-      r.readAsDataURL(file);
-    });
-
-    const img = await new Promise((resolve, reject)=>{
-      const i = new Image();
-      i.onload = () => resolve(i);
-      i.onerror = reject;
-      i.src = dataUrl;
-    });
-
-    let { width, height } = img;
-    const ratio = Math.min(maxW / width, maxH / height, 1);
-    width = Math.round(width * ratio);
-    height = Math.round(height * ratio);
-
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext("2d", { alpha: false });
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-    ctx.drawImage(img, 0, 0, width, height);
-
-    return canvas.toDataURL(outType, quality);
-  }
-
-  $("imageFile").addEventListener("change", async (e)=>{
-    const file = e.target.files?.[0];
-    if(!file){ clearPendingImage(false); return; }
-    if(!file.type.startsWith("image/")){
-      toast("Please select an image file");
-      clearPendingImage();
-      return;
-    }
-    try{
-      toast("Preparing image…");
-      const base64 = await fileToCompressedBase64(file, { maxWidth:560, maxHeight:560, quality:0.78, type:"image/jpeg" });
-      pendingImageData = base64;
-      showPreview(base64, file.name);
-      toast("Image ready ✅");
-    }catch{
-      toast("Could not process image");
-      clearPendingImage();
-    }
-  });
-
-  // ==============================
-  // Data model
-  // Entry:
-  // { id, nickname, birthdate, birthplace, currentAddress, metOn,
-  //   nativeLang, otherLangs, tz, imageData, notes, lat, lon, createdAt, updatedAt }
-  // ==============================
-  let entries = load();
-  let selectedId = null;
-
-  function load(){
-    const raw = localStorage.getItem(LS_KEY);
-    const data = safeParseJSON(raw);
-    return Array.isArray(data) ? data : [];
-  }
   function save(){
-    localStorage.setItem(LS_KEY, JSON.stringify(entries));
-    renderList();
-    renderMarkers();
-    updateCount();
-  }
-  function updateCount(){
-    $("countPill").textContent = `${entries.length} entries`;
+    localStorage.setItem(LS_KEY,JSON.stringify(entries));
+    render();
   }
 
-  // timezone suggestions
-  (function fillTZ(){
-    const list = $("tzlist");
-    try{
-      const tzs = (Intl.supportedValuesOf ? Intl.supportedValuesOf("timeZone") : []);
-      for(const tz of tzs){
-        const opt = document.createElement("option");
-        opt.value = tz;
-        list.appendChild(opt);
-      }
-    }catch{}
-  })();
+  function render(){
+    $("list").innerHTML="";
+    markers.clearLayers();
 
-  // ==============================
-  // Map
-  // ==============================
-  const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '&copy; OpenStreetMap'
-  }).addTo(map);
+    entries.forEach(e=>{
+      const li=document.createElement("li");
+      li.className="item";
+      li.textContent=e.nickname;
+      li.onclick=()=>load(e);
+      $("list").appendChild(li);
 
-  const markerLayer = L.layerGroup().addTo(map);
-  let tempPin = null;
+      const m=L.marker([e.lat,e.lon]).addTo(markers);
+      m.bindPopup(`<b>${e.nickname}</b><br>${e.notes||""}`);
+    });
+  }
 
-  map.on('click', (e) => {
-    const { lat, lng } = e.latlng;
-    $("coords").value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-    if(tempPin) markerLayer.removeLayer(tempPin);
-    tempPin = L.circleMarker([lat, lng], { radius: 7, weight: 2, fillOpacity: .25 }).addTo(markerLayer);
-    toast("Coordinates set (map click)");
+  map.on("click",e=>{
+    if(!selected) return;
+    selected.lat=e.latlng.lat;
+    selected.lon=e.latlng.lng;
+    save();
   });
 
-  function markerPopupHTML(entry){
-    const timeStr = personLocalTime(entry.tz);
-    const timeLine = timeStr
-      ? `<div class="pline"><span class="ptime">Local time:</span> ${escapeHTML(timeStr)} (${escapeHTML(entry.tz)})</div>`
-      : `<div class="pline"><span class="ptime">Local time:</span> — (check timezone)</div>`;
-
-    const where = entry.currentAddress
-      ? escapeHTML(entry.currentAddress)
-      : `${Number(entry.lat).toFixed(3)}, ${Number(entry.lon).toFixed(3)}`;
-
-    const bd = entry.birthdate ? fmtDate(entry.birthdate) : "";
-    let western = "—", chinese = "—";
-    if(entry.birthdate){
-      const d = new Date(entry.birthdate+"T00:00:00");
-      if(!Number.isNaN(d.getTime())){
-        western = westernZodiac(d.getMonth()+1, d.getDate());
-        chinese = chineseZodiac(d.getFullYear());
-      }
-    }
-
-    const img = entry.imageData ? `<img alt="${escapeHTML(entry.nickname)}" src="${entry.imageData}" />` : "";
-
-    const notes = entry.notes
-      ? `<div class="pline"><b>Notes:</b> ${escapeHTML(entry.notes).slice(0, 240)}${entry.notes.length>240?"…":""}</div>`
-      : "";
-
-    const langs = [
-      entry.nativeLang ? `<div class="pline"><b>Native:</b> ${escapeHTML(entry.nativeLang)}</div>` : "",
-      entry.otherLangs ? `<div class="pline"><b>Other:</b> ${escapeHTML(entry.otherLangs)}</div>` : ""
-    ].join("");
-
-    const born = entry.birthplace ? `<div class="pline"><b>Birthplace:</b> ${escapeHTML(entry.birthplace)}</div>` : "";
-    const met = entry.metOn ? `<div class="pline"><b>Met on:</b> ${escapeHTML(fmtDate(entry.metOn))}</div>` : "";
-    const z = entry.birthdate ? `<div class="pline"><b>Birthdate:</b> ${escapeHTML(bd)} · <b>Zodiac:</b> ${escapeHTML(western)} · <b>Chinese:</b> ${escapeHTML(chinese)}</div>` : "";
-
-    return `
-      <div class="popup">
-        <div class="pname">${escapeHTML(entry.nickname)}</div>
-        ${z}
-        ${born}
-        ${met}
-        <div class="pline"><b>Current:</b> ${where}</div>
-        ${langs}
-        ${timeLine}
-        ${notes}
-        ${img}
-      </div>
-    `;
+  function load(e){
+    selected=e;
+    $("nickname").value=e.nickname;
+    $("timezone").value=e.tz;
+    $("notes").value=e.notes;
   }
 
-  function renderMarkers(){
-    markerLayer.clearLayers();
-
-    for(const e of entries){
-      if(typeof e.lat !== "number" || typeof e.lon !== "number") continue;
-      const m = L.marker([e.lat, e.lon]).addTo(markerLayer);
-      m.bindPopup(markerPopupHTML(e), { maxWidth: 280 });
-      m.on('click', () => selectEntry(e.id));
+  $("saveBtn").onclick=()=>{
+    if(!selected){
+      selected={id:Date.now(),lat:20,lon:0};
+      entries.push(selected);
     }
-
-    // Temp pin
-    if($("coords").value.trim()){
-      const [lat, lon] = parseCoords($("coords").value);
-      if(Number.isFinite(lat) && Number.isFinite(lon)){
-        tempPin = L.circleMarker([lat, lon], { radius:7, weight:2, fillOpacity:.25 }).addTo(markerLayer);
-      }
-    }
-  }
-
-  // ==============================
-  // Geocoding (current address)
-  // ==============================
-  async function geocodeAddress(addr){
-    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(addr)}`;
-    const res = await fetch(url, { method:"GET" });
-    if(!res.ok) throw new Error("Geocoding failed");
-    const data = await res.json();
-    if(!Array.isArray(data) || !data[0]) return null;
-    return { lat: Number(data[0].lat), lon: Number(data[0].lon) };
-  }
-
-  // ==============================
-  // Form helpers
-  // ==============================
-  function clearForm(){
-    selectedId = null;
-    $("nickname").value = "";
-    $("birthdate").value = "";
-    $("birthplace").value = "";
-    $("currentAddress").value = "";
-    $("metOn").value = "";
-    $("nativeLang").value = "";
-    $("otherLangs").value = "";
-    $("timezone").value = "";
-    $("coords").value = "";
-    $("notes").value = "";
-    $("deleteBtn").disabled = true;
-
-    clearPendingImage();
-    $("removeImgBtn").dataset.remove = "0";
-
-    updateZodiacUI();
-    renderMarkers();
-  }
-
-  function fillForm(entry){
-    selectedId = entry.id;
-
-    $("nickname").value = entry.nickname ?? "";
-    $("birthdate").value = entry.birthdate ?? "";
-    $("birthplace").value = entry.birthplace ?? "";
-    $("currentAddress").value = entry.currentAddress ?? "";
-    $("metOn").value = entry.metOn ?? "";
-    $("nativeLang").value = entry.nativeLang ?? "";
-    $("otherLangs").value = entry.otherLangs ?? "";
-    $("timezone").value = entry.tz ?? "";
-    $("coords").value = (typeof entry.lat === "number" && typeof entry.lon === "number")
-      ? `${entry.lat.toFixed(6)}, ${entry.lon.toFixed(6)}`
-      : "";
-    $("notes").value = entry.notes ?? "";
-
-    $("deleteBtn").disabled = false;
-
-    clearPendingImage(true);
-    if(entry.imageData) showPreview(entry.imageData, "Existing image");
-    else showPreview(null, null);
-
-    $("removeImgBtn").dataset.remove = "0";
-    updateZodiacUI();
-
-    if(typeof entry.lat === "number" && typeof entry.lon === "number"){
-      map.setView([entry.lat, entry.lon], Math.max(map.getZoom(), 4));
-    }
-    toast("Entry loaded");
-  }
-
-  function selectEntry(id){
-    const e = entries.find(x=>x.id===id);
-    if(!e) return;
-    fillForm(e);
-  }
-
-  // ==============================
-  // Save / Delete
-  // ==============================
-  async function handleSave(){
-    const nickname = $("nickname").value.trim();
-    const birthdate = $("birthdate").value;
-    const birthplace = $("birthplace").value.trim();
-    const currentAddress = $("currentAddress").value.trim();
-    const metOn = $("metOn").value;
-    const nativeLang = $("nativeLang").value.trim();
-    const otherLangs = $("otherLangs").value.trim();
-    const tz = $("timezone").value.trim();
-    const notes = $("notes").value.trim();
-
-    if(!nickname){ toast("Please enter a nickname"); return; }
-    if(!tz){ toast("Please enter an IANA timezone"); return; }
-
-    let [lat, lon] = parseCoords($("coords").value);
-
-    // If coords missing: try geocode current address
-    if((!Number.isFinite(lat) || !Number.isFinite(lon)) && currentAddress){
-      toast("Finding current address…");
-      try{
-        const g = await geocodeAddress(currentAddress);
-        if(g){
-          lat = g.lat; lon = g.lon;
-          $("coords").value = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
-        }
-      }catch{}
-    }
-
-    if(!Number.isFinite(lat) || !Number.isFinite(lon)){
-      toast("Please set coordinates (map click) or enter a current address");
-      return;
-    }
-
-    const now = new Date().toISOString();
-    const removeImage = $("removeImgBtn").dataset.remove === "1";
-
-    if(selectedId){
-      const idx = entries.findIndex(x=>x.id===selectedId);
-      if(idx >= 0){
-        const prev = entries[idx];
-        const newImageData = removeImage ? null : (pendingImageData ?? prev.imageData ?? null);
-
-        entries[idx] = {
-          ...prev,
-          nickname,
-          birthdate,
-          birthplace,
-          currentAddress,
-          metOn,
-          nativeLang,
-          otherLangs,
-          tz,
-          notes,
-          lat: Number(lat),
-          lon: Number(lon),
-          imageData: newImageData,
-          updatedAt: now
-        };
-        toast("Updated");
-      }
-    } else {
-      entries.unshift({
-        id: uuid(),
-        nickname,
-        birthdate,
-        birthplace,
-        currentAddress,
-        metOn,
-        nativeLang,
-        otherLangs,
-        tz,
-        notes,
-        lat: Number(lat),
-        lon: Number(lon),
-        imageData: pendingImageData ?? null,
-        createdAt: now,
-        updatedAt: now
-      });
-      toast("Saved");
-    }
-
-    // reset pending image after save
-    pendingImageData = null;
-    $("imageFile").value = "";
-    $("removeImgBtn").dataset.remove = "0";
-
+    selected.nickname=$("nickname").value;
+    selected.tz=$("timezone").value;
+    selected.notes=$("notes").value;
     save();
-    renderMarkers();
+    toast("Saved");
+  };
 
-    const current = selectedId ? entries.find(x=>x.id===selectedId) : entries[0];
-    if(current?.imageData) showPreview(current.imageData, "Saved image");
-    else showPreview(null, null);
-  }
+  $("newBtn").onclick=()=>{
+    selected=null;
+    $("nickname").value="";
+    $("timezone").value="";
+    $("notes").value="";
+  };
 
-  function handleDelete(){
-    if(!selectedId) return;
-    const e = entries.find(x=>x.id===selectedId);
-    const ok = confirm(`Really delete this entry?\n\n${e?.nickname ?? ""}`);
-    if(!ok) return;
-    entries = entries.filter(x=>x.id!==selectedId);
-    selectedId = null;
+  $("deleteBtn").onclick=()=>{
+    if(!selected) return;
+    entries=entries.filter(e=>e!==selected);
+    selected=null;
     save();
-    clearForm();
-    toast("Deleted");
-  }
+  };
 
-  // remove image toggle
-  $("removeImgBtn").addEventListener("click", ()=>{
-    if(!selectedId){
-      clearPendingImage();
-      toast("Image removed (new entry)");
-      return;
-    }
-    $("removeImgBtn").dataset.remove = "1";
-    clearPendingImage();
-    toast("Image will be removed on save");
-  });
-
-  // Auto-geocode on blur (if coords empty)
-  $("currentAddress").addEventListener("blur", async ()=>{
-    const addr = $("currentAddress").value.trim();
-    if(!addr) return;
-    const [lat, lon] = parseCoords($("coords").value);
-    if(Number.isFinite(lat) && Number.isFinite(lon)) return;
-    try{
-      const g = await geocodeAddress(addr);
-      if(g){
-        $("coords").value = `${g.lat.toFixed(6)}, ${g.lon.toFixed(6)}`;
-        map.setView([g.lat, g.lon], 6);
-        renderMarkers();
-        toast("Address found");
-      }
-    }catch{}
-  });
-
-  // ==============================
-  // List
-  // ==============================
-  function renderList(){
-    const ul = $("list");
-    ul.innerHTML = "";
-
-    const sorted = [...entries].sort((a,b)=> (a.nickname||"").localeCompare(b.nickname||""));
-
-    for(const e of sorted){
-      const li = document.createElement("li");
-      li.className = "item";
-
-      const where = e.currentAddress || `${Number(e.lat).toFixed(2)}, ${Number(e.lon).toFixed(2)}`;
-      const t = personLocalTime(e.tz);
-
-      let z = "";
-      if(e.birthdate){
-        const d = new Date(e.birthdate+"T00:00:00");
-        if(!Number.isNaN(d.getTime())){
-          z = ` · ${westernZodiac(d.getMonth()+1, d.getDate())} / ${chineseZodiac(d.getFullYear())}`;
-        }
-      }
-
-      li.innerHTML = `
-        <div class="meta">
-          <div class="nick">${escapeHTML(e.nickname)}</div>
-          <div class="tiny">${escapeHTML(where)}${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}</div>
-          <div class="tiny">⏱ ${escapeHTML(t || "—")} ${e.tz?`(${escapeHTML(e.tz)})`:""}</div>
-        </div>
-        <div class="actions">
-          <span class="pill">📍</span>
-          <button class="secondary" data-id="${escapeAttr(e.id)}">Open</button>
-        </div>
-      `;
-
-      li.querySelector("button").addEventListener("click", ()=> selectEntry(e.id));
-      li.addEventListener("dblclick", ()=> selectEntry(e.id));
-      ul.appendChild(li);
-    }
-  }
-
-  // ==============================
-  // Export / Import
-  // ==============================
-  function exportJSON(){
-    const data = JSON.stringify(entries, null, 2);
-    navigator.clipboard?.writeText(data).catch(()=>{});
-    const blob = new Blob([data], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "world-friends-map.json";
-    a.click();
-    URL.revokeObjectURL(a.href);
-    toast("Export created (file + clipboard)");
-  }
-
-  async function importJSON(){
-    const text = prompt("Paste JSON (or cancel).");
-    if(!text) return;
-    const data = safeParseJSON(text);
-    if(!Array.isArray(data)){
-      toast("Invalid JSON");
-      return;
-    }
-
-    const cleaned = data
-      .filter(x=>x && typeof x === "object")
-      .map(x=>({
-        id: String(x.id || uuid()),
-        nickname: String(x.nickname || ""),
-        birthdate: x.birthdate ? String(x.birthdate) : "",
-        birthplace: x.birthplace ? String(x.birthplace) : "",
-        currentAddress: x.currentAddress ? String(x.currentAddress) : "",
-        metOn: x.metOn ? String(x.metOn) : "",
-        nativeLang: x.nativeLang ? String(x.nativeLang) : "",
-        otherLangs: x.otherLangs ? String(x.otherLangs) : "",
-        tz: x.tz ? String(x.tz) : "",
-        imageData: x.imageData ? String(x.imageData) : null,
-        notes: x.notes ? String(x.notes) : "",
-        lat: Number(x.lat),
-        lon: Number(x.lon),
-        createdAt: x.createdAt ? String(x.createdAt) : new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }))
-      .filter(x=>x.nickname && x.tz && Number.isFinite(x.lat) && Number.isFinite(x.lon));
-
-    entries = cleaned;
-    selectedId = null;
-    save();
-    clearForm();
-    toast("Import done");
-  }
-
-  function clearAll(){
-    const ok = confirm("Really delete ALL entries from this browser?");
-    if(!ok) return;
-    entries = [];
-    selectedId = null;
-    save();
-    clearForm();
-    toast("All deleted");
-  }
-
-  // ==============================
-  // Clock tick
-  // ==============================
-  function tick(){
-    $("nowHere").textContent = `Here: ${myLocalTime()}`;
-    renderList();
-  }
-
-  // ==============================
-  // Wire up
-  // ==============================
-  $("saveBtn").addEventListener("click", handleSave);
-  $("newBtn").addEventListener("click", clearForm);
-  $("deleteBtn").addEventListener("click", handleDelete);
-  $("exportBtn").addEventListener("click", exportJSON);
-  $("importBtn").addEventListener("click", importJSON);
-  $("clearAllBtn").addEventListener("click", clearAll);
-
-  // Ctrl/Cmd+S to save
-  document.addEventListener("keydown", (e)=>{
-    if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==="s"){
-      e.preventDefault();
-      handleSave();
-    }
-  });
-
-  // ==============================
-  // Init
-  // ==============================
-  function renderMarkersAndList(){
-    renderList();
-    renderMarkers();
-    updateCount();
-  }
-
-  renderMarkersAndList();
-  updateZodiacUI();
-  tick();
-  setInterval(tick, 10_000);
-
+  render();
 </script>
-</body>
-</html>
