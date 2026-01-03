@@ -33,3 +33,10 @@
   title_en: "Bassline Inferno"
   cover: "/assets/images/releases/bassline-inferno.svg"
   preview: "/assets/audio/bassline-inferno.mp3"
+
+# Rosa Eterna (NEW RELEASE)
+- date: 2026-01-06 19:00 +01:00
+  title_de: "Rosa Eterna"
+  title_en: "Rosa Eterna"
+  cover: "/assets/images/releases/rosa-eterna.svg"
+  preview: "/assets/audio/rosa-eterna.mp3"
