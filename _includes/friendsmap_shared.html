@@ -319,6 +319,7 @@
       color:#0b0f1a;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
+    .popup .pnotes{ white-space: pre-line; }
     .popup .pname{font-weight:800; font-size:14px; margin:0 0 6px}
     .popup .pline{font-size:12px; margin:3px 0; color:#1a2133}
     .popup .ptime{font-weight:700}
@@ -851,9 +852,13 @@
       entry.otherLangs ? `<div class="pline"><b>Other:</b> ${escapeHTML(entry.otherLangs)}</div>` : ""
     ].join("");
 
-    const notes = entry.notes
-      ? `<div class="pline"><b>Notes:</b> ${escapeHTML(entry.notes).slice(0, 260)}${entry.notes.length>260?"…":""}</div>`
-      : "";
+    const notesRaw = String(entry.notes || "");
+const shortNotes = notesRaw.length > 260 ? (notesRaw.slice(0, 260) + "…") : notesRaw;
+
+const notes = notesRaw
+  ? `<div class="pline pnotes"><b>Notes:</b><br>${escapeHTML(shortNotes)}</div>`
+  : "";
+
 
     const img = entry.imageData
       ? `
@@ -1448,3 +1453,4 @@
 </script>
 </body>
 </html>
+
