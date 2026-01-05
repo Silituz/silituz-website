@@ -1,6 +1,13 @@
-<!-- Leaflet (Map) -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>World Friends Map</title>
+
+  <!-- Leaflet (Map) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
     :root{
@@ -117,8 +124,41 @@
     button.danger{background: rgba(255,107,107,.16); border-color: rgba(255,107,107,.28)}
     button:disabled{opacity:.5; cursor:not-allowed; transform:none}
 
-    .list{
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:12px;
+      color: var(--muted);
+      white-space:nowrap;
+    }
+
+    .hr{height:1px; background: var(--line); margin: 2px 0}
+
+    /* Alphabet bar */
+    .alphaBar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      padding:10px 14px;
       border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      background: rgba(0,0,0,.05);
+    }
+    .alphaBar .aBtn{
+      padding:6px 9px;
+      font-size:12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+    }
+    .alphaBar .aBtn:hover{transform:none; background: rgba(255,255,255,.10)}
+    .alphaBar .aBtn:disabled{opacity:.35; cursor:not-allowed}
+
+    /* List */
+    .list{
       padding:0;
       margin:0;
       list-style:none;
@@ -135,21 +175,107 @@
       background: rgba(0,0,0,.05);
     }
     .item:hover{background: rgba(0,0,0,.12)}
+    .item.selected{outline: 1px solid rgba(122,167,255,.35); outline-offset:-1px}
+
     .meta{min-width:0}
     .nick{font-weight:700; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
     .tiny{font-size:12px; color:var(--muted); margin-top:3px}
-    .actions{display:flex; gap:8px; align-items:center}
-    .pill{
-      padding:6px 10px;
+
+    .actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
+
+    .iconBtn{
+      padding:8px 10px;
       border-radius:999px;
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.10);
-      font-size:12px;
+      color: var(--text);
+      cursor:pointer;
+    }
+    .iconBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
+
+    .avatar{
+      width:34px;
+      height:34px;
+      border-radius: 10px;
+      object-fit: cover;
+      border:1px solid rgba(255,255,255,.12);
+      cursor:pointer;
+    }
+    .avatarPh{
+      width:34px;
+      height:34px;
+      border-radius: 10px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
       color: var(--muted);
-      white-space:nowrap;
+      font-size:14px;
+      user-select:none;
     }
 
+    /* Map & right panel */
     #map{height:100%; min-height: 420px}
+
+    .rightView{height:100%}
+    #mapView{height:100%}
+
+    #profileView{
+      height:100%;
+      display:none;
+      overflow:auto;
+    }
+    .profileHead{
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      background: rgba(8,12,20,.82);
+      backdrop-filter: blur(10px);
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .profileTitle{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .profileTitle b{
+      font-size:14px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .profileTitle span{font-size:12px; color:var(--muted)}
+    .profileBody{padding:14px; display:flex; flex-direction:column; gap:12px}
+    .profileGrid{display:grid; grid-template-columns: 1fr; gap:10px}
+
+    .profileCard{
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      background: rgba(0,0,0,.14);
+    }
+    .profileCard .k{font-size:12px; color:var(--muted); margin-bottom:4px}
+    .profileCard .v{font-size:13px; color:var(--text); white-space:pre-wrap; word-break:break-word}
+
+    .profileImg{
+      width:110px;
+      height:110px;
+      border-radius: 16px;
+      object-fit: cover;
+      border:1px solid rgba(255,255,255,.12);
+      cursor:pointer;
+    }
+    .profileTop{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
 
     .footer-tools{
       display:flex;
@@ -174,6 +300,7 @@
       opacity:0;
       pointer-events:none;
       transition: .18s ease;
+      z-index: 50;
     }
     .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px)}
 
@@ -187,17 +314,19 @@
       color: var(--text);
     }
 
-    .hr{height:1px; background: var(--line); margin: 2px 0}
-
+    /* Leaflet popup */
     .popup{
       color:#0b0f1a;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
     .popup .pname{font-weight:800; font-size:14px; margin:0 0 6px}
     .popup .pline{font-size:12px; margin:3px 0; color:#1a2133}
-    .popup img{width:100%; max-width:240px; border-radius:12px; display:block; margin-top:8px}
     .popup .ptime{font-weight:700}
+    .popup .thumbRow{display:flex; gap:10px; align-items:center; margin-top:8px}
+    .popup img.thumb{width:84px;height:84px;border-radius:12px;object-fit:cover;cursor:pointer;display:block}
+    .popup .thumbHint{font-size:12px; color:#1a2133; opacity:.75}
 
+    /* Preview in form */
     .preview{
       display:flex;
       gap:10px;
@@ -219,6 +348,48 @@
       font-size:12px;
     }
     .toggleRow input{width:auto; margin:0}
+
+    /* Image modal */
+    .imgModal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      background: rgba(0,0,0,.58);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+    .imgModal.show{display:flex}
+    .imgModalInner{
+      max-width: min(920px, 92vw);
+      max-height: 86vh;
+      background: rgba(18,26,43,.92);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .imgModalInner img{
+      max-width: 100%;
+      max-height: 74vh;
+      border-radius: 14px;
+      display:block;
+      object-fit: contain;
+      background: rgba(0,0,0,.2);
+    }
+    .imgModalHint{
+      font-size:12px;
+      color: var(--muted);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
   </style>
 </head>
 
@@ -328,6 +499,9 @@
       </div>
     </div>
 
+    <!-- Alphabet helper (A–Z) -->
+    <div class="alphaBar" id="alpha"></div>
+
     <ul class="list" id="list"></ul>
 
     <div class="footer-tools">
@@ -353,12 +527,40 @@
     </div>
   </div>
 
-  <div class="card" style="overflow:hidden">
-    <div id="map"></div>
+  <div class="card rightView">
+    <div id="mapView">
+      <div id="map"></div>
+    </div>
+
+    <div id="profileView">
+      <div class="profileHead">
+        <div class="profileTitle">
+          <b id="profileName">—</b>
+          <span id="profileSub">—</span>
+        </div>
+        <div class="btns" style="gap:8px; justify-content:flex-end;">
+          <button id="profileBack" class="secondary" title="Back to map">🗺️ Map</button>
+          <button id="profileEdit" class="secondary" title="Load into form">✏️ Edit</button>
+          <button id="profilePin" class="secondary" title="Center on map">📍</button>
+        </div>
+      </div>
+      <div class="profileBody" id="profileBody"></div>
+    </div>
   </div>
 </div>
 
 <div class="toast" id="toast">—</div>
+
+<!-- Image modal (click thumbs to open) -->
+<div class="imgModal" id="imgModal" aria-hidden="true">
+  <div class="imgModalInner" role="dialog" aria-modal="true" aria-label="Image preview">
+    <img id="imgModalImg" alt="Preview" />
+    <div class="imgModalHint">
+      <span>Tip: click outside or press <span class="kbd">Esc</span> to close</span>
+      <button id="imgModalClose" class="secondary" style="padding:8px 12px;">Close</button>
+    </div>
+  </div>
+</div>
 
 <script>
   // ==============================
@@ -378,7 +580,6 @@
   function escapeHTML(s){
     return String(s ?? "").replace(/[&<>\"']/g, (c)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
   }
-  function escapeAttr(s){ return String(s ?? "").replace(/"/g, "%22"); }
   function parseCoords(text){
     const m = String(text).trim().match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/);
     if(!m) return [NaN, NaN];
@@ -406,6 +607,39 @@
       weekday:"short", year:"numeric", month:"2-digit", day:"2-digit"
     }).format(new Date());
   }
+
+  // ==============================
+  // Image modal (for thumbnails)
+  // ==============================
+  function openImageModal(src){
+    if(!src) return;
+    const m = $("imgModal");
+    const img = $("imgModalImg");
+    img.src = src;
+    m.classList.add("show");
+    m.setAttribute("aria-hidden", "false");
+  }
+  function closeImageModal(){
+    const m = $("imgModal");
+    const img = $("imgModalImg");
+    img.src = "";
+    m.classList.remove("show");
+    m.setAttribute("aria-hidden", "true");
+  }
+  $("imgModal").addEventListener("click", (e)=>{
+    if(e.target.id === "imgModal" ) closeImageModal();
+  });
+  $("imgModalClose").addEventListener("click", closeImageModal);
+  document.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape") closeImageModal();
+  });
+  // click-anywhere handler for thumbs (list + popup + profile)
+  document.addEventListener("click", (e)=>{
+    const img = e.target.closest(".js-open-img");
+    if(img && img.tagName === "IMG"){
+      openImageModal(img.getAttribute("data-full") || img.src);
+    }
+  });
 
   // ==============================
   // Zodiac
@@ -570,6 +804,7 @@
 
   const markerLayer = L.layerGroup().addTo(map);
   let tempPin = null;
+  const markerById = new Map();
 
   map.on('click', (e) => {
     const { lat, lng } = e.latlng;
@@ -591,7 +826,7 @@
   function markerPopupHTML(entry){
     const timeStr = personLocalTime(entry.tz);
     const timeLine = timeStr
-      ? `<div class="pline"><span class="ptime">Local time:</span> ${escapeHTML(timeStr)} (${escapeHTML(entry.tz)})</div>`
+      ? `<div class="pline"><span class="ptime">Local time:</span> <span class="js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> (${escapeHTML(entry.tz)})</div>`
       : `<div class="pline"><span class="ptime">Local time:</span> — (check timezone)</div>`;
 
     const where = entry.currentAddress
@@ -620,10 +855,17 @@
       ? `<div class="pline"><b>Notes:</b> ${escapeHTML(entry.notes).slice(0, 260)}${entry.notes.length>260?"…":""}</div>`
       : "";
 
-    const img = entry.imageData ? `<img alt="${escapeHTML(entry.nickname)}" src="${entry.imageData}" />` : "";
+    const img = entry.imageData
+      ? `
+        <div class="thumbRow">
+          <img class="thumb js-open-img" alt="${escapeHTML(entry.nickname)}" src="${entry.imageData}" />
+          <div class="thumbHint">Click to enlarge</div>
+        </div>
+      `
+      : "";
 
     return `
-      <div class="popup">
+      <div class="popup" data-entryid="${escapeHTML(entry.id)}">
         <div class="pname">${escapeHTML(entry.nickname)}</div>
         ${zLine}
         ${born}
@@ -639,12 +881,14 @@
 
   function renderMarkers(){
     markerLayer.clearLayers();
+    markerById.clear();
 
     for(const e of entries){
       if(typeof e.lat !== "number" || typeof e.lon !== "number") continue;
       const m = L.marker([e.lat, e.lon]).addTo(markerLayer);
-      m.bindPopup(markerPopupHTML(e), { maxWidth: 290 });
+      m.bindPopup(markerPopupHTML(e), { maxWidth: 300 });
       m.on('click', () => selectEntry(e.id));
+      markerById.set(e.id, m);
     }
 
     if($("coords").value.trim()){
@@ -654,6 +898,116 @@
       }
     }
   }
+
+  // ==============================
+  // Right panel view switch (Map <-> Profile)
+  // ==============================
+  function showMapView(){
+    $("profileView").style.display = "none";
+    $("mapView").style.display = "block";
+    // Leaflet needs a size refresh after being hidden
+    setTimeout(()=> map.invalidateSize(), 60);
+  }
+  function showProfileView(){
+    $("mapView").style.display = "none";
+    $("profileView").style.display = "block";
+  }
+
+  function buildProfile(entry){
+    const timeStr = personLocalTime(entry.tz) || "—";
+    const where = entry.currentAddress || `${Number(entry.lat).toFixed(3)}, ${Number(entry.lon).toFixed(3)}`;
+
+    let zodiac = "—";
+    if(entry.birthdate){
+      const d = new Date(entry.birthdate+"T00:00:00");
+      if(!Number.isNaN(d.getTime())){
+        zodiac = `${westernZodiac(d.getMonth()+1, d.getDate())} / ${chineseZodiac(d.getFullYear())}`;
+      }
+    }
+
+    $("profileName").textContent = entry.nickname || "—";
+    $("profileSub").textContent = entry.tz ? `⏱ ${timeStr} (${entry.tz})` : "—";
+
+    const imgBlock = entry.imageData
+      ? `
+        <div class="profileTop">
+          <img class="profileImg js-open-img" src="${entry.imageData}" alt="${escapeHTML(entry.nickname)}" />
+          <div style="display:flex; flex-direction:column; gap:8px; min-width:0;">
+            <div class="profileCard">
+              <div class="k">Current</div>
+              <div class="v">${escapeHTML(where)}</div>
+            </div>
+            <div class="profileCard">
+              <div class="k">Local time</div>
+              <div class="v"><span class="js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> (${escapeHTML(entry.tz)})</div>
+            </div>
+          </div>
+        </div>
+      `
+      : `
+        <div class="profileTop">
+          <div class="avatarPh" style="width:110px; height:110px; border-radius:16px; font-size:22px;">👤</div>
+          <div style="display:flex; flex-direction:column; gap:8px; min-width:0;">
+            <div class="profileCard">
+              <div class="k">Current</div>
+              <div class="v">${escapeHTML(where)}</div>
+            </div>
+            <div class="profileCard">
+              <div class="k">Local time</div>
+              <div class="v"><span class="js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> (${escapeHTML(entry.tz)})</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+    const cards = [
+      entry.birthdate ? `<div class="profileCard"><div class="k">Birthdate</div><div class="v">${escapeHTML(fmtDate(entry.birthdate))}</div></div>` : "",
+      entry.birthdate ? `<div class="profileCard"><div class="k">Zodiac</div><div class="v">${escapeHTML(zodiac)}</div></div>` : "",
+      entry.birthplace ? `<div class="profileCard"><div class="k">Birthplace</div><div class="v">${escapeHTML(entry.birthplace)}</div></div>` : "",
+      entry.metOn ? `<div class="profileCard"><div class="k">Met on</div><div class="v">${escapeHTML(fmtDate(entry.metOn))}</div></div>` : "",
+      entry.nativeLang ? `<div class="profileCard"><div class="k">Native language</div><div class="v">${escapeHTML(entry.nativeLang)}</div></div>` : "",
+      entry.otherLangs ? `<div class="profileCard"><div class="k">Other languages</div><div class="v">${escapeHTML(entry.otherLangs)}</div></div>` : "",
+      entry.notes ? `<div class="profileCard"><div class="k">Notes</div><div class="v">${escapeHTML(entry.notes)}</div></div>` : ""
+    ].filter(Boolean).join("");
+
+    $("profileBody").innerHTML = `
+      ${imgBlock}
+      <div class="profileGrid">
+        ${cards || `<div class="profileCard"><div class="k">Info</div><div class="v">No extra details saved.</div></div>`}
+      </div>
+    `;
+  }
+
+  function openProfile(id){
+    const e = entries.find(x=>x.id===id);
+    if(!e) return;
+    buildProfile(e);
+    showProfileView();
+  }
+
+  function focusEntryOnMap(id){
+    const e = entries.find(x=>x.id===id);
+    if(!e) return;
+    showMapView();
+    if(typeof e.lat === "number" && typeof e.lon === "number"){
+      map.setView([e.lat, e.lon], Math.max(map.getZoom(), 4));
+      const m = markerById.get(id);
+      if(m) m.openPopup();
+    }
+  }
+
+  $("profileBack").addEventListener("click", showMapView);
+  $("profileEdit").addEventListener("click", ()=>{
+    const name = $("profileName").textContent;
+    const e = entries.find(x=>x.nickname===name) || entries.find(x=>x.id===selectedId);
+    if(e) selectEntry(e.id);
+    toast("Entry loaded");
+  });
+  $("profilePin").addEventListener("click", ()=>{
+    const name = $("profileName").textContent;
+    const e = entries.find(x=>x.nickname===name) || entries.find(x=>x.id===selectedId);
+    if(e) focusEntryOnMap(e.id);
+  });
 
   // ==============================
   // Form
@@ -676,6 +1030,7 @@
     clearPendingImage();
     updateZodiacUI();
     renderMarkers();
+    renderList();
   }
 
   function fillForm(entry){
@@ -707,6 +1062,7 @@
       map.setView([entry.lat, entry.lon], Math.max(map.getZoom(), 4));
     }
     toast("Entry loaded");
+    renderList();
   }
 
   function selectEntry(id){
@@ -833,17 +1189,67 @@
   });
 
   // ==============================
-  // List
+  // Alphabet helper
+  // ==============================
+  function firstLetter(name){
+    const s = String(name || "").trim();
+    if(!s) return "#";
+    const ch = s[0].toUpperCase();
+    return (ch >= "A" && ch <= "Z") ? ch : "#";
+  }
+
+  function renderAlphabet(sorted){
+    const alpha = $("alpha");
+    alpha.innerHTML = "";
+
+    const firstIdByLetter = new Map();
+    for(const e of sorted){
+      const L = firstLetter(e.nickname);
+      if(!firstIdByLetter.has(L)) firstIdByLetter.set(L, e.id);
+    }
+
+    const letters = [];
+    for(let i=0;i<26;i++) letters.push(String.fromCharCode(65+i));
+    letters.push("#");
+
+    for(const L of letters){
+      const btn = document.createElement("button");
+      btn.className = "aBtn";
+      btn.textContent = L;
+      btn.disabled = !firstIdByLetter.has(L);
+      btn.addEventListener("click", ()=>{
+        const id = firstIdByLetter.get(L);
+        if(!id) return;
+        const ul = $("list");
+        const li = ul.querySelector(`li[data-id="${CSS.escape(id)}"]`);
+        if(li){
+          li.scrollIntoView({ behavior:"smooth", block:"start", inline:"nearest" });
+        }
+      });
+      alpha.appendChild(btn);
+    }
+  }
+
+  // ==============================
+  // List (with thumbnails + 📖 profile)
   // ==============================
   function renderList(){
     const ul = $("list");
-    ul.innerHTML = "";
 
     const sorted = [...entries].sort((a,b)=> (a.nickname||"").localeCompare(b.nickname||""));
+
+    // keep scroll position
+    const prevScroll = ul.scrollTop;
+
+    ul.innerHTML = "";
+
+    renderAlphabet(sorted);
 
     for(const e of sorted){
       const li = document.createElement("li");
       li.className = "item";
+      li.dataset.id = e.id;
+      if(selectedId && e.id === selectedId) li.classList.add("selected");
 
       const where = e.currentAddress || `${Number(e.lat).toFixed(2)}, ${Number(e.lon).toFixed(2)}`;
       const t = personLocalTime(e.tz);
@@ -856,21 +1262,47 @@
         }
       }
 
+      const avatar = e.imageData
+        ? `<img class="avatar js-open-img" alt="${escapeHTML(e.nickname)}" src="${e.imageData}" />`
+        : `<div class="avatarPh" title="No image">—</div>`;
+
       li.innerHTML = `
         <div class="meta">
           <div class="nick">${escapeHTML(e.nickname)}</div>
           <div class="tiny">${escapeHTML(where)}${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}</div>
-          <div class="tiny">⏱ ${escapeHTML(t || "—")} ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
+          <div class="tiny">⏱ <span class="js-time" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
         </div>
         <div class="actions">
-          <span class="pill">📍</span>
-          <button class="secondary">Open</button>
+          ${avatar}
+          <button class="iconBtn js-pin" title="Center on map">📍</button>
+          <button class="iconBtn js-book" title="Open profile">📖</button>
+          <button class="secondary js-open">Open</button>
         </div>
       `;
 
-      li.querySelector("button").addEventListener("click", ()=> selectEntry(e.id));
+      li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
+      li.querySelector(".js-pin").addEventListener("click", ()=> focusEntryOnMap(e.id));
+      li.querySelector(".js-book").addEventListener("click", ()=> openProfile(e.id));
       li.addEventListener("dblclick", ()=> selectEntry(e.id));
+
       ul.appendChild(li);
+    }
+
+    ul.scrollTop = prevScroll;
+  }
+
+  function updateTimesInUI(){
+    for(const el of document.querySelectorAll(".js-time")){
+      const tz = el.getAttribute("data-tz");
+      if(!tz){ el.textContent = "—"; continue; }
+      el.textContent = personLocalTime(tz) || "—";
+    }
+    // Update profile subtitle too
+    const name = $("profileName").textContent;
+    const e = entries.find(x=>x.nickname===name);
+    if(e && $("profileView").style.display !== "none"){
+      const t = personLocalTime(e.tz) || "—";
+      $("profileSub").textContent = e.tz ? `⏱ ${t} (${e.tz})` : "—";
     }
   }
 
@@ -976,6 +1408,7 @@
     save();
     clearForm();
     toast("All deleted");
+    showMapView();
   }
 
   // ==============================
@@ -983,7 +1416,7 @@
   // ==============================
   function tick(){
     $("nowHere").textContent = `Here: ${myLocalTime()}`;
-    renderList();
+    updateTimesInUI();
   }
 
   // ==============================
