@@ -1162,19 +1162,34 @@ async function geocodeAddress(addr){
       ? escapeHTML(entry.currentAddress)
       : `${Number(entry.lat).toFixed(3)}, ${Number(entry.lon).toFixed(3)}`;
 
-    let zLine = "";
+    const born = entry.birthplace ? `<div class="pline"><b>Birthplace:</b> ${escapeHTML(entry.birthplace)}</div>` : "";
+
+    // Birthdate + countdown + age (short)
+    let bdayLine = "";
     if(entry.birthdate){
-      const d = new Date(entry.birthdate+"T00:00:00");
-      if(!Number.isNaN(d.getTime())){
-        const western = westernZodiac(d.getMonth()+1, d.getDate());
-        const chinese = chineseZodiacAnimal(d.getFullYear());
-        zLine = `<div class="pline">${formatZodiacLineHTML(entry.birthdate)}</div>`;
+      const diff = monthsDaysUntilNextBirthday(entry.birthdate);
+      const dateTxt = escapeHTML(fmtDate(entry.birthdate));
+      if(diff){
+        const { months, days, age } = diff;
+        bdayLine = `<div class="pline"><b>Birthdate:</b> ${dateTxt} (${months}m ${days}d, +${age})</div>`;
+      }else{
+        bdayLine = `<div class="pline"><b>Birthdate:</b> ${dateTxt}</div>`;
       }
     }
 
-    const born = entry.birthplace ? `<div class="pline"><b>Birthplace:</b> ${escapeHTML(entry.birthplace)}</div>` : "";
-    const met = entry.metOn ? `<div class="pline"><b>Met on:</b> ${escapeHTML(fmtDate(entry.metOn))}</div>` : "";
-
+    // Met on
+    let met = "";
+    if(entry.metOn){
+      const diff = yearsMonthsDaysSince(entry.metOn);
+      const metDate = escapeHTML(fmtDate(entry.metOn));
+      if(diff){
+        const { years, months, days } = diff;
+        const short = `${years}y ${months}m ${days}d`;
+        met = `<div class="pline"><b>Met on:</b> ${metDate} (${short})</div>`;
+      }else{
+        met = `<div class="pline"><b>Met on:</b> ${metDate}</div>`;
+      }
+    }
     const langs = [
       entry.nativeLang ? `<div class="pline"><b>Native:</b> ${escapeHTML(entry.nativeLang)}</div>` : "",
       entry.otherLangs ? `<div class="pline"><b>Other:</b> ${escapeHTML(entry.otherLangs)}</div>` : ""
@@ -1200,7 +1215,7 @@ const notes = notesRaw
     return `
       <div class="popup" data-entryid="${escapeHTML(entry.id)}">
         <div class="pname">${escapeHTML(entry.nickname)}</div>
-        ${zLine}
+        ${bdayLine}
         ${born}
         ${met}
         <div class="pline"><b>Current:</b> ${where}</div>
