@@ -397,7 +397,37 @@
       justify-content:space-between;
       gap:12px;
     }
-  </style>
+  
+    .heart{
+      font-size: 14px;
+      line-height: 1;
+      margin-right: 8px;
+    }
+    .searchBar{
+      padding:12px 12px 0;
+      border-top:1px solid rgba(255,255,255,.06);
+      background: rgba(0,0,0,.10);
+    }
+    .searchBar input{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.28);
+      color:var(--text);
+      font-size:13px;
+      outline:none;
+    }
+    .searchBar input:focus{
+      border-color: rgba(122,167,255,.55);
+      box-shadow: 0 0 0 4px rgba(122,167,255,.15);
+    }
+    .bdayCountdown{
+      margin-top:6px;
+      font-size:12px;
+      color:var(--muted);
+    }
+</style>
 </head>
 
 <body>
@@ -422,6 +452,7 @@
         <div>
           <label>Birthdate (optional)</label>
           <input id="birthdate" type="date" />
+          <div id="bdayCountdown" class="bdayCountdown"></div>
           <div class="zodiacBox">
             <div class="zodiacItem">
               <span id="zodiacLine">Zodiac: — | Chinese Element: — | Chinese Zodiac: —</span>
@@ -438,6 +469,7 @@
         <div>
           <label>Met on (date, optional)</label>
           <input id="metOn" type="date" />
+          <div id="metCountdown" class="bdayCountdown"></div>
         </div>
       </div>
 
@@ -595,6 +627,203 @@
     if(Number.isNaN(d.getTime())) return iso;
     return d.toLocaleDateString(undefined, {year:"numeric", month:"2-digit", day:"2-digit"});
   }
+
+  // ==============================
+  // Local time hearts (based on IANA timezone)
+  // Rules:
+  // 02:00-05:59 -> ❤️ (red)
+  // 06:00-22:59 -> 💛 (yellow)
+  // 07:00-21:59 -> 💚 (green)
+  // otherwise -> ❤️
+  // ==============================
+  function getLocalHour(tz){
+    if(!tz) return null;
+    try{
+      const dtf = new Intl.DateTimeFormat("en-US", { timeZone: tz, hour: "2-digit", hour12: false });
+      const parts = dtf.formatToParts(new Date());
+      const h = parts.find(p=>p.type==="hour")?.value;
+      const hour = Number(h);
+      return Number.isFinite(hour) ? hour : null;
+    }catch{
+      return null;
+    }
+  }
+
+  function getLocalSeconds(tz){
+    if(!tz) return null;
+    try{
+      const dtf = new Intl.DateTimeFormat("en-US", {
+        timeZone: tz,
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      });
+      const parts = dtf.formatToParts(new Date());
+      const h = Number(parts.find(p=>p.type==="hour")?.value);
+      const m = Number(parts.find(p=>p.type==="minute")?.value);
+      const s = Number(parts.find(p=>p.type==="second")?.value);
+      if(!Number.isFinite(h) || !Number.isFinite(m) || !Number.isFinite(s)) return null;
+      return h*3600 + m*60 + s;
+    }catch{
+      return null;
+    }
+  }
+
+    function heartForTimezone(tz){
+    const sec = getLocalSeconds(tz);
+    if(sec === null) return "🤍";
+
+    // ❤️ 02:00:00 – 05:59:59
+    if(sec >= 2*3600 && sec <= 5*3600 + 59*60 + 59) return "❤️";
+
+    // 💛 06:00:00 – 08:59:59
+    if(sec >= 6*3600 && sec <= 8*3600 + 59*60 + 59) return "💛";
+
+    // 💚 09:00:00 – 21:59:59
+    if(sec >= 9*3600 && sec <= 21*3600 + 59*60 + 59) return "💚";
+
+    // 💛 22:00:00 – 01:59:59 (wraps over midnight)
+    if(sec >= 22*3600 || sec <= 1*3600 + 59*60 + 59) return "💛";
+
+    return "🤍";
+  }
+
+  // ==============================
+  // Birthday countdown (months + days) until next birthday
+  // ==============================
+  function monthsDaysUntilNextBirthday(birthISO){
+    if(!birthISO) return null;
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(birthISO).trim());
+    if(!m) return null;
+
+    const month = Number(m[2]); // 1-12
+    const day = Number(m[3]);   // 1-31
+    const birthYear = Number(m[1]); // YYYY
+    if(!(month>=1 && month<=12 && day>=1 && day<=31)) return null;
+
+    const today = new Date();
+    const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    let target = new Date(start.getFullYear(), month-1, day);
+    // Handle Feb 29 on non-leap years: move to Feb 28
+    if(month === 2 && day === 29 && target.getMonth() !== 1){
+      target = new Date(start.getFullYear(), 1, 28);
+    }
+    if(target < start){
+      target = new Date(start.getFullYear()+1, month-1, day);
+      if(month === 2 && day === 29 && target.getMonth() !== 1){
+        target = new Date(start.getFullYear()+1, 1, 28);
+      }
+    }
+
+    // Count full months by stepping month-by-month
+    let months = 0;
+    let cursor = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+    while(true){
+      const next = new Date(cursor.getFullYear(), cursor.getMonth()+1, cursor.getDate());
+      // If date overflowed (e.g., Jan 31 -> Mar 3), clamp to last day of next month
+      if(next.getMonth() !== (cursor.getMonth()+1)%12){
+        const lastDay = new Date(cursor.getFullYear(), cursor.getMonth()+2, 0).getDate();
+        next.setDate(lastDay);
+      }
+      if(next <= target){
+        cursor = next;
+        months++;
+      }else{
+        break;
+      }
+    }
+    const msPerDay = 24*60*60*1000;
+    const days = Math.round((target - cursor)/msPerDay);
+    const age = target.getFullYear() - birthYear;
+    return { months, days, target, age };
+  }
+
+  
+  function yearsMonthsDaysSince(startISO){
+    if(!startISO) return null;
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(startISO).trim());
+    if(!m) return null;
+
+    const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
+    if(!(mo>=1 && mo<=12 && d>=1 && d<=31)) return null;
+
+    const today = new Date();
+    const end = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    let start = new Date(y, mo-1, d);
+    // If invalid date (e.g., 31 in a 30-day month), JS will overflow; guard:
+    if(start.getMonth() !== (mo-1) || start.getDate() !== d) return null;
+
+    if(start > end) return null;
+
+    // Step years
+    let years = 0;
+    let cursor = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+    while(true){
+      const next = new Date(cursor.getFullYear()+1, cursor.getMonth(), cursor.getDate());
+      if(next <= end){
+        years++;
+        cursor = next;
+      } else break;
+    }
+
+    // Step months
+    let months = 0;
+    while(true){
+      const next = new Date(cursor.getFullYear(), cursor.getMonth()+1, cursor.getDate());
+      // handle overflow (e.g., Jan 31 -> Mar 3): clamp to last day of target month
+      if(next.getDate() !== cursor.getDate()){
+        const last = new Date(cursor.getFullYear(), cursor.getMonth()+2, 0); // last day of next month
+        const clamped = new Date(last.getFullYear(), last.getMonth(), last.getDate());
+        if(clamped <= end){
+          months++;
+          cursor = clamped;
+          continue;
+        }
+        break;
+      }
+      if(next <= end){
+        months++;
+        cursor = next;
+      } else break;
+    }
+
+    // Remaining days
+    const msPerDay = 24*60*60*1000;
+    const days = Math.round((end - cursor) / msPerDay);
+
+    return { years, months, days };
+  }
+
+  function updateMetCountdownUI(){
+    const el = $("metCountdown");
+    if(!el) return;
+    const iso = $("metOn")?.value?.trim();
+    const diff = yearsMonthsDaysSince(iso);
+    if(!diff){
+      el.textContent = "";
+      return;
+    }
+    const { years, months, days } = diff;
+    const yTxt = `${years} year${years===1?"":"s"}`;
+    const mTxt = `${months} month${months===1?"":"s"}`;
+    const dTxt = `${days} day${days===1?"":"s"}`;
+    el.textContent = `Known for ${yTxt}, ${mTxt} and ${dTxt}`;
+  }
+
+function updateBirthdayCountdownUI(){
+    const el = $("bdayCountdown");
+    if(!el) return;
+    const iso = $("birthdate")?.value?.trim();
+    const diff = monthsDaysUntilNextBirthday(iso);
+    if(!diff){
+      el.textContent = "";
+      return;
+    }
+    const { months, days, age } = diff;
+    el.textContent = `Next birthday in ${months} month${months===1?"":"s"} and ${days} day${days===1?"":"s"} (turns ${age})`;
+  }
   function personLocalTime(tz){
     if(!tz) return null;
     try{
@@ -746,7 +975,8 @@
   function updateZodiacUI(){
     $("zodiacLine").innerHTML = formatZodiacLineHTML($("birthdate").value);
   }
-  $("birthdate").addEventListener("change", updateZodiacUI);
+  $("birthdate").addEventListener("change", ()=>{ updateZodiacUI(); updateBirthdayCountdownUI(); });
+  $("metOn").addEventListener("change", updateMetCountdownUI);
 
 
   // ==============================
@@ -847,11 +1077,12 @@
   // ==============================
   // Data model
   // Entry:
-  // { id, nickname, birthdate, birthplace, currentAddress, metOn,
+  // { id, nickname, birthdate, birthplace, currentAddress, metOn, connection, connection,
   //   nativeLang, otherLangs, tz, imageData, notes, lat, lon, createdAt, updatedAt }
   // ==============================
   let entries = load();
   let selectedId = null;
+  let searchQuery = "";
 
   function load(){
     const raw = localStorage.getItem(LS_KEY);
@@ -1025,7 +1256,7 @@ const notes = notesRaw
     }
 
     $("profileName").textContent = entry.nickname || "—";
-    $("profileSub").textContent = entry.tz ? `⏱ ${timeStr} (${entry.tz})` : "—";
+    $("profileSub").textContent = entry.tz ? `${heartForTimezone(entry.tz)} ⏱ ${timeStr} (${entry.tz})${entry.connection ? " · " + entry.connection : ""}` : (entry.connection ? entry.connection : "—");
 
     const imgBlock = entry.imageData
       ? `
@@ -1061,9 +1292,12 @@ const notes = notesRaw
 
     const cards = [
       entry.birthdate ? `<div class="profileCard"><div class="k">Birthdate</div><div class="v">${escapeHTML(fmtDate(entry.birthdate))}</div></div>` : "",
+      entry.birthdate ? (()=>{ const d = monthsDaysUntilNextBirthday(entry.birthdate); return `<div class="profileCard"><div class="k">Next birthday</div><div class="v">${d ? `in ${d.months} month${d.months===1?"":"s"} and ${d.days} day${d.days===1?"":"s"} (turns ${d.age})` : "—"}</div></div>`; })() : "",
       entry.birthdate ? `<div class="profileCard"><div class="k">Zodiac</div><div class="v">${zodiacHTML}</div></div>` : "",
       entry.birthplace ? `<div class="profileCard"><div class="k">Birthplace</div><div class="v">${escapeHTML(entry.birthplace)}</div></div>` : "",
       entry.metOn ? `<div class="profileCard"><div class="k">Met on</div><div class="v">${escapeHTML(fmtDate(entry.metOn))}</div></div>` : "",
+      entry.metOn ? (()=>{ const d = yearsMonthsDaysSince(entry.metOn); return `<div class="profileCard"><div class="k">Known for</div><div class="v">${d ? `${d.years} year${d.years===1?"":"s"}, ${d.months} month${d.months===1?"":"s"} and ${d.days} day${d.days===1?"":"s"}` : "—"}</div></div>`; })() : "",
+      entry.connection ? `<div class="profileCard"><div class="k">Connection</div><div class="v">${escapeHTML(entry.connection)}</div></div>` : "",
       entry.nativeLang ? `<div class="profileCard"><div class="k">Native language</div><div class="v">${escapeHTML(entry.nativeLang)}</div></div>` : "",
       entry.otherLangs ? `<div class="profileCard"><div class="k">Other languages</div><div class="v">${escapeHTML(entry.otherLangs)}</div></div>` : "",
       entry.notes ? `<div class="profileCard"><div class="k">Notes</div><div class="v">${escapeHTML(entry.notes)}</div></div>` : ""
@@ -1119,6 +1353,7 @@ const notes = notesRaw
     $("currentAddress").value = "";
     $("metOn").value = "";
     $("nativeLang").value = "";
+    $("connection").value = "";
     $("otherLangs").value = "";
     $("timezone").value = "";
     $("coords").value = "";
@@ -1128,6 +1363,9 @@ const notes = notesRaw
     $("removeImgBtn").dataset.remove = "0";
     clearPendingImage();
     updateZodiacUI();
+    updateBirthdayCountdownUI();
+    updateMetCountdownUI();
+    updateMetCountdownUI();
     renderMarkers();
     renderList();
   }
@@ -1156,6 +1394,7 @@ const notes = notesRaw
 
     $("removeImgBtn").dataset.remove = "0";
     updateZodiacUI();
+    updateBirthdayCountdownUI();
 
     if(typeof entry.lat === "number" && typeof entry.lon === "number"){
       map.setView([entry.lat, entry.lon], Math.max(map.getZoom(), 4));
@@ -1353,7 +1592,17 @@ const notes = notesRaw
   function renderList(){
     const ul = $("list");
 
-    const sorted = [...entries].sort((a,b)=> (a.nickname||"").localeCompare(b.nickname||""));
+    const q = (searchQuery||"").trim().toLowerCase();
+
+    const filtered = q ? entries.filter(e=>{
+      const hay = [
+        e.nickname, e.connection, e.nativeLang, e.otherLangs, e.tz,
+        e.currentAddress, e.birthplace, e.birthdate, e.metOn, e.notes
+      ].filter(Boolean).join(" | ").toLowerCase();
+      return hay.includes(q);
+    }) : entries;
+
+    const sorted = [...filtered].sort((a,b)=> (a.nickname||"").localeCompare(b.nickname||""));
 
     // keep scroll position
     const prevScroll = ul.scrollTop;
@@ -1385,8 +1634,8 @@ const notes = notesRaw
 
       li.innerHTML = `
         <div class="meta">
-          <div class="nick">${escapeHTML(e.nickname)}</div>
-          <div class="tiny">${escapeHTML(where)}${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}</div>
+          <div class="nick"><span class="heart js-heart" data-tz="${escapeHTML(e.tz || "")}">${heartForTimezone(e.tz)}</span>${escapeHTML(e.nickname)}</div>
+          <div class="tiny">${escapeHTML(where)}${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}</div>
           <div class="tiny">⏱ <span class="js-time" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
         </div>
         <div class="actions">
@@ -1414,12 +1663,17 @@ const notes = notesRaw
       if(!tz){ el.textContent = "—"; continue; }
       el.textContent = personLocalTime(tz) || "—";
     }
+
+    for(const el of document.querySelectorAll(".js-heart")){
+      const tz = el.getAttribute("data-tz");
+      el.textContent = heartForTimezone(tz);
+    }
     // Update profile subtitle too
     const name = $("profileName").textContent;
     const e = entries.find(x=>x.nickname===name);
     if(e && $("profileView").style.display !== "none"){
       const t = personLocalTime(e.tz) || "—";
-      $("profileSub").textContent = e.tz ? `⏱ ${t} (${e.tz})` : "—";
+      $("profileSub").textContent = e.tz ? `${heartForTimezone(e.tz)} ⏱ ${t} (${e.tz})${e.connection ? " · " + e.connection : ""}` : (e.connection ? e.connection : "—");
     }
   }
 
@@ -1545,6 +1799,12 @@ const notes = notesRaw
   $("deleteBtn").addEventListener("click", handleDelete);
   $("exportBtn").addEventListener("click", exportJSON);
   $("clearAllBtn").addEventListener("click", clearAll);
+
+  // Search
+  $("search").addEventListener("input", ()=>{
+    searchQuery = $("search").value;
+    renderList();
+  });
 
   // Ctrl/Cmd+S to save
   document.addEventListener("keydown", (e)=>{
