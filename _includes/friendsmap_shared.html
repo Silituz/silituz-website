@@ -537,7 +537,11 @@
       </div>
     </div>
 
-    <!-- Alphabet helper (A–Z) -->
+      <div class="searchBar">
+    <input id="search" placeholder="Search (name, notes, dates, timezone…)" />
+  </div>
+
+<!-- Alphabet helper (A–Z) -->
     <div class="alphaBar" id="alpha"></div>
 
     <ul class="list" id="list"></ul>
@@ -976,7 +980,12 @@ function updateBirthdayCountdownUI(){
     $("zodiacLine").innerHTML = formatZodiacLineHTML($("birthdate").value);
   }
   $("birthdate").addEventListener("change", ()=>{ updateZodiacUI(); updateBirthdayCountdownUI(); });
+  $("birthdate").addEventListener("input", ()=>{ updateZodiacUI(); updateBirthdayCountdownUI(); });
+  $("birthdate").addEventListener("blur", ()=>{ updateZodiacUI(); updateBirthdayCountdownUI(); });
+
   $("metOn").addEventListener("change", updateMetCountdownUI);
+  $("metOn").addEventListener("input", updateMetCountdownUI);
+  $("metOn").addEventListener("blur", updateMetCountdownUI);
 
 
   // ==============================
@@ -1379,6 +1388,7 @@ const notes = notesRaw
     clearPendingImage();
     updateZodiacUI();
     updateBirthdayCountdownUI();
+    updateMetCountdownUI();
     updateMetCountdownUI();
     updateMetCountdownUI();
     renderMarkers();
@@ -1816,8 +1826,9 @@ const notes = notesRaw
   $("clearAllBtn").addEventListener("click", clearAll);
 
   // Search
-  $("search").addEventListener("input", ()=>{
-    searchQuery = $("search").value;
+  const _searchEl = $("search");
+  if(_searchEl) _searchEl.addEventListener("input", ()=>{
+    searchQuery = _searchEl.value;
     renderList();
   });
 
@@ -1837,7 +1848,7 @@ const notes = notesRaw
   updateCount();
   updateZodiacUI();
   tick();
-  setInterval(tick, 10_000);
+  setInterval(tick, 1000);
 </script>
 </body>
 </html>
