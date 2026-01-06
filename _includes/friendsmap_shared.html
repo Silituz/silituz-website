@@ -44,7 +44,7 @@
                   linear-gradient(135deg, rgba(122,167,255,1), rgba(125,255,178,1));
       box-shadow: 0 0 20px rgba(122,167,255,.35);
     }
-    h1{font-size:16px; margin:0; letter-spacing:.2px; color: rgb(16,185,129)}
+    h1{font-size:16px; margin:0; letter-spacing:.2px; color: rgb(16, 185, 129)}
     .sub{font-size:12px;color:var(--muted); margin-top:2px}
 
     .wrap{
@@ -101,6 +101,12 @@
       align-items:center;
       justify-content:space-between;
     }
+    .zodiacLink{
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(122,167,255,.45);
+    }
+    .zodiacLink:hover{ text-decoration: underline; }
     .zodiacItem{
       font-size:12px;
       color: var(--muted);
@@ -417,8 +423,9 @@
           <label>Birthdate (optional)</label>
           <input id="birthdate" type="date" />
           <div class="zodiacBox">
-            <div class="zodiacItem">Zodiac: <b id="zodiacWestern">—</b></div>
-            <div class="zodiacItem">Chinese zodiac: <b id="zodiacChinese">—</b></div>
+            <div class="zodiacItem">
+              <span id="zodiacLine">Zodiac: — | Chinese Element: — | Chinese Zodiac: —</span>
+            </div>
           </div>
         </div>
       </div>
@@ -639,7 +646,7 @@
   });
 
   // ==============================
-  // Zodiac
+  // Zodiac (auto from birthdate)
   // ==============================
   function westernZodiac(month, day){
     if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return "Capricorn";
@@ -656,20 +663,91 @@
     if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return "Sagittarius";
     return "—";
   }
-  function chineseZodiac(year){
+
+  function chineseZodiacAnimal(year){
     const animals = ["Rat","Ox","Tiger","Rabbit","Dragon","Snake","Horse","Goat","Monkey","Rooster","Dog","Pig"];
     const idx = ((year - 2008) % 12 + 12) % 12; // 2008 was Rat
     return animals[idx];
   }
+
+  // Chinese element: 10-year cycle (each element lasts 2 years)
+  // Reference: 1984 = Wood Rat (start of 60-year cycle)
+  function chineseZodiacElement(year){
+    const elements = ["Wood","Fire","Earth","Metal","Water"];
+    const idx10 = ((year - 1984) % 10 + 10) % 10;
+    return elements[Math.floor(idx10 / 2)];
+  }
+
+  function westernZodiacEmoji(sign){
+    const map = {
+      "Capricorn":"♑","Aquarius":"♒","Pisces":"♓","Aries":"♈","Taurus":"♉","Gemini":"♊",
+      "Cancer":"♋","Leo":"♌","Virgo":"♍","Libra":"♎","Scorpio":"♏","Sagittarius":"♐"
+    };
+    return map[sign] || "";
+  }
+
+  function chineseZodiacEmoji(animal){
+    const map = {
+      "Rat":"🐀","Ox":"🐂","Tiger":"🐅","Rabbit":"🐇","Dragon":"🐉","Snake":"🐍",
+      "Horse":"🐎","Goat":"🐐","Monkey":"🐒","Rooster":"🐓","Dog":"🐕","Pig":"🐖"
+    };
+    return map[animal] || "";
+  }
+
+  function chineseElementEmoji(el){
+    const map = { "Wood":"🌳", "Fire":"🔥", "Earth":"🌍", "Metal":"⚙️", "Water":"💧" };
+    return map[el] || "";
+  }
+
+  function westernZodiacUrl(sign){
+    if(!sign || sign === "—") return "";
+    // Wikipedia pages like: Leo_(astrology)
+    return `https://en.wikipedia.org/wiki/${encodeURIComponent(sign)}_(astrology)`;
+  }
+
+  function chineseZodiacUrl(animal){
+    if(!animal || animal === "—") return "";
+    // Wikipedia pages like: Snake_(zodiac)
+    return `https://en.wikipedia.org/wiki/${encodeURIComponent(animal)}_(zodiac)`;
+  }
+
+  function formatZodiacLineHTML(birthdateStr){
+    // birthdateStr: YYYY-MM-DD
+    if(!birthdateStr) return `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
+    const d = new Date(birthdateStr + "T00:00:00");
+    if(Number.isNaN(d.getTime())) return `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
+
+    const sign = westernZodiac(d.getMonth()+1, d.getDate());
+    const signEmoji = westernZodiacEmoji(sign);
+    const signLabel = sign === "—" ? "—" : `${sign} ${signEmoji}`.trim();
+    const signUrl = westernZodiacUrl(sign);
+
+    const year = d.getFullYear();
+    const animal = chineseZodiacAnimal(year);
+    const animalEmoji = chineseZodiacEmoji(animal);
+    const animalLabel = animal === "—" ? "—" : `${animal} ${animalEmoji}`.trim();
+    const animalUrl = chineseZodiacUrl(animal);
+
+    const el = chineseZodiacElement(year);
+    const elEmoji = chineseElementEmoji(el);
+    const elLabel = el ? `${el} ${elEmoji}`.trim() : "—";
+
+    const signHTML = (signUrl && sign !== "—")
+      ? `<a class="zodiacLink" href="${signUrl}" target="_blank" rel="noopener noreferrer">${escapeHTML(signLabel)}</a>`
+      : `${escapeHTML(signLabel)}`;
+
+    const animalHTML = (animalUrl && animal !== "—")
+      ? `<a class="zodiacLink" href="${animalUrl}" target="_blank" rel="noopener noreferrer">${escapeHTML(animalLabel)}</a>`
+      : `${escapeHTML(animalLabel)}`;
+
+    return `Zodiac: ${signHTML} | Chinese Element: ${escapeHTML(elLabel)} | Chinese Zodiac: ${animalHTML}`;
+  }
+
   function updateZodiacUI(){
-    const bd = $("birthdate").value;
-    if(!bd){ $("zodiacWestern").textContent = "—"; $("zodiacChinese").textContent = "—"; return; }
-    const d = new Date(bd+"T00:00:00");
-    if(Number.isNaN(d.getTime())){ $("zodiacWestern").textContent = "—"; $("zodiacChinese").textContent = "—"; return; }
-    $("zodiacWestern").textContent = westernZodiac(d.getMonth()+1, d.getDate());
-    $("zodiacChinese").textContent = chineseZodiac(d.getFullYear());
+    $("zodiacLine").innerHTML = formatZodiacLineHTML($("birthdate").value);
   }
   $("birthdate").addEventListener("change", updateZodiacUI);
+
 
   // ==============================
   // Timezone suggestions
@@ -858,8 +936,8 @@ async function geocodeAddress(addr){
       const d = new Date(entry.birthdate+"T00:00:00");
       if(!Number.isNaN(d.getTime())){
         const western = westernZodiac(d.getMonth()+1, d.getDate());
-        const chinese = chineseZodiac(d.getFullYear());
-        zLine = `<div class="pline"><b>Birthdate:</b> ${escapeHTML(fmtDate(entry.birthdate))} · <b>Zodiac:</b> ${escapeHTML(western)} · <b>Chinese:</b> ${escapeHTML(chinese)}</div>`;
+        const chinese = chineseZodiacAnimal(d.getFullYear());
+        zLine = `<div class="pline">${formatZodiacLineHTML(entry.birthdate)}</div>`;
       }
     }
 
@@ -941,12 +1019,9 @@ const notes = notesRaw
     const timeStr = personLocalTime(entry.tz) || "—";
     const where = entry.currentAddress || `${Number(entry.lat).toFixed(3)}, ${Number(entry.lon).toFixed(3)}`;
 
-    let zodiac = "—";
+    let zodiacHTML = `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
     if(entry.birthdate){
-      const d = new Date(entry.birthdate+"T00:00:00");
-      if(!Number.isNaN(d.getTime())){
-        zodiac = `${westernZodiac(d.getMonth()+1, d.getDate())} / ${chineseZodiac(d.getFullYear())}`;
-      }
+      zodiacHTML = formatZodiacLineHTML(entry.birthdate);
     }
 
     $("profileName").textContent = entry.nickname || "—";
@@ -986,7 +1061,7 @@ const notes = notesRaw
 
     const cards = [
       entry.birthdate ? `<div class="profileCard"><div class="k">Birthdate</div><div class="v">${escapeHTML(fmtDate(entry.birthdate))}</div></div>` : "",
-      entry.birthdate ? `<div class="profileCard"><div class="k">Zodiac</div><div class="v">${escapeHTML(zodiac)}</div></div>` : "",
+      entry.birthdate ? `<div class="profileCard"><div class="k">Zodiac</div><div class="v">${zodiacHTML}</div></div>` : "",
       entry.birthplace ? `<div class="profileCard"><div class="k">Birthplace</div><div class="v">${escapeHTML(entry.birthplace)}</div></div>` : "",
       entry.metOn ? `<div class="profileCard"><div class="k">Met on</div><div class="v">${escapeHTML(fmtDate(entry.metOn))}</div></div>` : "",
       entry.nativeLang ? `<div class="profileCard"><div class="k">Native language</div><div class="v">${escapeHTML(entry.nativeLang)}</div></div>` : "",
@@ -1300,7 +1375,7 @@ const notes = notesRaw
       if(e.birthdate){
         const d = new Date(e.birthdate+"T00:00:00");
         if(!Number.isNaN(d.getTime())){
-          z = ` · ${westernZodiac(d.getMonth()+1, d.getDate())} / ${chineseZodiac(d.getFullYear())}`;
+          z = ` · ${westernZodiac(d.getMonth()+1, d.getDate())} / ${chineseZodiacAnimal(d.getFullYear())}`;
         }
       }
 
@@ -1491,5 +1566,4 @@ const notes = notesRaw
 </script>
 </body>
 </html>
-
 
