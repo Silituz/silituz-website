@@ -44,7 +44,7 @@
                   linear-gradient(135deg, rgba(122,167,255,1), rgba(125,255,178,1));
       box-shadow: 0 0 20px rgba(122,167,255,.35);
     }
-    h1{font-size:16px; margin:0; letter-spacing:.2px}
+    h1{font-size:16px; margin:0; letter-spacing:.2px; color: rgb(125,255,178)}
     .sub{font-size:12px;color:var(--muted); margin-top:2px}
 
     .wrap{
@@ -397,13 +397,11 @@
 <body>
 <header>
   <div class="brand">
-    <div class="dot" aria-hidden="true"></div>
     <div>
       <h1>World Friends Map</h1>
-      <div class="sub">Markers + notes + local time per person (timezone) + image upload + import/export</div>
+      <div class="sub">by Silituz</div>
     </div>
   </div>
-  <div class="pill" id="nowHere">Here: —</div>
 </header>
 
 <div class="wrap">
@@ -519,9 +517,7 @@
             Merge on import (recommended if you already have entries here)
           </label>
         </div>
-
-        <div class="pill" id="countPill" style="align-self:flex-end;">0 entries</div>
-      </div>
+</div>
 
       <!-- Hidden file input for JSON import -->
       <input id="importFile" type="file" accept="application/json" style="display:none" />
@@ -791,7 +787,8 @@
     updateCount();
   }
   function updateCount(){
-    $("countPill").textContent = `${entries.length} entries`;
+    const cp = $("countPill");
+    if(cp) cp.textContent = `${entries.length} entries`;
   }
 
   // ==============================
@@ -807,21 +804,43 @@
   let tempPin = null;
   const markerById = new Map();
 
-  map.on('click', (e) => {
+  map.on('click', async (e) => {
     const { lat, lng } = e.latlng;
     $("coords").value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
     if(tempPin) markerLayer.removeLayer(tempPin);
     tempPin = L.circleMarker([lat, lng], { radius: 7, weight: 2, fillOpacity: .25 }).addTo(markerLayer);
-    toast("Coordinates set (map click)");
+
+    // Auto-timezone (only if empty)
+    if(!$("timezone").value.trim()){
+      try{
+        const tz = await resolveTimezone(lat, lng);
+        if(tz) $("timezone").value = tz;
+        toast(tz ? "Coordinates + timezone set ✅" : "Coordinates set (timezone unknown)");
+      }catch{
+        toast("Coordinates set (timezone lookup failed)");
+      }
+    }else{
+      toast("Coordinates set (map click)");
+    }
   });
 
-  async function geocodeAddress(addr){
+async function geocodeAddress(addr){
     const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(addr)}`;
     const res = await fetch(url, { method:"GET" });
     if(!res.ok) throw new Error("Geocoding failed");
     const data = await res.json();
     if(!Array.isArray(data) || !data[0]) return null;
     return { lat: Number(data[0].lat), lon: Number(data[0].lon) };
+  }
+
+  async function resolveTimezone(lat, lon){
+    // Open-Meteo: timezone=auto -> returns IANA timezone for coordinates
+    // We request a minimal "current" field just to satisfy the endpoint.
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(lat)}&longitude=${encodeURIComponent(lon)}&current=temperature_2m&timezone=auto`;
+    const res = await fetch(url, { method: "GET" });
+    if(!res.ok) throw new Error("Timezone lookup failed");
+    const data = await res.json();
+    return data?.timezone || null; // e.g. "Europe/Berlin"
   }
 
   function markerPopupHTML(entry){
@@ -1080,19 +1099,37 @@ const notes = notesRaw
     const addr = $("currentAddress").value.trim();
     if(!addr) return;
     const [lat, lon] = parseCoords($("coords").value);
+    // If coords are already set, don't override them on blur
     if(Number.isFinite(lat) && Number.isFinite(lon)) return;
+
     try{
       const g = await geocodeAddress(addr);
       if(g){
         $("coords").value = `${g.lat.toFixed(6)}, ${g.lon.toFixed(6)}`;
         map.setView([g.lat, g.lon], 6);
         renderMarkers();
-        toast("Address found");
+
+        // Auto-timezone (only if empty)
+        if(!$("timezone").value.trim()){
+          try{
+            const tz = await resolveTimezone(g.lat, g.lon);
+            if(tz){
+              $("timezone").value = tz;
+              toast("Address + timezone found ✅");
+            }else{
+              toast("Address found (timezone unknown)");
+            }
+          }catch{
+            toast("Address found (timezone lookup failed)");
+          }
+        }else{
+          toast("Address found");
+        }
       }
     }catch{}
   });
 
-  // ==============================
+// ==============================
   // Save / Delete
   // ==============================
   async function handleSave(){
@@ -1420,7 +1457,8 @@ const notes = notesRaw
   // Clock tick
   // ==============================
   function tick(){
-    $("nowHere").textContent = `Here: ${myLocalTime()}`;
+    const nh = $("nowHere");
+    if(nh) nh.textContent = `Here: ${myLocalTime()}`;
     updateTimesInUI();
   }
 
