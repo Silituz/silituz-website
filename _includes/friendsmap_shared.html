@@ -525,9 +525,9 @@
         </div>
         <div>
           <label>Met on (date, optional)</label>
-          <input id="metOn" type="date" />
-          <div id="metCountdown" class="bdayCountdown"></div>
-        </div>
+<input id="metOn" type="date" />
+          <div id="metKnownForLine" class="bdayCountdown"></div>
+</div>
       </div>
 
       <div class="row">
@@ -858,19 +858,18 @@
   }
 
   function updateMetCountdownUI(){
-    const el = $("metCountdown");
-    if(!el) return;
+    const line = $("metKnownForLine");
+    if(!line) return;
+
     const iso = $("metOn")?.value?.trim();
     const diff = yearsMonthsDaysSince(iso);
+
     if(!diff){
-      el.textContent = "";
+      line.textContent = "";
       return;
     }
     const { years, months, days } = diff;
-    const yTxt = `${years} year${years===1?"":"s"}`;
-    const mTxt = `${months} month${months===1?"":"s"}`;
-    const dTxt = `${days} day${days===1?"":"s"}`;
-    el.textContent = `Known for ${yTxt}, ${mTxt} and ${dTxt}`;
+    line.textContent = `Known for ${years} years, ${months} months and ${days} days`;
   }
 
 function updateBirthdayCountdownUI(){
@@ -1561,7 +1560,6 @@ const notes = notesRaw
     updateZodiacUI();
     updateBirthdayCountdownUI();
     updateMetCountdownUI();
-    updateMetCountdownUI();
     // Ensure nothing stays selected in the list (safety against accidental overwrite)
     document.querySelectorAll(".item.selected").forEach(el=>el.classList.remove("selected"));
     // Close any open map popups
@@ -1597,6 +1595,7 @@ const notes = notesRaw
     $("removeImgBtn").dataset.remove = "0";
     updateZodiacUI();
     updateBirthdayCountdownUI();
+    updateMetCountdownUI();
 
     if(typeof entry.lat === "number" && typeof entry.lon === "number"){
       map.setView([entry.lat, entry.lon], Math.max(map.getZoom(), 4));
@@ -2033,6 +2032,8 @@ const notes = notesRaw
   tick();
   setInterval(tick, 1000);
 </script>
+
+
 </body>
 </html>
 
