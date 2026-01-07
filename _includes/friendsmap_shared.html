@@ -320,18 +320,80 @@
       color: var(--text);
     }
 
-    /* Leaflet popup */
+    /* Leaflet popup (match dark theme) */
+    .leaflet-popup-content-wrapper{
+      background: rgba(18,26,43,.94);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+    .leaflet-popup-tip{
+      background: rgba(18,26,43,.94);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+    }
+    .leaflet-container a.leaflet-popup-close-button{
+      color: var(--muted);
+    }
+    .leaflet-container a.leaflet-popup-close-button:hover{
+      color: var(--text);
+      background: transparent;
+    }
     .popup{
-      color:#0b0f1a;
+      color: var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
     .popup .pnotes{ white-space: pre-line; }
     .popup .pname{font-weight:800; font-size:14px; margin:0 0 6px}
-    .popup .pline{font-size:12px; margin:3px 0; color:#1a2133}
-    .popup .ptime{font-weight:700}
+    .popup .pline{font-size:12px; margin:3px 0; color: var(--muted)}
+    .popup .ptime{font-weight:700; color: var(--text)}
     .popup .thumbRow{display:flex; gap:10px; align-items:center; margin-top:8px}
-    .popup img.thumb{width:84px;height:84px;border-radius:12px;object-fit:cover;cursor:pointer;display:block}
-    .popup .thumbHint{font-size:12px; color:#1a2133; opacity:.75}
+    .popup img.thumb{width:84px;height:84px;border-radius:12px;object-fit:cover;cursor:pointer;display:block; border:1px solid rgba(255,255,255,.12)}
+    .popup .thumbHint{font-size:12px; color: var(--muted); opacity:.9}
+
+    /* Responsive Leaflet popup sizing */
+    .leaflet-popup-content-wrapper{
+      max-width: min(560px, calc(100vw - 64px));
+    }
+    .leaflet-popup-content{
+      margin: 12px 14px;
+      width: auto !important;
+    }
+    .pname{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .pheart{font-size:14px; line-height:1}
+    .pnick{font-weight:800}
+
+    /* Map legend */
+    .mapLegend{
+      padding:8px 10px;
+      border-radius: 14px;
+      background: rgba(18,26,43,.92);
+      border:1px solid rgba(255,255,255,.12);
+      color: var(--text);
+      font-size:12px;
+      box-shadow: var(--shadow);
+      user-select:none;
+      pointer-events:none;
+      max-width: min(560px, calc(100vw - 64px));
+      white-space: nowrap;
+    }
+
+
+
+/* Responsive popup width (avoid zooming to read) */
+.leaflet-popup{
+  max-width: calc(100vw - 36px);
+}
+.leaflet-popup-content{
+  margin: 12px 14px;
+  width: min(560px, calc(100vw - 74px));
+}
 
     /* Preview in form */
     .preview{
@@ -1101,6 +1163,8 @@ function updateBirthdayCountdownUI(){
   function save(){
     localStorage.setItem(LS_KEY, JSON.stringify(entries));
     renderList();
+    // Remove temporary pin
+    try{ if(tempPin){ markerLayer.removeLayer(tempPin); tempPin = null; } }catch{}
     renderMarkers();
     updateCount();
   }
@@ -1112,11 +1176,124 @@ function updateBirthdayCountdownUI(){
   // ==============================
   // Map
   // ==============================
-  const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
+  const map = L.map('map', {
+    worldCopyJump: false,
+    maxBoundsViscosity: 1.0
+  }).setView([20, 0], 2);
+
+  // Prevent repeating world copies when zooming out
+  map.setMaxBounds([[-85, -180], [85, 180]]);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
+    noWrap: true,
     attribution: '&copy; OpenStreetMap'
   }).addTo(map);
+
+
+// Map legend (bottom-right)
+const mapLegend = L.control({ position: "bottomright" });
+mapLegend.onAdd = function(){
+  const div = L.DomUtil.create("div", "mapLegend");
+  div.innerHTML = `💚 good time · 💛 maybe · ❤️ sleeping · 🌘 = night`;
+  return div;
+};
+mapLegend.addTo(map);
+
+
+// ==============================
+// Day/Night overlay (solar terminator)
+// Updates every 30 seconds
+// ==============================
+function toJulian(date){
+  return date.getTime() / 86400000 + 2440587.5;
+}
+function solarPosition(date){
+  // Approximate solar position (good for day/night visualization)
+  const jd = toJulian(date);
+  const n = jd - 2451545.0; // days since J2000.0
+  const L = (280.46 + 0.9856474 * n) % 360; // mean longitude
+  const g = (357.528 + 0.9856003 * n) % 360; // mean anomaly
+  const gRad = g * Math.PI/180;
+  const lambda = (L + 1.915*Math.sin(gRad) + 0.020*Math.sin(2*gRad)) * Math.PI/180; // ecliptic longitude
+  const eps = (23.439 - 0.0000004 * n) * Math.PI/180; // obliquity
+  const sinDelta = Math.sin(eps) * Math.sin(lambda);
+  const delta = Math.asin(sinDelta); // declination
+
+  // Right ascension
+  const alpha = Math.atan2(Math.cos(eps)*Math.sin(lambda), Math.cos(lambda)); // radians
+
+  // Greenwich Mean Sidereal Time (deg)
+  const T = (jd - 2451545.0) / 36525.0;
+  let GMST = 280.46061837 + 360.98564736629*(jd - 2451545.0) + 0.000387933*T*T - (T*T*T)/38710000.0;
+  GMST = ((GMST % 360) + 360) % 360;
+
+  // Subsolar lon: RA - GMST
+  let lon = (alpha * 180/Math.PI) - GMST;
+  lon = ((lon + 540) % 360) - 180; // normalize to [-180,180]
+  const lat = delta * 180/Math.PI;
+
+  return { lat, lon };
+}
+
+function nightPolygonLatLngs(date){
+  const sun = solarPosition(date);
+  const lat0 = sun.lat * Math.PI/180;
+  const lon0 = sun.lon;
+
+  const pts = [];
+
+  // Special case near equinox (subsolar lat ~ 0): terminator is approximately a meridian
+  if(Math.abs(Math.sin(lat0)) < 1e-6){
+    const meridian = ((lon0 + 90 + 540) % 360) - 180;
+    // Build a straight line from south to north at that longitude
+    for(let lat=-89; lat<=89; lat+=2){
+      pts.push([lat, meridian]);
+    }
+  }else{
+    for(let lon=-180; lon<=180; lon+=2){
+      const dLon = (lon - lon0) * Math.PI/180;
+      const phi = Math.atan( -(Math.cos(dLon)) / Math.tan(lat0) ); // radians
+      pts.push([phi * 180/Math.PI, lon]);
+    }
+  }
+
+  // Determine which pole is in night
+  // If dot(sunVector, northPoleNormal) < 0 => north pole is night
+  const northDot = Math.sin(lat0); // sun vector dot with north pole normal
+  const northPoleIsNight = northDot < 0;
+
+  if(northPoleIsNight){
+    // Night includes north pole
+    return [[90, -180], [90, 180], ...pts.slice().reverse()];
+  }else{
+    // Night includes south pole
+    return [[-90, -180], [-90, 180], ...pts];
+  }
+}
+
+let nightLayer = null;
+
+function updateNightLayer(){
+  const latlngs = nightPolygonLatLngs(new Date());
+  if(!nightLayer){
+    nightLayer = L.polygon(latlngs, {
+      stroke: false,
+      fill: true,
+      fillColor: "#071632",
+      fillOpacity: 0.45,
+      interactive: false
+    }).addTo(map);
+    // keep behind markers/popups
+    nightLayer.bringToBack();
+  }else{
+    nightLayer.setLatLngs(latlngs);
+    nightLayer.bringToBack();
+  }
+}
+
+updateNightLayer();
+setInterval(updateNightLayer, 30000);
+
 
   const markerLayer = L.layerGroup().addTo(map);
   let tempPin = null;
@@ -1223,7 +1400,7 @@ const notes = notesRaw
 
     return `
       <div class="popup" data-entryid="${escapeHTML(entry.id)}">
-        <div class="pname">${escapeHTML(entry.nickname)}</div>
+        <div class="pname"><span class="pheart">${heartForTimezone(entry.tz)}</span><span class="pnick">${escapeHTML(entry.nickname)}</span></div>
         ${bdayLine}
         ${born}
         ${met}
@@ -1377,7 +1554,7 @@ const notes = notesRaw
     $("currentAddress").value = "";
     $("metOn").value = "";
     $("nativeLang").value = "";
-    $("connection").value = "";
+    const _connEl = $("connection"); if(_connEl) _connEl.value = "";
     $("otherLangs").value = "";
     $("timezone").value = "";
     $("coords").value = "";
@@ -1389,8 +1566,12 @@ const notes = notesRaw
     updateZodiacUI();
     updateBirthdayCountdownUI();
     updateMetCountdownUI();
-    updateMetCountdownUI();
-    updateMetCountdownUI();
+    // Ensure nothing stays selected in the list (safety against accidental overwrite)
+    document.querySelectorAll(".item.selected").forEach(el=>el.classList.remove("selected"));
+    // Close any open map popups
+    try{ map.closePopup(); }catch{}
+    // Remove temporary pin
+    try{ if(tempPin){ markerLayer.removeLayer(tempPin); tempPin = null; } }catch{}
     renderMarkers();
     renderList();
   }
@@ -1446,7 +1627,9 @@ const notes = notesRaw
       if(g){
         $("coords").value = `${g.lat.toFixed(6)}, ${g.lon.toFixed(6)}`;
         map.setView([g.lat, g.lon], 6);
-        renderMarkers();
+        // Remove temporary pin
+    try{ if(tempPin){ markerLayer.removeLayer(tempPin); tempPin = null; } }catch{}
+    renderMarkers();
 
         // Auto-timezone (only if empty)
         if(!$("timezone").value.trim()){
@@ -1539,6 +1722,8 @@ const notes = notesRaw
     $("removeImgBtn").dataset.remove = "0";
 
     save();
+    // Remove temporary pin
+    try{ if(tempPin){ markerLayer.removeLayer(tempPin); tempPin = null; } }catch{}
     renderMarkers();
 
     const current = selectedId ? entries.find(x=>x.id===selectedId) : entries[0];
