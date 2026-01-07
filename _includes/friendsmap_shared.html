@@ -16,6 +16,7 @@
       --muted:#a9b4d0;
       --accent:#7aa7ff;
       --danger:#ff6b6b;
+      --emerald:#10b981;
       --line:rgba(255,255,255,.08);
       --shadow: 0 14px 40px rgba(0,0,0,.35);
       --radius:18px;
@@ -322,19 +323,35 @@
 
     /* Leaflet popup (match dark theme) */
     .leaflet-popup-content-wrapper{
-      background: rgba(18,26,43,.94);
+      background: rgba(12,18,34,.96);
       color: var(--text);
       border: 1px solid rgba(255,255,255,.12);
       border-radius: 16px;
       box-shadow: var(--shadow);
+      /* wider but visually smaller */
+      max-width: min(680px, 94vw);
+    }
+    .leaflet-popup-content{
+      /* smaller padding + better use of width */
+      margin: 10px 12px;
+      min-width: 320px;
+      font-size: 12.5px;
+      line-height: 1.35;
+    }
+    @media (max-width: 420px){
+      .leaflet-popup-content{ min-width: 0; margin: 10px 10px; }
     }
     .leaflet-popup-tip{
-      background: rgba(18,26,43,.94);
+      background: rgba(12,18,34,.96);
       border: 1px solid rgba(255,255,255,.12);
       box-shadow: var(--shadow);
     }
     .leaflet-container a.leaflet-popup-close-button{
       color: var(--muted);
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      font-size: 18px;
     }
     .leaflet-container a.leaflet-popup-close-button:hover{
       color: var(--text);
@@ -345,57 +362,14 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
     .popup .pnotes{ white-space: pre-line; }
-    .popup .pname{font-weight:800; font-size:14px; margin:0 0 6px}
+    .popup .pname{font-weight:800; font-size:13.5px; margin:0 0 6px}
     .popup .pline{font-size:12px; margin:3px 0; color: var(--muted)}
     .popup .ptime{font-weight:700; color: var(--text)}
     .popup .thumbRow{display:flex; gap:10px; align-items:center; margin-top:8px}
-    .popup img.thumb{width:84px;height:84px;border-radius:12px;object-fit:cover;cursor:pointer;display:block; border:1px solid rgba(255,255,255,.12)}
+    .popup img.thumb{width:72px;height:72px;border-radius:12px;object-fit:cover;cursor:pointer;display:block; border:1px solid rgba(255,255,255,.12)}
     .popup .thumbHint{font-size:12px; color: var(--muted); opacity:.9}
 
-    /* Responsive Leaflet popup sizing */
-    .leaflet-popup-content-wrapper{
-      max-width: min(560px, calc(100vw - 64px));
-    }
-    .leaflet-popup-content{
-      margin: 12px 14px;
-      width: auto !important;
-    }
-    .pname{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-    .pheart{font-size:14px; line-height:1}
-    .pnick{font-weight:800}
-
-    /* Map legend */
-    .mapLegend{
-      padding:8px 10px;
-      border-radius: 14px;
-      background: rgba(18,26,43,.92);
-      border:1px solid rgba(255,255,255,.12);
-      color: var(--text);
-      font-size:12px;
-      box-shadow: var(--shadow);
-      user-select:none;
-      pointer-events:none;
-      max-width: min(560px, calc(100vw - 64px));
-      white-space: nowrap;
-    }
-
-
-
-/* Responsive popup width (avoid zooming to read) */
-.leaflet-popup{
-  max-width: calc(100vw - 36px);
-}
-.leaflet-popup-content{
-  margin: 12px 14px;
-  width: min(560px, calc(100vw - 74px));
-}
-
-    /* Preview in form */
+/* Preview in form */
     .preview{
       display:flex;
       gap:10px;
@@ -489,6 +463,27 @@
       font-size:12px;
       color:var(--muted);
     }
+
+    /* Emerald highlight for name + Local Time */
+    .ename, .popup .pnick, #profileName, .localLabel, .localTimeVal{
+      color: var(--emerald) !important;
+    }
+    #profileName{ font-weight:800; }
+    .popup .pname{ margin:0 0 6px; }
+    .popup .pname .pheart{ margin-right:6px; }
+
+    /* Map legend (bottom-right) */
+    .mapLegend{
+      padding:8px 10px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(5,10,25,.85);
+      font-size:12px;
+      letter-spacing:.1px;
+      color: var(--emerald); /* emerald for readability */
+      user-select:none;
+    }
+
 </style>
 </head>
 
@@ -1341,8 +1336,8 @@ async function geocodeAddress(addr){
   function markerPopupHTML(entry){
     const timeStr = personLocalTime(entry.tz);
     const timeLine = timeStr
-      ? `<div class="pline"><span class="ptime">Local time:</span> <span class="js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> (${escapeHTML(entry.tz)})</div>`
-      : `<div class="pline"><span class="ptime">Local time:</span> — (check timezone)</div>`;
+      ? `<div class="pline"><span class="ptime localLabel">Local Time:</span> <span class="js-time localTimeVal" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span></div>`
+      : `<div class="pline"><span class="ptime localLabel">Local Time:</span> — (check timezone)</div>`;
 
     const where = entry.currentAddress
       ? escapeHTML(entry.currentAddress)
@@ -1401,12 +1396,12 @@ const notes = notesRaw
     return `
       <div class="popup" data-entryid="${escapeHTML(entry.id)}">
         <div class="pname"><span class="pheart">${heartForTimezone(entry.tz)}</span><span class="pnick">${escapeHTML(entry.nickname)}</span></div>
+        ${timeLine}
         ${bdayLine}
         ${born}
         ${met}
         <div class="pline"><b>Current:</b> ${where}</div>
         ${langs}
-        ${timeLine}
         ${notes}
         ${img}
       </div>
@@ -1457,7 +1452,7 @@ const notes = notesRaw
     }
 
     $("profileName").textContent = entry.nickname || "—";
-    $("profileSub").textContent = entry.tz ? `${heartForTimezone(entry.tz)} ⏱ ${timeStr} (${entry.tz})${entry.connection ? " · " + entry.connection : ""}` : (entry.connection ? entry.connection : "—");
+    $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}` : (entry.connection ? escapeHTML(entry.connection) : "—");
 
     const imgBlock = entry.imageData
       ? `
@@ -1469,8 +1464,8 @@ const notes = notesRaw
               <div class="v">${escapeHTML(where)}</div>
             </div>
             <div class="profileCard">
-              <div class="k">Local time</div>
-              <div class="v"><span class="js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> (${escapeHTML(entry.tz)})</div>
+              <div class="k localLabel">Local Time</div>
+              <div class="v"><span class="js-time localTimeVal" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span></div>
             </div>
           </div>
         </div>
@@ -1484,8 +1479,8 @@ const notes = notesRaw
               <div class="v">${escapeHTML(where)}</div>
             </div>
             <div class="profileCard">
-              <div class="k">Local time</div>
-              <div class="v"><span class="js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> (${escapeHTML(entry.tz)})</div>
+              <div class="k localLabel">Local Time</div>
+              <div class="v"><span class="js-time localTimeVal" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span></div>
             </div>
           </div>
         </div>
@@ -1565,6 +1560,7 @@ const notes = notesRaw
     clearPendingImage();
     updateZodiacUI();
     updateBirthdayCountdownUI();
+    updateMetCountdownUI();
     updateMetCountdownUI();
     // Ensure nothing stays selected in the list (safety against accidental overwrite)
     document.querySelectorAll(".item.selected").forEach(el=>el.classList.remove("selected"));
@@ -1844,9 +1840,9 @@ const notes = notesRaw
 
       li.innerHTML = `
         <div class="meta">
-          <div class="nick"><span class="heart js-heart" data-tz="${escapeHTML(e.tz || "")}">${heartForTimezone(e.tz)}</span>${escapeHTML(e.nickname)}</div>
+          <div class="nick"><span class="heart js-heart" data-tz="${escapeHTML(e.tz || "")}">${heartForTimezone(e.tz)}</span><span class="ename">${escapeHTML(e.nickname)}</span></div>
           <div class="tiny">${escapeHTML(where)}${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}</div>
-          <div class="tiny">⏱ <span class="js-time" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
+          <div class="tiny"><span class="localLabel">Local Time</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
         </div>
         <div class="actions">
           ${avatar}
@@ -1883,7 +1879,9 @@ const notes = notesRaw
     const e = entries.find(x=>x.nickname===name);
     if(e && $("profileView").style.display !== "none"){
       const t = personLocalTime(e.tz) || "—";
-      $("profileSub").textContent = e.tz ? `${heartForTimezone(e.tz)} ⏱ ${t} (${e.tz})${e.connection ? " · " + e.connection : ""}` : (e.connection ? e.connection : "—");
+      $("profileSub").innerHTML = e.tz
+        ? `<span class="pheart">${heartForTimezone(e.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t)}</span> <span class="pline">(${escapeHTML(e.tz)})</span>${e.connection ? " · " + escapeHTML(e.connection) : ""}`
+        : (e.connection ? escapeHTML(e.connection) : "—");
     }
   }
 
