@@ -454,10 +454,82 @@
       font-size:13px;
       outline:none;
     }
-    .searchBar input:focus{
-      border-color: rgba(122,167,255,.55);
-      box-shadow: 0 0 0 4px rgba(122,167,255,.15);
+    
+    /* Filter chips (list) */
+    .filterBar{
+      padding:10px 12px 0;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      border-top:1px solid rgba(255,255,255,.06);
+      background: rgba(0,0,0,.10);
     }
+    .fChip{
+      padding:7px 10px;
+      font-size:12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      cursor:pointer;
+      user-select:none;
+      transition: .12s ease;
+    }
+    .fChip:hover{ background: rgba(255,255,255,.10); }
+    .fChip.active{
+      color: var(--text);
+      border-color: rgba(122,167,255,.55);
+      background: rgba(122,167,255,.18);
+      box-shadow: 0 0 0 4px rgba(122,167,255,.12);
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      font-size:12px;
+      color: var(--muted);
+      white-space:nowrap;
+      margin-left:8px;
+    }
+    .badge b{ color: var(--text); font-weight:700; }
+    .starBtn{
+      padding:8px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color: var(--text);
+      cursor:pointer;
+    }
+    .starBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
+    .starBtn.on{
+      background: rgba(255,215,0,.12);
+      border-color: rgba(255,215,0,.28);
+    }
+
+    .starInline{
+      margin-left:8px;
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.14);
+      color: var(--text);
+      cursor:pointer;
+      display:inline-grid;
+      place-items:center;
+      padding:0;
+      line-height:1;
+    }
+    .starInline:hover{ background: rgba(255,255,255,.08); }
+    .starInline.on{
+      background: rgba(255,215,0,.12);
+      border-color: rgba(255,215,0,.28);
+    }
+
     .bdayCountdown{
       margin-top:6px;
       font-size:12px;
@@ -598,6 +670,17 @@
     <input id="search" placeholder="Search (name, notes, dates, timezone…)" />
   </div>
 
+
+  <div class="filterBar" id="filterBar" aria-label="List filters">
+    <button class="fChip active" data-filter="all" type="button">All</button>
+    <button class="fChip" data-filter="fav" type="button">⭐ Favorites</button>
+    <button class="fChip" data-filter="now" type="button">💚 Now</button>
+    <button class="fChip" data-filter="maybe" type="button">💛 Maybe</button>
+    <button class="fChip" data-filter="sleep" type="button">❤️ Sleeping</button>
+    <button class="fChip" data-filter="bday" type="button">🎂 Birthday</button>
+    <button class="fChip" data-filter="friend" type="button">🎈 Friendship</button>
+  </div>
+
 <!-- Alphabet helper (A–Z) -->
     <div class="alphaBar" id="alpha"></div>
 
@@ -682,10 +765,44 @@
     if(!m) return [NaN, NaN];
     return [Number(m[1]), Number(m[2])];
   }
-  function fmtDate(iso){
+  
+  function parseDateYMD(input){
+    const s = String(input ?? "").trim();
+    if(!s) return null;
+
+    // YYYY-MM-DD
+    let m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+    if(m) return { year:Number(m[1]), month:Number(m[2]), day:Number(m[3]), hasYear:true };
+
+    // DD.MM.YYYY
+    m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(s);
+    if(m) return { year:Number(m[3]), month:Number(m[2]), day:Number(m[1]), hasYear:true };
+
+    // DD/MM/YYYY
+    m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(s);
+    if(m) return { year:Number(m[3]), month:Number(m[2]), day:Number(m[1]), hasYear:true };
+
+    // DD-MM-YYYY
+    m = /^(\d{2})-(\d{2})-(\d{4})$/.exec(s);
+    if(m) return { year:Number(m[3]), month:Number(m[2]), day:Number(m[1]), hasYear:true };
+
+    // MM-DD (no year) OR DD-MM (no year) — best-effort
+    m = /^(\d{1,2})-(\d{1,2})$/.exec(s);
+    if(m){
+      const a = Number(m[1]), b = Number(m[2]);
+      if(a>=1 && a<=12 && b>=1 && b<=31) return { year:2000, month:a, day:b, hasYear:false };
+      if(b>=1 && b<=12 && a>=1 && a<=31) return { year:2000, month:b, day:a, hasYear:false };
+    }
+
+    return null;
+  }
+
+function fmtDate(iso){
     if(!iso) return "";
-    const d = new Date(iso+"T00:00:00");
-    if(Number.isNaN(d.getTime())) return iso;
+    const p = parseDateYMD(iso);
+    if(!p) return String(iso);
+    const d = new Date(p.year, p.month-1, p.day);
+    if(Number.isNaN(d.getTime())) return String(iso);
     return d.toLocaleDateString(undefined, {year:"numeric", month:"2-digit", day:"2-digit"});
   }
 
@@ -721,9 +838,10 @@
         hour12: false
       });
       const parts = dtf.formatToParts(new Date());
-      const h = Number(parts.find(p=>p.type==="hour")?.value);
+      const h0 = Number(parts.find(p=>p.type==="hour")?.value);
       const m = Number(parts.find(p=>p.type==="minute")?.value);
       const s = Number(parts.find(p=>p.type==="second")?.value);
+      const h = (h0 === 24 ? 0 : h0);
       if(!Number.isFinite(h) || !Number.isFinite(m) || !Number.isFinite(s)) return null;
       return h*3600 + m*60 + s;
     }catch{
@@ -755,12 +873,14 @@
   // ==============================
   function monthsDaysUntilNextBirthday(birthISO){
     if(!birthISO) return null;
-    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(birthISO).trim());
-    if(!m) return null;
 
-    const month = Number(m[2]); // 1-12
-    const day = Number(m[3]);   // 1-31
-    const birthYear = Number(m[1]); // YYYY
+    const p = parseDateYMD(birthISO);
+    if(!p) return null;
+
+    const month = p.month; // 1-12
+    const day = p.day;     // 1-31
+    const birthYear = p.hasYear ? p.year : null;
+
     if(!(month>=1 && month<=12 && day>=1 && day<=31)) return null;
 
     const today = new Date();
@@ -797,12 +917,69 @@
     }
     const msPerDay = 24*60*60*1000;
     const days = Math.round((target - cursor)/msPerDay);
-    const age = target.getFullYear() - birthYear;
+    const age = (birthYear !== null) ? (target.getFullYear() - birthYear) : null;
     return { months, days, target, age };
   }
 
-  
-  function yearsMonthsDaysSince(startISO){
+
+  // ==============================
+  // Helpers: days until next birthday / next met anniversary
+  // ==============================
+  function daysBetweenDates(a, b){
+    // a, b are Date objects (midnight recommended)
+    const msPerDay = 24*60*60*1000;
+    // Use floor/ceil-safe integer day difference
+    const ua = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const ub = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+    return Math.round((ub - ua) / msPerDay);
+  }
+
+  function daysUntilNextBirthday(birthISO){
+    const diff = monthsDaysUntilNextBirthday(birthISO);
+    if(!diff || !diff.target) return null;
+    const today = new Date();
+    const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const target = new Date(diff.target.getFullYear(), diff.target.getMonth(), diff.target.getDate());
+    const d = daysBetweenDates(start, target);
+    return Number.isFinite(d) ? Math.max(0, d) : null;
+  }
+
+  function nextAnniversaryInfo(metISO){
+    if(!metISO) return null;
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(metISO).trim());
+    if(!m) return null;
+
+    const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
+    if(!(mo>=1 && mo<=12 && d>=1 && d<=31)) return null;
+
+    const today = new Date();
+    const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    // Anniversary date in current year
+    let ann = new Date(start.getFullYear(), mo-1, d);
+    // Guard overflow dates (e.g. 31 in shorter month) -> clamp to last day of month
+    if(ann.getMonth() !== (mo-1)){
+      ann = new Date(start.getFullYear(), mo, 0);
+    }
+
+    if(ann < start){
+      ann = new Date(start.getFullYear()+1, mo-1, d);
+      if(ann.getMonth() !== (mo-1)){
+        ann = new Date(start.getFullYear()+1, mo, 0);
+      }
+    }
+
+    const days = Math.max(0, daysBetweenDates(start, ann));
+
+    // Years count (how many full years will be completed on ann)
+    let years = ann.getFullYear() - y;
+    // if the first met date isn't reached yet in that anniversary year, years is still correct because ann is the anniversary
+    if(years < 0) years = 0;
+
+    return { days, years, anniversary: ann };
+  }
+
+function yearsMonthsDaysSince(startISO){
     if(!startISO) return null;
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(startISO).trim());
     if(!m) return null;
@@ -882,7 +1059,8 @@ function updateBirthdayCountdownUI(){
       return;
     }
     const { months, days, age } = diff;
-    el.textContent = `Next birthday in ${months} month${months===1?"":"s"} and ${days} day${days===1?"":"s"} (turns ${age})`;
+    const turns = (age === null) ? "" : ` (turns ${age})`;
+    el.textContent = `Next birthday in ${months} month${months===1?"":"s"} and ${days} day${days===1?"":"s"}${turns}`;
   }
   function personLocalTime(tz){
     if(!tz) return null;
@@ -1148,6 +1326,7 @@ function updateBirthdayCountdownUI(){
   let entries = load();
   let selectedId = null;
   let searchQuery = "";
+  let activeFilter = "all"; // all | fav | now | maybe | sleep | bday | friend
 
   function load(){
     const raw = localStorage.getItem(LS_KEY);
@@ -1351,7 +1530,8 @@ async function geocodeAddress(addr){
       const dateTxt = escapeHTML(fmtDate(entry.birthdate));
       if(diff){
         const { months, days, age } = diff;
-        bdayLine = `<div class="pline"><b>Birthdate:</b> ${dateTxt} (${months}m ${days}d, +${age})</div>`;
+        const ageTxt = (age===null) ? "" : `, +${age}`;
+        bdayLine = `<div class="pline"><b>Birthdate:</b> ${dateTxt} (${months}m ${days}d${ageTxt})</div>`;
       }else{
         bdayLine = `<div class="pline"><b>Birthdate:</b> ${dateTxt}</div>`;
       }
@@ -1487,7 +1667,7 @@ const notes = notesRaw
 
     const cards = [
       entry.birthdate ? `<div class="profileCard"><div class="k">Birthdate</div><div class="v">${escapeHTML(fmtDate(entry.birthdate))}</div></div>` : "",
-      entry.birthdate ? (()=>{ const d = monthsDaysUntilNextBirthday(entry.birthdate); return `<div class="profileCard"><div class="k">Next birthday</div><div class="v">${d ? `in ${d.months} month${d.months===1?"":"s"} and ${d.days} day${d.days===1?"":"s"} (turns ${d.age})` : "—"}</div></div>`; })() : "",
+      entry.birthdate ? (()=>{ const d = monthsDaysUntilNextBirthday(entry.birthdate); return `<div class="profileCard"><div class="k">Next birthday</div><div class="v">${d ? `in ${d.months} month${d.months===1?"":"s"} and ${d.days} day${d.days===1?"":"s"}${(d.age===null?"":` (turns ${d.age})`)}` : "—"}</div></div>`; })() : "",
       entry.birthdate ? `<div class="profileCard"><div class="k">Zodiac</div><div class="v">${zodiacHTML}</div></div>` : "",
       entry.birthplace ? `<div class="profileCard"><div class="k">Birthplace</div><div class="v">${escapeHTML(entry.birthplace)}</div></div>` : "",
       entry.metOn ? `<div class="profileCard"><div class="k">Met on</div><div class="v">${escapeHTML(fmtDate(entry.metOn))}</div></div>` : "",
@@ -1705,6 +1885,7 @@ const notes = notesRaw
         id: uuid(),
         nickname, birthdate, birthplace, currentAddress, metOn,
         nativeLang, otherLangs, tz, notes,
+        fav: false,
         lat: Number(lat), lon: Number(lon),
         imageData: pendingImageData ?? null,
         createdAt: now, updatedAt: now
@@ -1799,15 +1980,57 @@ const notes = notesRaw
 
     const q = (searchQuery||"").trim().toLowerCase();
 
-    const filtered = q ? entries.filter(e=>{
+    // Search filter
+    let filtered = q ? entries.filter(e=>{
       const hay = [
         e.nickname, e.connection, e.nativeLang, e.otherLangs, e.tz,
         e.currentAddress, e.birthplace, e.birthdate, e.metOn, e.notes
       ].filter(Boolean).join(" | ").toLowerCase();
       return hay.includes(q);
-    }) : entries;
+    }) : [...entries];
 
-    const sorted = [...filtered].sort((a,b)=> (a.nickname||"").localeCompare(b.nickname||""));
+    // Filters (only those that truly filter)
+    if(activeFilter === "fav"){
+      filtered = filtered.filter(e => !!e.fav);
+    }else if(activeFilter === "now"){
+      filtered = filtered.filter(e => heartForTimezone(e.tz) === "💚");
+    }else if(activeFilter === "maybe"){
+      filtered = filtered.filter(e => heartForTimezone(e.tz) === "💛");
+    }else if(activeFilter === "sleep"){
+      filtered = filtered.filter(e => heartForTimezone(e.tz) === "❤️");
+    }
+    // NOTE: bday/friend are *sort modes* (no filtering)
+
+    // Sorting
+    const sorted = [...filtered].sort((a,b)=>{
+      // Birthday sort: nearest next birthday first
+      if(activeFilter === "bday"){
+        const da = daysUntilNextBirthday(a.birthdate);
+        const db = daysUntilNextBirthday(b.birthdate);
+        const va = (da === null ? 999999 : da);
+        const vb = (db === null ? 999999 : db);
+        if(va !== vb) return va - vb;
+        return (a.nickname||"").localeCompare(b.nickname||"");
+      }
+
+      // Friendship sort: longest friendship first (oldest metOn date first)
+      if(activeFilter === "friend"){
+        const pa = parseDateYMD(a.metOn);
+        const pb = parseDateYMD(b.metOn);
+        const va = pa ? Date.UTC(pa.year, pa.month-1, pa.day) : Number.POSITIVE_INFINITY;
+        const vb = pb ? Date.UTC(pb.year, pb.month-1, pb.day) : Number.POSITIVE_INFINITY;
+        if(va !== vb) return va - vb; // earlier date (smaller) = longer friendship => on top
+        return (a.nickname||"").localeCompare(b.nickname||"");
+      }
+
+      // Default: favorites first, then A–Z
+      if(activeFilter === "all"){
+        const af = a.fav ? 1 : 0;
+        const bf = b.fav ? 1 : 0;
+        if(af !== bf) return bf - af;
+      }
+      return (a.nickname||"").localeCompare(b.nickname||"");
+    });
 
     // keep scroll position
     const prevScroll = ul.scrollTop;
@@ -1833,27 +2056,59 @@ const notes = notesRaw
         }
       }
 
+      // Inline info shown ONLY in the sorted tabs:
+      // - Birthday: 🎂 Xmo Yw Zd · turns N
+      // - Friendship: 🎈 Yy Mm Dd
+      let inlineInfo = "";
+      if(activeFilter === "bday"){
+        const diff = monthsDaysUntilNextBirthday(e.birthdate);
+        if(diff){
+          const weeks = Math.floor(diff.days / 7);
+          const remDays = diff.days % 7;
+          const ageTxt = (diff.age === null) ? "" : ` · turns ${diff.age}`;
+          inlineInfo = `<span class="badge" title="Time until next birthday">🎂 <b>${diff.months}mo ${weeks}w ${remDays}d</b>${ageTxt}</span>`;
+        }
+      }else if(activeFilter === "friend"){
+        const s = yearsMonthsDaysSince(e.metOn);
+        if(s){
+          inlineInfo = `<span class="badge" title="Friendship duration">🎈 <b>${s.years}y ${s.months}m ${s.days}d</b></span>`;
+        }
+      }
+
       const avatar = e.imageData
         ? `<img class="avatar js-open-img" alt="${escapeHTML(e.nickname)}" src="${e.imageData}" />`
         : `<div class="avatarPh" title="No image">—</div>`;
 
       li.innerHTML = `
         <div class="meta">
-          <div class="nick"><span class="heart js-heart" data-tz="${escapeHTML(e.tz || "")}">${heartForTimezone(e.tz)}</span><span class="ename">${escapeHTML(e.nickname)}</span></div>
+          <div class="nick">
+            <span class="heart js-heart" data-tz="${escapeHTML(e.tz || "")}">${heartForTimezone(e.tz)}</span>
+            <span class="ename">${escapeHTML(e.nickname)}</span>
+            <button class="starInline js-star ${e.fav ? "on" : ""}" title="${e.fav ? "Unfavorite" : "Favorite"}" type="button">${e.fav ? "⭐" : "☆"}</button>
+            ${inlineInfo}
+          </div>
           <div class="tiny">${escapeHTML(where)}${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}</div>
           <div class="tiny"><span class="localLabel">Local Time</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
         </div>
         <div class="actions">
           ${avatar}
-          <button class="iconBtn js-pin" title="Center on map">📍</button>
-          <button class="iconBtn js-book" title="Open profile">📖</button>
-          <button class="secondary js-open">Open</button>
+          <button class="iconBtn js-pin" title="Center on map" type="button">📍</button>
+          <button class="iconBtn js-book" title="Open profile" type="button">📖</button>
+          <button class="secondary js-open" type="button">Open</button>
         </div>
       `;
 
       li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
       li.querySelector(".js-pin").addEventListener("click", ()=> focusEntryOnMap(e.id));
       li.querySelector(".js-book").addEventListener("click", ()=> openProfile(e.id));
+      li.querySelector(".js-star").addEventListener("click", (ev)=>{
+        ev.stopPropagation();
+        e.fav = !e.fav;
+        e.updatedAt = new Date().toISOString();
+        save();
+        toast(e.fav ? "Added to favorites ⭐" : "Removed from favorites");
+      });
+
       li.addEventListener("dblclick", ()=> selectEntry(e.id));
 
       ul.appendChild(li);
@@ -1861,6 +2116,8 @@ const notes = notesRaw
 
     ul.scrollTop = prevScroll;
   }
+
+
 
   function updateTimesInUI(){
     for(const el of document.querySelectorAll(".js-time")){
@@ -1914,6 +2171,7 @@ const notes = notesRaw
         nativeLang: x.nativeLang ? String(x.nativeLang) : "",
         otherLangs: x.otherLangs ? String(x.otherLangs) : "",
         tz: x.tz ? String(x.tz) : "",
+        fav: !!x.fav,
         imageData: x.imageData ? String(x.imageData) : null,
         notes: x.notes ? String(x.notes) : "",
         lat: Number(x.lat),
@@ -2013,6 +2271,21 @@ const notes = notesRaw
     searchQuery = _searchEl.value;
     renderList();
   });
+
+  // Filters
+  (function wireFilters(){
+    const bar = $("filterBar");
+    if(!bar) return;
+    bar.addEventListener("click", (e)=>{
+      const btn = e.target.closest(".fChip");
+      if(!btn) return;
+      const f = btn.getAttribute("data-filter") || "all";
+      activeFilter = f;
+      bar.querySelectorAll(".fChip").forEach(b=> b.classList.toggle("active", b === btn));
+      renderList();
+    });
+  })();
+
 
   // Ctrl/Cmd+S to save
   document.addEventListener("keydown", (e)=>{
