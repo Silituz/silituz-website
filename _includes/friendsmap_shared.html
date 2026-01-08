@@ -645,6 +645,56 @@
       opacity: .55;
     }
 
+
+/* =============================
+   MICRO-ANIMATIONS + UI POLISH
+   ============================= */
+
+/* 1) Tap / click feedback */
+button, .iconBtn, .fChip, .starBtn, .starInline, .aBtn {
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
+}
+button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:active, .aBtn:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 0 0 4px rgba(122,167,255,.14);
+}
+
+/* 2) Popup soft fade-in */
+.leaflet-popup {
+  animation: popupIn .16s ease-out;
+}
+@keyframes popupIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 3) List selection pulse */
+.item.selected {
+  animation: selectPulse .22s ease-out;
+}
+@keyframes selectPulse {
+  from { box-shadow: 0 0 0 0 rgba(122,167,255,.22); }
+  to   { box-shadow: 0 0 0 8px rgba(122,167,255,0); }
+}
+
+/* =============================
+   MOBILE FORM WIDTH FIX
+   - Nickname wider
+   - Birthdate narrower
+   - mobile-only
+   ============================= */
+@media (max-width: 480px) {
+  /* First form row (Nickname + Birthdate) */
+  .panel .row:first-of-type {
+    display: grid !important;
+    grid-template-columns: 2.4fr 1fr !important;
+    gap: 10px !important;
+    align-items: start;
+  }
+  .panel .row:first-of-type > div { min-width: 0; }
+  #nickname, #birthdate { min-width: 0; }
+}
+
 </style>
 </head>
 
