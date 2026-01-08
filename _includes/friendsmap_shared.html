@@ -556,6 +556,54 @@
       user-select:none;
     }
 
+
+    /* =============================
+       MOBILE FORM WIDTH FIX
+       Ziel:
+       - Nickname Feld auf Mobile deutlich breiter
+       - Birthdate Feld etwas schmaler
+       - NUR mobile, Desktop bleibt unverändert
+       ============================= */
+    @media (max-width: 480px) {
+      /* erste Zeile: Nickname + Birthdate */
+      .panel .row:first-of-type {
+        display: grid;
+        grid-template-columns: 2.2fr 1fr; /* Name breiter, Birthday schmaler */
+        gap: 10px;
+      }
+
+      /* Inputs selbst etwas komfortabler */
+      .panel .row:first-of-type input {
+        padding: 12px 12px;
+        font-size: 14px;
+      }
+
+      /* Birthdate darf sich nicht aufblähen */
+      #birthdate { min-width: 0; }
+    }
+
+    /* My location marker (special) */
+    .myLocWrap{ position: relative; width: 22px; height: 22px; }
+    .myLocDot{
+      position:absolute; inset:0;
+      border-radius:999px;
+      background: rgba(0, 229, 255, .92);
+      border: 2px solid rgba(255,255,255,.92);
+      box-shadow: 0 0 18px rgba(0, 229, 255, .55);
+    }
+    .myLocRing{
+      position:absolute; inset:-6px;
+      border-radius:999px;
+      border: 2px solid rgba(0, 229, 255, .55);
+      animation: myPulse 1.8s ease-out infinite;
+      box-shadow: 0 0 10px rgba(0, 229, 255, .25);
+    }
+    @keyframes myPulse{
+      0%{ transform: scale(.65); opacity:.85; }
+      70%{ transform: scale(1.25); opacity:0; }
+      100%{ transform: scale(1.25); opacity:0; }
+    }
+
 </style>
 </head>
 
@@ -691,6 +739,7 @@
         <div class="btns">
           <button id="exportBtn" class="secondary">Export JSON</button>
           <button id="importBtn" class="secondary">Import JSON (file)</button>
+          <button id="myLocBtn" class="secondary" title="Show my current location marker">📍 My location</button>
           <button id="clearAllBtn" class="danger">Delete all</button>
         </div>
 
@@ -1327,6 +1376,7 @@ function updateBirthdayCountdownUI(){
   let selectedId = null;
   let searchQuery = "";
   let activeFilter = "all"; // all | fav | now | maybe | sleep | bday | friend
+  let _markerColorCounter = 0;
 
   function load(){
     const raw = localStorage.getItem(LS_KEY);
@@ -1472,6 +1522,51 @@ setInterval(updateNightLayer, 30000);
   let tempPin = null;
   const markerById = new Map();
 
+  // ==============================
+  // My location marker (special)
+  // ==============================
+  let myLocMarker = null;
+  let myLocLat = null;
+  let myLocLon = null;
+
+  function myLocPopupHTML(lat, lon){
+    return `<div class="popup">
+      <div class="pname"><span class="pheart">📍</span><span class="pnick">My location</span></div>
+      <div class="pline"><span class="localLabel">Local time:</span> <span class="localTimeVal">${myLocalTime()}</span></div>
+      <div class="pline">Coordinates: ${Number(lat).toFixed(5)}, ${Number(lon).toFixed(5)}</div>
+    </div>`;
+  }
+
+  function updateMyLocPopup(){
+    if(!myLocMarker || myLocLat === null || myLocLon === null) return;
+    const p = myLocMarker.getPopup?.();
+    if(!p) return;
+    p.setContent(myLocPopupHTML(myLocLat, myLocLon));
+  }
+
+  function setMyLocationMarker(lat, lon){
+    myLocLat = lat;
+    myLocLon = lon;
+
+    const icon = myLocationIcon();
+
+    if(!myLocMarker){
+      myLocMarker = L.marker([lat, lon], { icon }).addTo(markerLayer);
+      try{ myLocMarker.setZIndexOffset(1000); }catch{}
+      myLocMarker.bindPopup(myLocPopupHTML(lat, lon), { maxWidth: 280 });
+      myLocMarker.on("popupopen", updateMyLocPopup);
+    }else{
+      myLocMarker.setLatLng([lat, lon]);
+      updateMyLocPopup();
+    }
+
+    // Center so you can see the marker, but the marker is the important part
+    map.setView([lat, lon], Math.max(map.getZoom(), 5));
+    try{ myLocMarker.openPopup(); }catch{}
+  }
+
+
+
   map.on('click', async (e) => {
     const { lat, lng } = e.latlng;
     $("coords").value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
@@ -1587,23 +1682,134 @@ const notes = notesRaw
     `;
   }
 
+  function colorForHeart(h){
+    if(h === "💚") return { stroke:"#10b981", fill:"#10b981" };
+    if(h === "💛") return { stroke:"#fbbf24", fill:"#fbbf24" };
+    if(h === "❤️") return { stroke:"#ff6b6b", fill:"#ff6b6b" };
+    return { stroke:"#7aa7ff", fill:"#7aa7ff" };
+  }
+
+
+  // ==============================
+  // Pin marker icons (colored)
+  // ==============================
+  const _pinIconCache = new Map(); // key: fill hex => L.Icon
+
+  function pinSVG(fill){
+    // Simple pin with white inner dot
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="48" viewBox="0 0 24 36">
+      <path d="M12 0C7.58 0 4 3.58 4 8c0 6.18 8 18 8 18s8-11.82 8-18c0-4.42-3.58-8-8-8z"
+        fill="${fill}" stroke="rgba(0,0,0,.35)" stroke-width="1.2"/>
+      <circle cx="12" cy="8.6" r="3.2" fill="rgba(255,255,255,.92)"/>
+    </svg>`;
+  }
+
+  function pinIcon(fill){
+    if(_pinIconCache.has(fill)) return _pinIconCache.get(fill);
+    const svg = pinSVG(fill);
+    const url = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    const icon = L.icon({
+      iconUrl: url,
+      iconSize: [28, 42],
+      iconAnchor: [14, 42],
+      popupAnchor: [0, -38]
+    });
+    _pinIconCache.set(fill, icon);
+    return icon;
+  }
+
+
+  // Special pin for "My location" (same shape, but highlighted)
+  const _myLocIconCache = new Map();
+  function myLocPinSVG(fill){
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="48" viewBox="0 0 24 36">
+      <defs>
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow dx="0" dy="0" stdDeviation="2.2" flood-color="${fill}" flood-opacity="0.85"/>
+          <feDropShadow dx="0" dy="0" stdDeviation="5.0" flood-color="${fill}" flood-opacity="0.35"/>
+        </filter>
+      </defs>
+      <path d="M12 0C7.58 0 4 3.58 4 8c0 6.18 8 18 8 18s8-11.82 8-18c0-4.42-3.58-8-8-8z"
+        fill="${fill}" stroke="rgba(255,255,255,.65)" stroke-width="1.25" filter="url(#glow)"/>
+      <circle cx="12" cy="8.6" r="3.4" fill="rgba(255,255,255,.22)"/>
+      <circle cx="12" cy="8.6" r="2.7" fill="rgba(255,255,255,.92)"/>
+    </svg>`;
+  }
+
+  function myLocationIcon(){
+    const fill = "#22d3ee"; // special turquoise highlight
+    if(_myLocIconCache.has(fill)) return _myLocIconCache.get(fill);
+    const url = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(myLocPinSVG(fill));
+    const icon = L.icon({
+      iconUrl: url,
+      iconSize: [28, 42],
+      iconAnchor: [14, 42],
+      popupAnchor: [0, -38]
+    });
+    _myLocIconCache.set(fill, icon);
+    return icon;
+  }
+
+  function pinIconForEntry(e){
+    const h = heartForTimezone(e.tz);
+    const c = colorForHeart(h);
+    return pinIcon(c.fill);
+  }
+
+
+  function markerStyleForEntry(e){
+    const h = heartForTimezone(e.tz);
+    const c = colorForHeart(h);
+    return {
+      radius: 7,
+      color: c.stroke,
+      weight: 2,
+      opacity: 0.95,
+      fillColor: c.fill,
+      fillOpacity: 0.55
+    };
+  }
+
+  function updateMarkerColors(){
+    for(const e of entries){
+      const m = markerById.get(e.id);
+      if(!m) continue;
+      // pin markers
+      if(m.setIcon){
+        m.setIcon(pinIconForEntry(e));
+      }else if(m.setStyle){
+        // fallback (if anything uses circleMarkers)
+        m.setStyle(markerStyleForEntry(e));
+      }
+    }
+  }
+
+
   function renderMarkers(){
     markerLayer.clearLayers();
     markerById.clear();
 
     for(const e of entries){
       if(typeof e.lat !== "number" || typeof e.lon !== "number") continue;
-      const m = L.marker([e.lat, e.lon]).addTo(markerLayer);
+
+      const m = L.marker([e.lat, e.lon], { icon: pinIconForEntry(e) }).addTo(markerLayer);
       m.bindPopup(markerPopupHTML(e), { maxWidth: 300 });
       m.on('click', () => selectEntry(e.id));
       markerById.set(e.id, m);
     }
 
+    // temp pin (from coords input)
     if($("coords").value.trim()){
       const [lat, lon] = parseCoords($("coords").value);
       if(Number.isFinite(lat) && Number.isFinite(lon)){
         tempPin = L.circleMarker([lat, lon], { radius:7, weight:2, fillOpacity:.25 }).addTo(markerLayer);
       }
+    }
+
+    // keep my-location marker on top
+    if(myLocMarker){
+      myLocMarker.addTo(markerLayer);
+      try{ myLocMarker.setZIndexOffset(1000); }catch{}
     }
   }
 
@@ -1665,13 +1871,32 @@ const notes = notesRaw
         </div>
       `;
 
+    const birthdayCard = entry.birthdate ? (()=>{ 
+        const d = monthsDaysUntilNextBirthday(entry.birthdate);
+        const dateTxt = escapeHTML(fmtDate(entry.birthdate));
+        if(d){
+          const weeks = Math.floor(d.days / 7);
+          const remDays = d.days % 7;
+          const turns = (d.age === null) ? "" : ` · turns ${d.age}`;
+          return `<div class="profileCard"><div class="k">🎂 Birthday</div><div class="v">Next birthday: <b>in ${d.months}mo ${weeks}w ${remDays}d</b>${turns}<br>Birthdate: ${dateTxt}</div></div>`;
+        }
+        return `<div class="profileCard"><div class="k">🎂 Birthday</div><div class="v">Birthdate: ${dateTxt}</div></div>`;
+      })() : "";
+
+    const friendshipCard = entry.metOn ? (()=>{ 
+        const s = yearsMonthsDaysSince(entry.metOn);
+        const metTxt = escapeHTML(fmtDate(entry.metOn));
+        if(s){
+          return `<div class="profileCard"><div class="k">🎈 Friendship</div><div class="v">Met on: ${metTxt}<br>Known for: <b>${s.years}y ${s.months}m ${s.days}d</b></div></div>`;
+        }
+        return `<div class="profileCard"><div class="k">🎈 Friendship</div><div class="v">Met on: ${metTxt}</div></div>`;
+      })() : "";
+
     const cards = [
-      entry.birthdate ? `<div class="profileCard"><div class="k">Birthdate</div><div class="v">${escapeHTML(fmtDate(entry.birthdate))}</div></div>` : "",
-      entry.birthdate ? (()=>{ const d = monthsDaysUntilNextBirthday(entry.birthdate); return `<div class="profileCard"><div class="k">Next birthday</div><div class="v">${d ? `in ${d.months} month${d.months===1?"":"s"} and ${d.days} day${d.days===1?"":"s"}${(d.age===null?"":` (turns ${d.age})`)}` : "—"}</div></div>`; })() : "",
+      birthdayCard,
+      friendshipCard,
       entry.birthdate ? `<div class="profileCard"><div class="k">Zodiac</div><div class="v">${zodiacHTML}</div></div>` : "",
       entry.birthplace ? `<div class="profileCard"><div class="k">Birthplace</div><div class="v">${escapeHTML(entry.birthplace)}</div></div>` : "",
-      entry.metOn ? `<div class="profileCard"><div class="k">Met on</div><div class="v">${escapeHTML(fmtDate(entry.metOn))}</div></div>` : "",
-      entry.metOn ? (()=>{ const d = yearsMonthsDaysSince(entry.metOn); return `<div class="profileCard"><div class="k">Known for</div><div class="v">${d ? `${d.years} year${d.years===1?"":"s"}, ${d.months} month${d.months===1?"":"s"} and ${d.days} day${d.days===1?"":"s"}` : "—"}</div></div>`; })() : "",
       entry.connection ? `<div class="profileCard"><div class="k">Connection</div><div class="v">${escapeHTML(entry.connection)}</div></div>` : "",
       entry.nativeLang ? `<div class="profileCard"><div class="k">Native language</div><div class="v">${escapeHTML(entry.nativeLang)}</div></div>` : "",
       entry.otherLangs ? `<div class="profileCard"><div class="k">Other languages</div><div class="v">${escapeHTML(entry.otherLangs)}</div></div>` : "",
@@ -2254,6 +2479,17 @@ const notes = notesRaw
     const nh = $("nowHere");
     if(nh) nh.textContent = `Here: ${myLocalTime()}`;
     updateTimesInUI();
+
+    // Update marker colors less often (every 30s) to keep it lightweight
+    _markerColorCounter = (_markerColorCounter + 1) % 30;
+    if(_markerColorCounter === 0){
+      updateMarkerColors();
+    }
+
+    // Keep "My location" popup time fresh
+    if(myLocMarker && myLocMarker.isPopupOpen && myLocMarker.isPopupOpen()){
+      updateMyLocPopup();
+    }
   }
 
   // ==============================
@@ -2264,6 +2500,30 @@ const notes = notesRaw
   $("deleteBtn").addEventListener("click", handleDelete);
   $("exportBtn").addEventListener("click", exportJSON);
   $("clearAllBtn").addEventListener("click", clearAll);
+
+  // My location
+  const _myLocBtn = $("myLocBtn");
+  if(_myLocBtn){
+    _myLocBtn.addEventListener("click", ()=>{
+      if(!navigator.geolocation){
+        toast("Geolocation not supported");
+        return;
+      }
+      toast("Getting your location…");
+      navigator.geolocation.getCurrentPosition(
+        (pos)=>{
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          setMyLocationMarker(lat, lon);
+          toast("My location marker set ✅");
+        },
+        ()=>{
+          toast("Could not get location (permission?)");
+        },
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 }
+      );
+    });
+  }
 
   // Search
   const _searchEl = $("search");
