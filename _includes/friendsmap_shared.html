@@ -852,6 +852,46 @@
   function escapeHTML(s){
     return String(s ?? "").replace(/[&<>\"']/g, (c)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
   }
+
+  // ==============================
+  // Distance helpers (My Location)
+  // ==============================
+  function haversineKm(lat1, lon1, lat2, lon2){
+    const R = 6371; // km
+    const toRad = (deg)=> (deg * Math.PI) / 180;
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  }
+
+  function distanceLabelTo(lat, lon){
+    if(myLocLat === null || myLocLon === null) return "";
+    const aLat = Number(lat), aLon = Number(lon);
+    if(!Number.isFinite(aLat) || !Number.isFinite(aLon)) return "";
+    const km = haversineKm(myLocLat, myLocLon, aLat, aLon);
+    if(!Number.isFinite(km)) return "";
+
+    // More realistic travel-time estimate:
+    // - Short/medium distances: assume driving average ~80 km/h
+    // - Long distances: assume flying average ~850 km/h + fixed overhead (~0.7h)
+    const estimateHours = (dKm)=>{
+      if(dKm < 1000){
+        return dKm / 80;
+      }
+      return (dKm / 850) + 0.7;
+    };
+
+    const modeEmoji = (km < 1000) ? "🚗" : "✈️";
+
+    const hrs = estimateHours(km);
+    const kmTxt = Math.round(km).toLocaleString("en-US");
+    const hTxt = (Math.round(hrs * 10) / 10).toFixed(1);
+    return `${kmTxt} km (≈ ${hTxt} h ${modeEmoji})`;
+  }
+
+
   function parseCoords(text){
     const m = String(text).trim().match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/);
     if(!m) return [NaN, NaN];
@@ -1660,6 +1700,22 @@ setInterval(updateNightLayer, 30000);
   let tempPin = null;
   const markerById = new Map();
 
+  function refreshAllMarkerPopups(){
+    // Rebuild popup content (e.g., after My Location changes)
+    for(const [id, marker] of markerById.entries()){
+      const e = entries.find(x=>x.id===id);
+      if(!e || !marker) continue;
+      try{
+        if(typeof marker.setPopupContent === "function") marker.setPopupContent(markerPopupHTML(e));
+        else {
+          const p = marker.getPopup?.();
+          if(p) p.setContent(markerPopupHTML(e));
+        }
+      }catch{}
+    }
+  }
+
+
   // ==============================
   // My location marker (special)
   // ==============================
@@ -1685,6 +1741,14 @@ setInterval(updateNightLayer, 30000);
   function setMyLocationMarker(lat, lon){
     myLocLat = lat;
     myLocLon = lon;
+
+    // Update distance displays everywhere
+    try{ renderList(); }catch{}
+    try{ refreshAllMarkerPopups(); }catch{}
+    try{ if(document.getElementById("profileView") && document.getElementById("profileView").style.display !== "none" && selectedId){
+      const cur = entries.find(x=>x.id===selectedId);
+      if(cur) buildProfile(cur);
+    }}catch{}
 
     const icon = myLocationIcon();
 
@@ -1760,6 +1824,8 @@ async function geocodeAddress(addr){
       ? `<div class="pline"><span class="ptime localLabel">Local Time:</span> <span class="js-time localTimeVal" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span></div>`
       : `<div class="pline"><span class="ptime localLabel">Local Time:</span> — (check timezone)</div>`;
 
+    const dist = distanceLabelTo(entry.lat, entry.lon);
+
     const where = entry.currentAddress
       ? escapeHTML(entry.currentAddress)
       : `${Number(entry.lat).toFixed(3)}, ${Number(entry.lon).toFixed(3)}`;
@@ -1822,7 +1888,7 @@ const notes = notesRaw
         ${bdayLine}
         ${born}
         ${met}
-        <div class="pline"><b>Current:</b> ${where}</div>
+        <div class="pline"><b>Current:</b> ${where}${dist ? `📍${dist}` : ""}</div>
         ${langs}
         ${notes}
         ${img}
@@ -1993,6 +2059,13 @@ const notes = notesRaw
   function buildProfile(entry){
     const timeStr = personLocalTime(entry.tz) || "—";
     const where = entry.currentAddress || `${Number(entry.lat).toFixed(3)}, ${Number(entry.lon).toFixed(3)}`;
+    const dist = distanceLabelTo(entry.lat, entry.lon);
+    const distCard = dist ? `
+            <div class="profileCard">
+              <div class="k">📍 Distance</div>
+              <div class="v">${dist}</div>
+            </div>
+    ` : "";
 
     let zodiacHTML = `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
     if(entry.birthdate){
@@ -2011,6 +2084,7 @@ const notes = notesRaw
               <div class="k">Current</div>
               <div class="v">${escapeHTML(where)}</div>
             </div>
+            ${distCard}
             <div class="profileCard">
               <div class="k localLabel">Local Time</div>
               <div class="v"><span class="js-time localTimeVal" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span></div>
@@ -2026,6 +2100,7 @@ const notes = notesRaw
               <div class="k">Current</div>
               <div class="v">${escapeHTML(where)}</div>
             </div>
+            ${distCard}
             <div class="profileCard">
               <div class="k localLabel">Local Time</div>
               <div class="v"><span class="js-time localTimeVal" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span></div>
@@ -2476,6 +2551,7 @@ const notes = notesRaw
       if(selectedId && e.id === selectedId) li.classList.add("selected");
 
       const where = e.currentAddress || `${Number(e.lat).toFixed(2)}, ${Number(e.lon).toFixed(2)}`;
+      const dist = distanceLabelTo(e.lat, e.lon);
       const t = personLocalTime(e.tz);
 
       let z = "";
@@ -2517,7 +2593,7 @@ const notes = notesRaw
             <button class="starInline js-star ${e.fav ? "on" : ""}" title="${e.fav ? "Unfavorite" : "Favorite"}" type="button">${e.fav ? "⭐" : "☆"}</button>
             ${inlineInfo}
           </div>
-          <div class="tiny">${escapeHTML(where)}${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}</div>
+          <div class="tiny">${escapeHTML(where)}${dist ? ` · ${escapeHTML(dist)}` : ""}${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}</div>
           <div class="tiny"><span class="localLabel">Local Time</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
         </div>
         <div class="actions">
