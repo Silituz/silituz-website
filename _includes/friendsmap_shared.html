@@ -9,6 +9,11 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+  <!-- Leaflet.markercluster (Pin clustering) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
   <style>
     :root{
       --bg:#0b0f1a;
@@ -604,6 +609,42 @@
       100%{ transform: scale(1.25); opacity:0; }
     }
 
+
+    /* =============================
+       CLUSTER PINS (zoomed out)
+       ============================= */
+    .clusterPin{
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.22);
+      /* color comes from JS via --cluster-bg (single/2/3 color) */
+      background: var(--cluster-bg, rgba(12,18,34,.92));
+      box-shadow: 0 12px 30px rgba(0,0,0,.35), 0 0 0 6px rgba(122,167,255,.10);
+      color: var(--text);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: .2px;
+      position: relative;
+      overflow: hidden;
+    }
+    .clusterPin::before{
+      content:""; position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,0));
+      pointer-events:none;
+    }
+    .clusterPin::after{
+      content:"";
+      position:absolute;
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      border: 1px dashed rgba(122,167,255,.35);
+      opacity: .55;
+    }
+
 </style>
 </head>
 
@@ -739,6 +780,8 @@
         <div class="btns">
           <button id="exportBtn" class="secondary">Export JSON</button>
           <button id="importBtn" class="secondary">Import JSON (file)</button>
+          <button id="clusterToggleBtn" class="secondary">🧷 Cluster: On</button>
+          
           <button id="myLocBtn" class="secondary" title="Show my current location marker">📍 My location</button>
           <button id="clearAllBtn" class="danger">Delete all</button>
         </div>
@@ -1373,6 +1416,7 @@ function updateBirthdayCountdownUI(){
   //   nativeLang, otherLangs, tz, imageData, notes, lat, lon, createdAt, updatedAt }
   // ==============================
   let entries = load();
+  const entryById = new Map();
   let selectedId = null;
   let searchQuery = "";
   let activeFilter = "all"; // all | fav | now | maybe | sleep | bday | friend
@@ -1385,12 +1429,22 @@ function updateBirthdayCountdownUI(){
   }
   function save(){
     localStorage.setItem(LS_KEY, JSON.stringify(entries));
+    rebuildEntryById();
     renderList();
     // Remove temporary pin
-    try{ if(tempPin){ markerLayer.removeLayer(tempPin); tempPin = null; } }catch{}
+    try{ if(tempPin){ tempLayer.removeLayer(tempPin); tempPin = null; } }catch{}
     renderMarkers();
     updateCount();
   }
+
+  function rebuildEntryById(){
+    entryById.clear();
+    for(const e of entries){
+      if(e && e.id) entryById.set(e.id, e);
+    }
+  }
+
+  rebuildEntryById();
   function updateCount(){
     const cp = $("countPill");
     if(cp) cp.textContent = `${entries.length} entries`;
@@ -1518,7 +1572,91 @@ updateNightLayer();
 setInterval(updateNightLayer, 30000);
 
 
-  const markerLayer = L.layerGroup().addTo(map);
+  // ==============================
+  // Marker layers (clustered vs plain) + toggle
+  // ==============================
+  let clusteringEnabled = true;
+
+  const clusterLayer = L.markerClusterGroup({
+    showCoverageOnHover: false,
+    spiderfyOnMaxZoom: true,
+    disableClusteringAtZoom: 13,
+    maxClusterRadius: 55,
+    chunkedLoading: true,
+    iconCreateFunction: function(cluster){
+      // Color logic:
+      // - single color if only one status
+      // - 2-color or 3-color split if mixed
+      const kids = cluster.getAllChildMarkers();
+      const counts = { green:0, yellow:0, red:0 };
+      for(const mk of kids){
+        const id = mk && mk.__entryId;
+        const e = id ? entryById.get(id) : null;
+        const h = e ? heartForTimezone(e.tz) : null;
+        if(h === "💚") counts.green++;
+        else if(h === "💛") counts.yellow++;
+        else if(h === "❤️") counts.red++;
+      }
+
+      const count = cluster.getChildCount();
+      const colors = [];
+      if(counts.green) colors.push("#10b981");
+      if(counts.yellow) colors.push("#fbbf24");
+      if(counts.red) colors.push("#ff6b6b");
+
+      let bg;
+      if(colors.length <= 1){
+        const c = colors[0] || "rgba(12,18,34,.92)";
+        bg = `linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.45)), ${c}`;
+      }else if(colors.length === 2){
+        bg = `linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.45)), linear-gradient(90deg, ${colors[0]} 0 50%, ${colors[1]} 50% 100%)`;
+      }else{
+        bg = `linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.45)), conic-gradient(${colors[0]} 0 33%, ${colors[1]} 33% 66%, ${colors[2]} 66% 100%)`;
+      }
+
+      return L.divIcon({
+        html: `<div class="clusterPin" style="--cluster-bg:${bg}">${count}</div>`,
+        className: "",
+        iconSize: [40, 40]
+      });
+    }
+  });
+
+  const plainLayer = L.layerGroup();
+  let markerLayer = clusterLayer;
+  markerLayer.addTo(map);
+
+  function updateClusterToggleButton(){
+    const b = $("clusterToggleBtn");
+    if(!b) return;
+    b.textContent = clusteringEnabled ? "🧷 Cluster: On" : "🧷 Cluster: Off";
+  }
+
+  function setClusteringEnabled(on){
+    const next = !!on;
+    if(clusteringEnabled === next) return;
+    clusteringEnabled = next;
+
+    // swap layers
+    try{
+      if(clusteringEnabled){
+        if(map.hasLayer(plainLayer)) map.removeLayer(plainLayer);
+        if(!map.hasLayer(clusterLayer)) map.addLayer(clusterLayer);
+        markerLayer = clusterLayer;
+      }else{
+        if(map.hasLayer(clusterLayer)) map.removeLayer(clusterLayer);
+        if(!map.hasLayer(plainLayer)) map.addLayer(plainLayer);
+        markerLayer = plainLayer;
+      }
+    }catch{}
+
+    // re-render markers into the active layer
+    renderMarkers();
+    updateClusterToggleButton();
+  }
+
+  // temp markers (e.g., coords preview) should NOT be clustered
+  const tempLayer = L.layerGroup().addTo(map);
   let tempPin = null;
   const markerById = new Map();
 
@@ -1550,28 +1688,38 @@ setInterval(updateNightLayer, 30000);
 
     const icon = myLocationIcon();
 
-    if(!myLocMarker){
-      myLocMarker = L.marker([lat, lon], { icon }).addTo(markerLayer);
-      try{ myLocMarker.setZIndexOffset(1000); }catch{}
-      myLocMarker.bindPopup(myLocPopupHTML(lat, lon), { maxWidth: 280 });
-      myLocMarker.on("popupopen", updateMyLocPopup);
-    }else{
-      myLocMarker.setLatLng([lat, lon]);
-      updateMyLocPopup();
-    }
+    // Always keep "My location" OUT of clustering so it stays visible.
+    // (Uses the same pin shape, just highlighted.)
+    try{ if(myLocMarker) map.removeLayer(myLocMarker); }catch{}
+    myLocMarker = L.marker([lat, lon], { icon }).addTo(tempLayer);
+    try{ myLocMarker.setZIndexOffset(1000); }catch{}
+    myLocMarker.bindPopup(myLocPopupHTML(lat, lon), { maxWidth: 280, autoPan: false });
+    myLocMarker.on("popupopen", updateMyLocPopup);
 
-    // Center so you can see the marker, but the marker is the important part
-    map.setView([lat, lon], Math.max(map.getZoom(), 5));
-    try{ myLocMarker.openPopup(); }catch{}
-  }
+    // Smoothly center (with upward offset) and open popup
+    try{
+      let z = map.getZoom();
+      z = Math.min(Math.max(z + 2, 7), 11);
+      const size = map.getSize();
+      const offsetY = Math.round(Math.min(260, Math.max(150, size.y * 0.28)));
+      const p = map.project([lat, lon], z);
+      const center = map.unproject(L.point(p.x, p.y - offsetY), z);
+
+      map.flyTo(center, z, { animate:true, duration: 0.85, easeLinearity: 0.25 });
+      map.once("moveend", ()=>{ try{ myLocMarker.openPopup(); }catch{} });
+    }catch{
+      map.setView([lat, lon], Math.max(map.getZoom(), 7));
+      try{ myLocMarker.openPopup(); }catch{}
+    }
+}
 
 
 
   map.on('click', async (e) => {
     const { lat, lng } = e.latlng;
     $("coords").value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-    if(tempPin) markerLayer.removeLayer(tempPin);
-    tempPin = L.circleMarker([lat, lng], { radius: 7, weight: 2, fillOpacity: .25 }).addTo(markerLayer);
+    if(tempPin) tempLayer.removeLayer(tempPin);
+    tempPin = L.circleMarker([lat, lng], { radius: 7, weight: 2, fillOpacity: .25 }).addTo(tempLayer);
 
     // Auto-timezone (only if empty)
     if(!$("timezone").value.trim()){
@@ -1782,19 +1930,34 @@ const notes = notesRaw
         m.setStyle(markerStyleForEntry(e));
       }
     }
+
+    // Cluster icons depend on child status -> refresh them occasionally
+    try{
+      if(clusteringEnabled && clusterLayer && clusterLayer.refreshClusters){
+        clusterLayer.refreshClusters();
+      }
+    }catch{}
   }
 
 
   function renderMarkers(){
     markerLayer.clearLayers();
+    tempLayer.clearLayers();
     markerById.clear();
 
     for(const e of entries){
       if(typeof e.lat !== "number" || typeof e.lon !== "number") continue;
 
       const m = L.marker([e.lat, e.lon], { icon: pinIconForEntry(e) }).addTo(markerLayer);
-      m.bindPopup(markerPopupHTML(e), { maxWidth: 300 });
-      m.on('click', () => selectEntry(e.id));
+      m.__entryId = e.id;
+      m.bindPopup(markerPopupHTML(e), { maxWidth: 360, autoPan: false });
+      m.on('click', (ev) => {
+        // prevent other click handlers (e.g. from clusters) from interfering
+        try{ ev.originalEvent && ev.originalEvent.stopPropagation && ev.originalEvent.stopPropagation(); }catch{}
+        selectEntry(e.id, { panMap: false });
+        // Smooth center + keep popup centered in map
+        focusEntryOnMap(e.id, { fromMarker: true });
+      });
       markerById.set(e.id, m);
     }
 
@@ -1802,7 +1965,7 @@ const notes = notesRaw
     if($("coords").value.trim()){
       const [lat, lon] = parseCoords($("coords").value);
       if(Number.isFinite(lat) && Number.isFinite(lon)){
-        tempPin = L.circleMarker([lat, lon], { radius:7, weight:2, fillOpacity:.25 }).addTo(markerLayer);
+        tempPin = L.circleMarker([lat, lon], { radius:7, weight:2, fillOpacity:.25 }).addTo(tempLayer);
       }
     }
 
@@ -1918,14 +2081,55 @@ const notes = notesRaw
     showProfileView();
   }
 
-  function focusEntryOnMap(id){
+  function focusEntryOnMap(id, opts={}){
     const e = entries.find(x=>x.id===id);
     if(!e) return;
     showMapView();
-    if(typeof e.lat === "number" && typeof e.lon === "number"){
-      map.setView([e.lat, e.lon], Math.max(map.getZoom(), 4));
-      const m = markerById.get(id);
-      if(m) m.openPopup();
+
+    if(!(typeof e.lat === "number" && typeof e.lon === "number")) return;
+
+    const m = markerById.get(id);
+    const latlng = L.latLng(e.lat, e.lon);
+
+    // Zoom target: never zoom OUT (important when coming out of clusters)
+    const minZoom = 8;
+    const desiredZoom = 10;
+
+    // Helper: open popup, then pan so the popup itself is centered in the visible map.
+    function openAndCenterPopup(marker){
+      if(!marker) return;
+      try{ marker.openPopup(); }catch{}
+    }
+
+    function flyAndOpen(){
+      // Smooth zoom/pan (never zoom OUT — especially after cluster reveal)
+      let z = map.getZoom();
+      // ensure a noticeable zoom-in from far out, but NEVER reduce current zoom
+      z = Math.max(z, minZoom, desiredZoom);
+
+      // Offset center upward so popup opens centered without later camera drift
+      const size = map.getSize();
+      const offsetY = Math.round(Math.min(200, Math.max(120, size.y * 0.22)));
+
+      const p = map.project(latlng, z);
+      const center = map.unproject(L.point(p.x, p.y - offsetY), z);
+
+      map.flyTo(center, z, { animate:true, duration: 0.85, easeLinearity: 0.25 });
+
+      // Open popup after movement finishes so it doesn't jump
+      map.once("moveend", ()=>{
+        if(m){ openAndCenterPopup(m); }
+      });
+    }
+
+    // If marker is in cluster, reveal it first (this also may zoom in).
+    if(m && clusteringEnabled && map.hasLayer(clusterLayer) && clusterLayer.zoomToShowLayer){
+      clusterLayer.zoomToShowLayer(m, ()=>{
+        // After it's visible, do a smooth fly to our preferred zoom (won't zoom out)
+        flyAndOpen();
+      });
+    }else{
+      flyAndOpen();
     }
   }
 
@@ -1970,12 +2174,12 @@ const notes = notesRaw
     // Close any open map popups
     try{ map.closePopup(); }catch{}
     // Remove temporary pin
-    try{ if(tempPin){ markerLayer.removeLayer(tempPin); tempPin = null; } }catch{}
+    try{ if(tempPin){ tempLayer.removeLayer(tempPin); tempPin = null; } }catch{}
     renderMarkers();
     renderList();
   }
 
-  function fillForm(entry){
+  function fillForm(entry, opts={}){
     selectedId = entry.id;
 
     $("nickname").value = entry.nickname ?? "";
@@ -2002,17 +2206,18 @@ const notes = notesRaw
     updateBirthdayCountdownUI();
     updateMetCountdownUI();
 
-    if(typeof entry.lat === "number" && typeof entry.lon === "number"){
+    // Optional: pan map when selecting (disabled when selecting via marker click)
+    if(opts.panMap !== false && typeof entry.lat === "number" && typeof entry.lon === "number"){
       map.setView([entry.lat, entry.lon], Math.max(map.getZoom(), 4));
     }
     toast("Entry loaded");
     renderList();
   }
 
-  function selectEntry(id){
+  function selectEntry(id, opts={}){
     const e = entries.find(x=>x.id===id);
     if(!e) return;
-    fillForm(e);
+    fillForm(e, opts);
   }
 
   $("currentAddress").addEventListener("blur", async ()=>{
@@ -2028,7 +2233,7 @@ const notes = notesRaw
         $("coords").value = `${g.lat.toFixed(6)}, ${g.lon.toFixed(6)}`;
         map.setView([g.lat, g.lon], 6);
         // Remove temporary pin
-    try{ if(tempPin){ markerLayer.removeLayer(tempPin); tempPin = null; } }catch{}
+    try{ if(tempPin){ tempLayer.removeLayer(tempPin); tempPin = null; } }catch{}
     renderMarkers();
 
         // Auto-timezone (only if empty)
@@ -2124,7 +2329,7 @@ const notes = notesRaw
 
     save();
     // Remove temporary pin
-    try{ if(tempPin){ markerLayer.removeLayer(tempPin); tempPin = null; } }catch{}
+    try{ if(tempPin){ tempLayer.removeLayer(tempPin); tempPin = null; } }catch{}
     renderMarkers();
 
     const current = selectedId ? entries.find(x=>x.id===selectedId) : entries[0];
@@ -2500,6 +2705,16 @@ const notes = notesRaw
   $("deleteBtn").addEventListener("click", handleDelete);
   $("exportBtn").addEventListener("click", exportJSON);
   $("clearAllBtn").addEventListener("click", clearAll);
+
+  // Cluster toggle
+  const _clusterBtn = $("clusterToggleBtn");
+  if(_clusterBtn){
+    updateClusterToggleButton();
+    _clusterBtn.addEventListener("click", ()=>{
+      setClusteringEnabled(!clusteringEnabled);
+      toast(clusteringEnabled ? "Clustering enabled ✅" : "Clustering disabled ✅");
+    });
+  }
 
   // My location
   const _myLocBtn = $("myLocBtn");
