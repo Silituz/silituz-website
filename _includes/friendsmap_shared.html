@@ -1129,6 +1129,15 @@ function fmtDate(iso){
   }
 
 
+  // Format birthday countdown as months + days (no weeks)
+  function fmtMoDays(months, days){
+    const m = Number(months)||0;
+    const d = Number(days)||0;
+    if(m > 0) return `${m}mo ${d}d`;
+    return `${d}d`;
+  }
+
+
   // ==============================
   // Helpers: days until next birthday / next met anniversary
   // ==============================
@@ -2222,7 +2231,7 @@ const img = entry.imageData
           const weeks = Math.floor(d.days / 7);
           const remDays = d.days % 7;
           const turns = (d.age === null) ? "" : ` · turns ${d.age}`;
-          return `<div class="profileCard"><div class="k">🎂 Birthday</div><div class="v">Next birthday: <b>in ${d.months}mo ${weeks}w ${remDays}d</b>${turns}<br>Birthdate: ${dateTxt}</div></div>`;
+          return `<div class="profileCard"><div class="k">🎂 Birthday</div><div class="v">Next birthday: <b>in ${fmtMoDays(d.months, d.days)}</b>${turns}<br>Birthdate: ${dateTxt}</div></div>`;
         }
         return `<div class="profileCard"><div class="k">🎂 Birthday</div><div class="v">Birthdate: ${dateTxt}</div></div>`;
       })() : "";
@@ -2746,7 +2755,7 @@ function renderList(){
           const weeks = Math.floor(diff.days / 7);
           const remDays = diff.days % 7;
           const ageTxt = (diff.age === null) ? "" : ` · turns ${diff.age}`;
-          inlineInfo = `<span class="badge" title="Time until next birthday">🎂 <b>${diff.months}mo ${weeks}w ${remDays}d</b>${ageTxt}</span>`;
+          inlineInfo = `<span class="badge" title="Time until next birthday">🎂 <b>${fmtMoDays(diff.months, diff.days)}</b>${ageTxt}</span>`;
         }
       }else if(activeFilter === "friend"){
         const s = yearsMonthsDaysSince(e.metOn);
