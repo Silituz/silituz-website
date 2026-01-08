@@ -695,6 +695,17 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
   #nickname, #birthdate { min-width: 0; }
 }
 
+
+/* Header stats (top-right) */
+.hdrRight{ text-align:right; }
+.hdrTitle{ color: var(--green); font-weight:800; letter-spacing:.2px; }
+.hdrSub{ color: var(--muted); font-size:12.5px; margin-top:2px; max-width: 48vw; }
+@media (max-width: 480px){
+  .hdrSub{ max-width: 60vw; }
+}
+
+
+.stats-title{color:#10b981; font-weight:600;}
 </style>
 </head>
 
@@ -705,6 +716,11 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
       <h1>World Friends Map</h1>
       <div class="sub">by Silituz</div>
     </div>
+  </div>
+
+  <div class="hdrRight">
+    <div class="hdrTitle"><span class="stats-title">- Stats -</span></div>
+    <div class="hdrSub" id="statsText">Friends: 0 · Countries: 0 · Longest friendship: —</div>
   </div>
 </header>
 
@@ -1896,7 +1912,7 @@ setInterval(updateNightLayer, 30000);
   });
 
 async function geocodeAddress(addr){
-    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(addr)}`;
+    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=en&namedetails=1&q=${encodeURIComponent(addr)}`;
     const res = await fetch(url, { method:"GET" });
     if(!res.ok) throw new Error("Geocoding failed");
     const data = await res.json();
@@ -2438,6 +2454,25 @@ const img = entry.imageData
     if(!nickname){ toast("Please enter a nickname"); return; }
     if(!tz){ toast("Please enter an IANA timezone"); return; }
 
+
+    // Overwrite confirmation (same nickname)
+    const nickKey = nickname.toLowerCase();
+    let overwriteTargetId = null;
+    let deleteAfterOverwriteId = null;
+
+    const conflictIdx = entries.findIndex(x=>{
+      const nk = (x.nickname||"").trim().toLowerCase();
+      return nk === nickKey && (!selectedId || x.id !== selectedId);
+    });
+
+    if(conflictIdx >= 0){
+      const target = entries[conflictIdx];
+      const ok = confirm(`Overwrite existing entry?\n\n${target.nickname}\n\nThe current data will be replaced.`);
+      if(!ok) return;
+      overwriteTargetId = target.id;
+      if(selectedId) deleteAfterOverwriteId = selectedId; // merging two entries
+    }
+
     let [lat, lon] = parseCoords($("coords").value);
 
     if((!Number.isFinite(lat) || !Number.isFinite(lon)) && currentAddress){
@@ -2458,6 +2493,8 @@ const img = entry.imageData
 
     const now = new Date().toISOString();
     const removeImage = $("removeImgBtn").dataset.remove === "1";
+
+    if(!selectedId && overwriteTargetId) selectedId = overwriteTargetId;
 
     if(selectedId){
       const idx = entries.findIndex(x=>x.id===selectedId);
@@ -2493,6 +2530,11 @@ const img = entry.imageData
     $("removeImgBtn").dataset.remove = "0";
 
     save();
+    if(deleteAfterOverwriteId && deleteAfterOverwriteId !== selectedId){
+      entries = entries.filter(x=>x.id!==deleteAfterOverwriteId);
+      save();
+    }
+
     // Remove temporary pin
     try{ if(tempPin){ tempLayer.removeLayer(tempPin); tempPin = null; } }catch{}
     renderMarkers();
@@ -2570,7 +2612,49 @@ const img = entry.imageData
   // ==============================
   // List (with thumbnails + 📖 profile)
   // ==============================
-  function renderList(){
+  
+  function countryGuess(e){
+    const s = (e.currentAddress || e.birthplace || "").trim();
+    if(!s) return "";
+    const parts = s.split(",").map(x=>x.trim()).filter(Boolean);
+    return parts.length ? parts[parts.length-1] : "";
+  }
+
+  function formatYMDShort(ymd){
+    if(!ymd) return "—";
+    const y = ymd.years || 0, m = ymd.months || 0;
+    if(y<=0 && m<=0) return "0m";
+    if(y>0 && m>0) return `${y}y ${m}m`;
+    if(y>0) return `${y}y`;
+    return `${m}m`;
+  }
+
+  function updateStats(){
+    const el = document.getElementById("statsText");
+    if(!el) return;
+
+    const friends = entries.length;
+
+    const countries = new Set();
+    for(const e of entries){
+      const c = countryGuess(e);
+      if(c) countries.add(c);
+    }
+
+    let longest = null;
+    for(const e of entries){
+      const ymd = yearsMonthsDaysSince(e.metOn);
+      if(!ymd) continue;
+      const score = (ymd.years||0)*1000 + (ymd.months||0)*10 + (ymd.days||0);
+      if(!longest || score > longest.score){
+        longest = { score, ymd };
+      }
+    }
+
+    el.textContent = `Friends: ${friends} · Countries: ${countries.size} · Longest friendship: ${longest ? formatYMDShort(longest.ymd) : "—"}`;
+  }
+
+function renderList(){
     const ul = $("list");
 
     const q = (searchQuery||"").trim().toLowerCase();
@@ -2711,6 +2795,8 @@ const img = entry.imageData
     }
 
     ul.scrollTop = prevScroll;
+    try{ updateStats(); }catch{}
+
   }
 
 
@@ -2921,6 +3007,15 @@ const img = entry.imageData
         },
         ()=>{
           toast("Could not get location (permission?)");
+          try{
+            const manual = prompt("Enter a city/address to set My Location manually (English):");
+            if(manual && manual.trim()){
+              geocodeAddress(manual.trim()).then(r=>{
+                if(r){ setMyLocationMarker(r.lat, r.lon); toast("My location set (manual) ✅"); }
+                else toast("Could not find that place");
+              }).catch(()=>toast("Manual lookup failed"));
+            }
+          }catch{}
         },
         { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 }
       );
