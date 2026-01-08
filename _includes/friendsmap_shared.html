@@ -792,6 +792,13 @@
             Merge on import (recommended if you already have entries here)
           </label>
         </div>
+
+        <div class="toggleRow">
+          <input id="notesLock" type="checkbox" />
+          <label for="notesLock" style="margin:0; cursor:pointer;">
+            🔒 Hide notes (safe for screenshots)
+          </label>
+        </div>
 </div>
 
       <!-- Hidden file input for JSON import -->
@@ -839,6 +846,8 @@
   // Storage key
   // ==============================
   const LS_KEY = "world_friends_map_final_en_with_file_import_v1";
+  const NOTES_LOCK_KEY = LS_KEY + "__notes_hidden";
+  let notesHidden = (localStorage.getItem(NOTES_LOCK_KEY) === "1");
   const $ = (id) => document.getElementById(id);
 
   function toast(msg){
@@ -1477,6 +1486,43 @@ function updateBirthdayCountdownUI(){
     updateCount();
   }
 
+  // ==============================
+  // Notes Lock (hide/show notes in UI)
+  // ==============================
+  function setNotesHidden(v){
+    notesHidden = !!v;
+    localStorage.setItem(NOTES_LOCK_KEY, notesHidden ? "1" : "0");
+  }
+  function applyNotesLockUI(){
+    const cb = $("notesLock");
+    if(cb) cb.checked = !!notesHidden;
+  }
+  function popupNotesHTML(notes){
+    const notesRaw = String(notes || "");
+    if(!notesRaw) return "";
+    if(notesHidden) return `<div class="pline pnotes"><b>Notes:</b> 🔒 Hidden</div>`;
+    const shortNotes = notesRaw.length > 260 ? (notesRaw.slice(0, 260) + "…") : notesRaw;
+    return `<div class="pline pnotes"><b>Notes:</b><br>${escapeHTML(shortNotes)}</div>`;
+  }
+  function notesCardHTML(notes){
+    const notesRaw = String(notes || "");
+    if(!notesRaw) return "";
+    if(notesHidden) return `<div class="profileCard"><div class="k">Notes</div><div class="v">🔒 Hidden</div></div>`;
+    return `<div class="profileCard"><div class="k">Notes</div><div class="v">${escapeHTML(notesRaw)}</div></div>`;
+  }
+  function refreshMarkerPopups(){
+    try{
+      for(const e of entries){
+        const m = markerById.get(e.id);
+        if(m && m.getPopup && m.getPopup()){
+          m.setPopupContent(markerPopupHTML(e));
+        }
+      }
+    }catch{}
+  }
+
+
+
   function rebuildEntryById(){
     entryById.clear();
     for(const e of entries){
@@ -1864,15 +1910,9 @@ async function geocodeAddress(addr){
       entry.otherLangs ? `<div class="pline"><b>Other:</b> ${escapeHTML(entry.otherLangs)}</div>` : ""
     ].join("");
 
-    const notesRaw = String(entry.notes || "");
-const shortNotes = notesRaw.length > 260 ? (notesRaw.slice(0, 260) + "…") : notesRaw;
+    const notes = popupNotesHTML(entry.notes);
 
-const notes = notesRaw
-  ? `<div class="pline pnotes"><b>Notes:</b><br>${escapeHTML(shortNotes)}</div>`
-  : "";
-
-
-    const img = entry.imageData
+const img = entry.imageData
       ? `
         <div class="thumbRow">
           <img class="thumb js-open-img" alt="${escapeHTML(entry.nickname)}" src="${entry.imageData}" />
@@ -2138,7 +2178,7 @@ const notes = notesRaw
       entry.connection ? `<div class="profileCard"><div class="k">Connection</div><div class="v">${escapeHTML(entry.connection)}</div></div>` : "",
       entry.nativeLang ? `<div class="profileCard"><div class="k">Native language</div><div class="v">${escapeHTML(entry.nativeLang)}</div></div>` : "",
       entry.otherLangs ? `<div class="profileCard"><div class="k">Other languages</div><div class="v">${escapeHTML(entry.otherLangs)}</div></div>` : "",
-      entry.notes ? `<div class="profileCard"><div class="k">Notes</div><div class="v">${escapeHTML(entry.notes)}</div></div>` : ""
+      notesCardHTML(entry.notes)
     ].filter(Boolean).join("");
 
     $("profileBody").innerHTML = `
@@ -2781,6 +2821,27 @@ const notes = notesRaw
   $("deleteBtn").addEventListener("click", handleDelete);
   $("exportBtn").addEventListener("click", exportJSON);
   $("clearAllBtn").addEventListener("click", clearAll);
+
+
+  // Notes lock
+  const _notesLock = $("notesLock");
+  if(_notesLock){
+    applyNotesLockUI();
+    _notesLock.addEventListener("change", ()=>{
+      setNotesHidden(_notesLock.checked);
+      toast(notesHidden ? "Notes hidden 🔒" : "Notes visible 🔓");
+      try{ renderList(); }catch{}
+      try{
+        if(selectedId && $("profileView").style.display !== "none"){
+          const e = entries.find(x=>x.id===selectedId);
+          if(e) buildProfile(e);
+        }
+      }catch{}
+      refreshMarkerPopups();
+    });
+  }
+
+
 
   // Cluster toggle
   const _clusterBtn = $("clusterToggleBtn");
