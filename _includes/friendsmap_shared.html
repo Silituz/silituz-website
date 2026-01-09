@@ -706,6 +706,24 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 
 
 .stats-title{color:#10b981; font-weight:600;}
+
+    /* Framed info line under name (Birthday / Friendship sort) */
+    .infoBlock{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      margin-top:6px;
+      padding:6px 10px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      font-size:12px;
+      color: var(--text);
+      white-space:nowrap;
+      max-width:100%;
+    }
+    .infoBlock b{font-weight:700;}
+
 </style>
 </head>
 
@@ -2774,9 +2792,28 @@ function renderList(){
             <span class="heart js-heart" data-tz="${escapeHTML(e.tz || "")}">${heartForTimezone(e.tz)}</span>
             <span class="ename">${escapeHTML(e.nickname)}</span>
             <button class="starInline js-star ${e.fav ? "on" : ""}" title="${e.fav ? "Unfavorite" : "Favorite"}" type="button">${e.fav ? "⭐" : "☆"}</button>
-            ${inlineInfo}
           </div>
-          <div class="tiny">${escapeHTML(where)}${dist ? ` · ${escapeHTML(dist)}` : ""}${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}</div>
+
+          ${activeFilter === "bday" && (() => {
+              const diff = monthsDaysUntilNextBirthday(e.birthdate);
+              if(!diff) return "";
+              const ageTxt = (diff.age === null) ? "" : ` · turns ${diff.age}`;
+              return `<div class="infoBlock">🎂 <b>${fmtMoDays(diff.months, diff.days)}</b>${ageTxt}</div>`;
+            })() || ""}
+
+          ${activeFilter === "friend" && (() => {
+              const s = yearsMonthsDaysSince(e.metOn);
+              if(!s) return "";
+              return `<div class="infoBlock">🎈 <b>${s.years}y ${s.months}m ${s.days}d</b></div>`;
+            })() || ""}
+
+          <div class="tiny">
+            ${escapeHTML(where)}
+            ${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}
+            ${dist ? ` · ${escapeHTML(dist)}` : ""}
+            ${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}
+          </div>
+
           <div class="tiny"><span class="localLabel">Local Time</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
         </div>
         <div class="actions">
