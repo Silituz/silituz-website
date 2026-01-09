@@ -2809,8 +2809,8 @@ function renderList(){
 
           <div class="tiny">
             ${escapeHTML(where)}
-            ${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}
             ${dist ? ` · ${escapeHTML(dist)}` : ""}
+            ${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}
             ${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}
           </div>
 
