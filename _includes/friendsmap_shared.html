@@ -1500,6 +1500,221 @@ body::before, body::after,
   box-shadow: 0 0 14px rgba(255,195,90,.55) !important;
 }
 
+
+/* === Floating Distance Tool Button (always visible) === */
+#distanceFloatingBtn{
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 9999;
+  background: rgba(20,24,35,.95);
+  color: rgba(230,120,120,.95);
+  border: 1px solid rgba(220,90,90,.6);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+}
+#distanceFloatingBtn.active{
+  background: rgba(220,90,90,.18);
+  box-shadow: 0 0 16px rgba(220,90,90,.45);
+}
+
+
+/* === Distance Tool (armed) === */
+#distanceFloatingBtn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  width:42px;
+  height:42px;
+  padding:0 !important;
+}
+#distanceFloatingBtn.active{
+  background: rgba(220,90,90,.18) !important;
+  box-shadow: 0 0 16px rgba(220,90,90,.45) !important;
+}
+
+#distanceHint{
+  position: fixed;
+  left: 66px;
+  bottom: 16px;
+  z-index: 9999;
+  max-width: 320px;
+  padding: 7px 10px;
+  border-radius: 12px;
+  background: rgba(10,13,20,.92);
+  border: 1px solid rgba(220,90,90,.35);
+  color: rgba(255,220,220,.92);
+  font-size: 12px;
+  line-height: 1.15;
+  display:none;
+}
+#distanceHint b{ color: rgba(255,185,185,.98); }
+
+.distanceLabel{
+  background: rgba(10,13,20,.92);
+  color: rgba(255,200,200,.95);
+  border: 1px solid rgba(220,90,90,.55);
+  padding: 5px 9px;
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  line-height: 1.15;
+  box-shadow: 0 10px 25px rgba(0,0,0,.35);
+}
+.distanceMid{
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 2px dashed rgba(220,90,90,.65);
+  background: rgba(10,13,20,.15);
+}
+
+
+/* === Distance Tool refinements === */
+.distanceLabel{
+  background: rgba(5,7,12,.96) !important;
+  color: rgba(255,245,245,.98) !important;
+  border: 1px solid rgba(255,120,120,.72) !important;
+  font-weight: 700;
+  letter-spacing: .2px;
+  padding: 6px 10px !important;
+  border-radius: 12px !important;
+  font-size: 13px !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,.65);
+  box-shadow: 0 12px 30px rgba(0,0,0,.55), 0 0 18px rgba(220,90,90,.18);
+}
+.distanceMid{
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 999px;
+  border: 2px solid rgba(255,140,140,.85) !important;
+  background: rgba(10,13,20,.55) !important;
+  box-shadow: 0 0 16px rgba(220,90,90,.25);
+  position: relative;
+}
+.distanceMid::after{
+  content:"";
+  position:absolute;
+  left:50%; top:50%;
+  width:4px; height:4px;
+  transform: translate(-50%,-50%);
+  border-radius:999px;
+  background: rgba(255,180,180,.95);
+}
+#distanceHint{
+  border-color: rgba(220,90,90,.28) !important;
+  color: rgba(255,235,235,.90) !important;
+}
+
+
+/* === Distance Info Popup (red glow) === */
+.leaflet-popup.distInfoPopup .leaflet-popup-content-wrapper{
+  background: rgba(8,10,16,.96);
+  color: rgba(255,245,245,.95);
+  border: 1px solid rgba(220,90,90,.65);
+  box-shadow:
+    0 0 0 1px rgba(220,90,90,.18) inset,
+    0 0 34px rgba(220,90,90,.55),
+    0 28px 90px rgba(0,0,0,.62);
+  border-radius: 14px;
+}
+.leaflet-popup.distInfoPopup .leaflet-popup-tip{
+  background: rgba(8,10,16,.96);
+  box-shadow: 0 0 28px rgba(220,90,90,.45);
+}
+.distInfo{
+  font-size: 12px;
+  line-height: 1.25;
+  min-width: 250px;
+}
+.distInfo .row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.distInfo .row:last-child{ border-bottom:none; }
+.distInfo .k{ opacity:.85; }
+.distInfo .v{ font-weight:700; color: rgba(255,220,220,.98); }
+.distInfo .title{
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: rgba(255,230,230,.98);
+}
+.distInfo .controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin: 6px 0 8px 0;
+}
+.distInfo select{
+  background: rgba(12,15,24,.9);
+  color: rgba(255,245,245,.95);
+  border: 1px solid rgba(220,90,90,.35);
+  border-radius: 10px;
+  padding: 4px 8px;
+  outline: none;
+}
+
+/* numbered markers for point 1 / 2 */
+.distPointBadge{
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(220,90,90,.25);
+  border: 2px solid rgba(255,150,150,.85);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: rgba(255,235,235,.98);
+  font-weight: 800;
+  font-size: 11px;
+  box-shadow: 0 0 14px rgba(220,90,90,.25);
+}
+
+
+/* Nearest place marker (same red family) */
+.nearestPlacePin{
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 2px solid rgba(255,150,150,.9);
+  background: rgba(220,90,90,.35);
+  box-shadow: 0 0 18px rgba(220,90,90,.45);
+}
+
+
+/* Midpoint pin marker (styled like map pin, red glow) */
+.midpointPin{
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(180deg, rgba(255,120,120,.95), rgba(180,60,60,.95));
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow:
+    0 0 18px rgba(220,90,90,.55),
+    0 0 36px rgba(220,90,90,.25);
+  border: 2px solid rgba(255,200,200,.85);
+  position: relative;
+}
+.midpointPin::after{
+  content:"";
+  width: 8px;
+  height: 8px;
+  background: rgba(10,10,10,.65);
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%) rotate(45deg);
+  border-radius: 999px;
+}
+
 </style>
 </head>
 
@@ -2700,6 +2915,22 @@ setInterval(updateNightLayer, 30000);
 
   map.on('click', async (e) => {
     const { lat, lng } = e.latlng;
+    // Distance Tool intercept (do not alter editor fields)
+    if(distanceMode){
+      if(distancePoints.length >= 2) distClear();
+      // show/redraw free point marker
+      try{ if(distFreePoint) map.removeLayer(distFreePoint); }catch{}
+      distFreePoint = L.circleMarker([lat, lng], {
+        radius: 7,
+        weight: 2,
+        color: 'rgba(220,90,90,.9)',
+        fillColor: 'rgba(220,90,90,.35)',
+        fillOpacity: .65
+      }).addTo(map);
+      distAddPoint(lat, lng, "Point");
+      return;
+    }
+
     $("coords").value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
     if(tempPin) tempLayer.removeLayer(tempPin);
     tempPin = L.circleMarker([lat, lng], { radius: 7, weight: 2, fillOpacity: .25 }).addTo(tempLayer);
@@ -2933,6 +3164,15 @@ const img = entry.imageData
       m.on('click', (ev) => {
         // prevent other click handlers (e.g. from clusters) from interfering
         try{ ev.originalEvent && ev.originalEvent.stopPropagation && ev.originalEvent.stopPropagation(); }catch{}
+
+        if(distanceMode){
+          if(distancePoints.length >= 2) distClear();
+          const label = (e.nickname || e.name || e.fullname || "Profile");
+          try{ m.closePopup && m.closePopup(); }catch{}
+          distAddPoint(e.lat, e.lon, label);
+          return;
+        }
+
         selectEntry(e.id, { panMap: false });
         // Smooth center + keep popup centered in map
         focusEntryOnMap(e.id, { fromMarker: true });
@@ -3919,9 +4159,302 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
   updateZodiacUI();
   tick();
   setInterval(tick, 1000);
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));}
+
+// ==============================
+// Distance Tool (📏) - ARMED
+// ==============================
+let distanceMode = false;
+let distancePoints = []; // [{lat, lon, label}]
+let distLine = null;
+let distLabel = null;
+let distMid = null;
+let distFreePoint = null;
+let distPoint1Badge = null;
+let distPoint2Badge = null;
+let distInfoPopup = null;
+let distVehicle = 'car'; // 'car' | 'plane'
+let distNearestPlaceMarker = null;
+
+
+function distHint(html){
+  const el = document.getElementById("distanceHint");
+  if(!el) return;
+  if(!html){ el.style.display = "none"; el.innerHTML = ""; return; }
+  el.innerHTML = html;
+  el.style.display = "block";
+}
+
+function distClear(){
+  distancePoints = [];
+  try{ if(distLine) map.removeLayer(distLine); }catch{}
+  try{ if(distLabel) map.removeLayer(distLabel); }catch{}
+  try{ if(distMid) map.removeLayer(distMid); }catch{}
+  try{ if(distFreePoint) map.removeLayer(distFreePoint); }catch{}
+  try{ if(distPoint1Badge) map.removeLayer(distPoint1Badge); }catch{}
+  try{ if(distPoint2Badge) map.removeLayer(distPoint2Badge); }catch{}
+  try{ if(distInfoPopup) map.closePopup(distInfoPopup); }catch{}
+  try{ if(distNearestPlaceMarker) map.removeLayer(distNearestPlaceMarker); }catch{}
+  distLine = distLabel = distMid = distFreePoint = distPoint1Badge = distPoint2Badge = distInfoPopup = distNearestPlaceMarker = null;
+}
+
+function distAddPoint(lat, lon, label){
+  distancePoints.push({lat, lon, label: label || ""});
+  if(distancePoints.length === 1){
+    distHint('📏 <b>Distance mode</b>: choose the <b>2nd point</b> (profile pin or map).');
+  }
+  if(distancePoints.length === 2){
+    distDraw();
+    distHint('📏 <b>Done</b>. Click another pin/map to start a new measurement, or tap 📏 to exit.');
+  }
+}
+
+
+function fmtHMS(sec){
+  sec = Math.max(0, Math.round(sec));
+  const h = Math.floor(sec/3600);
+  const m = Math.floor((sec%3600)/60);
+  const s = sec%60;
+  const pad = (n)=> String(n).padStart(2,'0');
+  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+
+function travelSeconds(km, vehicle){
+  // simple model: car ~ 85 km/h, plane ~ 800 km/h
+  const speed = (vehicle === 'plane') ? 800 : 85;
+  return (km / speed) * 3600;
+}
+
+const __midpointCache = new Map();
+async function reverseGeocodeMidpoint(lat, lon){
+  // Cache by rounded coords to avoid spamming API
+  const key = `${lat.toFixed(3)},${lon.toFixed(3)}`;
+  if(__midpointCache.has(key)) return __midpointCache.get(key);
+
+  const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=10&addressdetails=1&accept-language=en`;
+  try{
+    const res = await fetch(url, { method: "GET" });
+    if(!res.ok) throw new Error("bad response");
+    const data = await res.json();
+    const addr = data.address || {};
+
+    const placeName =
+      addr.city || addr.town || addr.village || addr.hamlet ||
+      addr.county || addr.state || data.name || "Unknown";
+
+    const postcode = addr.postcode || "";
+    const display = postcode ? `${postcode}, ${placeName}` : placeName;
+
+    const plLat = data.lat ? parseFloat(data.lat) : lat;
+    const plLon = data.lon ? parseFloat(data.lon) : lon;
+
+    const deltaKm = Math.round(haversineKm(lat, lon, plLat, plLon));
+    const out = { text: `${display} (± ${deltaKm} km)`, placeLat: plLat, placeLon: plLon };
+    __midpointCache.set(key, out);
+    return out;
+  }catch(e){
+    const out = { text: "Unknown (± — km)", placeLat: lat, placeLon: lon };
+    __midpointCache.set(key, out);
+    return out;
+  }
+}
+
+
+
+
+function buildDistInfo(aLabel, bLabel, km, vehicle, midPlaceText){
+  const half = km/2;
+  const tAll = travelSeconds(km, vehicle);
+  const tHalf = travelSeconds(half, vehicle);
+  const selId = "distVehicleSelect";
+  const placeLine = midPlaceText || "Loading…";
+  return `
+    <div class="distInfo">
+      <div class="title">📏 Distance</div>
+      <div class="controls">
+        <span class="k">Vehicle:</span>
+        <select id="${selId}">
+          <option value="car"${vehicle==='car'?' selected':''}>Car</option>
+          <option value="plane"${vehicle==='plane'?' selected':''}>Plane</option>
+        </select>
+      </div>
+      <div class="row"><span class="k">Marker 1:</span><span class="v">${escapeHtml(aLabel||'—')}</span></div>
+      <div class="row"><span class="k">Marker 2:</span><span class="v">${escapeHtml(bLabel||'—')}</span></div>
+      <div class="row"><span class="k">Total distance:</span><span class="v">${km.toLocaleString()} km</span></div>
+      <div class="row"><span class="k">Half distance:</span><span class="v">${Math.round(half).toLocaleString()} km</span></div>
+      <div class="row"><span class="k">Time (total):</span><span class="v">${fmtHMS(tAll)}</span></div>
+      <div class="row"><span class="k">Time (half):</span><span class="v">${fmtHMS(tHalf)}</span></div>
+      <div class="row"><span class="k">Midpoint (nearest place):</span><span class="v">${placeLine}</span></div>
+    </div>
+  `;
+}
+
+
+function hookDistPopupEvents(){
+  // delegate once per popup open: when the select changes, re-render
+  const sel = document.getElementById("distVehicleSelect");
+  if(!sel) return;
+  sel.addEventListener("change", async ()=>{
+    distVehicle = sel.value === 'plane' ? 'plane' : 'car';
+    // re-render popup content keeping same midpoint
+    if(distancePoints.length === 2){
+      const a = distancePoints[0], b = distancePoints[1];
+      const km = Math.round(haversineKm(a.lat, a.lon, b.lat, b.lon));
+      if(distInfoPopup){
+        const key = `${((a.lat+b.lat)/2).toFixed(3)},${((a.lon+b.lon)/2).toFixed(3)}`;
+      let placeObj = (__midpointCache && __midpointCache.get(key)) ? __midpointCache.get(key) : null;
+      if(!placeObj){
+        // trigger fetch (will cache), so it doesn't get stuck on Loading
+        placeObj = await reverseGeocodeMidpoint((a.lat+b.lat)/2, (a.lon+b.lon)/2);
+      }
+      distInfoPopup.setContent(buildDistInfo(a.label, b.label, km, distVehicle, placeObj ? placeObj.text : null));
+      // keep marker in sync
+      try{ if(distNearestPlaceMarker) map.removeLayer(distNearestPlaceMarker); }catch{}
+      if(placeObj && isFinite(placeObj.placeLat) && isFinite(placeObj.placeLon)){
+        distNearestPlaceMarker = L.marker([placeObj.placeLat, placeObj.placeLon],{
+          interactive:false,
+          icon: L.divIcon({ className:'', html:`<div class="nearestPlacePin"></div>`, iconSize:[14,14], iconAnchor:[7,7] })
+        }).addTo(map);
+      }
+        setTimeout(hookDistPopupEvents, 0);
+      }
+    }
+  });
+}
+
+function distDraw(){
+  const a = distancePoints[0], b = distancePoints[1];
+  const km = Math.round(haversineKm(a.lat, a.lon, b.lat, b.lon));
+
+  // Screen-space midpoint so the label stays centered on the visible line
+  const p1 = map.latLngToLayerPoint([a.lat, a.lon]);
+  const p2 = map.latLngToLayerPoint([b.lat, b.lon]);
+  const midP = L.point((p1.x + p2.x)/2, (p1.y + p2.y)/2);
+
+  // Perpendicular offset: push label further away (avoid covering)
+  const dx = (p2.x - p1.x), dy = (p2.y - p1.y);
+  const len = Math.max(1, Math.hypot(dx, dy));
+  const nx = -dy/len, ny = dx/len;
+  const labelP = L.point(midP.x + nx*34, midP.y + ny*34); // was 18
+
+  const midLatLng = map.layerPointToLatLng(midP);
+  const labelLatLng = map.layerPointToLatLng(labelP);
+
+  distLine = L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{
+    color: "rgba(220,90,90,.82)",
+    weight: 2,
+    dashArray: "6 6",
+    interactive: false
+  }).addTo(map);
+
+  // small km label (optional, now out of the way)
+
+  // Midpoint target marker
+  distMid = L.marker(midLatLng,{
+    interactive: false,
+    icon: L.divIcon({ className:"", html: `<div class="distanceMid"></div>`, iconSize:[16,16], iconAnchor:[8,8] })
+  }).addTo(map);
+
+  // Endpoint badges (1 and 2)
+  distPoint1Badge = L.marker([a.lat, a.lon],{
+    interactive: false,
+    icon: L.divIcon({ className:"", html:`<div class="distPointBadge">1</div>`, iconSize:[18,18], iconAnchor:[9,9] })
+  }).addTo(map);
+  distPoint2Badge = L.marker([b.lat, b.lon],{
+    interactive: false,
+    icon: L.divIcon({ className:"", html:`<div class="distPointBadge">2</div>`, iconSize:[18,18], iconAnchor:[9,9] })
+  }).addTo(map);
+
+  // Info popup (red glow)
+  const content = buildDistInfo(a.label, b.label, km, distVehicle, null);
+  distInfoPopup = L.popup({
+    className: "distInfoPopup",
+    closeButton: true,
+    autoClose: false,
+    closeOnClick: false,
+    maxWidth: 360
+  }).setLatLng(midLatLng).setContent(content);
+
+  map.openPopup(distInfoPopup);
+
+  // update midpoint place (async)
+  (async ()=>{
+    const placeObj = await reverseGeocodeMidpoint(midLatLng.lat, midLatLng.lng);
+    if(distInfoPopup){
+      distInfoPopup.setContent(buildDistInfo(a.label, b.label, km, distVehicle, placeObj ? placeObj.text : null));
+      setTimeout(hookDistPopupEvents, 0);
+      // nearest place marker (red)
+      try{ if(distNearestPlaceMarker) map.removeLayer(distNearestPlaceMarker); }catch{}
+      if(placeObj && isFinite(placeObj.placeLat) && isFinite(placeObj.placeLon)){
+        distNearestPlaceMarker = L.marker([placeObj.placeLat, placeObj.placeLon],{
+          interactive: false,
+          icon: L.divIcon({ className:'', html:`<div class="nearestPlacePin"></div>`, iconSize:[14,14], iconAnchor:[7,7] })
+        }).addTo(map);
+      }
+    }
+  })();
+
+
+  // hook select events after popup is in DOM
+  setTimeout(hookDistPopupEvents, 0);
+}
+
+
+function distToggle(){
+  const btn = document.getElementById("distanceFloatingBtn");
+  distanceMode = !distanceMode;
+  btn && btn.classList.toggle("active", distanceMode);
+  distClear();
+  if(distanceMode){
+    distHint('📏 <b>Distance mode</b>: choose the <b>1st point</b> (profile pin or map).');
+    toast && toast("Distance tool enabled");
+  }else{
+    distHint("");
+    toast && toast("Distance tool disabled");
+  }
+}
+
+
+// Close popups while measuring (prevents huge popups covering the map)
+map.on('popupopen', (ev)=>{
+  if(distanceMode){
+    const cls = (ev && ev.popup && ev.popup.options && ev.popup.options.className) ? String(ev.popup.options.className) : '';
+    if(cls.includes('distInfoPopup')) return; // allow our distance info popup
+    try{ map.closePopup(ev.popup); }catch{}
+  }
+});
+
+// If a my-location marker exists, allow it as a measurement point
+try{
+  const ml = window.myLocationMarker || window.userLocationMarker || window.locationMarker || null;
+  if(ml && ml.on){
+    ml.on('click', (ev)=>{
+      if(!distanceMode) return;
+      try{ ev.originalEvent && ev.originalEvent.stopPropagation && ev.originalEvent.stopPropagation(); }catch{}
+      if(distancePoints.length >= 2) distClear();
+      const ll = ml.getLatLng ? ml.getLatLng() : null;
+      if(ll) distAddPoint(ll.lat, ll.lng, "My location");
+    });
+  }
+}catch{}
+
+
+// Wire the button
+document.addEventListener("DOMContentLoaded", ()=>{
+  const btn = document.getElementById("distanceFloatingBtn");
+  if(btn){
+    btn.addEventListener("click", (ev)=>{ ev.preventDefault(); ev.stopPropagation(); distToggle(); });
+  }
+});
+
 </script>
 
 
+
+<button id="distanceFloatingBtn" title="Distance tool">📏</button>
+
+<div id="distanceHint"></div>
 </body>
+
 </html>
 
