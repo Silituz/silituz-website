@@ -407,10 +407,12 @@
       padding:22px;
       background: rgba(0,0,0,.58);
       backdrop-filter: blur(8px);
-      z-index: 100;
+      z-index: 9999;
     }
     .imgModal.show{display:flex}
     .imgModalInner{
+      position: relative;
+      z-index: 10000;
       max-width: min(920px, 92vw);
       max-height: 86vh;
       background: rgba(18,26,43,.92);
@@ -724,6 +726,683 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
     }
     .infoBlock b{font-weight:700;}
 
+
+/* ============================
+   Premium UI polish (no new features)
+   ============================ */
+html,body{ text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+:root{
+  --card: rgba(255,255,255,.055);
+  --card2: rgba(255,255,255,.075);
+  --cardBorder: rgba(255,255,255,.12);
+  --cardBorder2: rgba(255,255,255,.18);
+  --shadowSoft: 0 10px 26px rgba(0,0,0,.32);
+  --shadowLift: 0 18px 50px rgba(0,0,0,.44);
+  --glowGreen: rgba(87, 255, 170, .35);
+  --glowYellow: rgba(255, 220, 90, .35);
+  --glowRed: rgba(255, 106, 130, .35);
+}
+
+/* subtle background depth */
+body::before{
+  content:"";
+  position:fixed;
+  inset:-20vh -10vw;
+  background:
+    radial-gradient(900px 600px at 20% 10%, rgba(122,167,255,.12), transparent 60%),
+    radial-gradient(700px 520px at 80% 12%, rgba(255,120,180,.09), transparent 62%),
+    radial-gradient(900px 620px at 55% 90%, rgba(80,255,190,.08), transparent 65%);
+  pointer-events:none;
+  z-index:-1;
+  filter: blur(0px);
+}
+
+/* list feels like premium cards */
+.list{ padding: 6px; }
+.item{
+  margin: 8px 6px;
+  border-bottom: none;
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--card2), var(--card));
+  border: 1px solid var(--cardBorder);
+  box-shadow: var(--shadowSoft);
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+  will-change: transform;
+  position: relative;
+  overflow: hidden;
+}
+.item::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background: radial-gradient(420px 120px at 18% 0%, rgba(122,167,255,.10), transparent 60%);
+  opacity:.9;
+  pointer-events:none;
+}
+.item:hover{
+  transform: translateY(-1px);
+  box-shadow: var(--shadowLift);
+  border-color: var(--cardBorder2);
+}
+.item:active{ transform: translateY(0px) scale(.995); }
+
+/* heart glow accents (purely visual) */
+.item.heartGreen::after,
+.item.heartYellow::after,
+.item.heartRed::after{
+  content:"";
+  position:absolute;
+  inset:-40px -40px auto auto;
+  width:180px;
+  height:180px;
+  border-radius: 999px;
+  filter: blur(18px);
+  opacity:.55;
+  pointer-events:none;
+}
+.item.heartGreen::after{ background: radial-gradient(circle, var(--glowGreen), transparent 60%); }
+.item.heartYellow::after{ background: radial-gradient(circle, var(--glowYellow), transparent 60%); }
+.item.heartRed::after{ background: radial-gradient(circle, var(--glowRed), transparent 60%); }
+
+/* typography hierarchy */
+.nick{ gap:8px; }
+.ename{
+  letter-spacing: .15px;
+}
+.tiny{
+  line-height: 1.35;
+  opacity: .92;
+}
+.localLabel{ opacity:.85; }
+
+/* framed info blocks: slightly more "chip" */
+.infoBlock{
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.07);
+  box-shadow: 0 10px 22px rgba(0,0,0,.22);
+}
+.infoBlock b{ letter-spacing:.2px; }
+
+/* micro motion (respect reduced motion) */
+@media (prefers-reduced-motion: no-preference){
+  .item{ animation: itemIn .22s ease both; }
+  @keyframes itemIn{
+    from{ opacity:0; transform: translateY(4px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+  .iconBtn, .secondary, .badge, .chip, .aBtn{
+    transition: transform .14s ease, background .14s ease, border-color .14s ease, opacity .14s ease;
+  }
+  .iconBtn:hover, .secondary:hover{ transform: translateY(-1px); }
+}
+
+/* mobile tuning */
+@media (max-width: 560px){
+  .list{ max-height: 42vh; }
+  .item{ margin: 8px 4px; }
+}
+
+
+/* Selected list item (visual focus) */
+.item.isSelected{
+  border-color: rgba(255,255,255,.28);
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+  box-shadow: 0 22px 70px rgba(0,0,0,.55);
+  transform: translateY(-1px);
+}
+.item.isSelected::before{
+  background: radial-gradient(520px 160px at 18% 0%, rgba(190,225,255,.16), transparent 62%);
+}
+.item.isSelected::after{
+  opacity:.72;
+}
+
+
+/* Favorite card accent (subtle, premium) */
+.item.isFav{
+  border-color: rgba(255, 230, 140, .16);
+}
+.item.isFav::before{
+  background:
+    radial-gradient(420px 120px at 18% 0%, rgba(255, 230, 140, .10), transparent 62%),
+    radial-gradient(520px 160px at 68% 10%, rgba(255, 190, 90, .06), transparent 65%);
+}
+
+/* Selected + Favorite = special spotlight */
+.item.isSelected.isFav{
+  border-color: rgba(255, 230, 140, .28);
+  box-shadow:
+    0 26px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(255, 230, 140, .12) inset,
+    0 0 40px rgba(255, 220, 120, .18);
+}
+.item.isSelected.isFav::after{
+  opacity:.78;
+  background: radial-gradient(circle, rgba(255, 220, 120, .42), transparent 60%);
+}
+
+/* tiny shimmer line (very subtle) */
+.item.isSelected.isFav .ename{
+  text-shadow: 0 0 18px rgba(255, 220, 120, .18);
+}
+
+
+/* === Strong selection glow (frame-focused, no background lift) === */
+.item.isSelected{
+  background: linear-gradient(180deg, var(--card2), var(--card)); /* keep original */
+  box-shadow:
+    0 0 0 1.5px rgba(160,200,255,.55),
+    0 0 22px rgba(120,170,255,.55),
+    0 14px 42px rgba(0,0,0,.55);
+}
+.item.isSelected::before{ opacity:.35; }
+
+/* Favorite selection = different color identity (golden) */
+.item.isSelected.isFav{
+  box-shadow:
+    0 0 0 1.5px rgba(255,215,140,.75),
+    0 0 26px rgba(255,210,120,.75),
+    0 18px 48px rgba(0,0,0,.6);
+}
+
+/* Optional soft pulse on select (very subtle) */
+@media (prefers-reduced-motion: no-preference){
+  .item.isSelected{
+    animation: selectPulse .6s ease-out 1;
+  }
+  @keyframes selectPulse{
+    from{
+      box-shadow:
+        0 0 0 0 rgba(120,170,255,.0),
+        0 0 0 rgba(120,170,255,.0),
+        0 14px 42px rgba(0,0,0,.55);
+    }
+    to{
+      box-shadow:
+        0 0 0 1.5px rgba(160,200,255,.55),
+        0 0 22px rgba(120,170,255,.55),
+        0 14px 42px rgba(0,0,0,.55);
+    }
+  }
+}
+
+
+/* === Unified Visit Card Background (Option A) === */
+.profileCard, .visitCard, .profile{
+  background:
+    linear-gradient(180deg, rgba(20,28,40,.92), rgba(14,20,30,.92));
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+/* Inner sections calmer & glass-like */
+.profileCard .section,
+.visitCard .section,
+.profile .section{
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* Remove competing gradients inside visit card */
+.profileCard .section::before,
+.visitCard .section::before,
+.profile .section::before{
+  display:none !important;
+}
+
+
+/* === Profile / Visit Card: Option A + C (unified but pep) === */
+#profileView{
+  position: relative;
+  overflow: hidden; /* keep glows inside the visit card area */
+  background: linear-gradient(180deg, rgba(14,18,28,.92), rgba(10,13,20,.92));
+}
+#profileView::before{
+  content:"";
+  position: absolute; /* was fixed -> leaked behind list in profile mode */
+  inset: -22% -18%;
+  pointer-events:none;
+  z-index: 0;
+  background:
+    radial-gradient(900px 620px at 18% 8%, rgba(120,170,255,.13), transparent 62%),
+    radial-gradient(760px 560px at 78% 16%, rgba(80,255,190,.08), transparent 64%),
+    radial-gradient(900px 700px at 55% 95%, rgba(255,120,180,.06), transparent 66%);
+  opacity: .95;
+}
+#profileView > *{ position: relative; z-index: 1; }
+
+/* Favorite profile: gold spotlight (only here, not everywhere) */
+#profileView.isFavProfile::before{
+  background:
+    radial-gradient(980px 700px at 22% 10%, rgba(255, 220, 120, .18), transparent 64%),
+    radial-gradient(860px 620px at 78% 18%, rgba(255, 200, 90, .10), transparent 66%),
+    radial-gradient(900px 700px at 55% 95%, rgba(120,170,255,.08), transparent 70%);
+}
+
+/* Calm inner cards (avoid multi competing gradients) */
+.profileCard{
+  background: rgba(255,255,255,.04) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04) !important;
+}
+.profileCard::before{ display:none !important; }
+
+
+/* === Profile mode: remove ALL glow effects === */
+#profileView .item,
+#profileView .item.isSelected,
+#profileView .item.isFav,
+#profileView .item::before,
+#profileView .item::after{
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+body.profileMode .item.isSelected{
+  box-shadow: 0 0 0 1px rgba(255,255,255,.18) !important;
+}
+
+body.profileMode .leaflet-popup-content-wrapper,
+body.profileMode .leaflet-popup-tip{
+  box-shadow: none !important;
+}
+
+
+/* === When profile (visit card) is open: disable list selection glow completely === */
+body.profileMode .item.isSelected,
+body.profileMode .item.isSelected.isFav,
+body.profileMode .item.isSelected.fromMap,
+body.profileMode .item.isSelected.fromList{
+  box-shadow: none !important;
+  transform: none !important;
+}
+body.profileMode .item.isSelected::after,
+body.profileMode .item.isSelected::before{
+  display:none !important;
+}
+body.profileMode .item.isSelected{
+  border-color: rgba(255,255,255,.18) !important;
+}
+
+
+/* === Nuclear option: kill ALL glow sources while profileMode is active === */
+/* 1) Remove global background glows */
+body.profileMode::before,
+body.profileMode::after{
+  opacity: 0 !important;
+  display:none !important;
+}
+
+/* 2) Remove profileView stage glows */
+body.profileMode #profileView::before,
+body.profileMode #profileView::after,
+body.profileMode #profileView.isFavProfile::before{
+  display:none !important;
+  opacity:0 !important;
+}
+
+/* 3) Remove list item ambient glows (heart blobs + card sheen) */
+body.profileMode .item::before,
+body.profileMode .item::after,
+body.profileMode .item.heartGreen::after,
+body.profileMode .item.heartYellow::after,
+body.profileMode .item.heartRed::after{
+  display:none !important;
+  opacity:0 !important;
+}
+
+/* 4) Ensure no shadows anywhere in list items during profileMode */
+body.profileMode .item,
+body.profileMode .item *{
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+/* Keep a minimal selection border so you still know what's selected */
+body.profileMode .item.isSelected{
+  border-color: rgba(255,255,255,.18) !important;
+}
+
+
+/* === Unify left panel background (top edit area, list, footer) === */
+:root{
+  --leftStage: rgba(10,13,20,.94);
+  --leftStageSolid: rgba(10,13,20,.98);
+  --leftBorder: rgba(255,255,255,.10);
+}
+
+/* Left main card becomes the single source of truth */
+.card{
+  background: var(--leftStage) !important;
+  border-color: var(--leftBorder) !important;
+}
+
+/* Ensure all left sub-areas use the exact same background */
+.searchBar,
+.filterBar,
+.alphaBar,
+.list,
+.footer-tools,
+.hint,
+.panel{
+  background: var(--leftStage) !important;
+}
+
+/* The list itself is <ul>; make sure it doesn't look like a different strip */
+.list{
+  border-top: 1px solid rgba(255,255,255,.06) !important;
+  border-bottom: 1px solid rgba(255,255,255,.06) !important;
+}
+
+/* Footer area: same color, no gradient differences */
+.footer-tools{
+  background: var(--leftStage) !important;
+  border-top: 1px solid rgba(255,255,255,.08) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* If there is any form container in left area, unify it too */
+.form,
+.formGrid,
+.formWrap,
+.formSection,
+#form,
+#editor,
+#left,
+.left{
+  background: transparent !important;
+}
+
+
+/* === Further unify: remove subtle overlays + make profile panel match === */
+body::before{ opacity: .18 !important; } /* keep slight ambience but reduce banding */
+
+/* Remove any card sheen overlays that can shift perceived color */
+.card::before{ display:none !important; }
+.item::before{ opacity:.35; } /* keep gentle, not affecting stage strips */
+
+/* Ensure the list strips are not influenced by transparency */
+.searchBar, .filterBar, .alphaBar, .list, .footer-tools, .hint, .panel{
+  background: var(--leftStageSolid) !important;
+}
+
+/* Profile / Visit card area: same background family */
+#profileView{
+  background: var(--leftStageSolid) !important;
+}
+#profileView .profileHead{
+  background: var(--leftStageSolid) !important;
+  border-bottom: 1px solid rgba(255,255,255,.08) !important;
+  box-shadow: none !important;
+}
+#profileView .profileCard{
+  background: var(--leftStageSolid) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  box-shadow: none !important;
+}
+
+
+/* === Absolute solid stage: eliminate all perceived color shifts === */
+:root{
+  --stageSolid: #0A0D14; /* single source of truth */
+}
+
+/* Turn off any backdrop / translucency that can vary with content behind */
+.searchBar, .filterBar, .alphaBar, .list, .footer-tools, .hint, .panel,
+.card, #profileView, #profileView .profileHead, #profileView .profileCard{
+  background-color: var(--stageSolid) !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Kill all overlay sheens that can change perceived brightness */
+body::before{ display:none !important; }
+.card::before, .card::after,
+.searchBar::before, .filterBar::before, .alphaBar::before, .footer-tools::before,
+#profileView::before, #profileView::after, #profileView .profileHead::before, #profileView .profileHead::after,
+.profileCard::before, .profileCard::after{
+  display:none !important;
+}
+
+/* Ensure borders are consistent (no gradients) */
+.card, .searchBar, .filterBar, .alphaBar, .footer-tools, .panel, .hint,
+#profileView .profileHead, #profileView .profileCard{
+  border-color: rgba(255,255,255,.10) !important;
+  box-shadow: none !important;
+}
+
+/* Keep list items premium without affecting stage color */
+.item{
+  background-image: none !important;
+}
+
+
+/* === One background everywhere (kills hard cuts in edit/list/profile) === */
+:root{ --stageSolid: #0A0D14; }
+
+/* Make the page itself the single background */
+html, body{
+  background: var(--stageSolid) !important;
+  background-image: none !important;
+}
+
+/* Common outer wrappers (safety net) */
+#app, .app, .wrap, .container, .main, .layout, .shell{
+  background: var(--stageSolid) !important;
+  background-image: none !important;
+}
+
+/* Left + Profile panes: no separate gradients/alphas */
+.card, #profileView, #profileView .profileHead, #profileView .profileCard,
+.searchBar, .filterBar, .alphaBar, .list, .footer-tools, .hint, .panel{
+  background: var(--stageSolid) !important;
+  background-image: none !important;
+  background-color: var(--stageSolid) !important;
+}
+
+/* Remove any remaining pseudo background layers that could create bands */
+body::before, body::after,
+.card::before, .card::after,
+.searchBar::before, .searchBar::after,
+.filterBar::before, .filterBar::after,
+.alphaBar::before, .alphaBar::after,
+.list::before, .list::after,
+.footer-tools::before, .footer-tools::after,
+#profileView::before, #profileView::after,
+#profileView .profileHead::before, #profileView .profileHead::after,
+#profileView .profileCard::before, #profileView .profileCard::after{
+  display:none !important;
+  opacity:0 !important;
+}
+
+/* Make separators subtle (so they don't look like 'cuts') */
+.searchBar, .filterBar, .alphaBar, .footer-tools, .card, #profileView .profileHead, #profileView .profileCard{
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+
+/* === Favorite indicator in visit card (gold strip + badge) === */
+#profileView .favBadge{
+  display:none;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid rgba(255,215,140,.22);
+  background: rgba(255,215,140,.10);
+  color: rgba(255,235,190,.95);
+  box-shadow: 0 0 18px rgba(255,215,140,.16);
+  margin-top:6px;
+}
+#profileView.isFavProfile .favBadge{ display:inline-flex; }
+
+#profileView.isFavProfile .profileHead{
+  border-bottom-color: rgba(255,215,140,.22) !important;
+}
+#profileView.isFavProfile .profileHead::after{
+  content:"";
+  position:absolute;
+  left:12px; right:12px; bottom:-1px;
+  height:2px;
+  background: linear-gradient(90deg, transparent, rgba(255,215,140,.55), transparent);
+}
+
+
+/* === Map popup glow: normal (cool) vs favorite (gold) === */
+.leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+  background: rgba(14,18,28,.96);
+  color: rgba(255,255,255,.92);
+  border:1px solid rgba(160,200,255,.42);
+  box-shadow:
+    0 0 0 1px rgba(160,200,255,.20) inset,
+    0 0 34px rgba(120,170,255,.55),
+    0 28px 90px rgba(0,0,0,.62);
+}
+.leaflet-popup.normPopup .leaflet-popup-tip{
+  background: rgba(14,18,28,.96);
+  box-shadow: 0 0 34px rgba(120,170,255,.45);
+}
+.leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+  background: rgba(16,14,18,.96);
+  color: rgba(255,255,255,.92);
+  border:1px solid rgba(255,215,140,.52);
+  box-shadow:
+    0 0 0 1px rgba(255,215,140,.24) inset,
+    0 0 38px rgba(255,210,120,.62),
+    0 30px 96px rgba(0,0,0,.66);
+}
+.leaflet-popup.favPopup .leaflet-popup-tip{
+  background: rgba(16,14,18,.96);
+  box-shadow: 0 0 38px rgba(255,210,120,.52);
+}
+
+
+/* === Favorite strip: wider + smoother gradient === */
+#profileView.isFavProfile .profileHead::after{
+  height:4px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,215,140,.35) 15%,
+    rgba(255,215,140,.85) 50%,
+    rgba(255,215,140,.35) 85%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px rgba(255,215,140,.55);
+}
+
+/* === Popup glow: slightly richer colors === */
+.leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(255,215,140,.65) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,215,140,.30) inset,
+    0 0 44px rgba(255,210,120,.75),
+    0 34px 110px rgba(0,0,0,.68) !important;
+}
+.leaflet-popup.favPopup .leaflet-popup-tip{
+  box-shadow: 0 0 44px rgba(255,210,120,.65) !important;
+}
+
+.leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(140,190,255,.55) !important;
+  box-shadow:
+    0 0 0 1px rgba(140,190,255,.25) inset,
+    0 0 40px rgba(120,170,255,.65),
+    0 32px 100px rgba(0,0,0,.65) !important;
+}
+.leaflet-popup.normPopup .leaflet-popup-tip{
+  box-shadow: 0 0 40px rgba(120,170,255,.55) !important;
+}
+
+
+/* === Fav band (visit card): thicker gradient like reference === */
+#profileView .profileHead{ position: relative; overflow: hidden; }
+
+#profileView.isFavProfile .profileHead::before{
+  content:"";
+  position:absolute;
+  left:-20px; right:-20px; top:0;
+  height:12px;
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.25) 18%,
+    rgba(255,215,140,.75) 50%,
+    rgba(255,215,140,.25) 82%,
+    rgba(255,215,140,0) 100%
+  );
+  filter: blur(.2px);
+  opacity: 1;
+  pointer-events:none;
+}
+/* keep the bottom strip too, slightly wider */
+#profileView.isFavProfile .profileHead::after{
+  height:5px !important;
+}
+
+
+/* === Final tweak: favorite band exactly like reference === */
+/* remove top glow band, keep ONLY the bottom gradient bar */
+#profileView.isFavProfile .profileHead::before{
+  display:none !important;
+}
+
+/* bottom band: centered, softer edges, correct vertical spacing */
+#profileView.isFavProfile .profileHead::after{
+  height:6px !important;
+  bottom:-1px !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.25) 20%,
+    rgba(255,215,140,.9) 50%,
+    rgba(255,215,140,.25) 80%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 14px rgba(255,215,140,.45) !important;
+}
+
+
+/* === Fix: make favorite band truly thicker and visible === */
+#profileView .profileHead{
+  overflow: visible !important; /* allow band to extend */
+}
+
+#profileView.isFavProfile .profileHead::after{
+  content:"";
+  position:absolute;
+  left:-16px;
+  right:-16px;
+  bottom:-6px;              /* move band down so height is visible */
+  height:14px !important;   /* real thickness */
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.30) 18%,
+    rgba(255,215,140,.95) 50%,
+    rgba(255,215,140,.30) 82%,
+    rgba(255,215,140,0) 100%
+  );
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 0 22px rgba(255,215,140,.55);
+  pointer-events:none;
+}
+
+
+/* === Only change: favorite band to 30px height === */
+#profileView.isFavProfile .profileHead::after{
+  height:30px !important;
+  bottom:-14px !important;
+  box-shadow: 0 0 32px rgba(255,215,140,.65) !important;
+}
+
 </style>
 </head>
 
@@ -898,7 +1577,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
     <div id="profileView">
       <div class="profileHead">
         <div class="profileTitle">
-          <b id="profileName">—</b>
+          <b id="profileName">—</b><div class="favBadge">⭐ Favorite</div>
           <span id="profileSub">—</span>
         </div>
         <div class="btns" style="gap:8px; justify-content:flex-end;">
@@ -1608,7 +2287,11 @@ function updateBirthdayCountdownUI(){
       for(const e of entries){
         const m = markerById.get(e.id);
         if(m && m.getPopup && m.getPopup()){
-          m.setPopupContent(markerPopupHTML(e));
+          // rebind popup to update className (fav vs normal)
+          const isOpen = m.isPopupOpen && m.isPopupOpen();
+          try{ m.unbindPopup(); }catch{}
+          m.bindPopup(markerPopupHTML(e), { className: (e.fav ? "favPopup" : "normPopup") });
+          if(isOpen){ try{ m.openPopup(); }catch{} }
         }
       }
     }catch{}
@@ -2149,7 +2832,7 @@ const img = entry.imageData
 
       const m = L.marker([e.lat, e.lon], { icon: pinIconForEntry(e) }).addTo(markerLayer);
       m.__entryId = e.id;
-      m.bindPopup(markerPopupHTML(e), { maxWidth: 360, autoPan: false });
+      m.bindPopup(markerPopupHTML(e), {maxWidth: 360, autoPan: false, className: (e.fav ? "favPopup" : "normPopup")});
       m.on('click', (ev) => {
         // prevent other click handlers (e.g. from clusters) from interfering
         try{ ev.originalEvent && ev.originalEvent.stopPropagation && ev.originalEvent.stopPropagation(); }catch{}
@@ -2179,7 +2862,9 @@ const img = entry.imageData
   // Right panel view switch (Map <-> Profile)
   // ==============================
   function showMapView(){
-    $("profileView").style.display = "none";
+    const pv = $("profileView");
+    pv.classList.remove("isFavProfile");
+    pv.style.display = "none";
     $("mapView").style.display = "block";
     // Leaflet needs a size refresh after being hidden
     setTimeout(()=> map.invalidateSize(), 60);
@@ -2206,6 +2891,8 @@ const img = entry.imageData
     }
 
     $("profileName").textContent = entry.nickname || "—";
+    $("profileView").classList.toggle("isFavProfile", !!entry.fav);
+
     $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}` : (entry.connection ? escapeHTML(entry.connection) : "—");
 
     const imgBlock = entry.imageData
@@ -2285,6 +2972,11 @@ const img = entry.imageData
   function openProfile(id){
     const e = entries.find(x=>x.id===id);
     if(!e) return;
+
+    // Mark profile as favorite/non-favorite for gold vs cool accent background
+    const pv = $("profileView");
+    pv.classList.toggle("isFavProfile", !!e.fav);
+
     buildProfile(e);
     showProfileView();
   }
@@ -2748,6 +3440,11 @@ function renderList(){
     for(const e of sorted){
       const li = document.createElement("li");
       li.className = "item";
+      // Selected highlight
+      li.classList.toggle("isSelected", e.id === selectedId);
+      li.classList.toggle("isFav", !!e.fav);
+
+
       li.dataset.id = e.id;
       if(selectedId && e.id === selectedId) li.classList.add("selected");
 
@@ -2798,6 +3495,15 @@ function renderList(){
               const diff = monthsDaysUntilNextBirthday(e.birthdate);
               if(!diff) return "";
               const ageTxt = (diff.age === null) ? "" : ` · turns ${diff.age}`;
+
+    // Visual-only: add a subtle glow class based on the heart emoji
+    const hEl = li.querySelector(".js-heart");
+    if(hEl){
+      const h = (hEl.textContent || "").trim();
+      li.classList.toggle("heartGreen", h === "💚");
+      li.classList.toggle("heartYellow", h === "💛");
+      li.classList.toggle("heartRed", h === "❤️");
+    }
               return `<div class="infoBlock">🎂 <b>${fmtMoDays(diff.months, diff.days)}</b>${ageTxt}</div>`;
             })() || ""}
 
@@ -2824,7 +3530,16 @@ function renderList(){
         </div>
       `;
 
-      li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
+      
+      // Click anywhere on the card to select (but don't steal clicks from buttons/links)
+      li.addEventListener("click", (ev)=>{
+        if(ev.target.closest("button, a, input, textarea, select")) return;
+        selectEntry(e.id, { panMap: false });
+        // Re-render to update selected glow immediately
+        renderList();
+      });
+
+li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
       li.querySelector(".js-pin").addEventListener("click", ()=> focusEntryOnMap(e.id));
       li.querySelector(".js-book").addEventListener("click", ()=> openProfile(e.id));
       li.querySelector(".js-star").addEventListener("click", (ev)=>{
