@@ -15,6 +15,14 @@
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
   <style>
+
+
+
+
+
+
+:root{--special-band-height: var(--special-band-height);}
+
     :root{
       --bg:#0b0f1a;
       --text:#e9eefc;
@@ -45,7 +53,7 @@
     }
     .brand{display:flex; align-items:center; gap:10px; user-select:none;}
     .dot{
-      width:14px;height:14px;border-radius:999px;
+      width:14px;height: var(--special-band-height);border-radius:999px;
       background: radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,.2) 32%, transparent 60%),
                   linear-gradient(135deg, rgba(122,167,255,1), rgba(125,255,178,1));
       box-shadow: 0 0 20px rgba(122,167,255,.35);
@@ -92,7 +100,7 @@
       color: var(--text);
       outline:none;
     }
-    textarea{min-height:90px; resize: vertical}
+    textarea{min-height: var(--special-band-height); resize: vertical}
     .hint{font-size:12px; color: var(--muted); line-height:1.35;}
 
     .zodiacBox{
@@ -146,7 +154,7 @@
       white-space:nowrap;
     }
 
-    .hr{height:1px; background: var(--line); margin: 2px 0}
+    .hr{height: var(--special-band-height); background: var(--line); margin: 2px 0}
 
     /* Alphabet bar */
     .alphaBar{
@@ -207,7 +215,7 @@
 
     .avatar{
       width:34px;
-      height:34px;
+      height: var(--special-band-height);
       border-radius: 10px;
       object-fit: cover;
       border:1px solid rgba(255,255,255,.12);
@@ -215,7 +223,7 @@
     }
     .avatarPh{
       width:34px;
-      height:34px;
+      height: var(--special-band-height);
       border-radius: 10px;
       display:grid;
       place-items:center;
@@ -277,13 +285,13 @@
 
     .profileImg{
       width:110px;
-      height:110px;
+      height: var(--special-band-height);
       border-radius: 16px;
       object-fit: cover;
       border:1px solid rgba(255,255,255,.12);
       cursor:pointer;
     }
-    .profileTop{
+    .profileTop{position: relative;
       display:flex;
       gap:12px;
       align-items:flex-start;
@@ -354,8 +362,8 @@
     .leaflet-container a.leaflet-popup-close-button{
       color: var(--muted);
       width: 28px;
-      height: 28px;
-      line-height: 28px;
+      height: var(--special-band-height);
+      line-height: var(--special-band-height);
       font-size: 18px;
     }
     .leaflet-container a.leaflet-popup-close-button:hover{
@@ -371,7 +379,7 @@
     .popup .pline{font-size:12px; margin:3px 0; color: var(--muted)}
     .popup .ptime{font-weight:700; color: var(--text)}
     .popup .thumbRow{display:flex; gap:10px; align-items:center; margin-top:8px}
-    .popup img.thumb{width:72px;height:72px;border-radius:12px;object-fit:cover;cursor:pointer;display:block; border:1px solid rgba(255,255,255,.12)}
+    .popup img.thumb{width:72px;height: var(--special-band-height);border-radius:12px;object-fit:cover;cursor:pointer;display:block; border:1px solid rgba(255,255,255,.12)}
     .popup .thumbHint{font-size:12px; color: var(--muted); opacity:.9}
 
 /* Preview in form */
@@ -382,7 +390,7 @@
       margin-top:6px;
     }
     .preview img{
-      width:48px;height:48px;border-radius:12px; object-fit:cover;
+      width:48px;height: var(--special-band-height);border-radius:12px; object-fit:cover;
       border:1px solid rgba(255,255,255,.12);
     }
 
@@ -520,7 +528,7 @@
     .starInline{
       margin-left:8px;
       width:26px;
-      height:26px;
+      height: var(--special-band-height);
       border-radius:999px;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.14);
@@ -590,7 +598,7 @@
     }
 
     /* My location marker (special) */
-    .myLocWrap{ position: relative; width: 22px; height: 22px; }
+    .myLocWrap{ position: relative; width: 22px; height: var(--special-band-height); }
     .myLocDot{
       position:absolute; inset:0;
       border-radius:999px;
@@ -617,7 +625,7 @@
        ============================= */
     .clusterPin{
       width: 40px;
-      height: 40px;
+      height: var(--special-band-height);
       border-radius: 999px;
       display: grid;
       place-items: center;
@@ -641,7 +649,7 @@
       content:"";
       position:absolute;
       width: 56px;
-      height: 56px;
+      height: var(--special-band-height);
       border-radius: 999px;
       border: 1px dashed rgba(122,167,255,.35);
       opacity: .55;
@@ -765,7 +773,7 @@ body::before{
   border-radius: 16px;
   background: linear-gradient(180deg, var(--card2), var(--card));
   border: 1px solid var(--cardBorder);
-  box-shadow: var(--shadowSoft);
+  box-shadow: var(--shadowSoft), 0 0 0 1px rgba(80,255,190,.10) inset, 0 0 22px rgba(80,255,190,.16);
   transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
   will-change: transform;
   position: relative;
@@ -794,7 +802,7 @@ body::before{
   position:absolute;
   inset:-40px -40px auto auto;
   width:180px;
-  height:180px;
+  height: var(--special-band-height);
   border-radius: 999px;
   filter: blur(18px);
   opacity:.55;
@@ -845,9 +853,9 @@ body::before{
 
 /* Selected list item (visual focus) */
 .item.isSelected{
-  border-color: rgba(255,255,255,.28);
-  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-  box-shadow: 0 22px 70px rgba(0,0,0,.55);
+  border-color: rgba(255,255,255,.32);
+  background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.06));
+  box-shadow: 0 0 0 2px rgba(80,255,190,.22), 0 22px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(80,255,190,.14) inset, 0 0 60px rgba(80,255,190,.28);
   transform: translateY(-1px);
 }
 .item.isSelected::before{
@@ -874,7 +882,7 @@ body::before{
   box-shadow:
     0 26px 80px rgba(0,0,0,.58),
     0 0 0 1px rgba(255, 230, 140, .12) inset,
-    0 0 40px rgba(255, 220, 120, .18);
+    0 0 60px rgba(255, 220, 120, .26);
 }
 .item.isSelected.isFav::after{
   opacity:.78;
@@ -887,6 +895,20 @@ body::before{
 }
 
 
+
+/* Selected + Favorite + My Special One -> Special wins */
+.item.isSelected.isFav.isSpecial{
+  border-color: rgba(90, 235, 230, .42) !important;
+  box-shadow:
+    0 0 0 2px rgba(80,240,230,.45),
+    0 26px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(90, 235, 230, .14) inset,
+    0 0 78px rgba(80,240,230,.40) !important;
+}
+.item.isSelected.isFav.isSpecial::after{
+  opacity: 1 !important;
+  background: radial-gradient(520px 170px at 50% 0%, rgba(80,235,230,.22), transparent 65%) !important;
+}
 /* === Strong selection glow (frame-focused, no background lift) === */
 .item.isSelected{
   background: linear-gradient(180deg, var(--card2), var(--card)); /* keep original */
@@ -1067,6 +1089,26 @@ body.profileMode .item.isSelected{
   border-color: rgba(255,255,255,.18) !important;
 }
 
+/* In profileMode we still want the selected person to gently glow (frame only) */
+body.profileMode .item.isSelected{
+  box-shadow:
+    0 0 0 1.5px rgba(160,200,255,.45) !important,
+    0 0 18px rgba(120,170,255,.38) !important,
+    0 14px 42px rgba(0,0,0,.55) !important;
+}
+body.profileMode .item.isSelected.isFav{
+  box-shadow:
+    0 0 0 1.5px rgba(255,215,140,.55) !important,
+    0 0 22px rgba(255,210,120,.48) !important,
+    0 16px 46px rgba(0,0,0,.60) !important;
+}
+body.profileMode .item.isSelected.isSpecial{
+  box-shadow:
+    0 0 0 1.5px rgba(80,240,230,.55) !important,
+    0 0 24px rgba(80,240,230,.50) !important,
+    0 16px 48px rgba(0,0,0,.60) !important;
+}
+
 
 /* === Unify left panel background (top edit area, list, footer) === */
 :root{
@@ -1227,6 +1269,36 @@ body::before, body::after,
 }
 
 
+
+/* === My Special One (only when Special + Favorite) === */
+#profileView .specialOneBadge{
+  display:none;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid rgba(80,240,230,.30);
+  background: rgba(80,240,230,.10);
+  color: rgba(200,255,250,.98);
+  box-shadow: 0 0 18px rgba(80,240,230,.18);
+  margin-top:6px;
+  white-space:nowrap;
+}
+#profileView.isSpecialProfile .specialOneBadge{ display:inline-flex; }
+
+/* === Favorite top band on profile image row (gold) === */
+#profileView.isFavProfile 
+
+/* === Special top band overrides Favorite when both === */
+#profileView.isSpecialProfile 
+
+/* === Fix: don't stack two bands (gold + turquoise) on the profile.
+   We use ONE band only (the bottom band on .profileHead) and simply recolor it.
+   So the top band on the image row is disabled entirely. === */
+#profileView 
+
+
 /* === Favorite indicator in visit card (gold strip + badge) === */
 #profileView .favBadge{
   display:none;
@@ -1250,7 +1322,7 @@ body::before, body::after,
   content:"";
   position:absolute;
   left:12px; right:12px; bottom:-1px;
-  height:2px;
+  height: var(--special-band-height);
   background: linear-gradient(90deg, transparent, rgba(255,215,140,.55), transparent);
 }
 
@@ -1259,15 +1331,15 @@ body::before, body::after,
 .leaflet-popup.normPopup .leaflet-popup-content-wrapper{
   background: rgba(14,18,28,.96);
   color: rgba(255,255,255,.92);
-  border:1px solid rgba(160,200,255,.42);
+  border:1px solid rgba(80,255,190,.46);
   box-shadow:
     0 0 0 1px rgba(160,200,255,.20) inset,
-    0 0 34px rgba(120,170,255,.55),
+    0 0 46px rgba(80,255,190,.40),
     0 28px 90px rgba(0,0,0,.62);
 }
 .leaflet-popup.normPopup .leaflet-popup-tip{
   background: rgba(14,18,28,.96);
-  box-shadow: 0 0 34px rgba(120,170,255,.45);
+  box-shadow: 0 0 46px rgba(80,255,190,.36);
 }
 .leaflet-popup.favPopup .leaflet-popup-content-wrapper{
   background: rgba(16,14,18,.96);
@@ -1303,45 +1375,29 @@ body::before, body::after,
   border-color: rgba(255,215,140,.65) !important;
   box-shadow:
     0 0 0 1px rgba(255,215,140,.30) inset,
-    0 0 44px rgba(255,210,120,.75),
-    0 34px 110px rgba(0,0,0,.68) !important;
+    0 0 68px rgba(255,210,120,.85),
+    0 36px 120px rgba(0,0,0,.70) !important;
 }
 .leaflet-popup.favPopup .leaflet-popup-tip{
-  box-shadow: 0 0 44px rgba(255,210,120,.65) !important;
+  box-shadow: 0 0 68px rgba(255,210,120,.72) !important;
 }
 
 .leaflet-popup.normPopup .leaflet-popup-content-wrapper{
   border-color: rgba(140,190,255,.55) !important;
   box-shadow:
     0 0 0 1px rgba(140,190,255,.25) inset,
-    0 0 40px rgba(120,170,255,.65),
-    0 32px 100px rgba(0,0,0,.65) !important;
+    0 0 64px rgba(120,170,255,.78),
+    0 34px 112px rgba(0,0,0,.68) !important;
 }
 .leaflet-popup.normPopup .leaflet-popup-tip{
-  box-shadow: 0 0 40px rgba(120,170,255,.55) !important;
+  box-shadow: 0 0 64px rgba(120,170,255,.65) !important;
 }
 
 
 /* === Fav band (visit card): thicker gradient like reference === */
 #profileView .profileHead{ position: relative; overflow: hidden; }
 
-#profileView.isFavProfile .profileHead::before{
-  content:"";
-  position:absolute;
-  left:-20px; right:-20px; top:0;
-  height:12px;
-  background: linear-gradient(
-    90deg,
-    rgba(255,215,140,0) 0%,
-    rgba(255,215,140,.25) 18%,
-    rgba(255,215,140,.75) 50%,
-    rgba(255,215,140,.25) 82%,
-    rgba(255,215,140,0) 100%
-  );
-  filter: blur(.2px);
-  opacity: 1;
-  pointer-events:none;
-}
+#profileView.isFavProfile .profileHead
 /* keep the bottom strip too, slightly wider */
 #profileView.isFavProfile .profileHead::after{
   height:5px !important;
@@ -1367,6 +1423,27 @@ body::before, body::after,
     rgba(255,215,140,0) 100%
   ) !important;
   box-shadow: 0 0 14px rgba(255,215,140,.45) !important;
+}
+
+/* === Special One: recolor the SAME bottom band to turquoise (no second bar) === */
+#profileView.isSpecialProfile .profileHead{
+  border-bottom-color: rgba(80,240,230,.22) !important;
+}
+#profileView.isSpecialProfile .profileHead::after{
+  content:"";
+  position:absolute;
+  left:12px; right:12px;
+  bottom:-1px;
+  height: var(--special-band-height);
+  background: linear-gradient(
+    90deg,
+    rgba(80,240,230,0) 0%,
+    rgba(80,240,230,.25) 20%,
+    rgba(80,240,230,.95) 50%,
+    rgba(0,200,190,.25) 80%,
+    rgba(80,240,230,0) 100%
+  ) !important;
+  box-shadow: 0 0 16px rgba(80,240,230,.55) !important;
 }
 
 
@@ -1529,7 +1606,7 @@ body::before, body::after,
   justify-content:center;
   gap:8px;
   width:42px;
-  height:42px;
+  height: var(--special-band-height);
   padding:0 !important;
 }
 #distanceFloatingBtn.active{
@@ -1567,7 +1644,7 @@ body::before, body::after,
 }
 .distanceMid{
   width: 16px;
-  height: 16px;
+  height: var(--special-band-height);
   border-radius: 999px;
   border: 2px dashed rgba(220,90,90,.65);
   background: rgba(10,13,20,.15);
@@ -1600,7 +1677,7 @@ body::before, body::after,
   content:"";
   position:absolute;
   left:50%; top:50%;
-  width:4px; height:4px;
+  width:4px; height: var(--special-band-height);
   transform: translate(-50%,-50%);
   border-radius:999px;
   background: rgba(255,180,180,.95);
@@ -1665,7 +1742,7 @@ body::before, body::after,
 /* numbered markers for point 1 / 2 */
 .distPointBadge{
   width: 18px;
-  height: 18px;
+  height: var(--special-band-height);
   border-radius: 999px;
   background: rgba(220,90,90,.25);
   border: 2px solid rgba(255,150,150,.85);
@@ -1682,7 +1759,7 @@ body::before, body::after,
 /* Nearest place marker (same red family) */
 .nearestPlacePin{
   width: 14px;
-  height: 14px;
+  height: var(--special-band-height);
   border-radius: 999px;
   border: 2px solid rgba(255,150,150,.9);
   background: rgba(220,90,90,.35);
@@ -1693,7 +1770,7 @@ body::before, body::after,
 /* Midpoint pin marker (styled like map pin, red glow) */
 .midpointPin{
   width: 22px;
-  height: 22px;
+  height: var(--special-band-height);
   background: linear-gradient(180deg, rgba(255,120,120,.95), rgba(180,60,60,.95));
   border-radius: 50% 50% 50% 0;
   transform: rotate(-45deg);
@@ -1706,7 +1783,7 @@ body::before, body::after,
 .midpointPin::after{
   content:"";
   width: 8px;
-  height: 8px;
+  height: var(--special-band-height);
   background: rgba(10,10,10,.65);
   position:absolute;
   top:50%;
@@ -1714,6 +1791,619 @@ body::before, body::after,
   transform: translate(-50%,-50%) rotate(45deg);
   border-radius: 999px;
 }
+
+
+/* === Special person (turquoise) === */
+.item.isSpecial{
+  border-color: rgba(90, 235, 230, .22);
+}
+.item.isSpecial::before{
+  background:
+    radial-gradient(420px 120px at 18% 0%, rgba(80, 235, 230, .12), transparent 62%),
+    radial-gradient(520px 160px at 68% 10%, rgba(40, 190, 220, .08), transparent 65%);
+}
+.item.isSelected.isSpecial{
+  border-color: rgba(90, 235, 230, .42);
+  box-shadow:
+    0 0 0 2px rgba(80,240,230,.45),
+    0 26px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(90, 235, 230, .14) inset,
+    0 0 72px rgba(80,240,230,.36);
+}
+@keyframes specialPulse{
+  0%,100%{ filter: drop-shadow(0 0 0 rgba(80,235,230,0)); opacity:.0; }
+  50%{ filter: drop-shadow(0 0 16px rgba(80,235,230,.55)); opacity:.75; }
+}
+.item.isSelected.isSpecial::after{
+  opacity: 1 !important;
+  background: radial-gradient(520px 170px at 50% 0%, rgba(80,235,230,.18), transparent 65%);
+  animation: specialPulse 2.4s ease-in-out infinite;
+}
+
+/* inline "special" button next to favorite star */
+.diamondInline{
+  margin-left: 8px;
+  border: 1px solid rgba(90,235,230,.28);
+  background: rgba(8,12,20,.35);
+  color: rgba(160,255,250,.95);
+  border-radius: 10px;
+  padding: 2px 7px;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+.diamondInline.on{
+  border-color: rgba(90,235,230,.55);
+  background: rgba(80,235,230,.10);
+  box-shadow: 0 0 18px rgba(80,235,230,.22);
+}
+
+
+/* === Special ∞ animation (turquoise, always running) === */
+.diamondInline.specialOn{
+  position: relative;
+  color: rgba(120,255,245,.98) !important;
+  text-shadow: 0 0 10px rgba(80,240,230,.55), 0 0 18px rgba(80,240,230,.25);
+}
+.diamondInline.specialOn::before{
+  content:"";
+  position:absolute;
+  inset:-6px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, rgba(120,255,245,.35), rgba(0,0,0,0) 60%);
+  filter: blur(4px);
+  opacity: .85;
+  animation: spGlow 1.8s ease-in-out infinite;
+  pointer-events:none;
+}
+.diamondInline.specialOn{
+  animation: spFloat 2.2s ease-in-out infinite;
+}
+@keyframes spGlow{
+  0%,100%{ transform: scale(.9); opacity:.55; }
+  50%{ transform: scale(1.08); opacity: 1; }
+}
+@keyframes spFloat{
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-1.5px); }
+}
+
+
+/* === Special (turquoise) list highlight (like fav) === */
+.item.isSpecial{
+  border-color: rgba(80,240,230,.22);
+}
+.item.isSpecial::before{
+  background:
+    radial-gradient(420px 120px at 18% 0%, rgba(80,240,230,.14), transparent 62%),
+    radial-gradient(520px 160px at 68% 10%, rgba(0,200,190,.10), transparent 66%);
+}
+.item.isSpecial.isSelected{
+  box-shadow: 0 22px 70px rgba(0,0,0,.55), 0 0 26px rgba(80,240,230,.35);
+  border-color: rgba(80,240,230,.38);
+}
+
+
+/* === Special (turquoise) profile background + top band === */
+.isSpecialProfile::before{
+  background:
+    radial-gradient(980px 700px at 22% 10%, rgba(80,240,230,.18), transparent 64%),
+    radial-gradient(860px 620px at 78% 18%, rgba(0,200,190,.12), transparent 66%),
+    radial-gradient(900px 700px at 55% 95%, rgba(80,240,230,.10), transparent 62%);
+}
+
+
+/* === Special (turquoise) map popup glow === */
+.leaflet-popup.specialPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(80,240,230,.38);
+  box-shadow: 0 0 0 1px rgba(80,240,230,.18) inset, 0 0 120px rgba(80,240,230,.85), 0 38px 140px rgba(0,0,0,.74);
+}
+.leaflet-popup.specialPopup .leaflet-popup-tip{
+  background: rgba(12,18,34,.96);
+  box-shadow: 0 0 120px rgba(80,240,230,.80);
+}
+
+
+/* === Mi Vida (Special) list aura + subtle motion === */
+.item.isSpecial{ position: relative; border-color: rgba(80,240,230,.28) !important; }
+.item.isSpecial::before{
+  content:""; position:absolute; inset:-1px; border-radius:22px; pointer-events:none;
+  background:
+    radial-gradient(520px 160px at 20% 0%, rgba(80,240,230,.22), transparent 62%),
+    radial-gradient(560px 200px at 70% 10%, rgba(0,200,190,.16), transparent 66%),
+    radial-gradient(520px 200px at 55% 110%, rgba(80,240,230,.12), transparent 70%);
+  opacity:.85; animation:mividaAura 4.2s ease-in-out infinite;
+}
+.item.isSpecial::after{
+  content:""; position:absolute; inset:-2px; border-radius:24px; pointer-events:none;
+  box-shadow: 0 0 0 1px rgba(80,240,230,.10) inset, 0 0 22px rgba(80,240,230,.28), 0 0 50px rgba(80,240,230,.14);
+  opacity:.55; animation:mividaGlow 2.8s ease-in-out infinite;
+}
+@keyframes mividaAura{ 0%,100%{ transform:translateY(0); opacity:.75;} 50%{ transform:translateY(-2px); opacity:.98;} }
+@keyframes mividaGlow{ 0%,100%{ opacity:.45;} 50%{ opacity:.8;} }
+
+
+/* === Mi Vida badge + special top band === */
+.badge.specialBadge{
+  display:inline-flex; align-items:center; gap:.45rem;
+  padding:.38rem .75rem; border-radius:999px;
+  border:1px solid rgba(80,240,230,.35);
+  background: rgba(10,18,22,.55);
+  color: rgba(170,255,248,.95);
+  box-shadow: 0 0 16px rgba(80,240,230,.18);
+  font-weight:600;
+}
+
+
+/* === Popup wrappers: make each clearly different === */
+.leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(120,160,255,.16);
+  box-shadow: 0 0 0 1px rgba(120,160,255,.14) inset, 0 0 64px rgba(120,170,255,.70), 0 34px 112px rgba(0,0,0,.68);
+}
+.leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(255,210,120,.22);
+  box-shadow: 0 0 0 1px rgba(255,210,120,.18) inset, 0 0 68px rgba(255,210,120,.78), 0 36px 120px rgba(0,0,0,.70);
+}
+.leaflet-popup.specialPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(80,240,230,.32);
+  box-shadow: 0 0 0 1px rgba(80,240,230,.16) inset, 0 0 78px rgba(80,240,230,.70), 0 34px 120px rgba(0,0,0,.70);
+}
+
+
+
+/* === Stronger profile (visit card) glow to match Favorite style === */
+#profileView{
+  position: relative;
+}
+#profileView.isFavProfile{
+  border: 1px solid rgba(255,215,140,.28) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 0 0 1px rgba(255,215,140,.14) inset,
+    0 0 54px rgba(255,215,140,.22),
+    0 28px 90px rgba(0,0,0,.62) !important;
+}
+#profileView.isFavProfile .profileCard{
+  border-color: rgba(255,215,140,.18) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 0 26px rgba(255,215,140,.14) !important;
+}
+#profileView.isFavProfile .profileHead
+
+/* =========================================================
+   My Special One: use SAME bar as Favorite (recolored),
+   no extra second bar, and Special wins over Favorite.
+   ========================================================= */
+#profileView.isSpecialProfile 
+
+#profileView.isSpecialProfile .profileHead::after{
+  height:5px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(80,240,230,.35) 15%,
+    rgba(80,240,230,.95) 50%,
+    rgba(80,240,230,.35) 85%,
+    transparent 100%
+  ) !important;
+  box-shadow: 0 0 18px rgba(80,240,230,.55) !important;
+}
+
+/* ensure Special still wins even when Favorite is also present */
+#profileView.isFavProfile.isSpecialProfile .profileHead::after{
+  height:5px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(80,240,230,.35) 15%,
+    rgba(80,240,230,.95) 50%,
+    rgba(80,240,230,.35) 85%,
+    transparent 100%
+  ) !important;
+  box-shadow: 0 0 18px rgba(80,240,230,.55) !important;
+}
+
+
+/* =========================================================
+   v93.1 FIX (clean + reliable):
+   - Profile band uses ONE unified ::after base that is explicitly enabled
+     for Favorite OR Special (so Special-only never collapses to a 1px line)
+   - When both are active, Special wins (turquoise) and band is nudged
+     slightly down so it never covers the Local Time line.
+   - Thickness: Special band a bit thicker than before, and even thicker
+     when BOTH Favorite + Special are active (like your first screenshot).
+   ========================================================= */
+
+#profileView .profileHead{
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Base band (disabled by default) */
+#profileView .profileHead::after{
+  content: "" !important;
+  position: absolute !important;
+  left: -18px !important;   /* a touch wider */
+  right: -18px !important;
+  bottom: -7px !important;
+  height: 18px !important;  /* default thickness once enabled */
+  border-radius: 0 0 8px 8px !important;
+  pointer-events: none !important;
+  display: none !important;
+  opacity: 1 !important;
+}
+
+/* Favorite band (gold) */
+#profileView.isFavProfile .profileHead::after{
+  display: block !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.30) 18%,
+    rgba(255,215,140,.92) 50%,
+    rgba(255,215,140,.30) 82%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 22px rgba(255,215,140,.55) !important;
+}
+
+/* Special band (turquoise) — MUST work even when Favorite is OFF */
+#profileView.isSpecialProfile .profileHead::after{
+  display: block !important;
+  background: linear-gradient(
+    90deg,
+    rgba(80,240,230,0) 0%,
+    rgba(80,240,230,.32) 18%,
+    rgba(80,240,230,.98) 50%,
+    rgba(0,200,190,.32) 82%,
+    rgba(80,240,230,0) 100%
+  ) !important;
+  box-shadow: 0 0 26px rgba(80,240,230,.70) !important;
+}
+
+/* Both active: Special wins + a bit thicker and slightly lower */
+#profileView.isFavProfile.isSpecialProfile .profileHead::after{
+  height: 22px !important;   /* thicker like screenshot 1 */
+  bottom: -10px !important;  /* lower so it never touches Local Time */
+  box-shadow: 0 0 30px rgba(80,240,230,.78) !important;
+}
+
+/* Also give the content a hair more breathing room only when both badges show */
+#profileView.isBothProfileBadges .profileTop{
+  margin-top: 2px !important;
+}
+
+/* Special-only: kill any 1px divider illusion */
+#profileView.isSpecialProfile .profileHead{
+  border-bottom-color: transparent !important;
+}
+
+
+
+/* Special only */
+.profile-card.is-special:not(.is-favorite) .special-band,
+.profile-card.is-special:not(.is-favorite)
+
+/* Special + Favorite */
+.profile-card.is-special.is-favorite .special-band,
+.profile-card.is-special.is-favorite
+
+
+:root{
+  --band-height-special-only: 7px;
+  --band-height-special-favorite: 3px;
+}
+
+/* base band */
+.special-band{
+  height: var(--band-height-special-only);
+  box-shadow: 0 0 6px rgba(64,224,208,.55);
+}
+
+/* Special + Favorite → thinner & calmer */
+.profile-card.is-special.is-favorite .special-band{
+  height: var(--band-height-special-favorite) !important;
+  box-shadow: 0 0 3px rgba(64,224,208,.45);
+}
+
+
+/* =========================================================
+   SINGLE PROFILE TOP BAND (FINAL)
+   - One band only
+   - Same thin thickness for Favorite & Special
+   - No layout / image shifting
+   ========================================================= */
+
+#profileView{ --profile-top-band-h: 4px; } /* thin, unified */
+
+
+
+/* Favorite (gold) */
+
+
+/* Special (with or without Favorite) */
+
+
+
+/* Force SAME band height for Favorite, Special, and both */
+
+
+
+/* =========================================================
+   UNIFIED PROFILE TOP BAND (FINAL ALIGNMENT)
+   - Same thickness for Favorite, Special, and both
+   ========================================================= */
+#profileView{
+  --profile-top-band-h: 4px;
+}
+
+#profileView .profileTop::after{
+  display:block !important;
+  height: var(--profile-top-band-h) !important;
+}
+
+/* Restore Favorite badge */
+
+
+
+/* =========================================================
+   SAFE OVERRIDE (v106)
+   Unify band thickness + effects across states.
+   - Do not touch layout.
+   - Keep Favorite badge.
+   - One band (.profileTop::after) with same height for all.
+   - Favorite uses gold palette
+   - Special-only & Fav+Special use turquoise palette but same effect style.
+   ========================================================= */
+
+#profileView{
+  --profile-top-band-h: 4px;
+}
+
+/* Make sure the band exists and is always the same thickness */
+#profileView .profileTop::after{
+  display:block !important;
+  top:0 !important;
+  height: var(--profile-top-band-h) !important;
+  opacity:.98 !important;
+  border-radius: 0 0 14px 14px !important;
+  pointer-events:none !important;
+}
+
+/* FAVORITE (gold) - reference effects */
+#profileView.isFavProfile:not(.isSpecialProfile) .profileTop::after{
+  background: linear-gradient(90deg,
+    rgba(0,0,0,0),
+    rgba(255,220,120,1),
+    rgba(255,195,90,.95),
+    rgba(0,0,0,0)
+  ) !important;
+  filter: drop-shadow(0 0 10px rgba(255,210,110,.22)) !important;
+}
+
+/* SPECIAL (turquoise) - same style, only color changed */
+#profileView.isSpecialProfile .profileTop::after{
+  background: linear-gradient(90deg,
+    rgba(0,0,0,0),
+    rgba(80,240,230,1),
+    rgba(0,200,190,.95),
+    rgba(0,0,0,0)
+  ) !important;
+  filter: drop-shadow(0 0 10px rgba(80,240,230,.22)) !important;
+}
+
+/* Ensure Favorite badge is shown like before */
+
+
+
+/* =========================================================
+   v107: EFFECTS MATCH FAVORITE (not thickness)
+   Copy Favorite visual effects to Special states.
+   Only change gold -> turquoise colors.
+   Applies to LIST items (not layout).
+   ========================================================= */
+
+/* Special-only: same structure as Favorite */
+.item.isSelected.isSpecial{
+  border-color: rgba(90, 235, 230, .28) !important;
+  box-shadow:
+    0 26px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(90, 235, 230, .12) inset,
+    0 0 60px rgba(80,240,230,.26) !important;
+}
+
+/* Favorite + Special: same as Favorite too (but turquoise wins) */
+.item.isSelected.isFav.isSpecial{
+  border-color: rgba(90, 235, 230, .28) !important;
+  box-shadow:
+    0 26px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(90, 235, 230, .12) inset,
+    0 0 60px rgba(80,240,230,.26) !important;
+}
+
+/* Radial highlight: copy Favorite ::after behavior */
+.item.isSelected.isSpecial::after,
+.item.isSelected.isFav.isSpecial::after{
+  opacity:.78 !important;
+  background: radial-gradient(circle, rgba(80,240,230,.42), transparent 60%) !important;
+  animation: none !important;
+}
+
+/* Name glow: copy Favorite behavior */
+.item.isSelected.isSpecial .ename,
+.item.isSelected.isFav.isSpecial .ename{
+  text-shadow: 0 0 18px rgba(80,240,230,.18) !important;
+}
+
+
+/* =========================================================
+   BADGES INLINE (v108)
+   - Show Special + Favorite badges
+   - Same row, Special first, Favorite second
+   ========================================================= */
+
+/* Ensure badge container is inline */
+#profileView .badgeRow,
+#profileView .badges,
+#profileView .tagRow{
+  display:flex !important;
+  align-items:center;
+  gap:8px;
+}
+
+/* Ensure both badges are visible */
+#profileView .specialBadge,
+
+
+/* Order: Special first, Favorite second */
+#profileView .specialBadge{ order: 1; }
+#profileView .favBadge{ order: 2; }
+
+
+/* =========================================================
+   BADGES REFINED (v109)
+   - Smaller badges
+   - Special first, Favorite second
+   - Favorite has its own golden glow badge again
+   ========================================================= */
+
+/* Badge row */
+#profileView .badgeRow,
+#profileView .badges,
+#profileView .tagRow{
+  display:flex !important;
+  align-items:center;
+  gap:6px;
+}
+
+/* Base badge size (smaller) */
+#profileView .specialBadge,
+#profileView .favBadge{
+  font-size: 12px !important;
+  padding: 4px 8px !important;
+  border-radius: 999px;
+  line-height: 1;
+}
+
+/* Special badge (turquoise, calm) */
+#profileView .specialBadge{
+  background: rgba(80,240,230,.12);
+  border: 1px solid rgba(80,240,230,.45);
+  color: rgb(160,245,235);
+  box-shadow: 0 0 10px rgba(80,240,230,.25);
+  order: 1;
+}
+
+/* Favorite badge (gold, glowing, own identity) */
+
+
+
+/* =========================================================
+   BADGES INLINE & COMPACT (v110)
+   - Badges only as wide as text
+   - Special + Favorite on SAME line
+   ========================================================= */
+
+/* Force badge row inline */
+#profileView .badgeRow,
+#profileView .badges,
+#profileView .tagRow{
+  display:flex !important;
+  flex-wrap: nowrap !important;
+  align-items:center;
+  gap:6px;
+}
+
+/* Compact badges: width fits text */
+#profileView .specialBadge,
+
+
+/* Ensure Favorite is NOT pushed to new line */
+#profileView .favBadge{
+  margin-top: 0 !important;
+}
+
+
+/* =========================================================
+   BADGES EQUAL HEIGHT & FULL TEXT (v111)
+   - Special badge same height as Favorite
+   - Full text always visible
+   ========================================================= */
+
+/* Unify badge height & vertical alignment */
+#profileView .specialBadge,
+
+
+/* Ensure Special badge is not visually smaller */
+#profileView .specialBadge{
+  line-height: 1.1 !important;
+}
+
+
+/* =========================================================
+   v112 BADGE ROW FIX
+   - Special + Favorite in ONE line
+   - Badges are compact (fit text)
+   - Local Time stays below badges (profileSub)
+   ========================================================= */
+#profileView .profileTitle{ gap:4px; }
+#profileView .badgeRow{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:nowrap;
+}
+#profileView .specialOneBadge,
+#profileView .favBadge{
+  margin-top:0 !important;
+  margin-left:0 !important;
+  width:auto !important;
+  display:none;               /* default hidden; toggled by profile state */
+  align-items:center;
+  gap:6px;
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:12px;
+  line-height:1;
+  white-space:nowrap;
+}
+
+/* show rules */
+#profileView.isSpecialProfile .specialOneBadge{ display:inline-flex; }
+#profileView.isFavProfile .favBadge{ display:inline-flex; }
+
+/* Special styling */
+#profileView .specialOneBadge{
+  border:1px solid rgba(80,240,230,.35);
+  background: rgba(10,18,22,.55);
+  color: rgba(200,255,250,.98);
+  box-shadow: 0 0 18px rgba(80,240,230,.18);
+  font-weight:600;
+}
+/* Favorite styling */
+#profileView .favBadge{
+  border:1px solid rgba(255,215,140,.22);
+  background: rgba(255,215,140,.10);
+  color: rgba(255,235,190,.95);
+  box-shadow: 0 0 18px rgba(255,215,140,.16);
+  font-weight:600;
+}
+
+
+/* =========================================================
+   v113: Badge visibility fix
+   - Favorite badge ONLY when profile is actually favorite
+   - Special badge ONLY when profile is actually special
+   ========================================================= */
+
+/* Default: hide both */
+#profileView .favBadge{ display:none !important; }
+#profileView .specialBadge{ display:none !important; }
+
+/* Show when flags are present */
+#profileView.isFavProfile .favBadge{ display:inline-flex !important; }
+#profileView.isSpecialProfile .specialBadge{ display:inline-flex !important; }
 
 </style>
 </head>
@@ -1889,7 +2579,11 @@ body::before, body::after,
     <div id="profileView">
       <div class="profileHead">
         <div class="profileTitle">
-          <b id="profileName">—</b><div class="favBadge">⭐ Favorite</div>
+          <b id="profileName">—</b>
+          <div class="badgeRow">
+            <div class="specialOneBadge">♾️ My Special One</div>
+            <div class="favBadge">⭐ Favorite</div>
+          </div>
           <span id="profileSub">—</span>
         </div>
         <div class="btns" style="gap:8px; justify-content:flex-end;">
@@ -2551,6 +3245,23 @@ function updateBirthdayCountdownUI(){
   let entries = load();
   const entryById = new Map();
   let selectedId = null;
+
+// Special person (only one) stored locally
+const SPECIAL_STORAGE_KEY = "friendsmap_special_id";
+let specialId = (()=>{ try{ return localStorage.getItem(SPECIAL_STORAGE_KEY) || ""; }catch{ return ""; } })();
+
+function setSpecial(id){
+  const next = (specialId === id) ? "" : id; // toggle off if same
+  specialId = next;
+  try{
+    if(next) localStorage.setItem(SPECIAL_STORAGE_KEY, next);
+    else localStorage.removeItem(SPECIAL_STORAGE_KEY);
+  }catch{}
+  // refresh list + profile (if open)
+  try{ renderList(); }catch{}
+  try{ if(selectedId) buildProfile(entries.find(x=>x.id===selectedId)); }catch{}
+  toast(next ? "Set as special ∞" : "Special cleared");
+}
   let searchQuery = "";
   let activeFilter = "all"; // all | fav | now | maybe | sleep | bday | friend
   let _markerColorCounter = 0;
@@ -2602,7 +3313,7 @@ function updateBirthdayCountdownUI(){
           // rebind popup to update className (fav vs normal)
           const isOpen = m.isPopupOpen && m.isPopupOpen();
           try{ m.unbindPopup(); }catch{}
-          m.bindPopup(markerPopupHTML(e), { className: (e.fav ? "favPopup" : "normPopup") });
+          m.bindPopup(markerPopupHTML(e), { className: ((specialId && e.id===specialId ) ? "specialPopup" : (e.fav ? "favPopup" : "normPopup")) });
           if(isOpen){ try{ m.openPopup(); }catch{} }
         }
       }
@@ -3108,6 +3819,23 @@ const img = entry.imageData
     return icon;
   }
 
+  // Special pin for "Nearest place" (same style as pins, red glow)
+  const _nearestPlaceIconCache = new Map();
+  function nearestPlaceIcon(fill="#ef4444"){
+    if(_nearestPlaceIconCache.has(fill)) return _nearestPlaceIconCache.get(fill);
+    // reuse the glowing pin SVG used for My Location
+    const url = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(myLocPinSVG(fill));
+    const icon = L.icon({
+      iconUrl: url,
+      iconSize: [28, 42],
+      iconAnchor: [14, 42],
+      popupAnchor: [0, -38]
+    });
+    _nearestPlaceIconCache.set(fill, icon);
+    return icon;
+  }
+
+
   function pinIconForEntry(e){
     const h = heartForTimezone(e.tz);
     const c = colorForHeart(h);
@@ -3160,7 +3888,7 @@ const img = entry.imageData
 
       const m = L.marker([e.lat, e.lon], { icon: pinIconForEntry(e) }).addTo(markerLayer);
       m.__entryId = e.id;
-      m.bindPopup(markerPopupHTML(e), {maxWidth: 360, autoPan: false, className: (e.fav ? "favPopup" : "normPopup")});
+      m.bindPopup(markerPopupHTML(e), {maxWidth: 360, autoPan: false, className: ((specialId && e.id===specialId ) ? "specialPopup" : (e.fav ? "favPopup" : "normPopup"))});
       m.on('click', (ev) => {
         // prevent other click handlers (e.g. from clusters) from interfering
         try{ ev.originalEvent && ev.originalEvent.stopPropagation && ev.originalEvent.stopPropagation(); }catch{}
@@ -3229,8 +3957,10 @@ const img = entry.imageData
 
     $("profileName").textContent = entry.nickname || "—";
     $("profileView").classList.toggle("isFavProfile", !!entry.fav);
+    $("profileView").classList.toggle("isSpecialProfile", !!specialId && entry.id===specialId );
 
-    $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}` : (entry.connection ? escapeHTML(entry.connection) : "—");
+        $("profileView").classList.toggle("isBothProfileBadges", !!entry.fav && !!specialId && entry.id===specialId );
+$("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}` : (entry.connection ? escapeHTML(entry.connection) : "—");
 
     const imgBlock = entry.imageData
       ? `
@@ -3251,7 +3981,7 @@ const img = entry.imageData
       `
       : `
         <div class="profileTop">
-          <div class="avatarPh" style="width:110px; height:110px; border-radius:16px; font-size:22px;">👤</div>
+          <div class="avatarPh" style="width:110px; height: var(--special-band-height); border-radius:16px; font-size:22px;">👤</div>
           <div style="display:flex; flex-direction:column; gap:8px; min-width:0;">
             <div class="profileCard">
               <div class="k">Current</div>
@@ -3308,6 +4038,7 @@ const img = entry.imageData
 
   function openProfile(id){
     const e = entries.find(x=>x.id===id);
+    selectedId = id; // keep in sync so Special/Favorite changes refresh the open profile
     if(!e) return;
 
     // Mark profile as favorite/non-favorite for gold vs cool accent background
@@ -3666,7 +4397,7 @@ const img = entry.imageData
   }
 
   // ==============================
-  // List (with thumbnails + 📖 profile)
+  // List (with thumbnails + 🪪 profile)
   // ==============================
   
   function countryGuess(e){
@@ -3738,6 +4469,11 @@ function renderList(){
 
     // Sorting
     const sorted = [...filtered].sort((a,b)=>{
+      const aS = (specialId && a.id===specialId);
+      const bS = (specialId && b.id===specialId );
+      if(aS !== bS) return aS ? -1 : 1;
+      const aF = !!a.fav, bF = !!b.fav;
+      if(aF !== bF) return aF ? -1 : 1;
       // Birthday sort: nearest next birthday first
       if(activeFilter === "bday"){
         const da = daysUntilNextBirthday(a.birthdate);
@@ -3780,6 +4516,7 @@ function renderList(){
       // Selected highlight
       li.classList.toggle("isSelected", e.id === selectedId);
       li.classList.toggle("isFav", !!e.fav);
+      li.classList.toggle("isSpecial", !!specialId && e.id === specialId );
 
 
       li.dataset.id = e.id;
@@ -3826,6 +4563,7 @@ function renderList(){
             <span class="heart js-heart" data-tz="${escapeHTML(e.tz || "")}">${heartForTimezone(e.tz)}</span>
             <span class="ename">${escapeHTML(e.nickname)}</span>
             <button class="starInline js-star ${e.fav ? "on" : ""}" title="${e.fav ? "Unfavorite" : "Favorite"}" type="button">${e.fav ? "⭐" : "☆"}</button>
+            <button class="diamondInline js-special ${ (specialId && e.id===specialId) ? "on specialOn" : "" }" title="${ (specialId && e.id===specialId) ? "Unset special" : "Set as special" }" type="button">${ (specialId && e.id===specialId) ? "∞" : "◈" }</button>
           </div>
 
           ${activeFilter === "bday" && (() => {
@@ -3862,7 +4600,7 @@ function renderList(){
         <div class="actions">
           ${avatar}
           <button class="iconBtn js-pin" title="Center on map" type="button">📍</button>
-          <button class="iconBtn js-book" title="Open profile" type="button">📖</button>
+          <button class="iconBtn js-book" title="Open profile" type="button">🪪</button>
           <button class="secondary js-open" type="button">Open</button>
         </div>
       `;
@@ -3882,9 +4620,15 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
       li.querySelector(".js-star").addEventListener("click", (ev)=>{
         ev.stopPropagation();
         e.fav = !e.fav;
-        e.updatedAt = new Date().toISOString();
+                e.updatedAt = new Date().toISOString();
         save();
         toast(e.fav ? "Added to favorites ⭐" : "Removed from favorites");
+      });
+
+      // Special (turquoise) - only one person globally
+      li.querySelector(".js-special").addEventListener("click", (ev)=>{
+        ev.stopPropagation();
+        setSpecial(e.id);
       });
 
       li.addEventListener("dblclick", ()=> selectEntry(e.id));
@@ -4312,8 +5056,9 @@ function hookDistPopupEvents(){
       try{ if(distNearestPlaceMarker) map.removeLayer(distNearestPlaceMarker); }catch{}
       if(placeObj && isFinite(placeObj.placeLat) && isFinite(placeObj.placeLon)){
         distNearestPlaceMarker = L.marker([placeObj.placeLat, placeObj.placeLon],{
-          interactive:false,
-          icon: L.divIcon({ className:'', html:`<div class="nearestPlacePin"></div>`, iconSize:[14,14], iconAnchor:[7,7] })
+          interactive: false,
+          icon: nearestPlaceIcon('#ef4444'),
+          zIndexOffset: 1200
         }).addTo(map);
       }
         setTimeout(hookDistPopupEvents, 0);
