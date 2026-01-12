@@ -101,6 +101,40 @@
       outline:none;
     }
     textarea{min-height: var(--special-band-height); resize: vertical}
+
+/* Notes tabs */
+.notesTabsBar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin: 0 0 8px;
+}
+.notesTabsWidget{ margin-top:2px; }
+.notesTabBtn{
+  padding:6px 10px;
+  font-size:12px;
+  border-radius:999px;
+  background: rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  color: var(--muted);
+  cursor:pointer;
+  user-select:none;
+  transition:.15s ease;
+  white-space:nowrap;
+}
+.notesTabBtn:hover{ background: rgba(255,255,255,.10); transform:none; }
+.notesTabBtn.active{
+  color: var(--text);
+  background: rgba(16,185,129,.12);
+  border-color: rgba(16,185,129,.32);
+  box-shadow: 0 0 0 1px rgba(16,185,129,.08) inset;
+}
+.notesPane{ display:none; }
+.notesPane.active{ display:block; }
+.notesTabsWidget .noteDisplay{ white-space: pre-line; font-size:12px; line-height:1.35; color: var(--text); }
+.notesTabsWidget .noteEmpty{ color: var(--muted); }
+.notesHelp{ font-size:12px; color: var(--muted); margin-top:6px; line-height:1.35; }
     .hint{font-size:12px; color: var(--muted); line-height:1.35;}
 
     .zodiacBox{
@@ -282,6 +316,8 @@
     }
     .profileCard .k{font-size:12px; color:var(--muted); margin-bottom:4px}
     .profileCard .v{font-size:13px; color:var(--text); white-space:pre-wrap; word-break:break-word}
+    /* Notes widget inside profile card should not preserve leading template whitespace */
+    .profileCard .v.hasNotesTabs{ white-space: normal; }
 
     .profileImg{
       width:110px;
@@ -2498,12 +2534,36 @@ body::before, body::after,
         </div>
       </div>
 
-      <div class="row">
-        <div>
-          <label>Notes</label>
-          <textarea id="notes" placeholder="Preferences, reminders, links, key info…"></textarea>
-        </div>
-      </div>
+<div class="row">
+  <div>
+    <label>Notes</label>
+
+    <div class="notesTabsBar" role="tablist" aria-label="Notes categories">
+      <button class="notesTabBtn active" type="button" data-notes-tab="important" role="tab" aria-selected="true">🚨 Important</button>
+      <button class="notesTabBtn" type="button" data-notes-tab="work" role="tab" aria-selected="false">💼 Work & 🚀 Projects</button>
+      <button class="notesTabBtn" type="button" data-notes-tab="food" role="tab" aria-selected="false">🍕 Food & More</button>
+      <button class="notesTabBtn" type="button" data-notes-tab="other" role="tab" aria-selected="false">📦 Other</button>
+    </div>
+
+    <div class="notesPane active" data-notes-pane="important" role="tabpanel">
+      <textarea id="notesImportant" placeholder="Things that are urgent, critical, or should not be forgotten"></textarea>
+    </div>
+
+    <div class="notesPane" data-notes-pane="work" role="tabpanel">
+      <textarea id="notesWork" placeholder="Work-related tasks, projects and ideas"></textarea>
+    </div>
+
+    <div class="notesPane" data-notes-pane="food" role="tabpanel">
+      <textarea id="notesFood" placeholder="Food and drinks, restaurant ideas, and places worth trying"></textarea>
+    </div>
+
+    <div class="notesPane" data-notes-pane="other" role="tabpanel">
+      <textarea id="notesOther" placeholder="Miscellaneous notes"></textarea>
+    </div>
+
+    <div class="notesHelp">Tip: Existing old notes (from earlier versions) will automatically appear under <b>📦 Other</b>.</div>
+  </div>
+</div>
 
       <div class="btns">
         <button id="saveBtn">Save / Set marker</button>
@@ -2618,6 +2678,160 @@ body::before, body::after,
   const NOTES_LOCK_KEY = LS_KEY + "__notes_hidden";
   let notesHidden = (localStorage.getItem(NOTES_LOCK_KEY) === "1");
   const $ = (id) => document.getElementById(id);
+
+// ==========================
+// Notes Tabs (Categories)
+// ==========================
+const NOTES_TAB_KEYS = ["important","work","food","other"];
+const NOTES_TAB_LABELS = {
+  important: "🚨 Important",
+  work: "💼 Work & 🚀 Projects",
+  food: "🍕 Food & More",
+  other: "📦 Other"
+};
+
+function getNotesTabsFromUI(){
+  return {
+    important: ($("notesImportant")?.value || "").trim(),
+    work: ($("notesWork")?.value || "").trim(),
+    food: ($("notesFood")?.value || "").trim(),
+    other: ($("notesOther")?.value || "").trim()
+  };
+}
+
+function setNotesTabsToUI(obj){
+  const o = obj || {};
+  if($("notesImportant")) $("notesImportant").value = (o.important ?? "");
+  if($("notesWork")) $("notesWork").value = (o.work ?? "");
+  if($("notesFood")) $("notesFood").value = (o.food ?? "");
+  if($("notesOther")) $("notesOther").value = (o.other ?? "");
+}
+
+function normalizeNotesTabs(entry){
+  // Backwards compatible:
+  // - If entry.notesTabs exists, use it
+  // - Else, put entry.notes (string) into "other"
+  const tabs = (entry && typeof entry === "object") ? (entry.notesTabs || null) : null;
+  if(tabs && typeof tabs === "object"){
+    return {
+      important: String(tabs.important || ""),
+      work: String(tabs.work || ""),
+      food: String(tabs.food || ""),
+      other: String(tabs.other || "")
+    };
+  }
+  const legacy = entry && (entry.notes != null) ? String(entry.notes) : "";
+  return { important:"", work:"", food:"", other: legacy };
+}
+
+function buildNotesAggregate(tabs){
+  const t = tabs || {};
+  const parts = [];
+  for(const k of NOTES_TAB_KEYS){
+    const v = String(t[k] || "").trim();
+    if(!v) continue;
+    parts.push(`[${NOTES_TAB_LABELS[k]}]\n${v}`);
+  }
+  return parts.join("\n\n");
+}
+
+function notesTabsToHTML(tabs, {compact=false} = {}){
+  const t = tabs || {};
+  const chunks = [];
+  for(const k of NOTES_TAB_KEYS){
+    const v = String(t[k] || "").trim();
+    if(!v) continue;
+    const title = NOTES_TAB_LABELS[k];
+    const body = escapeHTML(v);
+    chunks.push(`<div class="pline pnotes"><b>${escapeHTML(title)}:</b><br>${body}</div>`);
+    if(compact && chunks.length >= 2) break; // keep popups short-ish
+  }
+  return chunks.join("");
+}
+
+// Reusable interactive tabs widget for displaying notes in Profile + Map Popup
+function notesTabsWidgetHTML(tabs, groupId){
+  const t = tabs || {};
+  // pick first non-empty tab as default, else important
+  let active = "important";
+  for(const k of NOTES_TAB_KEYS){
+    if(String(t[k] || "").trim()) { active = k; break; }
+  }
+
+  const btns = NOTES_TAB_KEYS.map(k=>{
+    const isOn = (k === active);
+    return `<button class="notesTabBtn${isOn?" active":""}" type="button" data-notes-group="${escapeHTML(groupId)}" data-notes-tab="${k}" role="tab" aria-selected="${isOn?"true":"false"}">${escapeHTML(NOTES_TAB_LABELS[k])}</button>`;
+  }).join("");
+
+  const panes = NOTES_TAB_KEYS.map(k=>{
+    const isOn = (k === active);
+    const v = String(t[k] || "").trim();
+    const body = v ? `<div class="noteDisplay">${escapeHTML(v)}</div>` : `<div class="noteDisplay noteEmpty">—</div>`;
+    return `<div class="notesPane${isOn?" active":""}" data-notes-group="${escapeHTML(groupId)}" data-notes-pane="${k}" role="tabpanel">${body}</div>`;
+  }).join("");
+
+  // IMPORTANT: avoid leading newlines/spaces because some containers use white-space: pre-wrap
+  return `<div class="notesTabsWidget" data-notes-widget="${escapeHTML(groupId)}"><div class="notesTabsBar" role="tablist" aria-label="Notes categories">${btns}</div>${panes}</div>`;
+}
+
+function activateNotesGroup(groupId, key){
+  const btns = Array.from(document.querySelectorAll(`.notesTabBtn[data-notes-group="${CSS.escape(groupId)}"]`));
+  const panes = Array.from(document.querySelectorAll(`.notesPane[data-notes-group="${CSS.escape(groupId)}"]`));
+  for(const b of btns){
+    const on = b.dataset.notesTab === key;
+    b.classList.toggle("active", on);
+    b.setAttribute("aria-selected", on ? "true" : "false");
+  }
+  for(const p of panes){
+    const on = p.dataset.notesPane === key;
+    p.classList.toggle("active", on);
+  }
+}
+
+// Delegated handler for ANY notes tabs widget (profile + popup)
+document.addEventListener("click", (e)=>{
+  const btn = e.target.closest?.(".notesTabBtn[data-notes-group]");
+  if(!btn) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const groupId = btn.dataset.notesGroup;
+  const key = btn.dataset.notesTab;
+  if(!groupId || !key) return;
+  activateNotesGroup(groupId, key);
+});
+
+function initNotesTabsUI(){
+  const bar = document.querySelector(".notesTabsBar");
+  if(!bar) return;
+
+  const btns = Array.from(bar.querySelectorAll(".notesTabBtn"));
+  const panes = Array.from(document.querySelectorAll(".notesPane"));
+
+  function activate(key){
+    for(const b of btns){
+      const on = b.dataset.notesTab === key;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+    }
+    for(const p of panes){
+      const on = p.dataset.notesPane === key;
+      p.classList.toggle("active", on);
+    }
+  }
+
+  btns.forEach(b=>{
+    b.addEventListener("click", ()=>{
+      activate(b.dataset.notesTab);
+    });
+  });
+
+  // Default active
+  activate("important");
+}
+
+// Initialize immediately (script is placed after the Notes markup)
+initNotesTabsUI();
+
 
   function toast(msg){
     const t = $("toast");
@@ -3249,6 +3463,18 @@ function updateBirthdayCountdownUI(){
 // Special person (only one) stored locally
 const SPECIAL_STORAGE_KEY = "friendsmap_special_id";
 let specialId = (()=>{ try{ return localStorage.getItem(SPECIAL_STORAGE_KEY) || ""; }catch{ return ""; } })();
+// If specialId points to a deleted/overwritten entry, clear it.
+ensureSpecialValid();
+
+function ensureSpecialValid(){
+  if(!specialId) return;
+  const exists = entries.some(e=>e && e.id === specialId);
+  if(!exists){
+    // Entry was overwritten/removed → clear special so it doesn't "randomly" disappear later
+    specialId = "";
+    try{ localStorage.removeItem(SPECIAL_STORAGE_KEY); }catch{}
+  }
+}
 
 function setSpecial(id){
   const next = (specialId === id) ? "" : id; // toggle off if same
@@ -3292,18 +3518,30 @@ function setSpecial(id){
     const cb = $("notesLock");
     if(cb) cb.checked = !!notesHidden;
   }
-  function popupNotesHTML(notes){
-    const notesRaw = String(notes || "");
-    if(!notesRaw) return "";
+  function popupNotesWidgetHTML(entry){
+    const safeTabs = (entry && entry.notesTabs && typeof entry.notesTabs === "object")
+      ? { important:String(entry.notesTabs.important||""), work:String(entry.notesTabs.work||""), food:String(entry.notesTabs.food||""), other:String(entry.notesTabs.other||"") }
+      : normalizeNotesTabs(entry || {});
+
+    const hasAny = Object.values(safeTabs).some(v=>String(v||"").trim());
+    if(!hasAny) return "";
     if(notesHidden) return `<div class="pline pnotes"><b>Notes:</b> 🔒 Hidden</div>`;
-    const shortNotes = notesRaw.length > 260 ? (notesRaw.slice(0, 260) + "…") : notesRaw;
-    return `<div class="pline pnotes"><b>Notes:</b><br>${escapeHTML(shortNotes)}</div>`;
+
+    const gid = `popup-${entry.id || "unknown"}`;
+    return `<div class="pline" style="margin-top:6px;"><b>Notes</b></div>${notesTabsWidgetHTML(safeTabs, gid)}`;
   }
-  function notesCardHTML(notes){
-    const notesRaw = String(notes || "");
-    if(!notesRaw) return "";
+
+  function notesCardTabsHTML(entry){
+    const safeTabs = (entry && entry.notesTabs && typeof entry.notesTabs === "object")
+      ? { important:String(entry.notesTabs.important||""), work:String(entry.notesTabs.work||""), food:String(entry.notesTabs.food||""), other:String(entry.notesTabs.other||"") }
+      : normalizeNotesTabs(entry || {});
+
+    const hasAny = Object.values(safeTabs).some(v=>String(v||"").trim());
+    if(!hasAny) return "";
     if(notesHidden) return `<div class="profileCard"><div class="k">Notes</div><div class="v">🔒 Hidden</div></div>`;
-    return `<div class="profileCard"><div class="k">Notes</div><div class="v">${escapeHTML(notesRaw)}</div></div>`;
+
+    const gid = `profile-${entry.id || "unknown"}`;
+    return `<div class="profileCard"><div class="k">Notes</div><div class="v hasNotesTabs">${notesTabsWidgetHTML(safeTabs, gid)}</div></div>`;
   }
   function refreshMarkerPopups(){
     try{
@@ -3725,7 +3963,7 @@ async function geocodeAddress(addr){
       entry.otherLangs ? `<div class="pline"><b>Other:</b> ${escapeHTML(entry.otherLangs)}</div>` : ""
     ].join("");
 
-    const notes = popupNotesHTML(entry.notes);
+    const notes = popupNotesWidgetHTML(entry);
 
 const img = entry.imageData
       ? `
@@ -4025,7 +4263,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
       entry.connection ? `<div class="profileCard"><div class="k">Connection</div><div class="v">${escapeHTML(entry.connection)}</div></div>` : "",
       entry.nativeLang ? `<div class="profileCard"><div class="k">Native language</div><div class="v">${escapeHTML(entry.nativeLang)}</div></div>` : "",
       entry.otherLangs ? `<div class="profileCard"><div class="k">Other languages</div><div class="v">${escapeHTML(entry.otherLangs)}</div></div>` : "",
-      notesCardHTML(entry.notes)
+      notesCardTabsHTML(entry)
     ].filter(Boolean).join("");
 
     $("profileBody").innerHTML = `
@@ -4129,7 +4367,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     $("otherLangs").value = "";
     $("timezone").value = "";
     $("coords").value = "";
-    $("notes").value = "";
+    setNotesTabsToUI({important:"",work:"",food:"",other:""});
     $("deleteBtn").disabled = true;
 
     $("removeImgBtn").dataset.remove = "0";
@@ -4161,7 +4399,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     $("coords").value = (typeof entry.lat === "number" && typeof entry.lon === "number")
       ? `${entry.lat.toFixed(6)}, ${entry.lon.toFixed(6)}`
       : "";
-    $("notes").value = entry.notes ?? "";
+    setNotesTabsToUI(normalizeNotesTabs(entry));
 
     $("deleteBtn").disabled = false;
 
@@ -4236,7 +4474,8 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     const nativeLang = $("nativeLang").value.trim();
     const otherLangs = $("otherLangs").value.trim();
     const tz = $("timezone").value.trim();
-    const notes = $("notes").value.trim();
+    const notesTabs = getNotesTabsFromUI();
+    const notes = buildNotesAggregate(notesTabs);
 
     if(!nickname){ toast("Please enter a nickname"); return; }
     if(!tz){ toast("Please enter an IANA timezone"); return; }
@@ -4293,6 +4532,8 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
           ...prev,
           nickname, birthdate, birthplace, currentAddress, metOn,
           nativeLang, otherLangs, tz, notes,
+        notesTabs,
+          notesTabs,
           lat: Number(lat), lon: Number(lon),
           imageData: newImageData,
           updatedAt: now
@@ -4304,6 +4545,8 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
         id: uuid(),
         nickname, birthdate, birthplace, currentAddress, metOn,
         nativeLang, otherLangs, tz, notes,
+        notesTabs,
+          notesTabs,
         fav: false,
         lat: Number(lat), lon: Number(lon),
         imageData: pendingImageData ?? null,
@@ -4318,9 +4561,17 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
 
     save();
     if(deleteAfterOverwriteId && deleteAfterOverwriteId !== selectedId){
+      // If the deleted entry was the Special one, transfer Special to the kept/merged entry.
+      if(specialId && specialId === deleteAfterOverwriteId){
+        specialId = selectedId;
+        try{ localStorage.setItem(SPECIAL_STORAGE_KEY, specialId); }catch{}
+      }
       entries = entries.filter(x=>x.id!==deleteAfterOverwriteId);
       save();
     }
+
+    // Safety: if special points to an entry that no longer exists, clear it.
+    ensureSpecialValid();
 
     // Remove temporary pin
     try{ if(tempPin){ tempLayer.removeLayer(tempPin); tempPin = null; } }catch{}
@@ -4336,9 +4587,15 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     const e = entries.find(x=>x.id===selectedId);
     const ok = confirm(`Really delete this entry?\n\n${e?.nickname ?? ""}`);
     if(!ok) return;
-    entries = entries.filter(x=>x.id!==selectedId);
+    const deletedId = selectedId;
+    entries = entries.filter(x=>x.id!==deletedId);
     selectedId = null;
     save();
+    if(specialId && specialId === deletedId){
+      specialId = "";
+      try{ localStorage.removeItem(SPECIAL_STORAGE_KEY); }catch{}
+    }
+    ensureSpecialValid();
     clearForm();
     toast("Deleted");
   }
@@ -4697,7 +4954,30 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
         tz: x.tz ? String(x.tz) : "",
         fav: !!x.fav,
         imageData: x.imageData ? String(x.imageData) : null,
-        notes: x.notes ? String(x.notes) : "",
+        notesTabs: (()=>{
+          // Keep old data working: if only "notes" exists, put it into 📦 Other
+          if(x.notesTabs && typeof x.notesTabs === "object"){
+            return {
+              important: String(x.notesTabs.important || ""),
+              work: String(x.notesTabs.work || ""),
+              food: String(x.notesTabs.food || ""),
+              other: String(x.notesTabs.other || "")
+            };
+          }
+          const legacy = x.notes ? String(x.notes) : "";
+          return { important:"", work:"", food:"", other: legacy };
+        })(),
+        notes: (()=>{
+          const t = (x.notesTabs && typeof x.notesTabs === "object")
+            ? {
+              important: String(x.notesTabs.important || ""),
+              work: String(x.notesTabs.work || ""),
+              food: String(x.notesTabs.food || ""),
+              other: String(x.notesTabs.other || "")
+            }
+            : { important:"", work:"", food:"", other: (x.notes ? String(x.notes) : "") };
+          return buildNotesAggregate(t);
+        })(),
         lat: Number(x.lat),
         lon: Number(x.lon),
         createdAt: x.createdAt ? String(x.createdAt) : new Date().toISOString(),
