@@ -2553,6 +2553,486 @@ body::before, body::after,
   margin-top:8px;
 }
 
+
+/* =============================
+   MOBILE PACK (Handy Optimierung)
+   ============================= */
+@media (max-width: 560px){
+  header{
+    padding: 14px 12px 8px;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .wrap{
+    padding: 0 12px 12px;
+    gap: 12px;
+  }
+  #map{ height: 48vh; min-height: 340px; }
+  .list{ max-height: 46vh; }
+  .item{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .actions{ justify-content: flex-start; }
+  .nick{
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: clip;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .infoBlock{
+    white-space: normal;
+    line-height: 1.25;
+  }
+  #profileView .badgeRow,
+  #profileView .badges,
+  #profileView .tagRow{
+    flex-wrap: wrap !important;
+    row-gap: 6px;
+  }
+  .notesTabs{
+    margin: 6px 0 6px;
+    gap: 6px;
+  }
+  .notesTabs .tabBtn{
+    padding: 8px 10px;
+  }
+  .colorInputRow{
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .smallBtn{ width: 100%; }
+}
+@media (max-width: 380px){
+  #map{ height: 44vh; min-height: 320px; }
+  .list{ max-height: 44vh; }
+  .item{ padding: 12px 12px; }
+}
+
+
+
+/* =============================
+   MOBILE FORM BEAUTIFY (Editor oben)
+   ============================= */
+@media (max-width: 560px){
+  /* Formular-Card angenehmer und “appiger” */
+  .panel{
+    padding: 14px;
+  }
+
+  /* Felder untereinander, mehr Luft */
+  .row{
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* iOS/Android: 16px verhindert Auto-Zoom beim Tippen */
+  input, textarea, select{
+    font-size: 16px;
+    padding: 12px 12px;
+    border-radius: 14px;
+  }
+
+  textarea{
+    min-height: 140px;
+  }
+
+  /* Buttons immer griffbereit (sticky) */
+  .btns{
+    position: sticky;
+    bottom: 10px;
+    z-index: 25;
+    padding: 10px;
+    border-radius: 16px;
+    background: rgba(9,12,20,.82);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.10);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  /* Save prominent */
+  #saveBtn{
+    grid-column: 1 / -1;
+  }
+  .btns button{
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Notes Tabs: horizontal scroll statt quetschen */
+  .notesTabs{
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+  .notesTabs::-webkit-scrollbar{ height: 6px; }
+}
+
+
+/* =============================
+   MOBILE FORM BEAUTIFY (v3)
+   Makes the top edit area cleaner & easier on phones
+   ============================= */
+@media (max-width: 560px){
+  header{ padding: 12px 12px 10px !important; }
+  .hdrRight{ width:100%; text-align:left; }
+  .hdrRight .hdrTitle{ display:none !important; }
+  .hdrSub{ font-size:12px !important; opacity:.9; line-height:1.25; }
+
+  .panel{ padding: 14px 12px !important; }
+  .panel .row{
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-bottom: 12px !important;
+  }
+  .panel .row:first-of-type{ grid-template-columns: 1fr !important; }
+
+  .panel label{
+    font-size: 12px !important;
+    letter-spacing: .2px;
+    margin-bottom: 6px !important;
+    opacity: .92;
+  }
+  .panel input,
+  .panel select,
+  .panel textarea{
+    width: 100%;
+    font-size: 16px !important;
+    padding: 12px 14px !important;
+    border-radius: 14px !important;
+  }
+  input[type="date"]{ min-height: 46px; }
+
+  .hint, .bdayCountdown{
+    font-size: 12px !important;
+    line-height: 1.25;
+    margin-top: 6px !important;
+  }
+
+  .panel .row .smallBtn,
+  .panel .row button.smallBtn{
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 380px){
+  .panel{ padding: 12px 10px !important; }
+  .panel input, .panel select, .panel textarea{ padding: 11px 12px !important; }
+}
+
+
+/* =============================
+   MOBILE MAP POPUP TUNING
+   ============================= */
+@media (max-width: 560px){
+  .leaflet-popup-content-wrapper{
+    max-width: 260px;
+    padding: 8px;
+  }
+  .leaflet-popup-content{
+    margin: 6px;
+    font-size: 13px;
+    line-height: 1.25;
+  }
+  .popup-image-wrap{
+    position: relative;
+  }
+  .popup-card-btn{
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(20,20,24,0.75);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .popup-card-btn:hover{
+    background: rgba(30,30,36,0.9);
+  }
+}
+
+
+/* =============================
+   TWEAKS: Smaller color pills + prettier notes tabs
+   ============================= */
+
+/* Color pills (Map + Profile) a bit smaller */
+.colorPillGlass{
+  padding: 8px 12px !important;
+  font-size: 11px !important;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+.colorPillGlass .xBtn{
+  width: 18px !important;
+  height: 18px !important;
+  margin-left: 8px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+}
+
+/* Notes tabs: more "segmented / glass" and nicer on mobile */
+.notesTabs{
+  gap: 6px !important;
+}
+.notesTabs .tabBtn{
+  padding: 7px 10px !important;
+  font-size: 12px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,0.055) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.22);
+  backdrop-filter: blur(8px);
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+.notesTabs .tabBtn:active{
+  transform: scale(0.98);
+}
+.notesTabs .tabBtn.active{
+  background: rgba(56,189,248,0.20) !important;
+  border-color: rgba(56,189,248,0.40) !important;
+  box-shadow: 0 10px 26px rgba(56,189,248,0.12), 0 10px 24px rgba(0,0,0,0.22);
+}
+
+/* Mobile: tabs scroll horizontally instead of wrapping into ugly multi-lines */
+@media (max-width: 560px){
+  .notesTabs{
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+  .notesTabs::-webkit-scrollbar{ display:none; } /* Chrome/Safari */
+  .notesTabs .tabBtn{
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+
+
+/* =============================
+   FIX: Nothing should overflow on 390px
+   ============================= */
+
+/* Always include padding/border in width calculations */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Avoid horizontal scrolling */
+html, body { overflow-x: hidden; }
+.wrap, main, header, .panel, .list, #profileView { max-width: 100%; }
+
+/* Ensure all images / cards never exceed container */
+img, video, canvas, svg { max-width: 100%; height: auto; }
+
+/* Wrap long text gracefully */
+.nick, .infoBlock, .meta, .metaLine, .small, .statLine, .notePreview, .popup *{
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Buttons/rows: allow wrapping instead of pushing layout wider */
+.actions, .badgeRow, .badges, .tagRow, .pillRow, .notesTabs{
+  max-width: 100%;
+}
+
+/* Some flex rows may force overflow; allow wrap on narrow screens */
+@media (max-width: 560px){
+  .row{ flex-wrap: wrap !important; }
+  .row > *{ min-width: 0; } /* critical for flex text overflow */
+  .actions{ flex-wrap: wrap; gap: 8px; }
+  .actions > *{ min-width: 0; }
+
+  /* Inputs: full width, no weird min widths */
+  input, select, textarea{
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+
+/* =============================
+   MOBILE WIDTH CLIP FIXES (390px)
+   ============================= */
+@media (max-width: 560px){
+
+  /* Cards should not clip inner content/shadows on mobile */
+  .card{ overflow: visible !important; }
+
+  /* Zodiac line in editor: allow wrapping + slightly smaller */
+  #zodiacLine{
+    display:block;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    line-height: 1.25;
+    font-size: 12px;
+  }
+
+  /* Profile cards value lines: wrap instead of overflowing */
+  #profileView .profileCard .v{
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.25;
+    font-size: 13px;
+    min-width: 0;
+  }
+
+  /* Notes tabs: keep inside the card, no clipping at right edge */
+  .notesTabs{
+    padding-right: 10px;
+  }
+
+  /* Buttons inside rows shouldn't force width */
+  .notesTabs .tabBtn{
+    max-width: 100%;
+  }
+}
+
+
+/* =============================
+   LAYOUT SHIFT FIX (Profile open makes page "wider")
+   - reserve scrollbar gutter to prevent width jump
+   - kill any hidden overflow widths on mobile
+   ============================= */
+html{
+  scrollbar-gutter: stable both-edges; /* Firefox/Chromium: prevents width jump */
+}
+body{
+  overflow-y: scroll; /* always reserve vertical scrollbar space */
+}
+
+/* Safety: nothing in views should exceed viewport */
+#listView, #profileView, #mapView, .wrap, main, header{
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Leaflet popup / dist info must not enforce min-width on mobile */
+@media (max-width: 560px){
+  .leaflet-popup-content{
+    min-width: 0 !important;
+    max-width: 260px !important;
+  }
+  .distInfo{
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}
+
+
+/* =============================
+   FIX: Width jump when opening Profile (nested scrollbars / gutter)
+   ============================= */
+
+/* Do NOT reserve both edges (causes big right gutter when scrollbar appears) */
+html{ scrollbar-gutter: stable; }
+
+/* Mobile: avoid nested scroll container in #profileView that triggers width recalculation */
+@media (max-width: 560px){
+  #profileView{
+    overflow: visible !important;
+    height: auto !important;
+    max-width: 100%;
+  }
+  #mapView{
+    height: auto !important;
+  }
+  .rightView{
+    height: auto !important;
+    overflow: visible !important;
+  }
+}
+
+
+/* =============================
+   FIX: Clicking Visitenkarte causes horizontal overflow (nowrap text)
+   ============================= */
+@media (max-width: 560px){
+
+  /* Allow long info/zodiac strings to wrap instead of forcing wider layout */
+  .infoBlock,
+  .zodiacItem,
+  #zodiacLine,
+  #profileView .profileTitle,
+  #profileView .profileTitle b,
+  #profileView .profileCard .v{
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Badges: prevent them from pushing width; keep single line with ellipsis if needed */
+  #profileView .badgeRow,
+  #profileView .badges,
+  #profileView .tagRow{
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  #profileView .specialOneBadge,
+  #profileView .favBadge{
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* As a final safety net: no element may exceed viewport width */
+  #profileView *{
+    max-width: 100%;
+  }
+}
+
+
+/* =============================
+   FIX: Opening Profile causes whole page to overflow (glows/shadows)
+   Reason: .card overflow: visible makes box-shadows count into scrollWidth in Firefox.
+   Solution: keep cards clipped, and handle tabs/lines inside.
+   ============================= */
+@media (max-width: 560px){
+
+  /* Revert card overflow to avoid horizontal scroll from glows */
+  .card,
+  .panel,
+  .profileCard,
+  #profileView{
+    overflow: hidden !important;
+  }
+
+  /* Keep notes tabs inside the card without needing overflow:visible */
+  .notesTabs{
+    padding-right: 14px !important;
+  }
+
+  /* Ensure inner content doesn't sit flush to the edge */
+  .card .sectionTitle,
+  .card .row,
+  .card .notesTabs,
+  .card .pillRow{
+    max-width: 100%;
+  }
+}
+
 </style>
 </head>
 
@@ -3516,17 +3996,65 @@ function setSpecial(id){
   };
 
   function normalizeNotes(notes){
-    // Backward-compat: old saves had a single string notes
-    if(notes == null) return { important:"", work:"", food:"", other:"" };
+    // Backward-compat:
+    // - very old saves used a single string
+    // - some saves used different keys like "projects", "others", or capitalized labels
+    const empty = { important:"", work:"", food:"", other:"" };
+    if(notes == null) return { ...empty };
     if(typeof notes === "string"){
-      return { important:"", work:"", food:"", other: notes };
+      return { ...empty, other: notes };
     }
-    const out = { important:"", work:"", food:"", other:"" };
+    // Defensive: if it's not a plain object, fall back
+    if(typeof notes !== "object") return { ...empty };
+
+    const out = { ...empty };
+
+    // helper to append (keeps existing content)
+    const append = (key, text, prefix=null) => {
+      const t = String(text||"").trim();
+      if(!t) return;
+      const add = prefix ? `${prefix}\n${t}` : t;
+      out[key] = out[key] ? (out[key].trim() + "\n\n" + add) : add;
+    };
+
+    // map legacy keys -> current tabs
+    const mapKey = (rawKey) => {
+      const k = String(rawKey||"").trim().toLowerCase();
+      if(!k) return null;
+      if(k === "important" || k === "imp" || k === "urgent") return "important";
+      if(k === "work" || k === "job") return "work";
+      if(k === "projects" || k === "project" || k === "proj") return "work"; // merged into Work & Projects
+      if(k === "food" || k === "foods" || k === "meal" || k === "meals") return "food";
+      if(k === "other" || k === "others" || k === "misc" || k === "miscellaneous") return "other";
+      return null;
+    };
+
+    // If the object already matches current schema, prefer it
     for(const k of NOTES_CATS){
       if(typeof notes[k] === "string") out[k] = notes[k];
     }
+
+    // Merge any legacy keys that are present but not in current schema
+    for(const [rawKey, val] of Object.entries(notes)){
+      if(typeof val !== "string") continue;
+      const mapped = mapKey(rawKey);
+      if(!mapped) {
+        // unknown category: keep it under Other with a header so nothing is lost
+        append("other", val, `— ${rawKey} —`);
+        continue;
+      }
+      // If it's a legacy key different from current or the target is empty, merge safely
+      if(!(rawKey in out) || !out[mapped]){
+        append(mapped, val);
+      }else if(rawKey.toLowerCase() !== mapped){
+        // if both exist, append legacy into target
+        append(mapped, val, `— ${rawKey} —`);
+      }
+    }
+
     return out;
   }
+
 
   function getNotesFromForm(){
     const o = {
@@ -4205,8 +4733,9 @@ async function geocodeAddress(addr){
 
 const img = entry.imageData
       ? `
-        <div class="thumbRow">
+        <div class="thumbRow popup-image-wrap">
           <img class="thumb js-open-img" alt="${escapeHTML(entry.nickname)}" src="${entry.imageData}" />
+          <button class="popup-card-btn" type="button" title="Open card" onclick="openProfile(this.closest('.popup')?.dataset.entryid); event.stopPropagation();">🪪</button>
           <div class="thumbHint">Click to enlarge</div>
         </div>
       `
