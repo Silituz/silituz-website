@@ -2431,6 +2431,168 @@ body::before, body::after,
 .notesPanel{
   min-height: 92px;
 }
+
+/* Cycle tracker (local-only) */
+.cyclePanel{
+  min-height: 280px;
+  padding:12px;
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:14px;
+  background: rgba(255,255,255,0.04);
+}
+.cycleGrid{ display:flex; flex-direction:column; gap:10px; }
+.cycleRow{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+@media (max-width: 520px){
+  .cycleRow{ grid-template-columns: 1fr; }
+}
+.miniLabel{
+  font-size:12px;
+  opacity:.86;
+  margin-bottom:6px;
+}
+.cycleActions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.cycleHint{
+  font-size:12px;
+  opacity:.86;
+  line-height:1.35;
+}
+.cycleLegend{
+  display:inline-flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-left:8px;
+}
+.cycleLegend .leg{
+  display:inline-flex;
+  gap:6px;
+  align-items:center;
+  padding:4px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+}
+.cycleLegend .legPeriod{ box-shadow: 0 0 0 1px rgba(255,80,120,0.15), 0 0 16px rgba(255,80,120,0.10); }
+.cycleLegend .legPred{ box-shadow: 0 0 0 1px rgba(255,80,120,0.10), 0 0 16px rgba(255,80,120,0.06); opacity:.9; }
+.cycleLegend .legFert{ box-shadow: 0 0 0 1px rgba(16,185,129,0.14), 0 0 16px rgba(16,185,129,0.08); }
+.cycleLegend .legOvu{ box-shadow: 0 0 0 1px rgba(251,191,36,0.14), 0 0 16px rgba(251,191,36,0.08); }
+
+.cycleSummary{
+  font-size:12px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.18);
+}
+.cycleSummary b{ font-weight:700; }
+
+.cycleList{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.cycleChip{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  font-size:12px;
+}
+.cycleChip .x{
+  cursor:pointer;
+  padding:2px 6px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+}
+.cycleChip .x:hover{ background: rgba(255,255,255,0.08); }
+
+.cycleCalWrap{
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:14px;
+  padding:10px;
+  background: rgba(0,0,0,0.12);
+}
+.cycleCalHdr{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+.cycleMonthLabel{
+  font-weight:700;
+  letter-spacing:.3px;
+  font-size:13px;
+  opacity:.95;
+}
+.cycleWeekdays{
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap:6px;
+  font-size:11px;
+  opacity:.8;
+  margin-bottom:6px;
+  text-align:center;
+}
+.cycleCal{
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap:6px;
+}
+.cDay{
+  position:relative;
+  min-height:34px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.03);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  cursor:pointer;
+  user-select:none;
+}
+.cDay.off{
+  opacity:.45;
+  background: rgba(255,255,255,0.02);
+}
+.cDay.today{
+  box-shadow: 0 0 0 2px rgba(56,189,248,0.18), 0 0 18px rgba(56,189,248,0.12);
+}
+.cDay.period{
+  border-color: rgba(255,80,120,0.35);
+  background: rgba(255,80,120,0.14);
+  box-shadow: 0 0 0 1px rgba(255,80,120,0.10), 0 0 18px rgba(255,80,120,0.10);
+}
+.cDay.pred{
+  border-color: rgba(255,80,120,0.22);
+  background: rgba(255,80,120,0.08);
+}
+.cDay.fert{
+  border-color: rgba(16,185,129,0.26);
+  background: rgba(16,185,129,0.10);
+  box-shadow: 0 0 0 1px rgba(16,185,129,0.08), 0 0 18px rgba(16,185,129,0.08);
+}
+.cDay.ov{
+  border-color: rgba(251,191,36,0.30);
+  background: rgba(251,191,36,0.12);
+}
+.cDay.sel{
+  outline: 2px solid rgba(56,189,248,0.35);
+}
+
 .hidden{ display:none !important; }
 
 /* Favorite Colors input */
@@ -3134,6 +3296,7 @@ html{ scrollbar-gutter: stable; }
             <button type="button" class="tabBtn" data-notes-tab="work">💼 Work &amp; 🚀 Projects</button>
             <button type="button" class="tabBtn" data-notes-tab="food">🍕 Food &amp; More</button>
             <button type="button" class="tabBtn" data-notes-tab="other">📦 Other</button>
+            <button type="button" class="tabBtn" data-notes-tab="cycle">🩸 Cycle</button>
           </div>
 
           <div class="notesPanels">
@@ -3141,6 +3304,64 @@ html{ scrollbar-gutter: stable; }
             <textarea id="notes_work" class="notesPanel hidden" data-notes-panel="work" placeholder="Work-related tasks, projects and ideas"></textarea>
             <textarea id="notes_food" class="notesPanel hidden" data-notes-panel="food" placeholder="Food and drinks, restaurant ideas, places worth trying"></textarea>
             <textarea id="notes_other" class="notesPanel hidden" data-notes-panel="other" placeholder="Miscellaneous notes"></textarea>
+            <div id="cyclePanel" class="notesPanel hidden cyclePanel" data-notes-panel="cycle">
+              <div class="cycleGrid">
+                <div class="cycleRow">
+                  <div>
+                    <div class="miniLabel">Last period start</div>
+                    <input id="cycleStart" type="date" />
+                  </div>
+                  <div>
+                    <div class="miniLabel">Last period end</div>
+                    <input id="cycleEnd" type="date" />
+                  </div>
+                </div>
+
+                <div class="cycleRow">
+                  <div>
+                    <div class="miniLabel">Cycle length (days)</div>
+                    <input id="cycleLen" type="number" min="15" max="60" step="1" placeholder="28" />
+                  </div>
+                  <div>
+                    <div class="miniLabel">Period length (days)</div>
+                    <input id="periodLen" type="number" min="1" max="15" step="1" placeholder="5" />
+                  </div>
+                </div>
+
+                <div class="cycleActions">
+                  <button type="button" id="cycleAddBtn" class="btn secondary smallBtn">Add 🩸 range</button>
+                  <button type="button" id="cycleClearBtn" class="btn danger smallBtn">Clear</button>
+                </div>
+
+                <div class="cycleHint">
+                  Stored locally per person. Predictions are estimates (not medical advice).
+                  <span class="cycleLegend">
+                    <span class="leg legPeriod">🩸 period</span>
+                    <span class="leg legPred">🩸 predicted</span>
+                    <span class="leg legFert">🌿 fertile</span>
+                    <span class="leg legOvu">⭐ ovulation</span>
+                  </span>
+                </div>
+
+                <div class="cycleSummary" id="cycleSummary"></div>
+                <div class="cycleList" id="cycleList"></div>
+
+                <div class="cycleCalWrap">
+                  <div class="cycleCalHdr">
+                    <button type="button" class="btn secondary smallBtn" id="cyclePrev" title="Previous month">‹</button>
+                    <div id="cycleMonthLabel" class="cycleMonthLabel">—</div>
+                    <button type="button" class="btn secondary smallBtn" id="cycleNext" title="Next month">›</button>
+                  </div>
+                  <div class="cycleWeekdays">
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                  </div>
+                  <div class="cycleCal" id="cycleCal"></div>
+                </div>
+
+                <div class="hint">Tip: click days in the calendar to pick start/end.</div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -3892,7 +4113,7 @@ function updateBirthdayCountdownUI(){
   // Data model
   // Entry:
   // { id, nickname, birthdate, birthplace, currentAddress, metOn, connection, connection,
-  //   nativeLang, otherLangs, tz, imageData, notes, lat, lon, createdAt, updatedAt }
+  //   nativeLang, otherLangs, tz, imageData, notes, favoriteColors, cycle, lat, lon, createdAt, updatedAt }
   // ==============================
   let entries = load();
   const entryById = new Map();
@@ -3957,6 +4178,9 @@ function setSpecial(id){
         .map(x=>String(x||"").trim().slice(0,40))
         .filter(Boolean)
         .slice(0,6);
+
+      // normalize cycle tracker
+      e.cycle = normalizeCycle(e.cycle);
 
       e.fav = !!e.fav;
       return e;
@@ -4104,6 +4328,509 @@ function setSpecial(id){
     // default
     switchNotesTab(tabs.parentElement, "important");
   })();
+
+  // ==============================
+  // Cycle Tracker (local-only, per person)
+  // Data shape:
+  // entry.cycle = { periods:[{start:"YYYY-MM-DD", end:"YYYY-MM-DD"}], cycleLength:28, periodLength:5 }
+  // ==============================
+  function clampInt(n, lo, hi, fallback){
+    const x = Number(n);
+    if(!Number.isFinite(x)) return fallback;
+    const r = Math.round(x);
+    return Math.min(hi, Math.max(lo, r));
+  }
+  function isValidFullDate(ymd){
+    const p = parseDateYMD(ymd);
+    return !!(p && p.hasYear && p.year >= 1900 && p.year <= 2100 && p.month >= 1 && p.month <= 12 && p.day >= 1 && p.day <= 31);
+  }
+  function ymdToUTCDate(ymd){
+    const p = parseDateYMD(ymd);
+    if(!p || !p.hasYear) return null;
+    const d = new Date(Date.UTC(p.year, p.month-1, p.day));
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+  function utcDateToYMD(d){
+    const y = d.getUTCFullYear();
+    const m = String(d.getUTCMonth()+1).padStart(2,"0");
+    const day = String(d.getUTCDate()).padStart(2,"0");
+    return `${y}-${m}-${day}`;
+  }
+  function addDaysYMD(ymd, days){
+    const d = ymdToUTCDate(ymd);
+    if(!d) return "";
+    d.setUTCDate(d.getUTCDate() + Number(days||0));
+    return utcDateToYMD(d);
+  }
+  function diffDaysYMD(a, b){
+    const da = ymdToUTCDate(a), db = ymdToUTCDate(b);
+    if(!da || !db) return NaN;
+    return Math.round((db.getTime() - da.getTime()) / 86400000);
+  }
+  function todayYMDUTC(){
+    const now = new Date();
+    const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    return utcDateToYMD(d);
+  }
+
+  function cycleAverages(periods){
+    // periods: [{start,end}] with valid YMD
+    const starts = periods
+      .map(p=>p.start)
+      .filter(isValidFullDate)
+      .map(s=>ymdToUTCDate(s))
+      .filter(Boolean)
+      .sort((a,b)=>a.getTime()-b.getTime());
+    const diffs = [];
+    for(let i=1;i<starts.length;i++){
+      const dd = Math.round((starts[i].getTime() - starts[i-1].getTime())/86400000);
+      if(dd>=15 && dd<=60) diffs.push(dd);
+    }
+    const avgCycle = diffs.length ? Math.round(diffs.reduce((a,b)=>a+b,0)/diffs.length) : null;
+
+    const lens = periods.map(p=>{
+      const s=p.start, e=p.end || p.start;
+      if(!isValidFullDate(s) || !isValidFullDate(e)) return null;
+      const l = diffDaysYMD(s,e) + 1;
+      if(l>=1 && l<=15) return l;
+      return null;
+    }).filter(v=>Number.isFinite(v));
+    const avgPeriod = lens.length ? Math.round(lens.reduce((a,b)=>a+b,0)/lens.length) : null;
+
+    return { avgCycle, avgPeriod };
+  }
+
+  function normalizeCycle(cycle){
+    const out = { periods: [], cycleLength: 28, periodLength: 5 };
+    if(!cycle || typeof cycle !== "object") return { ...out };
+
+    // periods
+    const raw = Array.isArray(cycle.periods) ? cycle.periods : [];
+    const cleaned = [];
+    for(const p of raw){
+      if(!p || typeof p !== "object") continue;
+      let start = String(p.start||"").trim();
+      const e0 = String(p.end||"").trim();
+      if(!isValidFullDate(start)) continue;
+
+      // If end is missing, infer it from the stored periodLength (fallback 5)
+      const plHint = clampInt(cycle.periodLength, 1, 15, 5);
+      let end = isValidFullDate(e0) ? e0 : (addDaysYMD(start, Math.max(0, plHint - 1)) || start);
+
+      // normalize order (in case swapped)
+      if(diffDaysYMD(start, end) < 0){
+        const tmp = end; end = start; start = tmp;
+      }
+      cleaned.push({ start: start, end: end });
+    }
+
+    // sort newest first + de-dup
+    cleaned.sort((a,b)=> (ymdToUTCDate(b.start)?.getTime()||0) - (ymdToUTCDate(a.start)?.getTime()||0));
+    const uniq = [];
+    const seen = new Set();
+    for(const p of cleaned){
+      const k = `${p.start}|${p.end}`;
+      if(seen.has(k)) continue;
+      seen.add(k);
+      uniq.push(p);
+      if(uniq.length>=36) break;
+    }
+    out.periods = uniq;
+
+    const avgs = cycleAverages(out.periods);
+
+    // cycle length / period length
+    const cl = clampInt(cycle.cycleLength, 15, 60, avgs.avgCycle ?? 28);
+    const pl = clampInt(cycle.periodLength, 1, 15, avgs.avgPeriod ?? 5);
+
+    out.cycleLength = cl;
+    out.periodLength = pl;
+
+    return out;
+  }
+
+  function computeCycleInfo(cycle){
+    const c = normalizeCycle(cycle);
+    if(!c.periods.length) return null;
+
+    const last = c.periods[0];
+    const lastStart = last.start;
+    const lastEnd = last.end || last.start;
+
+    const nextStart = addDaysYMD(lastStart, c.cycleLength);
+    const nextEnd = addDaysYMD(nextStart, Math.max(0, c.periodLength-1));
+
+    // Classic estimate: ovulation ≈ cycleLength - 14 (luteal phase ≈ 14 days)
+    const ovu = addDaysYMD(lastStart, Math.max(0, c.cycleLength - 14));
+    const fertStart = addDaysYMD(ovu, -5);
+    const fertEnd = addDaysYMD(ovu, 1);
+
+    const today = todayYMDUTC();
+    const daysToNext = Number.isFinite(diffDaysYMD(today, nextStart)) ? diffDaysYMD(today, nextStart) : null;
+
+    return {
+      cycle: c,
+      lastStart, lastEnd,
+      nextStart, nextEnd,
+      ovulation: ovu,
+      fertileStart: fertStart,
+      fertileEnd: fertEnd,
+      daysToNext
+    };
+  }
+
+  function fmtRangeYMD(a, b){
+    if(!a) return "—";
+    if(!b || a===b) return fmtDate(a);
+    return `${fmtDate(a)} – ${fmtDate(b)}`;
+  }
+
+  function cyclePopupLineHTML(cycle){
+    if(notesHidden) return "";
+    const info = computeCycleInfo(cycle);
+    if(!info) return "";
+    const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? " (overdue?)" : ` (in ${info.daysToNext}d)`);
+    return `<div class="pline"><b>🩸 Next:</b> ${escapeHTML(fmtDate(info.nextStart))}${dn} · <b>🌿 Fertile:</b> ${escapeHTML(fmtDate(info.fertileStart))}–${escapeHTML(fmtDate(info.fertileEnd))} ⭐ ${escapeHTML(fmtDate(info.ovulation))}</div>`;
+  }
+
+  function cycleCardHTML(cycle){
+    if(notesHidden) return "";
+    const info = computeCycleInfo(cycle);
+    if(!info) return "";
+    const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? " (overdue?)" : ` (in ${info.daysToNext} days)`);
+    return `
+      <div class="profileCard">
+        <div class="k">🩸 Cycle</div>
+        <div class="v">
+          Last: <b>${escapeHTML(fmtRangeYMD(info.lastStart, info.lastEnd))}</b><br>
+          Next: <b>${escapeHTML(fmtRangeYMD(info.nextStart, info.nextEnd))}</b>${dn}<br>
+          Fertile: <b>${escapeHTML(fmtRangeYMD(info.fertileStart, info.fertileEnd))}</b> · Ovulation: <b>${escapeHTML(fmtDate(info.ovulation))}</b><br>
+          Avg cycle: ${info.cycle.cycleLength}d · Period: ${info.cycle.periodLength}d
+        </div>
+      </div>
+    `;
+  }
+
+  // ---- Form UI state ----
+  let formCycle = normalizeCycle(null);
+  let cycleViewMonth = null;      // Date (UTC) at first of month
+  let cyclePick = { start:"", end:"" };
+
+  function readCycleNumsIntoState(){
+    const cl = parseInt(($("cycleLen")?.value||"").trim(), 10);
+    const pl = parseInt(($("periodLen")?.value||"").trim(), 10);
+    if(Number.isFinite(cl)) formCycle.cycleLength = clampInt(cl, 15, 60, formCycle.cycleLength);
+    if(Number.isFinite(pl)) formCycle.periodLength = clampInt(pl, 1, 15, formCycle.periodLength);
+  }
+
+  function setCycleToForm(cycle){
+    formCycle = normalizeCycle(cycle);
+    cyclePick = { start:"", end:"" };
+
+    const a = $("cycleStart"); if(a) a.value = "";
+    const b = $("cycleEnd"); if(b) b.value = "";
+    const cl = $("cycleLen"); if(cl) cl.value = String(formCycle.cycleLength || 28);
+    const pl = $("periodLen"); if(pl) pl.value = String(formCycle.periodLength || 5);
+
+    // default month: current month
+    const t = ymdToUTCDate(todayYMDUTC()) || new Date();
+    cycleViewMonth = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), 1));
+
+    updateCycleUI();
+  }
+
+  function clearCycleForm(){
+    formCycle = normalizeCycle(null);
+    cyclePick = { start:"", end:"" };
+    const a = $("cycleStart"); if(a) a.value = "";
+    const b = $("cycleEnd"); if(b) b.value = "";
+    const cl = $("cycleLen"); if(cl) cl.value = "";
+    const pl = $("periodLen"); if(pl) pl.value = "";
+    updateCycleUI();
+  }
+
+  function getCycleFromForm(){
+    // keep periods in formCycle, only update numbers from inputs
+    readCycleNumsIntoState();
+    return normalizeCycle(formCycle);
+  }
+
+  function updateCycleUI(){
+    const sum = $("cycleSummary");
+    const list = $("cycleList");
+    const cal = $("cycleCal");
+    const label = $("cycleMonthLabel");
+    if(!sum || !list || !cal || !label) return;
+
+    // If no entry is selected and the user hasn't added anything, keep it empty
+    const hasAny = (formCycle.periods && formCycle.periods.length) || ($("cycleStart")?.value) || ($("cycleEnd")?.value);
+    const info = computeCycleInfo(formCycle);
+
+    // Summary
+    if(!info){
+      sum.innerHTML = hasAny
+        ? `No recorded period range yet. Add one to get predictions.`
+        : `Add a period range to enable predictions for next period & fertile window.`;
+    }else{
+      const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? " (overdue?)" : ` (in ${info.daysToNext} days)`);
+      sum.innerHTML = `
+        <div><b>Last:</b> ${escapeHTML(fmtRangeYMD(info.lastStart, info.lastEnd))}</div>
+        <div><b>Next:</b> ${escapeHTML(fmtRangeYMD(info.nextStart, info.nextEnd))}${dn}</div>
+        <div><b>Fertile:</b> ${escapeHTML(fmtRangeYMD(info.fertileStart, info.fertileEnd))} · <b>Ovulation:</b> ${escapeHTML(fmtDate(info.ovulation))}</div>
+        <div><b>Cycle:</b> ${info.cycle.cycleLength}d · <b>Period:</b> ${info.cycle.periodLength}d</div>
+      `;
+    }
+
+    // List chips
+    const periods = normalizeCycle(formCycle).periods;
+    if(!periods.length){
+      list.innerHTML = "";
+    }else{
+      list.innerHTML = periods.map(p=>{
+        const txt = fmtRangeYMD(p.start, p.end);
+        return `<span class="cycleChip">🩸 ${escapeHTML(txt)} <span class="x" title="Remove" data-del="${escapeHTML(p.start)}|${escapeHTML(p.end)}">✕</span></span>`;
+      }).join("");
+    }
+
+    // Month label
+    if(!cycleViewMonth){
+      const t = ymdToUTCDate(todayYMDUTC()) || new Date();
+      cycleViewMonth = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), 1));
+    }
+    const monthForLabel = new Date(Date.UTC(cycleViewMonth.getUTCFullYear(), cycleViewMonth.getUTCMonth(), 1));
+    label.textContent = monthForLabel.toLocaleDateString(undefined, { month:"long", year:"numeric" });
+
+    // Calendar
+    renderCycleCalendar(info);
+  }
+
+  function isWithin(ymd, a, b){
+    if(!ymd || !a || !b) return false;
+    const x = diffDaysYMD(a, ymd);
+    const y = diffDaysYMD(ymd, b);
+    return Number.isFinite(x) && Number.isFinite(y) && x>=0 && y>=0;
+  }
+
+  function renderCycleCalendar(info){
+    const cal = $("cycleCal");
+    if(!cal || !cycleViewMonth) return;
+
+    const y = cycleViewMonth.getUTCFullYear();
+    const m = cycleViewMonth.getUTCMonth(); // 0-based
+    const first = new Date(Date.UTC(y, m, 1));
+    const last = new Date(Date.UTC(y, m+1, 0));
+    const daysInMonth = last.getUTCDate();
+
+    // Monday-first: 0..6
+    const dow = (first.getUTCDay() + 6) % 7;
+    const prevLast = new Date(Date.UTC(y, m, 0));
+    const prevDays = prevLast.getUTCDate();
+
+    const today = todayYMDUTC();
+    const periods = normalizeCycle(formCycle).periods;
+
+    const cells = [];
+
+    // leading (prev month)
+    for(let i=0;i<dow;i++){
+      const dayNum = prevDays - (dow - 1 - i);
+      const d = new Date(Date.UTC(y, m-1, dayNum));
+      const ymd = utcDateToYMD(d);
+      cells.push({ ymd, day: dayNum, off:true });
+    }
+    // current month
+    for(let day=1; day<=daysInMonth; day++){
+      const d = new Date(Date.UTC(y, m, day));
+      const ymd = utcDateToYMD(d);
+      cells.push({ ymd, day, off:false });
+    }
+    // trailing (next month) to fill 6 rows (42 cells)
+    while(cells.length < 42){
+      const day = cells.length - (dow + daysInMonth) + 1;
+      const d = new Date(Date.UTC(y, m+1, day));
+      const ymd = utcDateToYMD(d);
+      cells.push({ ymd, day, off:true });
+    }
+
+    const html = cells.map(c=>{
+      const cls = [];
+      if(c.off) cls.push("off");
+      if(c.ymd === today) cls.push("today");
+
+      // Selected range (from inputs/clicks)
+      const s = ($("cycleStart")?.value || "").trim();
+      const e0 = ($("cycleEnd")?.value || "").trim();
+      let e = isValidFullDate(e0) ? e0 : "";
+      if(!e && isValidFullDate(s)){
+        // If no end date is provided, preview a range based on "Period length (days)"
+        const pl = normalizeCycle(formCycle).periodLength || 5;
+        e = addDaysYMD(s, Math.max(0, pl - 1)) || s;
+      }
+      if(isValidFullDate(s) && isValidFullDate(e) && isWithin(c.ymd, s, e)) cls.push("sel");
+
+      // Recorded periods
+      let inRecorded = false;
+      for(const p of periods){
+        if(isWithin(c.ymd, p.start, p.end || p.start)){ inRecorded = true; break; }
+      }
+      if(inRecorded) cls.push("period");
+
+      // Predictions
+      if(info){
+        if(isWithin(c.ymd, info.nextStart, info.nextEnd) && !inRecorded) cls.push("pred");
+        if(isWithin(c.ymd, info.fertileStart, info.fertileEnd)) cls.push("fert");
+        if(c.ymd === info.ovulation) cls.push("ov");
+      }
+
+      return `<div class="cDay ${cls.join(" ")}" data-ymd="${c.ymd}" title="${c.ymd}">${c.day}</div>`;
+    }).join("");
+
+    cal.innerHTML = html;
+  }
+
+  (function initCycleTrackerUI(){
+    const panel = $("cyclePanel");
+    if(!panel) return;
+
+    const addBtn = $("cycleAddBtn");
+    const clearBtn = $("cycleClearBtn");
+    const prevBtn = $("cyclePrev");
+    const nextBtn = $("cycleNext");
+    const startEl = $("cycleStart");
+    const endEl = $("cycleEnd");
+    const lenEl = $("cycleLen");
+    const perEl = $("periodLen");
+    const list = $("cycleList");
+    const cal = $("cycleCal");
+    const tabs = $("notesTabs");
+
+    // Re-render when switching into Cycle tab
+    if(tabs){
+      tabs.addEventListener("click", (ev)=>{
+        const btn = ev.target.closest("[data-notes-tab]");
+        if(!btn) return;
+        if(btn.getAttribute("data-notes-tab")==="cycle"){
+          setTimeout(()=>updateCycleUI(), 0);
+        }
+      });
+    }
+
+    // Calendar click = pick start/end
+    if(cal){
+      cal.addEventListener("click", (ev)=>{
+        const cell = ev.target.closest("[data-ymd]");
+        if(!cell) return;
+        const ymd = cell.getAttribute("data-ymd");
+        if(!isValidFullDate(ymd)) return;
+
+        if(!cyclePick.start || (cyclePick.start && cyclePick.end)){
+          cyclePick = { start: ymd, end: "" };
+        }else{
+          cyclePick.end = ymd;
+          // normalize order
+          if(diffDaysYMD(cyclePick.start, cyclePick.end) < 0){
+            const tmp = cyclePick.end; cyclePick.end = cyclePick.start; cyclePick.start = tmp;
+          }
+        }
+
+        if(startEl) startEl.value = cyclePick.start || "";
+        if(endEl) endEl.value = cyclePick.end || "";
+        updateCycleUI();
+      });
+    }
+
+    // Remove chip
+    if(list){
+      list.addEventListener("click", (ev)=>{
+        const x = ev.target.closest("[data-del]");
+        if(!x) return;
+        const key = x.getAttribute("data-del") || "";
+        const [s,e] = key.split("|");
+        formCycle.periods = (formCycle.periods||[]).filter(p=>!(p.start===s && p.end===e));
+        formCycle = normalizeCycle(formCycle);
+        updateCycleUI();
+      });
+    }
+
+    // Add range
+    if(addBtn){
+      addBtn.addEventListener("click", ()=>{
+        let start = (startEl?.value||"").trim();
+        const e0 = (endEl?.value||"").trim();
+        if(!isValidFullDate(start)){
+          toast("Pick a valid start date");
+          return;
+        }
+
+        // If no end date is provided, auto-create a range using "Period length (days)"
+        const pl = normalizeCycle(formCycle).periodLength || 5;
+        let end = isValidFullDate(e0) ? e0 : (addDaysYMD(start, Math.max(0, pl - 1)) || start);
+
+        // normalize order (in case user manually reversed)
+        if(diffDaysYMD(start, end) < 0){
+          const tmp = end; end = start; start = tmp;
+        }
+
+        formCycle.periods = Array.isArray(formCycle.periods) ? formCycle.periods.slice() : [];
+        // de-dup same range
+        formCycle.periods = formCycle.periods.filter(p=>!(p.start===start && (p.end||p.start)===end));
+        formCycle.periods.push({ start:start, end:end });
+        formCycle = normalizeCycle(formCycle);
+
+        // keep numbers in sync
+        if(lenEl) lenEl.value = String(formCycle.cycleLength);
+        if(perEl) perEl.value = String(formCycle.periodLength);
+
+        // reset pick
+        cyclePick = { start:"", end:"" };
+        if(startEl) startEl.value = "";
+        if(endEl) endEl.value = "";
+
+        updateCycleUI();
+        toast("Period saved ✅");
+      });
+    }
+
+    // Clear
+    if(clearBtn){
+      clearBtn.addEventListener("click", ()=>{
+        const ok = confirm("Clear all cycle data for this person?");
+        if(!ok) return;
+        clearCycleForm();
+        toast("Cycle cleared");
+      });
+    }
+
+    // Length changes
+    const onNums = ()=>{
+      readCycleNumsIntoState();
+      formCycle = normalizeCycle(formCycle);
+      updateCycleUI();
+    };
+    if(lenEl) lenEl.addEventListener("change", onNums);
+    if(perEl) perEl.addEventListener("change", onNums);
+
+    // Prev/Next month
+    if(prevBtn){
+      prevBtn.addEventListener("click", ()=>{
+        if(!cycleViewMonth) return;
+        cycleViewMonth = new Date(Date.UTC(cycleViewMonth.getUTCFullYear(), cycleViewMonth.getUTCMonth()-1, 1));
+        updateCycleUI();
+      });
+    }
+    if(nextBtn){
+      nextBtn.addEventListener("click", ()=>{
+        if(!cycleViewMonth) return;
+        cycleViewMonth = new Date(Date.UTC(cycleViewMonth.getUTCFullYear(), cycleViewMonth.getUTCMonth()+1, 1));
+        updateCycleUI();
+      });
+    }
+
+    // initial (for new entry)
+    setCycleToForm(null);
+  })();
+
+
 
   // ==============================
   // Favorite Colors (max 6) + Glass Pills
@@ -4729,6 +5456,7 @@ async function geocodeAddress(addr){
     ].join("");
 
     const colors = favoriteColorsInlineHTML(entry.favoriteColors);
+    const cycleLine = cyclePopupLineHTML(entry.cycle);
     const notes = popupNotesHTML(entry.notes, entry.id);
 
 const img = entry.imageData
@@ -4751,6 +5479,7 @@ const img = entry.imageData
         <div class="pline"><b>Current:</b> ${where}${dist ? `📍${dist}` : ""}</div>
         ${langs}
         ${colors}
+        ${cycleLine}
         ${notes}
         ${img}
       </div>
@@ -5032,6 +5761,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
       entry.nativeLang ? `<div class="profileCard"><div class="k">Native language</div><div class="v">${escapeHTML(entry.nativeLang)}</div></div>` : "",
       entry.otherLangs ? `<div class="profileCard"><div class="k">Other languages</div><div class="v">${escapeHTML(entry.otherLangs)}</div></div>` : "",
       favoriteColorsCardHTML(entry.favoriteColors),
+      cycleCardHTML(entry.cycle),
       notesCardHTML(entry.notes)
     ].filter(Boolean).join("");
 
@@ -5138,6 +5868,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     $("coords").value = "";
     clearNotesForm();
     setFavColorsToForm([]);
+    clearCycleForm();
     $("deleteBtn").disabled = true;
 
     $("removeImgBtn").dataset.remove = "0";
@@ -5171,6 +5902,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
       : "";
     setNotesToForm(entry.notes);
     setFavColorsToForm(entry.favoriteColors);
+    setCycleToForm(entry.cycle);
 
     $("deleteBtn").disabled = false;
 
@@ -5247,6 +5979,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     const tz = $("timezone").value.trim();
     const notes = getNotesFromForm();
     const favColors = getFavColorsFromForm();
+    const cycle = getCycleFromForm();
 
     if(!nickname){ toast("Please enter a nickname"); return; }
     if(!tz){ toast("Please enter an IANA timezone"); return; }
@@ -5304,6 +6037,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
           nickname, birthdate, birthplace, currentAddress, metOn,
           nativeLang, otherLangs, tz, notes,
           favoriteColors: favColors,
+          cycle: cycle,
           lat: Number(lat), lon: Number(lon),
           imageData: newImageData,
           updatedAt: now
@@ -5316,6 +6050,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
         nickname, birthdate, birthplace, currentAddress, metOn,
         nativeLang, otherLangs, tz, notes,
         favoriteColors: favColors,
+        cycle: cycle,
         fav: false,
         lat: Number(lat), lon: Number(lon),
         imageData: pendingImageData ?? null,
@@ -5739,6 +6474,9 @@ function exportJSON(){
           .filter(Boolean)
           .slice(0,6);
 
+        // cycle tracker
+        const cycle = normalizeCycle(x.cycle);
+
         return ({
           id: String(x.id || uuid()),
           nickname: String(x.nickname || ""),
@@ -5753,6 +6491,7 @@ function exportJSON(){
           imageData: x.imageData ? String(x.imageData) : null,
           notes: notes,
           favoriteColors: favoriteColors,
+          cycle: cycle,
           lat: Number(x.lat),
           lon: Number(x.lon),
           createdAt: x.createdAt ? String(x.createdAt) : new Date().toISOString(),
