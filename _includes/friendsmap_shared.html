@@ -3477,8 +3477,8 @@ html{ scrollbar-gutter: stable; }
   <div class="imgModalInner" role="dialog" aria-modal="true" aria-label="Image preview">
     <img id="imgModalImg" alt="Preview" />
     <div class="imgModalHint">
-      <span>Tip: click outside or press <span class="kbd">Esc</span> to close</span>
-      <button id="imgModalClose" class="secondary" style="padding:8px 12px;">Close</button>
+      <span>{{ page.t_img_tip_close }}</span>
+      <button id="imgModalClose" class="secondary" style="padding:8px 12px;">{{ page.t_btn_close }}</button>
     </div>
   </div>
 </div>
@@ -4094,17 +4094,17 @@ function updateBirthdayCountdownUI(){
     const file = e.target.files?.[0];
     if(!file){ clearPendingImage(false); return; }
     if(!file.type.startsWith("image/")){
-      toast("Please select an image file");
+      toast({{ page.t_toast_select_image | jsonify }});
       clearPendingImage();
       return;
     }
     try{
-      toast("Preparing image…");
+      toast({{ page.t_toast_preparing_image | jsonify }});
       pendingImageData = await fileToCompressedBase64(file, { maxWidth:560, maxHeight:560, quality:0.78, type:"image/jpeg" });
       showPreview(pendingImageData, file.name);
-      toast("Image ready ✅");
+      toast({{ page.t_toast_image_ready | jsonify }});
     }catch{
-      toast("Could not process image");
+      toast({{ page.t_toast_image_fail | jsonify }});
       clearPendingImage();
     }
   });
@@ -4758,7 +4758,7 @@ function setSpecial(id){
         let start = (startEl?.value||"").trim();
         const e0 = (endEl?.value||"").trim();
         if(!isValidFullDate(start)){
-          toast("Pick a valid start date");
+          toast({{ page.t_toast_pick_valid_start | jsonify }});
           return;
         }
 
@@ -4787,17 +4787,17 @@ function setSpecial(id){
         if(endEl) endEl.value = "";
 
         updateCycleUI();
-        toast("Period saved ✅");
+        toast({{ page.t_toast_period_saved | jsonify }});
       });
     }
 
     // Clear
     if(clearBtn){
       clearBtn.addEventListener("click", ()=>{
-        const ok = confirm("Clear all cycle data for this person?");
+        const ok = confirm({{ page.t_confirm_clear_cycle | jsonify }});
         if(!ok) return;
         clearCycleForm();
-        toast("Cycle cleared");
+        toast({{ page.t_toast_cycle_cleared | jsonify }});
       });
     }
 
@@ -4937,7 +4937,7 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
       return;
     }
     if(formFavColors.length >= 6){
-      toast("Max 6 colors");
+      toast({{ page.t_toast_max_colors | jsonify }});
       return;
     }
     const key = raw.toLowerCase();
@@ -5383,10 +5383,10 @@ setInterval(updateNightLayer, 30000);
         if(tz) $("timezone").value = tz;
         toast(tz ? "Coordinates + timezone set ✅" : "Coordinates set (timezone unknown)");
       }catch{
-        toast("Coordinates set (timezone lookup failed)");
+        toast({{ page.t_toast_coords_set_tz_failed | jsonify }});
       }
     }else{
-      toast("Coordinates set (map click)");
+      toast({{ page.t_toast_coords_set_map | jsonify }});
     }
   });
 
@@ -5843,7 +5843,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     const name = $("profileName").textContent;
     const e = entries.find(x=>x.nickname===name) || entries.find(x=>x.id===selectedId);
     if(e) selectEntry(e.id);
-    toast("Entry loaded");
+    toast({{ page.t_toast_entry_loaded | jsonify }});
   });
   $("profilePin").addEventListener("click", ()=>{
     const name = $("profileName").textContent;
@@ -5919,7 +5919,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     if(opts.panMap !== false && typeof entry.lat === "number" && typeof entry.lon === "number"){
       map.setView([entry.lat, entry.lon], Math.max(map.getZoom(), 4));
     }
-    toast("Entry loaded");
+    toast({{ page.t_toast_entry_loaded | jsonify }});
     renderList();
   }
 
@@ -5951,15 +5951,15 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
             const tz = await resolveTimezone(g.lat, g.lon);
             if(tz){
               $("timezone").value = tz;
-              toast("Address + timezone found ✅");
+              toast({{ page.t_toast_addr_tz_found | jsonify }});
             }else{
-              toast("Address found (timezone unknown)");
+              toast({{ page.t_toast_addr_found_tz_unknown | jsonify }});
             }
           }catch{
-            toast("Address found (timezone lookup failed)");
+            toast({{ page.t_toast_addr_found_tz_failed | jsonify }});
           }
         }else{
-          toast("Address found");
+          toast({{ page.t_toast_addr_found | jsonify }});
         }
       }
     }catch{}
@@ -5981,8 +5981,8 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     const favColors = getFavColorsFromForm();
     const cycle = getCycleFromForm();
 
-    if(!nickname){ toast("Please enter a nickname"); return; }
-    if(!tz){ toast("Please enter an IANA timezone"); return; }
+    if(!nickname){ toast({{ page.t_toast_need_nickname | jsonify }}); return; }
+    if(!tz){ toast({{ page.t_toast_need_timezone | jsonify }}); return; }
 
 
     // Overwrite confirmation (same nickname)
@@ -5997,7 +5997,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
 
     if(conflictIdx >= 0){
       const target = entries[conflictIdx];
-      const ok = confirm(`Overwrite existing entry?\n\n${target.nickname}\n\nThe current data will be replaced.`);
+      const ok = confirm(`${{ page.t_confirm_overwrite_prefix | jsonify }}\n\n${target.nickname}\n\n${{ page.t_confirm_overwrite_suffix | jsonify }}`);
       if(!ok) return;
       overwriteTargetId = target.id;
       if(selectedId) deleteAfterOverwriteId = selectedId; // merging two entries
@@ -6006,7 +6006,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     let [lat, lon] = parseCoords($("coords").value);
 
     if((!Number.isFinite(lat) || !Number.isFinite(lon)) && currentAddress){
-      toast("Finding current address…");
+      toast({{ page.t_toast_finding_address | jsonify }});
       try{
         const g = await geocodeAddress(currentAddress);
         if(g){
@@ -6017,7 +6017,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     }
 
     if(!Number.isFinite(lat) || !Number.isFinite(lon)){
-      toast("Please set coordinates (map click) or enter a current address");
+      toast({{ page.t_toast_need_coords_or_address | jsonify }});
       return;
     }
 
@@ -6042,7 +6042,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
           imageData: newImageData,
           updatedAt: now
         };
-        toast("Updated");
+        toast({{ page.t_toast_updated | jsonify }});
       }
     } else {
       entries.unshift({
@@ -6056,7 +6056,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
         imageData: pendingImageData ?? null,
         createdAt: now, updatedAt: now
       });
-      toast("Saved");
+      toast({{ page.t_toast_saved | jsonify }});
     }
 
     pendingImageData = null;
@@ -6086,7 +6086,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
   function handleDelete(){
     if(!selectedId) return;
     const e = entries.find(x=>x.id===selectedId);
-    const ok = confirm(`Really delete this entry?\n\n${e?.nickname ?? ""}`);
+    const ok = confirm(`${{ page.t_confirm_delete_one_prefix | jsonify }}\n\n${e?.nickname ?? ""}`);
     if(!ok) return;
     // keep Special consistent
     if(specialId === selectedId){
@@ -6097,18 +6097,18 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     selectedId = null;
     save();
     clearForm();
-    toast("Deleted");
+    toast({{ page.t_toast_deleted | jsonify }});
   }
 
   $("removeImgBtn").addEventListener("click", ()=>{
     if(!selectedId){
       clearPendingImage();
-      toast("Image removed (new entry)");
+      toast({{ page.t_toast_image_removed_new | jsonify }});
       return;
     }
     $("removeImgBtn").dataset.remove = "1";
     clearPendingImage();
-    toast("Image will be removed on save");
+    toast({{ page.t_toast_image_will_remove | jsonify }});
   });
 
   // ==============================
@@ -6553,7 +6553,7 @@ function exportJSON(){
       const { cleaned, incomingSpecialId } = parseImportPayload(parsed);
 
       if(cleaned.length === 0){
-        toast("Import failed: JSON has no valid entries");
+        toast({{ page.t_toast_import_no_entries | jsonify }});
         return;
       }
 
@@ -6561,10 +6561,10 @@ function exportJSON(){
 
       if(doMerge){
         entries = mergeImported(entries, cleaned);
-        toast("Imported (merged) ✅");
+        toast({{ page.t_toast_import_merged | jsonify }});
       }else{
         entries = cleaned;
-        toast("Imported (replaced) ✅");
+        toast({{ page.t_toast_import_replaced | jsonify }});
       }
 
       // Apply imported specialId if present and valid
@@ -6580,7 +6580,7 @@ function exportJSON(){
       save();
       clearForm();
     }catch{
-      toast("Could not import file");
+      toast({{ page.t_toast_import_file_fail | jsonify }});
     }finally{
       // allow importing same file again
       e.target.value = "";
@@ -6588,13 +6588,13 @@ function exportJSON(){
   });
 
   function clearAll(){
-    const ok = confirm("Really delete ALL entries from this browser?");
+    const ok = confirm({{ page.t_confirm_delete_all | jsonify }});
     if(!ok) return;
     entries = [];
     selectedId = null;
     save();
     clearForm();
-    toast("All deleted");
+    toast({{ page.t_toast_all_deleted | jsonify }});
     showMapView();
   }
 
@@ -6772,11 +6772,11 @@ function distClear(){
 function distAddPoint(lat, lon, label){
   distancePoints.push({lat, lon, label: label || ""});
   if(distancePoints.length === 1){
-    distHint('📏 <b>Distance mode</b>: choose the <b>2nd point</b> (profile pin or map).');
+    distHint({{ page.t_dist_hint_second | jsonify }});
   }
   if(distancePoints.length === 2){
     distDraw();
-    distHint('📏 <b>Done</b>. Click another pin/map to start a new measurement, or tap 📏 to exit.');
+    distHint({{ page.t_dist_hint_done | jsonify }});
   }
 }
 
@@ -6978,11 +6978,11 @@ function distToggle(){
   btn && btn.classList.toggle("active", distanceMode);
   distClear();
   if(distanceMode){
-    distHint('📏 <b>Distance mode</b>: choose the <b>1st point</b> (profile pin or map).');
-    toast && toast("Distance tool enabled");
+    distHint({{ page.t_dist_hint_first | jsonify }});
+    toast && toast({{ page.t_toast_distance_on | jsonify }});
   }else{
     distHint("");
-    toast && toast("Distance tool disabled");
+    toast && toast({{ page.t_toast_distance_off | jsonify }});
   }
 }
 
@@ -7005,7 +7005,7 @@ try{
       try{ ev.originalEvent && ev.originalEvent.stopPropagation && ev.originalEvent.stopPropagation(); }catch{}
       if(distancePoints.length >= 2) distClear();
       const ll = ml.getLatLng ? ml.getLatLng() : null;
-      if(ll) distAddPoint(ll.lat, ll.lng, "My location");
+      if(ll) distAddPoint(ll.lat, ll.lng, {{ page.t_my_location_label | jsonify }});
     });
   }
 }catch{}
