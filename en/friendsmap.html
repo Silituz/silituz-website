@@ -1,8 +1,139 @@
 ---
 layout: default
-title: Social Organizer
 lang: en
 permalink: /en/friendsmap/
+title: Social Organizer
+hero_title: Social Organizer
+hero_sub: by Silituz
+stats_title: '- Stats -'
+stats_initial: 'Friends: 0 · Countries: 0 · Longest friendship: —'
+lbl_nickname: Nickname *
+ph_nickname: e.g. Sun / Polina / ...
+lbl_birthdate: Birthdate (optional)
+zodiac_initial: 'Zodiac: — | Chinese Element: — | Chinese Zodiac: —'
+lbl_birthplace: Birthplace (optional)
+ph_birthplace: e.g. Warsaw, Poland
+lbl_meton: Met on (date, optional)
+lbl_current_address: Current address (optional)
+ph_current_address: e.g. Los Angeles, CA
+hint_current_address: Used for coordinates (auto‑geocode) if coordinates are empty.
+lbl_timezone: Timezone (IANA) *
+ph_timezone: e.g. America/Los_Angeles
+hint_timezone_examples: 'Examples: <span class="kbd">Europe/Berlin</span>, <span class="kbd">America/Los_Angeles</span>,
+  <span class="kbd">Asia/Tokyo</span>'
+lbl_coords: Coordinates (optional)
+ph_coords: lat, lon (or click on the map)
+hint_coords: Click on the map to set the location.
+lbl_photo: Image (upload, optional)
+hint_photo: Preview will appear here.
+lbl_local_time: Local Time
+section_notes: Notes
+tab_important: 🚨 Important
+tab_work: 💼 Work &amp; 🚀 Projects
+tab_food: 🍕 Food &amp; Ideas
+tab_other: 📦 Other
+tab_cycle: 🩸 Cycle
+ph_notes_important: Things that are urgent, critical, or should not be forgotten
+ph_notes_work: Work‑related tasks, projects and ideas
+ph_notes_food: Food &amp; drinks, restaurant ideas, places worth trying
+ph_notes_other: Miscellaneous notes
+cycle_lbl_start: Last period start
+cycle_lbl_end: Last period end
+cycle_lbl_cycle_len: Cycle length (days)
+cycle_lbl_period_len: Period length (days)
+cycle_btn_add_range: Add 🩸 range
+btn_clear: Clear
+cycle_hint_storage: Stored locally per person. Predictions are estimates (not medical
+  advice).
+cycle_leg_period: 🩸 period
+cycle_leg_predicted: 🩸 predicted
+cycle_leg_fertile: 🌿 fertile
+cycle_hint_calendar: 'Tip: click days in the calendar to pick start/end.'
+lbl_fav_colors: Favorite Colors
+ph_fav_color: 'Add a color (e.g. turquoise, gold, #ff8800)'
+btn_add: Add
+hint_fav_colors: Up to 6 colors.
+btn_save: Save / set marker
+btn_new: New
+btn_delete: Delete
+btn_remove_image: Remove image
+tt_remove_image: Remove image from entry
+hint_bullets_1: • Current address can be auto‑geocoded via OpenStreetMap (Nominatim).
+hint_bullets_2: • Everything is stored in <b>localStorage</b> in this browser. Use
+  Export/Import to move data to another device.
+ph_search: Search (name, notes, dates, timezone…)
+filter_all: All
+filter_fav: ⭐ Favorites
+filter_now: 💚 Now
+filter_maybe: 💛 Maybe
+filter_sleep: ❤️ Sleeping
+filter_bday: 🎂 Birthday
+filter_friend: 🎈 Friendship
+btn_export: Export JSON
+btn_import: Import JSON (file)
+cluster_on: 'Cluster: On'
+cluster_off: 'Cluster: Off'
+btn_my_location: My location
+tt_my_location: Show my current location marker
+btn_delete_all: Delete all
+lbl_hide_notes: 🔒 Hide notes (safe for screenshots)
+badge_special_one: ♾️ My Special One
+badge_favorite: ⭐ Favorite
+btn_map: Map
+tt_back_to_map: Back to map
+btn_edit: Edit
+tt_edit: Load into form
+tt_center_on_map: Center on map
+img_preview_aria: Image preview
+img_preview_alt: Preview
+img_tip_close: 'Tip: click outside or press <span class="kbd">Esc</span> to close'
+btn_close: Close
+export_filename: social-organizer.v2.json
+toast_export_created: Export created (file + clipboard)
+toast_select_image: Please select an image file
+toast_preparing_image: Preparing image…
+toast_image_ready: Image ready ✅
+toast_image_fail: Could not process image
+toast_added_fav: Added to favorites ⭐
+toast_removed_fav: Removed from favorites
+toast_entry_loaded: Entry loaded
+toast_addr_tz_found: Address + timezone found ✅
+toast_addr_found_tz_unknown: Address found (timezone unknown)
+toast_addr_found_tz_failed: Address found (timezone lookup failed)
+toast_addr_found: Address found
+toast_need_nickname: Please enter a nickname
+toast_need_timezone: Please enter an IANA timezone
+toast_finding_address: Finding current address…
+toast_need_coords_or_address: Please set coordinates (map click) or enter a current
+  address
+toast_updated: Updated
+toast_saved: Saved
+toast_deleted: Deleted
+toast_all_deleted: All deleted
+toast_coords_set_map: Coordinates set (map click)
+toast_coords_set_tz_failed: Coordinates set (timezone lookup failed)
+toast_place_not_found: Could not find that place
+toast_geo_permission: Could not get location (permission?)
+toast_import_file_fail: Could not import file
+toast_cycle_cleared: Cycle cleared
+toast_distance_off: Distance tool disabled
+toast_distance_on: Distance tool enabled
+toast_geo_not_supported: Geolocation not supported
+toast_getting_location: Getting your location…
+toast_image_removed_new: Image removed (new entry)
+toast_image_will_remove: Image will be removed on save
+toast_import_no_entries: 'Import failed: JSON has no valid entries'
+toast_import_merged: Imported (merged) ✅
+toast_import_replaced: Imported (replaced) ✅
+toast_manual_lookup_failed: Manual lookup failed
+toast_max_colors: Max 6 colors
+toast_myloc_marker_set: My location marker set ✅
+toast_myloc_manual_set: My location set (manual) ✅
+toast_period_saved: Period saved ✅
+toast_pick_valid_start: Pick a valid start date
+toast_unknown_color: 'Unknown color. Try a CSS color name or a hex value like #ff8800.'
+confirm_overwrite_prefix: Overwrite existing entry?
+confirm_overwrite_suffix: The current data will be replaced.
 ---
 
-{% include friendsmap_shared_en.html %}
+{% include friendsmap_shared.html %}
