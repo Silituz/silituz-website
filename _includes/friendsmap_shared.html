@@ -44,7 +44,7 @@
                   linear-gradient(180deg, #070a12, #0b0f1a 40%, #070a12);
       color:var(--text);
     }
-    header{
+    .fmHead{
       padding:18px 18px 10px;
       display:flex;
       gap:12px;
@@ -2720,7 +2720,7 @@ body::before, body::after,
    MOBILE PACK (Handy Optimierung)
    ============================= */
 @media (max-width: 560px){
-  header{
+  .fmHead{
     padding: 14px 12px 8px;
     flex-wrap: wrap;
     gap: 10px;
@@ -2842,7 +2842,7 @@ body::before, body::after,
    Makes the top edit area cleaner & easier on phones
    ============================= */
 @media (max-width: 560px){
-  header{ padding: 12px 12px 10px !important; }
+  .fmHead{ padding: 12px 12px 10px !important; }
   .hdrRight{ width:100%; text-align:left; }
   .hdrRight .hdrTitle{ display:none !important; }
   .hdrSub{ font-size:12px !important; opacity:.9; line-height:1.25; }
@@ -2996,7 +2996,7 @@ body::before, body::after,
 
 /* Avoid horizontal scrolling */
 html, body { overflow-x: hidden; }
-.wrap, main, header, .panel, .list, #profileView { max-width: 100%; }
+.wrap, main, .fmHead, .panel, .list, #profileView { max-width: 100%; }
 
 /* Ensure all images / cards never exceed container */
 img, video, canvas, svg { max-width: 100%; height: auto; }
@@ -3083,7 +3083,7 @@ body{
 }
 
 /* Safety: nothing in views should exceed viewport */
-#listView, #profileView, #mapView, .wrap, main, header{
+#listView, #profileView, #mapView, .wrap, main, .fmHead{
   width: 100%;
   max-width: 100%;
 }
@@ -3195,41 +3195,11 @@ html{ scrollbar-gutter: stable; }
   }
 }
 
-
-/* =========================================================
-   SITE HEADER FIX (only affects the website header on this page)
-   - FriendsMap uses generic `header{...}` rules, which would
-     otherwise restyle the site header from default.html.
-   - We reset layout + give the header the same blue-ish vibe.
-   ========================================================= */
-body > header.sticky{
-  padding: 0 !important;
-  display: block !important;
-  gap: 0 !important;
-  align-items: stretch !important;
-  justify-content: initial !important;
-
-  /* blue / glassy background like the page */
-  background:
-    radial-gradient(1200px 600px at 15% 10%, rgba(122,167,255,.18), transparent 55%),
-    radial-gradient(900px 500px at 80% 20%, rgba(125,255,178,.12), transparent 55%),
-    linear-gradient(180deg, rgba(7,10,18,.78), rgba(11,15,26,.60)) !important;
-
-  border-bottom-color: rgba(255,255,255,.10) !important;
-  backdrop-filter: blur(10px) saturate(140%) !important;
-}
-
-/* Keep the inner container spacing exactly like the other pages */
-body > header.sticky > .container{
-  padding-top: 1.5rem !important;  /* = py-6 */
-  padding-bottom: 1.5rem !important;
-}
-
 </style>
 </head>
 
 <body>
-<header>
+<header class="fmHead">
   <div class="brand">
     <div>
       <h1>World Friends Map</h1>
@@ -7179,3 +7149,19 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 </html>
 
+
+
+
+<style>
+/* === FIX: Website-Header nicht von FriendsMap-CSS beeinflussen & farblich integrieren === */
+body > header.sticky{
+  /* Light mode: leichtes Glas */
+  background-color: rgba(255,255,255,.88) !important;
+  border-bottom-color: rgba(148,163,184,.45) !important;
+}
+html.dark body > header.sticky{
+  /* Dark mode: blaues Glas (Tailwind slate-900) */
+  background-color: rgba(15,23,42,.90) !important;
+  border-bottom-color: rgba(51,65,85,.75) !important;
+}
+</style>
