@@ -1,23 +1,20 @@
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-
+<!-- Social Organizer (scoped include) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <style>
-/* FriendsMap styles are scoped so they don't overwrite the global site header/body */
-.friendsmap-wrap {
-  color: var(--text);
-  background: radial-gradient(1200px 600px at 15% 10%, rgba(122,167,255,.18), transparent 55%),
-              radial-gradient(900px 500px at 80% 20%, rgba(125,255,178,.12), transparent 55%),
-              linear-gradient(180deg, #070a12, #0b0f1a 40%, #070a12);
-  border-radius: 22px;
-  box-shadow: 0 14px 40px rgba(0,0,0,.25);
-  padding: 18px;
-}
-.friendsmap-wrap *{ box-sizing:border-box; }
-.friendsmap-scope{--special-band-height: var(--special-band-height);}
-.friendsmap-scope{
+
+
+
+
+
+
+
+#soApp{--special-band-height: var(--special-band-height);}
+
+    #soApp{
       --bg:#0b0f1a;
       --text:#e9eefc;
       --muted:#a9b4d0;
@@ -28,21 +25,34 @@
       --shadow: 0 14px 40px rgba(0,0,0,.35);
       --radius:18px;
     }
-    
-    
-    
-    
-    .brand{display:flex; align-items:center; gap:10px; user-select:none;}
-    .dot{
+    #soApp *{box-sizing:border-box}
+    #soApp, #soApp{height:100%}
+    #soApp{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: radial-gradient(1200px 600px at 15% 10%, rgba(122,167,255,.18), transparent 55%),
+                  radial-gradient(900px 500px at 80% 20%, rgba(125,255,178,.12), transparent 55%),
+                  linear-gradient(180deg, #070a12, #0b0f1a 40%, #070a12);
+      color:var(--text);
+    }
+    #soApp header{
+      padding:18px 18px 10px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    #soApp .brand{display:flex; align-items:center; gap:10px; user-select:none;}
+    #soApp .dot{
       width:14px;height: var(--special-band-height);border-radius:999px;
       background: radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,.2) 32%, transparent 60%),
                   linear-gradient(135deg, rgba(122,167,255,1), rgba(125,255,178,1));
       box-shadow: 0 0 20px rgba(122,167,255,.35);
     }
-    h1{font-size:16px; margin:0; letter-spacing:.2px; color: rgb(16, 185, 129)}
-    .sub{font-size:12px;color:var(--muted); margin-top:2px}
+    #soApp h1{font-size:16px; margin:0; letter-spacing:.2px; color: rgb(16, 185, 129)}
+    #soApp .sub{font-size:12px;color:var(--muted); margin-top:2px}
 
-    .wrap{
+    #soApp .wrap{
       display:grid;
       grid-template-columns: 480px 1fr;
       gap:14px;
@@ -50,29 +60,29 @@
       height: calc(100% - 64px);
     }
     @media (max-width: 980px){
-      .wrap{grid-template-columns:1fr; height:auto}
-      #map{height:55vh}
+      #soApp .wrap{grid-template-columns:1fr; height:auto}
+      #soApp #map{height:55vh}
     }
 
-    .card{
+    #soApp .card{
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
     }
-    .panel{
+    #soApp .panel{
       padding:14px;
       display:flex;
       flex-direction:column;
       gap:12px;
     }
 
-    .row{display:flex; gap:10px}
-    .row > *{flex:1}
+    #soApp .row{display:flex; gap:10px}
+    #soApp .row > *{flex:1}
 
-    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px;}
-    input, textarea, select{
+    #soApp label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px;}
+    #soApp input, #soApp textarea, #soApp select{
       width:100%;
       padding:10px 10px;
       border-radius: 12px;
@@ -81,10 +91,10 @@
       color: var(--text);
       outline:none;
     }
-    textarea{min-height: var(--special-band-height); resize: vertical}
-    .hint{font-size:12px; color: var(--muted); line-height:1.35;}
+    #soApp textarea{min-height: var(--special-band-height); resize: vertical}
+    #soApp .hint{font-size:12px; color: var(--muted); line-height:1.35;}
 
-    .zodiacBox{
+    #soApp .zodiacBox{
       margin-top:8px;
       padding:10px 10px;
       border-radius:12px;
@@ -96,21 +106,21 @@
       align-items:center;
       justify-content:space-between;
     }
-    .zodiacLink{
+    #soApp .zodiacLink{
       color: var(--accent);
       text-decoration: none;
       border-bottom: 1px dashed rgba(122,167,255,.45);
     }
-    .zodiacLink:hover{ text-decoration: underline; }
-    .zodiacItem{
+    #soApp .zodiacLink:hover{ text-decoration: underline; }
+    #soApp .zodiacItem{
       font-size:12px;
       color: var(--muted);
       white-space:nowrap;
     }
-    .zodiacItem b{color:var(--text)}
+    #soApp .zodiacItem b{color:var(--text)}
 
-    .btns{display:flex; gap:10px; flex-wrap:wrap}
-    button{
+    #soApp .btns{display:flex; gap:10px; flex-wrap:wrap}
+    #soApp button{
       border:none;
       border-radius: 999px;
       padding:10px 14px;
@@ -120,12 +130,12 @@
       transition: .15s ease;
       border:1px solid rgba(122,167,255,.28);
     }
-    button:hover{transform: translateY(-1px); background: rgba(122,167,255,.24)}
-    button.secondary{background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10)}
-    button.danger{background: rgba(255,107,107,.16); border-color: rgba(255,107,107,.28)}
-    button:disabled{opacity:.5; cursor:not-allowed; transform:none}
+    #soApp button:hover{transform: translateY(-1px); background: rgba(122,167,255,.24)}
+    #soApp button.secondary{background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10)}
+    #soApp button.danger{background: rgba(255,107,107,.16); border-color: rgba(255,107,107,.28)}
+    #soApp button:disabled{opacity:.5; cursor:not-allowed; transform:none}
 
-    .pill{
+    #soApp .pill{
       padding:6px 10px;
       border-radius:999px;
       background: rgba(255,255,255,.06);
@@ -135,10 +145,10 @@
       white-space:nowrap;
     }
 
-    .hr{height: var(--special-band-height); background: var(--line); margin: 2px 0}
+    #soApp .hr{height: var(--special-band-height); background: var(--line); margin: 2px 0}
 
     /* Alphabet bar */
-    .alphaBar{
+    #soApp .alphaBar{
       display:flex;
       flex-wrap:wrap;
       gap:6px;
@@ -147,7 +157,7 @@
       border-bottom:1px solid var(--line);
       background: rgba(0,0,0,.05);
     }
-    .alphaBar .aBtn{
+    #soApp .alphaBar .aBtn{
       padding:6px 9px;
       font-size:12px;
       border-radius:999px;
@@ -155,18 +165,18 @@
       border:1px solid rgba(255,255,255,.10);
       color: var(--muted);
     }
-    .alphaBar .aBtn:hover{transform:none; background: rgba(255,255,255,.10)}
-    .alphaBar .aBtn:disabled{opacity:.35; cursor:not-allowed}
+    #soApp .alphaBar .aBtn:hover{transform:none; background: rgba(255,255,255,.10)}
+    #soApp .alphaBar .aBtn:disabled{opacity:.35; cursor:not-allowed}
 
     /* List */
-    .list{
+    #soApp .list{
       padding:0;
       margin:0;
       list-style:none;
       max-height: 34vh;
       overflow:auto;
     }
-    .item{
+    #soApp .item{
       padding:12px 14px;
       border-bottom:1px solid var(--line);
       display:flex;
@@ -175,45 +185,16 @@
       justify-content:space-between;
       background: rgba(0,0,0,.05);
     }
-    .item:hover{background: rgba(0,0,0,.12)}
-    .item.selected{outline: 1px solid rgba(122,167,255,.35); outline-offset:-1px}
+    #soApp .item:hover{background: rgba(0,0,0,.12)}
+    #soApp .item.selected{outline: 1px solid rgba(122,167,255,.35); outline-offset:-1px}
 
-    /* ===== Restored selection glow (scoped) ===== */
-    .friendsmap-wrap .item{ position: relative; }
-    .friendsmap-wrap .item::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(420px 120px at 18% 0%, rgba(122,167,255,.10), transparent 60%);
-      opacity:.45;
-      pointer-events:none;
-    }
-    .friendsmap-wrap .item::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      opacity:0;
-      pointer-events:none;
-    }
-    .friendsmap-wrap .item.isSelected{
-      background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.06));
-      box-shadow: 0 0 0 2px rgba(80,255,190,.22), 0 22px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(80,255,190,.14) inset, 0 0 60px rgba(80,255,190,.28);
-      transform: translateY(-1px);
-    }
-    .friendsmap-wrap .item.isSelected::before{
-      background: radial-gradient(520px 160px at 18% 0%, rgba(190,225,255,.16), transparent 62%);
-      opacity:.9;
-    }
-    .friendsmap-wrap .item.isSelected::after{ opacity:.72; }
+    #soApp .meta{min-width:0}
+    #soApp .nick{font-weight:700; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    #soApp .tiny{font-size:12px; color:var(--muted); margin-top:3px}
 
+    #soApp .actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
 
-    .meta{min-width:0}
-    .nick{font-weight:700; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-    .tiny{font-size:12px; color:var(--muted); margin-top:3px}
-
-    .actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
-
-    .iconBtn{
+    #soApp .iconBtn{
       padding:8px 10px;
       border-radius:999px;
       background: rgba(255,255,255,.06);
@@ -221,9 +202,9 @@
       color: var(--text);
       cursor:pointer;
     }
-    .iconBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
+    #soApp .iconBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
 
-    .avatar{
+    #soApp .avatar{
       width:34px;
       height: var(--special-band-height);
       border-radius: 10px;
@@ -231,7 +212,7 @@
       border:1px solid rgba(255,255,255,.12);
       cursor:pointer;
     }
-    .avatarPh{
+    #soApp .avatarPh{
       width:34px;
       height: var(--special-band-height);
       border-radius: 10px;
@@ -245,17 +226,17 @@
     }
 
     /* Map & right panel */
-    #map{height:100%; min-height: 420px}
+    #soApp #map{height:100%; min-height: 420px}
 
-    .rightView{height:100%}
-    #mapView{height:100%}
+    #soApp .rightView{height:100%}
+    #soApp #mapView{height:100%}
 
-    #profileView{
+    #soApp #profileView{
       height:100%;
       display:none;
       overflow:auto;
     }
-    .profileHead{
+    #soApp .profileHead{
       position: sticky;
       top: 0;
       z-index: 2;
@@ -268,32 +249,32 @@
       align-items:center;
       justify-content:space-between;
     }
-    .profileTitle{
+    #soApp .profileTitle{
       min-width:0;
       display:flex;
       flex-direction:column;
       gap:2px;
     }
-    .profileTitle b{
+    #soApp .profileTitle b{
       font-size:14px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .profileTitle span{font-size:12px; color:var(--muted)}
-    .profileBody{padding:14px; display:flex; flex-direction:column; gap:12px}
-    .profileGrid{display:grid; grid-template-columns: 1fr; gap:10px}
+    #soApp .profileTitle span{font-size:12px; color:var(--muted)}
+    #soApp .profileBody{padding:14px; display:flex; flex-direction:column; gap:12px}
+    #soApp .profileGrid{display:grid; grid-template-columns: 1fr; gap:10px}
 
-    .profileCard{
+    #soApp .profileCard{
       padding:12px;
       border:1px solid rgba(255,255,255,.10);
       border-radius: 14px;
       background: rgba(0,0,0,.14);
     }
-    .profileCard .k{font-size:12px; color:var(--muted); margin-bottom:4px}
-    .profileCard .v{font-size:13px; color:var(--text); white-space:pre-wrap; word-break:break-word}
+    #soApp .profileCard .k{font-size:12px; color:var(--muted); margin-bottom:4px}
+    #soApp .profileCard .v{font-size:13px; color:var(--text); white-space:pre-wrap; word-break:break-word}
 
-    .profileImg{
+    #soApp .profileImg{
       width:110px;
       height: var(--special-band-height);
       border-radius: 16px;
@@ -301,13 +282,13 @@
       border:1px solid rgba(255,255,255,.12);
       cursor:pointer;
     }
-    .profileTop{position: relative;
+    #soApp .profileTop{position: relative;
       display:flex;
       gap:12px;
       align-items:flex-start;
     }
 
-    .footer-tools{
+    #soApp .footer-tools{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
@@ -318,7 +299,7 @@
       background: rgba(0,0,0,.06);
     }
 
-    .toast{
+    #soApp .toast{
       position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
       background: rgba(18,26,43,.92);
       border:1px solid rgba(255,255,255,.12);
@@ -332,9 +313,9 @@
       transition: .18s ease;
       z-index: 50;
     }
-    .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px)}
+    #soApp .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px)}
 
-    .kbd{
+    #soApp .kbd{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size:12px;
       padding:2px 6px;
@@ -345,7 +326,7 @@
     }
 
     /* Leaflet popup (match dark theme) */
-    .leaflet-popup-content-wrapper{
+    #soApp .leaflet-popup-content-wrapper{
       background: rgba(12,18,34,.96);
       color: var(--text);
       border: 1px solid rgba(255,255,255,.12);
@@ -354,7 +335,7 @@
       /* wider but visually smaller */
       max-width: min(680px, 94vw);
     }
-    .leaflet-popup-content{
+    #soApp .leaflet-popup-content{
       /* smaller padding + better use of width */
       margin: 10px 12px;
       min-width: 320px;
@@ -362,49 +343,49 @@
       line-height: 1.35;
     }
     @media (max-width: 420px){
-      .leaflet-popup-content{ min-width: 0; margin: 10px 10px; }
+      #soApp .leaflet-popup-content{ min-width: 0; margin: 10px 10px; }
     }
-    .leaflet-popup-tip{
+    #soApp .leaflet-popup-tip{
       background: rgba(12,18,34,.96);
       border: 1px solid rgba(255,255,255,.12);
       box-shadow: var(--shadow);
     }
-    .leaflet-container a.leaflet-popup-close-button{
+    #soApp .leaflet-container a.leaflet-popup-close-button{
       color: var(--muted);
       width: 28px;
       height: var(--special-band-height);
       line-height: var(--special-band-height);
       font-size: 18px;
     }
-    .leaflet-container a.leaflet-popup-close-button:hover{
+    #soApp .leaflet-container a.leaflet-popup-close-button:hover{
       color: var(--text);
       background: transparent;
     }
-    .popup{
+    #soApp .popup{
       color: var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
-    .popup .pnotes{ white-space: pre-line; }
-    .popup .pname{font-weight:800; font-size:13.5px; margin:0 0 6px}
-    .popup .pline{font-size:12px; margin:3px 0; color: var(--muted)}
-    .popup .ptime{font-weight:700; color: var(--text)}
-    .popup .thumbRow{display:flex; gap:10px; align-items:center; margin-top:8px}
-    .popup img.thumb{width:72px;height: var(--special-band-height);border-radius:12px;object-fit:cover;cursor:pointer;display:block; border:1px solid rgba(255,255,255,.12)}
-    .popup .thumbHint{font-size:12px; color: var(--muted); opacity:.9}
+    #soApp .popup .pnotes{ white-space: pre-line; }
+    #soApp .popup .pname{font-weight:800; font-size:13.5px; margin:0 0 6px}
+    #soApp .popup .pline{font-size:12px; margin:3px 0; color: var(--muted)}
+    #soApp .popup .ptime{font-weight:700; color: var(--text)}
+    #soApp .popup .thumbRow{display:flex; gap:10px; align-items:center; margin-top:8px}
+    #soApp .popup img.thumb{width:72px;height: var(--special-band-height);border-radius:12px;object-fit:cover;cursor:pointer;display:block; border:1px solid rgba(255,255,255,.12)}
+    #soApp .popup .thumbHint{font-size:12px; color: var(--muted); opacity:.9}
 
 /* Preview in form */
-    .preview{
+    #soApp .preview{
       display:flex;
       gap:10px;
       align-items:center;
       margin-top:6px;
     }
-    .preview img{
+    #soApp .preview img{
       width:48px;height: var(--special-band-height);border-radius:12px; object-fit:cover;
       border:1px solid rgba(255,255,255,.12);
     }
 
-    .toggleRow{
+    #soApp .toggleRow{
       display:flex; align-items:center; gap:10px;
       padding:8px 10px;
       border:1px solid rgba(255,255,255,.10);
@@ -413,10 +394,10 @@
       color: var(--muted);
       font-size:12px;
     }
-    .toggleRow input{width:auto; margin:0}
+    #soApp .toggleRow input{width:auto; margin:0}
 
     /* Image modal */
-    .imgModal{
+    #soApp .imgModal{
       position:fixed;
       inset:0;
       display:none;
@@ -427,8 +408,8 @@
       backdrop-filter: blur(8px);
       z-index: 9999;
     }
-    .imgModal.show{display:flex}
-    .imgModalInner{
+    #soApp .imgModal.show{display:flex}
+    #soApp .imgModalInner{
       position: relative;
       z-index: 10000;
       max-width: min(920px, 92vw);
@@ -442,7 +423,7 @@
       flex-direction:column;
       gap:10px;
     }
-    .imgModalInner img{
+    #soApp .imgModalInner img{
       max-width: 100%;
       max-height: 74vh;
       border-radius: 14px;
@@ -450,7 +431,7 @@
       object-fit: contain;
       background: rgba(0,0,0,.2);
     }
-    .imgModalHint{
+    #soApp .imgModalHint{
       font-size:12px;
       color: var(--muted);
       display:flex;
@@ -459,17 +440,17 @@
       gap:12px;
     }
   
-    .heart{
+    #soApp .heart{
       font-size: 14px;
       line-height: 1;
       margin-right: 8px;
     }
-    .searchBar{
+    #soApp .searchBar{
       padding:12px 12px 0;
       border-top:1px solid rgba(255,255,255,.06);
       background: rgba(0,0,0,.10);
     }
-    .searchBar input{
+    #soApp .searchBar input{
       width:100%;
       padding:10px 12px;
       border-radius:12px;
@@ -481,7 +462,7 @@
     }
     
     /* Filter chips (list) */
-    .filterBar{
+    #soApp .filterBar{
       padding:10px 12px 0;
       display:flex;
       flex-wrap:wrap;
@@ -489,7 +470,7 @@
       border-top:1px solid rgba(255,255,255,.06);
       background: rgba(0,0,0,.10);
     }
-    .fChip{
+    #soApp .fChip{
       padding:7px 10px;
       font-size:12px;
       border-radius:999px;
@@ -500,14 +481,14 @@
       user-select:none;
       transition: .12s ease;
     }
-    .fChip:hover{ background: rgba(255,255,255,.10); }
-    .fChip.active{
+    #soApp .fChip:hover{ background: rgba(255,255,255,.10); }
+    #soApp .fChip.active{
       color: var(--text);
       border-color: rgba(122,167,255,.55);
       background: rgba(122,167,255,.18);
       box-shadow: 0 0 0 4px rgba(122,167,255,.12);
     }
-    .badge{
+    #soApp .badge{
       display:inline-flex;
       align-items:center;
       gap:6px;
@@ -520,8 +501,8 @@
       white-space:nowrap;
       margin-left:8px;
     }
-    .badge b{ color: var(--text); font-weight:700; }
-    .starBtn{
+    #soApp .badge b{ color: var(--text); font-weight:700; }
+    #soApp .starBtn{
       padding:8px 10px;
       border-radius:999px;
       background: rgba(255,255,255,.06);
@@ -529,13 +510,13 @@
       color: var(--text);
       cursor:pointer;
     }
-    .starBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
-    .starBtn.on{
+    #soApp .starBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
+    #soApp .starBtn.on{
       background: rgba(255,215,0,.12);
       border-color: rgba(255,215,0,.28);
     }
 
-    .starInline{
+    #soApp .starInline{
       margin-left:8px;
       width:26px;
       height: var(--special-band-height);
@@ -549,28 +530,28 @@
       padding:0;
       line-height:1;
     }
-    .starInline:hover{ background: rgba(255,255,255,.08); }
-    .starInline.on{
+    #soApp .starInline:hover{ background: rgba(255,255,255,.08); }
+    #soApp .starInline.on{
       background: rgba(255,215,0,.12);
       border-color: rgba(255,215,0,.28);
     }
 
-    .bdayCountdown{
+    #soApp .bdayCountdown{
       margin-top:6px;
       font-size:12px;
       color:var(--muted);
     }
 
     /* Emerald highlight for name + Local Time */
-    .ename, .popup .pnick, #profileName, .localLabel, .localTimeVal{
+    #soApp .ename, #soApp .popup .pnick, #soApp #profileName, #soApp .localLabel, #soApp .localTimeVal{
       color: var(--emerald) !important;
     }
-    #profileName{ font-weight:800; }
-    .popup .pname{ margin:0 0 6px; }
-    .popup .pname .pheart{ margin-right:6px; }
+    #soApp #profileName{ font-weight:800; }
+    #soApp .popup .pname{ margin:0 0 6px; }
+    #soApp .popup .pname .pheart{ margin-right:6px; }
 
     /* Map legend (bottom-right) */
-    .mapLegend{
+    #soApp .mapLegend{
       padding:8px 10px;
       border-radius: 12px;
       border:1px solid rgba(255,255,255,.10);
@@ -591,32 +572,32 @@
        ============================= */
     @media (max-width: 480px) {
       /* erste Zeile: Nickname + Birthdate */
-      .panel .row:first-of-type {
+      #soApp .panel .row:first-of-type{
         display: grid;
         grid-template-columns: 2.2fr 1fr; /* Name breiter, Birthday schmaler */
         gap: 10px;
       }
 
       /* Inputs selbst etwas komfortabler */
-      .panel .row:first-of-type input {
+      #soApp .panel .row:first-of-type input{
         padding: 12px 12px;
         font-size: 14px;
       }
 
       /* Birthdate darf sich nicht aufblähen */
-      #birthdate { min-width: 0; }
+      #soApp #birthdate{ min-width: 0; }
     }
 
     /* My location marker (special) */
-    .myLocWrap{ position: relative; width: 22px; height: var(--special-band-height); }
-    .myLocDot{
+    #soApp .myLocWrap{ position: relative; width: 22px; height: var(--special-band-height); }
+    #soApp .myLocDot{
       position:absolute; inset:0;
       border-radius:999px;
       background: rgba(0, 229, 255, .92);
       border: 2px solid rgba(255,255,255,.92);
       box-shadow: 0 0 18px rgba(0, 229, 255, .55);
     }
-    .myLocRing{
+    #soApp .myLocRing{
       position:absolute; inset:-6px;
       border-radius:999px;
       border: 2px solid rgba(0, 229, 255, .55);
@@ -633,7 +614,7 @@
     /* =============================
        CLUSTER PINS (zoomed out)
        ============================= */
-    .clusterPin{
+    #soApp .clusterPin{
       width: 40px;
       height: var(--special-band-height);
       border-radius: 999px;
@@ -650,12 +631,12 @@
       position: relative;
       overflow: hidden;
     }
-    .clusterPin::before{
+    #soApp .clusterPin::before{
       content:""; position:absolute; inset:0;
       background: linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,0));
       pointer-events:none;
     }
-    .clusterPin::after{
+    #soApp .clusterPin::after{
       content:"";
       position:absolute;
       width: 56px;
@@ -671,16 +652,16 @@
    ============================= */
 
 /* 1) Tap / click feedback */
-button, .iconBtn, .fChip, .starBtn, .starInline, .aBtn {
+#soApp button, #soApp .iconBtn, #soApp .fChip, #soApp .starBtn, #soApp .starInline, #soApp .aBtn{
   transition: transform .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
 }
-button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:active, .aBtn:active {
+#soApp button:active, #soApp .iconBtn:active, #soApp .fChip:active, #soApp .starBtn:active, #soApp .starInline:active, #soApp .aBtn:active{
   transform: translateY(1px) scale(0.98);
   box-shadow: 0 0 0 4px rgba(122,167,255,.14);
 }
 
 /* 2) Popup soft fade-in */
-.leaflet-popup {
+#soApp .leaflet-popup{
   animation: popupIn .16s ease-out;
 }
 @keyframes popupIn {
@@ -689,7 +670,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 }
 
 /* 3) List selection pulse */
-.item.selected {
+#soApp .item.selected{
   animation: selectPulse .22s ease-out;
 }
 @keyframes selectPulse {
@@ -705,30 +686,30 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    ============================= */
 @media (max-width: 480px) {
   /* First form row (Nickname + Birthdate) */
-  .panel .row:first-of-type {
+  #soApp .panel .row:first-of-type{
     display: grid !important;
     grid-template-columns: 2.4fr 1fr !important;
     gap: 10px !important;
     align-items: start;
   }
-  .panel .row:first-of-type > div { min-width: 0; }
-  #nickname, #birthdate { min-width: 0; }
+  #soApp .panel .row:first-of-type > div{ min-width: 0; }
+  #soApp #nickname, #soApp #birthdate{ min-width: 0; }
 }
 
 
 /* Header stats (top-right) */
-.hdrRight{ text-align:right; }
-.hdrTitle{ color: var(--green); font-weight:800; letter-spacing:.2px; }
-.hdrSub{ color: var(--muted); font-size:12.5px; margin-top:2px; max-width: 48vw; }
+#soApp .hdrRight{ text-align:right; }
+#soApp .hdrTitle{ color: var(--green); font-weight:800; letter-spacing:.2px; }
+#soApp .hdrSub{ color: var(--muted); font-size:12.5px; margin-top:2px; max-width: 48vw; }
 @media (max-width: 480px){
-  .hdrSub{ max-width: 60vw; }
+  #soApp .hdrSub{ max-width: 60vw; }
 }
 
 
-.stats-title{color:#10b981; font-weight:600;}
+#soApp .stats-title{color:#10b981; font-weight:600;}
 
     /* Framed info line under name (Birthday / Friendship sort) */
-    .infoBlock{
+    #soApp .infoBlock{
       display:inline-flex;
       align-items:center;
       gap:6px;
@@ -742,13 +723,14 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
       white-space:nowrap;
       max-width:100%;
     }
-    .infoBlock b{font-weight:700;}
+    #soApp .infoBlock b{font-weight:700;}
 
 
 /* ============================
    Premium UI polish (no new features)
    ============================ */
-.friendsmap-scope{
+#soApp, #soApp{ text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+#soApp{
   --card: rgba(255,255,255,.055);
   --card2: rgba(255,255,255,.075);
   --cardBorder: rgba(255,255,255,.12);
@@ -760,31 +742,368 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
   --glowRed: rgba(255, 106, 130, .35);
 }
 
+/* subtle background depth */
+#soApp::before{
+  content:"";
+  position:fixed;
+  inset:-20vh -10vw;
+  background:
+    radial-gradient(900px 600px at 20% 10%, rgba(122,167,255,.12), transparent 60%),
+    radial-gradient(700px 520px at 80% 12%, rgba(255,120,180,.09), transparent 62%),
+    radial-gradient(900px 620px at 55% 90%, rgba(80,255,190,.08), transparent 65%);
+  pointer-events:none;
+  z-index:-1;
+  filter: blur(0px);
+}
+
+/* list feels like premium cards */
+#soApp .list{ padding: 6px; }
+#soApp .item{
+  margin: 8px 6px;
+  border-bottom: none;
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--card2), var(--card));
+  border: 1px solid var(--cardBorder);
+  box-shadow: var(--shadowSoft), 0 0 0 1px rgba(80,255,190,.10) inset, 0 0 22px rgba(80,255,190,.16);
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+  will-change: transform;
+  position: relative;
+  overflow: hidden;
+}
+#soApp .item::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background: radial-gradient(420px 120px at 18% 0%, rgba(122,167,255,.10), transparent 60%);
+  opacity:.9;
+  pointer-events:none;
+}
+#soApp .item:hover{
+  transform: translateY(-1px);
+  box-shadow: var(--shadowLift);
+  border-color: var(--cardBorder2);
+}
+#soApp .item:active{ transform: translateY(0px) scale(.995); }
+
+/* heart glow accents (purely visual) */
+#soApp .item.heartGreen::after, #soApp .item.heartYellow::after, #soApp .item.heartRed::after{
+  content:"";
+  position:absolute;
+  inset:-40px -40px auto auto;
+  width:180px;
+  height: var(--special-band-height);
+  border-radius: 999px;
+  filter: blur(18px);
+  opacity:.55;
+  pointer-events:none;
+}
+#soApp .item.heartGreen::after{ background: radial-gradient(circle, var(--glowGreen), transparent 60%); }
+#soApp .item.heartYellow::after{ background: radial-gradient(circle, var(--glowYellow), transparent 60%); }
+#soApp .item.heartRed::after{ background: radial-gradient(circle, var(--glowRed), transparent 60%); }
+
+/* typography hierarchy */
+#soApp .nick{ gap:8px; }
+#soApp .ename{
+  letter-spacing: .15px;
+}
+#soApp .tiny{
+  line-height: 1.35;
+  opacity: .92;
+}
+#soApp .localLabel{ opacity:.85; }
+
+/* framed info blocks: slightly more "chip" */
+#soApp .infoBlock{
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.07);
+  box-shadow: 0 10px 22px rgba(0,0,0,.22);
+}
+#soApp .infoBlock b{ letter-spacing:.2px; }
+
+/* micro motion (respect reduced motion) */
+@media (prefers-reduced-motion: no-preference){
+  #soApp .item{ animation: itemIn .22s ease both; }
+  @keyframes itemIn{
+    from{ opacity:0; transform: translateY(4px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+  #soApp .iconBtn, #soApp .secondary, #soApp .badge, #soApp .chip, #soApp .aBtn{
+    transition: transform .14s ease, background .14s ease, border-color .14s ease, opacity .14s ease;
+  }
+  #soApp .iconBtn:hover, #soApp .secondary:hover{ transform: translateY(-1px); }
+}
+
+/* mobile tuning */
+@media (max-width: 560px){
+  #soApp .list{ max-height: 42vh; }
+  #soApp .item{ margin: 8px 4px; }
+}
+
+
+/* Selected list item (visual focus) */
+#soApp .item.isSelected{
+  border-color: rgba(255,255,255,.32);
+  background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.06));
+  box-shadow: 0 0 0 2px rgba(80,255,190,.22), 0 22px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(80,255,190,.14) inset, 0 0 60px rgba(80,255,190,.28);
+  transform: translateY(-1px);
+}
+#soApp .item.isSelected::before{
+  background: radial-gradient(520px 160px at 18% 0%, rgba(190,225,255,.16), transparent 62%);
+}
+#soApp .item.isSelected::after{
+  opacity:.72;
+}
+
+
+/* Favorite card accent (subtle, premium) */
+#soApp .item.isFav{
+  border-color: rgba(255, 230, 140, .16);
+}
+#soApp .item.isFav::before{
+  background:
+    radial-gradient(420px 120px at 18% 0%, rgba(255, 230, 140, .10), transparent 62%),
+    radial-gradient(520px 160px at 68% 10%, rgba(255, 190, 90, .06), transparent 65%);
+}
+
+/* Selected + Favorite = special spotlight */
+#soApp .item.isSelected.isFav{
+  border-color: rgba(255, 230, 140, .28);
+  box-shadow:
+    0 26px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(255, 230, 140, .12) inset,
+    0 0 60px rgba(255, 220, 120, .26);
+}
+#soApp .item.isSelected.isFav::after{
+  opacity:.78;
+  background: radial-gradient(circle, rgba(255, 220, 120, .42), transparent 60%);
+}
+
+/* tiny shimmer line (very subtle) */
+#soApp .item.isSelected.isFav .ename{
+  text-shadow: 0 0 18px rgba(255, 220, 120, .18);
+}
+
+
+
+/* Selected + Favorite + My Special One -> Special wins */
+#soApp .item.isSelected.isFav.isSpecial{
+  border-color: rgba(90, 235, 230, .42) !important;
+  box-shadow:
+    0 0 0 2px rgba(80,240,230,.45),
+    0 26px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(90, 235, 230, .14) inset,
+    0 0 78px rgba(80,240,230,.40) !important;
+}
+#soApp .item.isSelected.isFav.isSpecial::after{
+  opacity: 1 !important;
+  background: radial-gradient(520px 170px at 50% 0%, rgba(80,235,230,.22), transparent 65%) !important;
+}
+/* === Strong selection glow (frame-focused, no background lift) === */
+#soApp .item.isSelected{
+  background: linear-gradient(180deg, var(--card2), var(--card)); /* keep original */
+  box-shadow:
+    0 0 0 1.5px rgba(160,200,255,.55),
+    0 0 22px rgba(120,170,255,.55),
+    0 14px 42px rgba(0,0,0,.55);
+}
+#soApp .item.isSelected::before{ opacity:.35; }
+
+/* Favorite selection = different color identity (golden) */
+#soApp .item.isSelected.isFav{
+  box-shadow:
+    0 0 0 1.5px rgba(255,215,140,.75),
+    0 0 26px rgba(255,210,120,.75),
+    0 18px 48px rgba(0,0,0,.6);
+}
+
+/* Optional soft pulse on select (very subtle) */
+@media (prefers-reduced-motion: no-preference){
+  #soApp .item.isSelected{
+    animation: selectPulse .6s ease-out 1;
+  }
+  @keyframes selectPulse{
+    from{
+      box-shadow:
+        0 0 0 0 rgba(120,170,255,.0),
+        0 0 0 rgba(120,170,255,.0),
+        0 14px 42px rgba(0,0,0,.55);
+    }
+    to{
+      box-shadow:
+        0 0 0 1.5px rgba(160,200,255,.55),
+        0 0 22px rgba(120,170,255,.55),
+        0 14px 42px rgba(0,0,0,.55);
+    }
+  }
+}
+
+
+/* === Unified Visit Card Background (Option A) === */
+#soApp .profileCard, #soApp .visitCard, #soApp .profile{
+  background:
+    linear-gradient(180deg, rgba(20,28,40,.92), rgba(14,20,30,.92));
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+/* Inner sections calmer & glass-like */
+#soApp .profileCard .section, #soApp .visitCard .section, #soApp .profile .section{
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* Remove competing gradients inside visit card */
+#soApp .profileCard .section::before, #soApp .visitCard .section::before, #soApp .profile .section::before{
+  display:none !important;
+}
+
+
+/* === Profile / Visit Card: Option A + C (unified but pep) === */
+#soApp #profileView{
+  position: relative;
+  overflow: hidden; /* keep glows inside the visit card area */
+  background: linear-gradient(180deg, rgba(14,18,28,.92), rgba(10,13,20,.92));
+}
+#soApp #profileView::before{
+  content:"";
+  position: absolute; /* was fixed -> leaked behind list in profile mode */
+  inset: -22% -18%;
+  pointer-events:none;
+  z-index: 0;
+  background:
+    radial-gradient(900px 620px at 18% 8%, rgba(120,170,255,.13), transparent 62%),
+    radial-gradient(760px 560px at 78% 16%, rgba(80,255,190,.08), transparent 64%),
+    radial-gradient(900px 700px at 55% 95%, rgba(255,120,180,.06), transparent 66%);
+  opacity: .95;
+}
+#soApp #profileView > *{ position: relative; z-index: 1; }
+
+/* Favorite profile: gold spotlight (only here, not everywhere) */
+#soApp #profileView.isFavProfile::before{
+  background:
+    radial-gradient(980px 700px at 22% 10%, rgba(255, 220, 120, .18), transparent 64%),
+    radial-gradient(860px 620px at 78% 18%, rgba(255, 200, 90, .10), transparent 66%),
+    radial-gradient(900px 700px at 55% 95%, rgba(120,170,255,.08), transparent 70%);
+}
+
+/* Calm inner cards (avoid multi competing gradients) */
+#soApp .profileCard{
+  background: rgba(255,255,255,.04) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04) !important;
+}
+#soApp .profileCard::before{ display:none !important; }
+
+
+/* === Profile mode: remove ALL glow effects === */
+#soApp #profileView .item, #soApp #profileView .item.isSelected, #soApp #profileView .item.isFav, #soApp #profileView .item::before, #soApp #profileView .item::after{
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+#soApp.profileMode .item.isSelected{
+  box-shadow: 0 0 0 1px rgba(255,255,255,.18) !important;
+}
+
+#soApp.profileMode .leaflet-popup-content-wrapper, #soApp.profileMode .leaflet-popup-tip{
+  box-shadow: none !important;
+}
+
+
+/* === When profile (visit card) is open: disable list selection glow completely === */
+#soApp.profileMode .item.isSelected, #soApp.profileMode .item.isSelected.isFav, #soApp.profileMode .item.isSelected.fromMap, #soApp.profileMode .item.isSelected.fromList{
+  box-shadow: none !important;
+  transform: none !important;
+}
+#soApp.profileMode .item.isSelected::after, #soApp.profileMode .item.isSelected::before{
+  display:none !important;
+}
+#soApp.profileMode .item.isSelected{
+  border-color: rgba(255,255,255,.18) !important;
+}
+
+
+/* === Nuclear option: kill ALL glow sources while profileMode is active === */
+/* 1) Remove global background glows */
+#soApp.profileMode::before, #soApp.profileMode::after{
+  opacity: 0 !important;
+  display:none !important;
+}
+
+/* 2) Remove profileView stage glows */
+#soApp.profileMode #profileView::before, #soApp.profileMode #profileView::after, #soApp.profileMode #profileView.isFavProfile::before{
+  display:none !important;
+  opacity:0 !important;
+}
+
+/* 3) Remove list item ambient glows (heart blobs + card sheen) */
+#soApp.profileMode .item::before, #soApp.profileMode .item::after, #soApp.profileMode .item.heartGreen::after, #soApp.profileMode .item.heartYellow::after, #soApp.profileMode .item.heartRed::after{
+  display:none !important;
+  opacity:0 !important;
+}
+
+/* 4) Ensure no shadows anywhere in list items during profileMode */
+#soApp.profileMode .item, #soApp.profileMode .item *{
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+/* Keep a minimal selection border so you still know what's selected */
+#soApp.profileMode .item.isSelected{
+  border-color: rgba(255,255,255,.18) !important;
+}
+
+/* In profileMode we still want the selected person to gently glow (frame only) */
+#soApp.profileMode .item.isSelected{
+  box-shadow:
+    0 0 0 1.5px rgba(160,200,255,.45) !important,
+    0 0 18px rgba(120,170,255,.38) !important,
+    0 14px 42px rgba(0,0,0,.55) !important;
+}
+#soApp.profileMode .item.isSelected.isFav{
+  box-shadow:
+    0 0 0 1.5px rgba(255,215,140,.55) !important,
+    0 0 22px rgba(255,210,120,.48) !important,
+    0 16px 46px rgba(0,0,0,.60) !important;
+}
+#soApp.profileMode .item.isSelected.isSpecial{
+  box-shadow:
+    0 0 0 1.5px rgba(80,240,230,.55) !important,
+    0 0 24px rgba(80,240,230,.50) !important,
+    0 16px 48px rgba(0,0,0,.60) !important;
+}
+
+
+/* === Unify left panel background (top edit area, list, footer) === */
+#soApp{
+  --leftStage: rgba(10,13,20,.94);
+  --leftStageSolid: rgba(10,13,20,.98);
+  --leftBorder: rgba(255,255,255,.10);
+}
+
 /* Left main card becomes the single source of truth */
-.card{
+#soApp .card{
   background: var(--leftStage) !important;
   border-color: var(--leftBorder) !important;
 }
 
 /* Ensure all left sub-areas use the exact same background */
-.searchBar,
-.filterBar,
-.alphaBar,
-.list,
-.footer-tools,
-.hint,
-.panel{
+#soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .list, #soApp .footer-tools, #soApp .hint, #soApp .panel{
   background: var(--leftStage) !important;
 }
 
 /* The list itself is <ul>; make sure it doesn't look like a different strip */
-.list{
+#soApp .list{
   border-top: 1px solid rgba(255,255,255,.06) !important;
   border-bottom: 1px solid rgba(255,255,255,.06) !important;
 }
 
 /* Footer area: same color, no gradient differences */
-.footer-tools{
+#soApp .footer-tools{
   background: var(--leftStage) !important;
   border-top: 1px solid rgba(255,255,255,.08) !important;
   box-shadow: none !important;
@@ -792,40 +1111,33 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 }
 
 /* If there is any form container in left area, unify it too */
-.form,
-.formGrid,
-.formWrap,
-.formSection,
-#form,
-#editor,
-#left,
-.left{
+#soApp .form, #soApp .formGrid, #soApp .formWrap, #soApp .formSection, #soApp #form, #soApp #editor, #soApp #left, #soApp .left{
   background: transparent !important;
 }
 
 
 /* === Further unify: remove subtle overlays + make profile panel match === */
-.friendsmap-scope::before{ opacity: .18 !important; } /* keep slight ambience but reduce banding */
+#soApp::before{ opacity: .18 !important; } /* keep slight ambience but reduce banding */
 
 /* Remove any card sheen overlays that can shift perceived color */
-.card::before{ display:none !important; }
-.item::before{ opacity:.35; } /* keep gentle, not affecting stage strips */
+#soApp .card::before{ display:none !important; }
+#soApp .item::before{ opacity:.35; } /* keep gentle, not affecting stage strips */
 
 /* Ensure the list strips are not influenced by transparency */
-.searchBar, .filterBar, .alphaBar, .list, .footer-tools, .hint, .panel{
+#soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .list, #soApp .footer-tools, #soApp .hint, #soApp .panel{
   background: var(--leftStageSolid) !important;
 }
 
 /* Profile / Visit card area: same background family */
-#profileView{
+#soApp #profileView{
   background: var(--leftStageSolid) !important;
 }
-#profileView .profileHead{
+#soApp #profileView .profileHead{
   background: var(--leftStageSolid) !important;
   border-bottom: 1px solid rgba(255,255,255,.08) !important;
   box-shadow: none !important;
 }
-#profileView .profileCard{
+#soApp #profileView .profileCard{
   background: var(--leftStageSolid) !important;
   border: 1px solid rgba(255,255,255,.10) !important;
   box-shadow: none !important;
@@ -833,13 +1145,12 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 
 
 /* === Absolute solid stage: eliminate all perceived color shifts === */
-.friendsmap-scope{
+#soApp{
   --stageSolid: #0A0D14; /* single source of truth */
 }
 
 /* Turn off any backdrop / translucency that can vary with content behind */
-.searchBar, .filterBar, .alphaBar, .list, .footer-tools, .hint, .panel,
-.card, #profileView, #profileView .profileHead, #profileView .profileCard{
+#soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .list, #soApp .footer-tools, #soApp .hint, #soApp .panel, #soApp .card, #soApp #profileView, #soApp #profileView .profileHead, #soApp #profileView .profileCard{
   background-color: var(--stageSolid) !important;
   background-image: none !important;
   backdrop-filter: none !important;
@@ -847,47 +1158,886 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 }
 
 /* Kill all overlay sheens that can change perceived brightness */
-.friendsmap-scope::before{ display:none !important; }
-.card::before, .card::after,
-.searchBar::before, .filterBar::before, .alphaBar::before, .footer-tools::before,
-#profileView::before, #profileView::after, #profileView .profileHead::before, #profileView .profileHead::after,
-.profileCard::before, .profileCard::after{
+#soApp::before{ display:none !important; }
+#soApp .card::before, #soApp .card::after, #soApp .searchBar::before, #soApp .filterBar::before, #soApp .alphaBar::before, #soApp .footer-tools::before, #soApp #profileView::before, #soApp #profileView::after, #soApp #profileView .profileHead::before, #soApp #profileView .profileHead::after, #soApp .profileCard::before, #soApp .profileCard::after{
   display:none !important;
 }
 
 /* Ensure borders are consistent (no gradients) */
-.card, .searchBar, .filterBar, .alphaBar, .footer-tools, .panel, .hint,
-#profileView .profileHead, #profileView .profileCard{
+#soApp .card, #soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .footer-tools, #soApp .panel, #soApp .hint, #soApp #profileView .profileHead, #soApp #profileView .profileCard{
   border-color: rgba(255,255,255,.10) !important;
   box-shadow: none !important;
 }
 
 /* Keep list items premium without affecting stage color */
-.item{
+#soApp .item{
   background-image: none !important;
 }
 
 
+/* === One background everywhere (kills hard cuts in edit/list/profile) === */
+#soApp{ --stageSolid: #0A0D14; }
+
+/* Make the page itself the single background */
+#soApp, #soApp{
+  background: var(--stageSolid) !important;
+  background-image: none !important;
+}
+
+/* Common outer wrappers (safety net) */
+#soApp #app, #soApp .app, #soApp .wrap, #soApp .container, #soApp .main, #soApp .layout, #soApp .shell{
+  background: var(--stageSolid) !important;
+  background-image: none !important;
+}
+
+/* Left + Profile panes: no separate gradients/alphas */
+#soApp .card, #soApp #profileView, #soApp #profileView .profileHead, #soApp #profileView .profileCard, #soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .list, #soApp .footer-tools, #soApp .hint, #soApp .panel{
+  background: var(--stageSolid) !important;
+  background-image: none !important;
+  background-color: var(--stageSolid) !important;
+}
+
+/* Remove any remaining pseudo background layers that could create bands */
+#soApp::before, #soApp::after, #soApp .card::before, #soApp .card::after, #soApp .searchBar::before, #soApp .searchBar::after, #soApp .filterBar::before, #soApp .filterBar::after, #soApp .alphaBar::before, #soApp .alphaBar::after, #soApp .list::before, #soApp .list::after, #soApp .footer-tools::before, #soApp .footer-tools::after, #soApp #profileView::before, #soApp #profileView::after, #soApp #profileView .profileHead::before, #soApp #profileView .profileHead::after, #soApp #profileView .profileCard::before, #soApp #profileView .profileCard::after{
+  display:none !important;
+  opacity:0 !important;
+}
+
+/* Make separators subtle (so they don't look like 'cuts') */
+#soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .footer-tools, #soApp .card, #soApp #profileView .profileHead, #soApp #profileView .profileCard{
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+
+
+/* === My Special One (only when Special + Favorite) === */
+#soApp #profileView .specialOneBadge{
+  display:none;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid rgba(80,240,230,.30);
+  background: rgba(80,240,230,.10);
+  color: rgba(200,255,250,.98);
+  box-shadow: 0 0 18px rgba(80,240,230,.18);
+  margin-top:6px;
+  white-space:nowrap;
+}
+#soApp #profileView.isSpecialProfile .specialOneBadge{ display:inline-flex; }
+
+/* === Favorite top band on profile image row (gold) === */
+#soApp #profileView.isFavProfile 
+
+/* === Special top band overrides Favorite when both === */
+#profileView.isSpecialProfile 
+
+/* === Fix: don't stack two bands (gold + turquoise) on the profile.
+   We use ONE band only (the bottom band on .profileHead) and simply recolor it.
+   So the top band on the image row is disabled entirely. === */
+#profileView 
+
+
+/* === Favorite indicator in visit card (gold strip + badge) === */
+#profileView .favBadge{
+  display:none;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid rgba(255,215,140,.22);
+  background: rgba(255,215,140,.10);
+  color: rgba(255,235,190,.95);
+  box-shadow: 0 0 18px rgba(255,215,140,.16);
+  margin-top:6px;
+}
+#soApp #profileView.isFavProfile .favBadge{ display:inline-flex; }
+
+#soApp #profileView.isFavProfile .profileHead{
+  border-bottom-color: rgba(255,215,140,.22) !important;
+}
+#soApp #profileView.isFavProfile .profileHead::after{
+  content:"";
+  position:absolute;
+  left:12px; right:12px; bottom:-1px;
+  height: var(--special-band-height);
+  background: linear-gradient(90deg, transparent, rgba(255,215,140,.55), transparent);
+}
+
+
+/* === Map popup glow: normal (cool) vs favorite (gold) === */
+#soApp .leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+  background: rgba(14,18,28,.96);
+  color: rgba(255,255,255,.92);
+  border:1px solid rgba(80,255,190,.46);
+  box-shadow:
+    0 0 0 1px rgba(160,200,255,.20) inset,
+    0 0 46px rgba(80,255,190,.40),
+    0 28px 90px rgba(0,0,0,.62);
+}
+#soApp .leaflet-popup.normPopup .leaflet-popup-tip{
+  background: rgba(14,18,28,.96);
+  box-shadow: 0 0 46px rgba(80,255,190,.36);
+}
+#soApp .leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+  background: rgba(16,14,18,.96);
+  color: rgba(255,255,255,.92);
+  border:1px solid rgba(255,215,140,.52);
+  box-shadow:
+    0 0 0 1px rgba(255,215,140,.24) inset,
+    0 0 38px rgba(255,210,120,.62),
+    0 30px 96px rgba(0,0,0,.66);
+}
+#soApp .leaflet-popup.favPopup .leaflet-popup-tip{
+  background: rgba(16,14,18,.96);
+  box-shadow: 0 0 38px rgba(255,210,120,.52);
+}
+
+
+/* === Favorite strip: wider + smoother gradient === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:4px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,215,140,.35) 15%,
+    rgba(255,215,140,.85) 50%,
+    rgba(255,215,140,.35) 85%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px rgba(255,215,140,.55);
+}
+
+/* === Popup glow: slightly richer colors === */
+#soApp .leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(255,215,140,.65) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,215,140,.30) inset,
+    0 0 68px rgba(255,210,120,.85),
+    0 36px 120px rgba(0,0,0,.70) !important;
+}
+#soApp .leaflet-popup.favPopup .leaflet-popup-tip{
+  box-shadow: 0 0 68px rgba(255,210,120,.72) !important;
+}
+
+#soApp .leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(140,190,255,.55) !important;
+  box-shadow:
+    0 0 0 1px rgba(140,190,255,.25) inset,
+    0 0 64px rgba(120,170,255,.78),
+    0 34px 112px rgba(0,0,0,.68) !important;
+}
+#soApp .leaflet-popup.normPopup .leaflet-popup-tip{
+  box-shadow: 0 0 64px rgba(120,170,255,.65) !important;
+}
+
+
+/* === Fav band (visit card): thicker gradient like reference === */
+#soApp #profileView .profileHead{ position: relative; overflow: hidden; }
+
+#soApp #profileView.isFavProfile .profileHead
+/* keep the bottom strip too, #soApp slightly wider */
+#profileView.isFavProfile .profileHead::after{
+  height:5px !important;
+}
+
+
+/* === Final tweak: favorite band exactly like reference === */
+/* remove top glow band, keep ONLY the bottom gradient bar */
+#soApp #profileView.isFavProfile .profileHead::before{
+  display:none !important;
+}
+
+/* bottom band: centered, softer edges, correct vertical spacing */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:6px !important;
+  bottom:-1px !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.25) 20%,
+    rgba(255,215,140,.9) 50%,
+    rgba(255,215,140,.25) 80%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 14px rgba(255,215,140,.45) !important;
+}
+
+/* === Special One: recolor the SAME bottom band to turquoise (no second bar) === */
+#soApp #profileView.isSpecialProfile .profileHead{
+  border-bottom-color: rgba(80,240,230,.22) !important;
+}
+#soApp #profileView.isSpecialProfile .profileHead::after{
+  content:"";
+  position:absolute;
+  left:12px; right:12px;
+  bottom:-1px;
+  height: var(--special-band-height);
+  background: linear-gradient(
+    90deg,
+    rgba(80,240,230,0) 0%,
+    rgba(80,240,230,.25) 20%,
+    rgba(80,240,230,.95) 50%,
+    rgba(0,200,190,.25) 80%,
+    rgba(80,240,230,0) 100%
+  ) !important;
+  box-shadow: 0 0 16px rgba(80,240,230,.55) !important;
+}
+
+
+/* === Fix: make favorite band truly thicker and visible === */
+#soApp #profileView .profileHead{
+  overflow: visible !important; /* allow band to extend */
+}
+
+#soApp #profileView.isFavProfile .profileHead::after{
+  content:"";
+  position:absolute;
+  left:-16px;
+  right:-16px;
+  bottom:-6px;              /* move band down so height is visible */
+  height:14px !important;   /* real thickness */
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.30) 18%,
+    rgba(255,215,140,.95) 50%,
+    rgba(255,215,140,.30) 82%,
+    rgba(255,215,140,0) 100%
+  );
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 0 22px rgba(255,215,140,.55);
+  pointer-events:none;
+}
+
+
+/* === Only change: favorite band to 30px height === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:30px !important;
+  bottom:-14px !important;
+  box-shadow: 0 0 32px rgba(255,215,140,.65) !important;
+}
+
+
+/* === Unblock favorite band: override earlier 'display:none' safety reset === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  display:block !important;
+  opacity:1 !important;
+  content:"" !important;
+}
+
+
+/* === Adjust favorite band to half thickness === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:15px !important;   /* half of 30px */
+  bottom:-7px !important;
+  box-shadow: 0 0 20px rgba(255,215,140,.55) !important;
+}
+
+
+/* === Refine favorite band: slightly thinner, remove hard center line === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:12px !important;          /* a bit thinner */
+  bottom:-6px !important;
+  /* smoother gradient without a sharp center line */
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.28) 22%,
+    rgba(255,215,140,.55) 50%,
+    rgba(255,215,140,.28) 78%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 16px rgba(255,215,140,.45) !important;
+}
+
+
+/* === Final micro-tune: 10px band, no hard center line at all === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:10px !important;
+  bottom:-5px !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.22) 30%,
+    rgba(255,215,140,.32) 50%,
+    rgba(255,215,140,.22) 70%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(255,215,140,.35) !important;
+}
+
+/* ensure no other rule adds a center highlight */
+#soApp #profileView.isFavProfile .profileHead::after::before, #soApp #profileView.isFavProfile .profileHead::after::after{
+  display:none !important;
+}
+
+
+/* === Ultra-fix: 11px band + explicitly kill centerline sources === */
+#soApp #profileView.isFavProfile .profileHead{
+  border-bottom-color: transparent !important; /* kill 1px border line */
+}
+
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:11px !important;
+  bottom:-5px !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.18) 35%,
+    rgba(255,215,140,.24) 50%,
+    rgba(255,215,140,.18) 65%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 10px rgba(255,215,140,.30) !important;
+}
+
+/* absolutely ensure no 1px hairline from any pseudo/border */
+#soApp #profileView.isFavProfile .profileHead, #soApp #profileView.isFavProfile .profileHead *{
+  outline: none !important;
+}
+
+
+/* === Final: richer gold color, same size === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:11px !important;
+  bottom:-5px !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,205,120,.35) 30%,
+    rgba(255,195,90,.55) 50%,
+    rgba(255,205,120,.35) 70%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 14px rgba(255,195,90,.55) !important;
+}
+
+
+/* === Floating Distance Tool Button (always visible) === */
+#soApp #distanceFloatingBtn{
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 9999;
+  background: rgba(20,24,35,.95);
+  color: rgba(230,120,120,.95);
+  border: 1px solid rgba(220,90,90,.6);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+}
+#soApp #distanceFloatingBtn.active{
+  background: rgba(220,90,90,.18);
+  box-shadow: 0 0 16px rgba(220,90,90,.45);
+}
+
+
+/* === Distance Tool (armed) === */
+#soApp #distanceFloatingBtn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  width:42px;
+  height: var(--special-band-height);
+  padding:0 !important;
+}
+#soApp #distanceFloatingBtn.active{
+  background: rgba(220,90,90,.18) !important;
+  box-shadow: 0 0 16px rgba(220,90,90,.45) !important;
+}
+
+#soApp #distanceHint{
+  position: fixed;
+  left: 66px;
+  bottom: 16px;
+  z-index: 9999;
+  max-width: 320px;
+  padding: 7px 10px;
+  border-radius: 12px;
+  background: rgba(10,13,20,.92);
+  border: 1px solid rgba(220,90,90,.35);
+  color: rgba(255,220,220,.92);
+  font-size: 12px;
+  line-height: 1.15;
+  display:none;
+}
+#soApp #distanceHint b{ color: rgba(255,185,185,.98); }
+
+#soApp .distanceLabel{
+  background: rgba(10,13,20,.92);
+  color: rgba(255,200,200,.95);
+  border: 1px solid rgba(220,90,90,.55);
+  padding: 5px 9px;
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  line-height: 1.15;
+  box-shadow: 0 10px 25px rgba(0,0,0,.35);
+}
+#soApp .distanceMid{
+  width: 16px;
+  height: var(--special-band-height);
+  border-radius: 999px;
+  border: 2px dashed rgba(220,90,90,.65);
+  background: rgba(10,13,20,.15);
+}
+
+
+/* === Distance Tool refinements === */
+#soApp .distanceLabel{
+  background: rgba(5,7,12,.96) !important;
+  color: rgba(255,245,245,.98) !important;
+  border: 1px solid rgba(255,120,120,.72) !important;
+  font-weight: 700;
+  letter-spacing: .2px;
+  padding: 6px 10px !important;
+  border-radius: 12px !important;
+  font-size: 13px !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,.65);
+  box-shadow: 0 12px 30px rgba(0,0,0,.55), 0 0 18px rgba(220,90,90,.18);
+}
+#soApp .distanceMid{
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 999px;
+  border: 2px solid rgba(255,140,140,.85) !important;
+  background: rgba(10,13,20,.55) !important;
+  box-shadow: 0 0 16px rgba(220,90,90,.25);
+  position: relative;
+}
+#soApp .distanceMid::after{
+  content:"";
+  position:absolute;
+  left:50%; top:50%;
+  width:4px; height: var(--special-band-height);
+  transform: translate(-50%,-50%);
+  border-radius:999px;
+  background: rgba(255,180,180,.95);
+}
+#soApp #distanceHint{
+  border-color: rgba(220,90,90,.28) !important;
+  color: rgba(255,235,235,.90) !important;
+}
+
+
+/* === Distance Info Popup (red glow) === */
+#soApp .leaflet-popup.distInfoPopup .leaflet-popup-content-wrapper{
+  background: rgba(8,10,16,.96);
+  color: rgba(255,245,245,.95);
+  border: 1px solid rgba(220,90,90,.65);
+  box-shadow:
+    0 0 0 1px rgba(220,90,90,.18) inset,
+    0 0 34px rgba(220,90,90,.55),
+    0 28px 90px rgba(0,0,0,.62);
+  border-radius: 14px;
+}
+#soApp .leaflet-popup.distInfoPopup .leaflet-popup-tip{
+  background: rgba(8,10,16,.96);
+  box-shadow: 0 0 28px rgba(220,90,90,.45);
+}
+#soApp .distInfo{
+  font-size: 12px;
+  line-height: 1.25;
+  min-width: 250px;
+}
+#soApp .distInfo .row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+#soApp .distInfo .row:last-child{ border-bottom:none; }
+#soApp .distInfo .k{ opacity:.85; }
+#soApp .distInfo .v{ font-weight:700; color: rgba(255,220,220,.98); }
+#soApp .distInfo .title{
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: rgba(255,230,230,.98);
+}
+#soApp .distInfo .controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin: 6px 0 8px 0;
+}
+#soApp .distInfo select{
+  background: rgba(12,15,24,.9);
+  color: rgba(255,245,245,.95);
+  border: 1px solid rgba(220,90,90,.35);
+  border-radius: 10px;
+  padding: 4px 8px;
+  outline: none;
+}
+
+/* numbered markers for point 1 / 2 */
+#soApp .distPointBadge{
+  width: 18px;
+  height: var(--special-band-height);
+  border-radius: 999px;
+  background: rgba(220,90,90,.25);
+  border: 2px solid rgba(255,150,150,.85);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: rgba(255,235,235,.98);
+  font-weight: 800;
+  font-size: 11px;
+  box-shadow: 0 0 14px rgba(220,90,90,.25);
+}
+
+
+/* Nearest place marker (same red family) */
+#soApp .nearestPlacePin{
+  width: 14px;
+  height: var(--special-band-height);
+  border-radius: 999px;
+  border: 2px solid rgba(255,150,150,.9);
+  background: rgba(220,90,90,.35);
+  box-shadow: 0 0 18px rgba(220,90,90,.45);
+}
+
+
+/* Midpoint pin marker (styled like map pin, red glow) */
+#soApp .midpointPin{
+  width: 22px;
+  height: var(--special-band-height);
+  background: linear-gradient(180deg, rgba(255,120,120,.95), rgba(180,60,60,.95));
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow:
+    0 0 18px rgba(220,90,90,.55),
+    0 0 36px rgba(220,90,90,.25);
+  border: 2px solid rgba(255,200,200,.85);
+  position: relative;
+}
+#soApp .midpointPin::after{
+  content:"";
+  width: 8px;
+  height: var(--special-band-height);
+  background: rgba(10,10,10,.65);
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%) rotate(45deg);
+  border-radius: 999px;
+}
+
+
+/* === Special person (turquoise) === */
+#soApp .item.isSpecial{
+  border-color: rgba(90, 235, 230, .22);
+}
+#soApp .item.isSpecial::before{
+  background:
+    radial-gradient(420px 120px at 18% 0%, rgba(80, 235, 230, .12), transparent 62%),
+    radial-gradient(520px 160px at 68% 10%, rgba(40, 190, 220, .08), transparent 65%);
+}
+#soApp .item.isSelected.isSpecial{
+  border-color: rgba(90, 235, 230, .42);
+  box-shadow:
+    0 0 0 2px rgba(80,240,230,.45),
+    0 26px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(90, 235, 230, .14) inset,
+    0 0 72px rgba(80,240,230,.36);
+}
+@keyframes specialPulse{
+  0%,100%{ filter: drop-shadow(0 0 0 rgba(80,235,230,0)); opacity:.0; }
+  50%{ filter: drop-shadow(0 0 16px rgba(80,235,230,.55)); opacity:.75; }
+}
+#soApp .item.isSelected.isSpecial::after{
+  opacity: 1 !important;
+  background: radial-gradient(520px 170px at 50% 0%, rgba(80,235,230,.18), transparent 65%);
+  animation: specialPulse 2.4s ease-in-out infinite;
+}
+
+/* inline "special" button next to favorite star */
+#soApp .diamondInline{
+  margin-left: 8px;
+  border: 1px solid rgba(90,235,230,.28);
+  background: rgba(8,12,20,.35);
+  color: rgba(160,255,250,.95);
+  border-radius: 10px;
+  padding: 2px 7px;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+#soApp .diamondInline.on{
+  border-color: rgba(90,235,230,.55);
+  background: rgba(80,235,230,.10);
+  box-shadow: 0 0 18px rgba(80,235,230,.22);
+}
+
+
+/* === Special ∞ animation (turquoise, always running) === */
+#soApp .diamondInline.specialOn{
+  position: relative;
+  color: rgba(120,255,245,.98) !important;
+  text-shadow: 0 0 10px rgba(80,240,230,.55), 0 0 18px rgba(80,240,230,.25);
+}
+#soApp .diamondInline.specialOn::before{
+  content:"";
+  position:absolute;
+  inset:-6px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, rgba(120,255,245,.35), rgba(0,0,0,0) 60%);
+  filter: blur(4px);
+  opacity: .85;
+  animation: spGlow 1.8s ease-in-out infinite;
+  pointer-events:none;
+}
+#soApp .diamondInline.specialOn{
+  animation: spFloat 2.2s ease-in-out infinite;
+}
+@keyframes spGlow{
+  0%,100%{ transform: scale(.9); opacity:.55; }
+  50%{ transform: scale(1.08); opacity: 1; }
+}
+@keyframes spFloat{
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-1.5px); }
+}
+
+
+/* === Special (turquoise) list highlight (like fav) === */
+#soApp .item.isSpecial{
+  border-color: rgba(80,240,230,.22);
+}
+#soApp .item.isSpecial::before{
+  background:
+    radial-gradient(420px 120px at 18% 0%, rgba(80,240,230,.14), transparent 62%),
+    radial-gradient(520px 160px at 68% 10%, rgba(0,200,190,.10), transparent 66%);
+}
+#soApp .item.isSpecial.isSelected{
+  box-shadow: 0 22px 70px rgba(0,0,0,.55), 0 0 26px rgba(80,240,230,.35);
+  border-color: rgba(80,240,230,.38);
+}
+
+
+/* === Special (turquoise) profile background + top band === */
+#soApp .isSpecialProfile::before{
+  background:
+    radial-gradient(980px 700px at 22% 10%, rgba(80,240,230,.18), transparent 64%),
+    radial-gradient(860px 620px at 78% 18%, rgba(0,200,190,.12), transparent 66%),
+    radial-gradient(900px 700px at 55% 95%, rgba(80,240,230,.10), transparent 62%);
+}
+
+
+/* === Special (turquoise) map popup glow === */
+#soApp .leaflet-popup.specialPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(80,240,230,.38);
+  box-shadow: 0 0 0 1px rgba(80,240,230,.18) inset, 0 0 120px rgba(80,240,230,.85), 0 38px 140px rgba(0,0,0,.74);
+}
+#soApp .leaflet-popup.specialPopup .leaflet-popup-tip{
+  background: rgba(12,18,34,.96);
+  box-shadow: 0 0 120px rgba(80,240,230,.80);
+}
+
+
+/* === Mi Vida (Special) list aura + subtle motion === */
+#soApp .item.isSpecial{ position: relative; border-color: rgba(80,240,230,.28) !important; }
+#soApp .item.isSpecial::before{
+  content:""; position:absolute; inset:-1px; border-radius:22px; pointer-events:none;
+  background:
+    radial-gradient(520px 160px at 20% 0%, rgba(80,240,230,.22), transparent 62%),
+    radial-gradient(560px 200px at 70% 10%, rgba(0,200,190,.16), transparent 66%),
+    radial-gradient(520px 200px at 55% 110%, rgba(80,240,230,.12), transparent 70%);
+  opacity:.85; animation:mividaAura 4.2s ease-in-out infinite;
+}
+#soApp .item.isSpecial::after{
+  content:""; position:absolute; inset:-2px; border-radius:24px; pointer-events:none;
+  box-shadow: 0 0 0 1px rgba(80,240,230,.10) inset, 0 0 22px rgba(80,240,230,.28), 0 0 50px rgba(80,240,230,.14);
+  opacity:.55; animation:mividaGlow 2.8s ease-in-out infinite;
+}
+@keyframes mividaAura{ 0%,100%{ transform:translateY(0); opacity:.75;} 50%{ transform:translateY(-2px); opacity:.98;} }
+@keyframes mividaGlow{ 0%,100%{ opacity:.45;} 50%{ opacity:.8;} }
+
+
+/* === Mi Vida badge + special top band === */
+#soApp .badge.specialBadge{
+  display:inline-flex; align-items:center; gap:.45rem;
+  padding:.38rem .75rem; border-radius:999px;
+  border:1px solid rgba(80,240,230,.35);
+  background: rgba(10,18,22,.55);
+  color: rgba(170,255,248,.95);
+  box-shadow: 0 0 16px rgba(80,240,230,.18);
+  font-weight:600;
+}
+
+
+/* === Popup wrappers: make each clearly different === */
+#soApp .leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(120,160,255,.16);
+  box-shadow: 0 0 0 1px rgba(120,160,255,.14) inset, 0 0 64px rgba(120,170,255,.70), 0 34px 112px rgba(0,0,0,.68);
+}
+#soApp .leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(255,210,120,.22);
+  box-shadow: 0 0 0 1px rgba(255,210,120,.18) inset, 0 0 68px rgba(255,210,120,.78), 0 36px 120px rgba(0,0,0,.70);
+}
+#soApp .leaflet-popup.specialPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(80,240,230,.32);
+  box-shadow: 0 0 0 1px rgba(80,240,230,.16) inset, 0 0 78px rgba(80,240,230,.70), 0 34px 120px rgba(0,0,0,.70);
+}
+
+
+
+/* === Stronger profile (visit card) glow to match Favorite style === */
+#soApp #profileView{
+  position: relative;
+}
+#soApp #profileView.isFavProfile{
+  border: 1px solid rgba(255,215,140,.28) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 0 0 1px rgba(255,215,140,.14) inset,
+    0 0 54px rgba(255,215,140,.22),
+    0 28px 90px rgba(0,0,0,.62) !important;
+}
+#soApp #profileView.isFavProfile .profileCard{
+  border-color: rgba(255,215,140,.18) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 0 26px rgba(255,215,140,.14) !important;
+}
+#soApp #profileView.isFavProfile .profileHead
+
+/* =========================================================
+   My Special One: use SAME bar as Favorite (recolored), #soApp no extra second bar, #soApp and Special wins over Favorite.
+   ========================================================= */
+#profileView.isSpecialProfile 
+
+#profileView.isSpecialProfile .profileHead::after{
+  height:5px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(80,240,230,.35) 15%,
+    rgba(80,240,230,.95) 50%,
+    rgba(80,240,230,.35) 85%,
+    transparent 100%
+  ) !important;
+  box-shadow: 0 0 18px rgba(80,240,230,.55) !important;
+}
+
+/* ensure Special still wins even when Favorite is also present */
+#soApp #profileView.isFavProfile.isSpecialProfile .profileHead::after{
+  height:5px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(80,240,230,.35) 15%,
+    rgba(80,240,230,.95) 50%,
+    rgba(80,240,230,.35) 85%,
+    transparent 100%
+  ) !important;
+  box-shadow: 0 0 18px rgba(80,240,230,.55) !important;
+}
+
+
+/* =========================================================
+   v93.1 FIX (clean + reliable):
+   - Profile band uses ONE unified ::after base that is explicitly enabled
+     for Favorite OR Special (so Special-only never collapses to a 1px line)
+   - When both are active, Special wins (turquoise) and band is nudged
+     slightly down so it never covers the Local Time line.
+   - Thickness: Special band a bit thicker than before, and even thicker
+     when BOTH Favorite + Special are active (like your first screenshot).
+   ========================================================= */
+
+#soApp #profileView .profileHead{
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Base band (disabled by default) */
+#soApp #profileView .profileHead::after{
+  content: "" !important;
+  position: absolute !important;
+  left: -18px !important;   /* a touch wider */
+  right: -18px !important;
+  bottom: -7px !important;
+  height: 18px !important;  /* default thickness once enabled */
+  border-radius: 0 0 8px 8px !important;
+  pointer-events: none !important;
+  display: none !important;
+  opacity: 1 !important;
+}
+
+/* Favorite band (gold) */
+#soApp #profileView.isFavProfile .profileHead::after{
+  display: block !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.30) 18%,
+    rgba(255,215,140,.92) 50%,
+    rgba(255,215,140,.30) 82%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 22px rgba(255,215,140,.55) !important;
+}
+
+/* Special band (turquoise) — MUST work even when Favorite is OFF */
+#soApp #profileView.isSpecialProfile .profileHead::after{
+  display: block !important;
+  background: linear-gradient(
+    90deg,
+    rgba(80,240,230,0) 0%,
+    rgba(80,240,230,.32) 18%,
+    rgba(80,240,230,.98) 50%,
+    rgba(0,200,190,.32) 82%,
+    rgba(80,240,230,0) 100%
+  ) !important;
+  box-shadow: 0 0 26px rgba(80,240,230,.70) !important;
+}
+
+/* Both active: Special wins + a bit thicker and slightly lower */
+#soApp #profileView.isFavProfile.isSpecialProfile .profileHead::after{
+  height: 22px !important;   /* thicker like screenshot 1 */
+  bottom: -10px !important;  /* lower so it never touches Local Time */
+  box-shadow: 0 0 30px rgba(80,240,230,.78) !important;
+}
+
+/* Also give the content a hair more breathing room only when both badges show */
+#soApp #profileView.isBothProfileBadges .profileTop{
+  margin-top: 2px !important;
+}
+
+/* Special-only: kill any 1px divider illusion */
+#soApp #profileView.isSpecialProfile .profileHead{
+  border-bottom-color: transparent !important;
+}
+
+
+
 /* Special only */
-.profile-card.is-special:not(.is-favorite) .special-band,
-.profile-card.is-special:not(.is-favorite)
+#soApp .profile-card.is-special:not(.is-favorite) .special-band, #soApp .profile-card.is-special:not(.is-favorite)
 
 /* Special + Favorite */
-.profile-card.is-special.is-favorite .special-band,
-.profile-card.is-special.is-favorite
-.friendsmap-scope{
+.profile-card.is-special.is-favorite .special-band, #soApp .profile-card.is-special.is-favorite
+
+
+:root{
   --band-height-special-only: 7px;
   --band-height-special-favorite: 3px;
 }
 
 /* base band */
-.special-band{
+#soApp .special-band{
   height: var(--band-height-special-only);
   box-shadow: 0 0 6px rgba(64,224,208,.55);
 }
 
 /* Special + Favorite → thinner & calmer */
-.profile-card.is-special.is-favorite .special-band{
+#soApp .profile-card.is-special.is-favorite .special-band{
   height: var(--band-height-special-favorite) !important;
   box-shadow: 0 0 3px rgba(64,224,208,.45);
 }
@@ -900,7 +2050,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    - No layout / image shifting
    ========================================================= */
 
-#profileView{ --profile-top-band-h: 4px; } /* thin, unified */
+#soApp #profileView{ --profile-top-band-h: 4px; } /* thin, unified */
 
 
 
@@ -919,11 +2069,11 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    UNIFIED PROFILE TOP BAND (FINAL ALIGNMENT)
    - Same thickness for Favorite, Special, and both
    ========================================================= */
-#profileView{
+#soApp #profileView{
   --profile-top-band-h: 4px;
 }
 
-#profileView .profileTop::after{
+#soApp #profileView .profileTop::after{
   display:block !important;
   height: var(--profile-top-band-h) !important;
 }
@@ -942,12 +2092,12 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    - Special-only & Fav+Special use turquoise palette but same effect style.
    ========================================================= */
 
-#profileView{
+#soApp #profileView{
   --profile-top-band-h: 4px;
 }
 
 /* Make sure the band exists and is always the same thickness */
-#profileView .profileTop::after{
+#soApp #profileView .profileTop::after{
   display:block !important;
   top:0 !important;
   height: var(--profile-top-band-h) !important;
@@ -957,7 +2107,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 }
 
 /* FAVORITE (gold) - reference effects */
-#profileView.isFavProfile:not(.isSpecialProfile) .profileTop::after{
+#soApp #profileView.isFavProfile:not(.isSpecialProfile) .profileTop::after{
   background: linear-gradient(90deg,
     rgba(0,0,0,0),
     rgba(255,220,120,1),
@@ -968,7 +2118,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 }
 
 /* SPECIAL (turquoise) - same style, only color changed */
-#profileView.isSpecialProfile .profileTop::after{
+#soApp #profileView.isSpecialProfile .profileTop::after{
   background: linear-gradient(90deg,
     rgba(0,0,0,0),
     rgba(80,240,230,1),
@@ -990,7 +2140,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    ========================================================= */
 
 /* Special-only: same structure as Favorite */
-.item.isSelected.isSpecial{
+#soApp .item.isSelected.isSpecial{
   border-color: rgba(90, 235, 230, .28) !important;
   box-shadow:
     0 26px 80px rgba(0,0,0,.58),
@@ -999,7 +2149,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 }
 
 /* Favorite + Special: same as Favorite too (but turquoise wins) */
-.item.isSelected.isFav.isSpecial{
+#soApp .item.isSelected.isFav.isSpecial{
   border-color: rgba(90, 235, 230, .28) !important;
   box-shadow:
     0 26px 80px rgba(0,0,0,.58),
@@ -1008,16 +2158,14 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 }
 
 /* Radial highlight: copy Favorite ::after behavior */
-.item.isSelected.isSpecial::after,
-.item.isSelected.isFav.isSpecial::after{
+#soApp .item.isSelected.isSpecial::after, #soApp .item.isSelected.isFav.isSpecial::after{
   opacity:.78 !important;
   background: radial-gradient(circle, rgba(80,240,230,.42), transparent 60%) !important;
   animation: none !important;
 }
 
 /* Name glow: copy Favorite behavior */
-.item.isSelected.isSpecial .ename,
-.item.isSelected.isFav.isSpecial .ename{
+#soApp .item.isSelected.isSpecial .ename, #soApp .item.isSelected.isFav.isSpecial .ename{
   text-shadow: 0 0 18px rgba(80,240,230,.18) !important;
 }
 
@@ -1029,21 +2177,16 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    ========================================================= */
 
 /* Ensure badge container is inline */
-#profileView .badgeRow,
-#profileView .badges,
-#profileView .tagRow{
+#soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
   display:flex !important;
   align-items:center;
   gap:8px;
 }
 
 /* Ensure both badges are visible */
-#profileView .specialBadge,
-
-
-/* Order: Special first, Favorite second */
+#soApp #profileView .specialBadge, #soApp /* Order: Special first, #soApp Favorite second */
 #profileView .specialBadge{ order: 1; }
-#profileView .favBadge{ order: 2; }
+#soApp #profileView .favBadge{ order: 2; }
 
 
 /* =========================================================
@@ -1054,17 +2197,14 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    ========================================================= */
 
 /* Badge row */
-#profileView .badgeRow,
-#profileView .badges,
-#profileView .tagRow{
+#soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
   display:flex !important;
   align-items:center;
   gap:6px;
 }
 
 /* Base badge size (smaller) */
-#profileView .specialBadge,
-#profileView .favBadge{
+#soApp #profileView .specialBadge, #soApp #profileView .favBadge{
   font-size: 12px !important;
   padding: 4px 8px !important;
   border-radius: 999px;
@@ -1072,7 +2212,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 }
 
 /* Special badge (turquoise, calm) */
-#profileView .specialBadge{
+#soApp #profileView .specialBadge{
   background: rgba(80,240,230,.12);
   border: 1px solid rgba(80,240,230,.45);
   color: rgb(160,245,235);
@@ -1091,9 +2231,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    ========================================================= */
 
 /* Force badge row inline */
-#profileView .badgeRow,
-#profileView .badges,
-#profileView .tagRow{
+#soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
   display:flex !important;
   flex-wrap: nowrap !important;
   align-items:center;
@@ -1101,10 +2239,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 }
 
 /* Compact badges: width fits text */
-#profileView .specialBadge,
-
-
-/* Ensure Favorite is NOT pushed to new line */
+#soApp #profileView .specialBadge, #soApp /* Ensure Favorite is NOT pushed to new line */
 #profileView .favBadge{
   margin-top: 0 !important;
 }
@@ -1117,10 +2252,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    ========================================================= */
 
 /* Unify badge height & vertical alignment */
-#profileView .specialBadge,
-
-
-/* Ensure Special badge is not visually smaller */
+#soApp #profileView .specialBadge, #soApp /* Ensure Special badge is not visually smaller */
 #profileView .specialBadge{
   line-height: 1.1 !important;
 }
@@ -1132,15 +2264,14 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    - Badges are compact (fit text)
    - Local Time stays below badges (profileSub)
    ========================================================= */
-#profileView .profileTitle{ gap:4px; }
-#profileView .badgeRow{
+#soApp #profileView .profileTitle{ gap:4px; }
+#soApp #profileView .badgeRow{
   display:flex;
   align-items:center;
   gap:6px;
   flex-wrap:nowrap;
 }
-#profileView .specialOneBadge,
-#profileView .favBadge{
+#soApp #profileView .specialOneBadge, #soApp #profileView .favBadge{
   margin-top:0 !important;
   margin-left:0 !important;
   width:auto !important;
@@ -1155,11 +2286,11 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 }
 
 /* show rules */
-#profileView.isSpecialProfile .specialOneBadge{ display:inline-flex; }
-#profileView.isFavProfile .favBadge{ display:inline-flex; }
+#soApp #profileView.isSpecialProfile .specialOneBadge{ display:inline-flex; }
+#soApp #profileView.isFavProfile .favBadge{ display:inline-flex; }
 
 /* Special styling */
-#profileView .specialOneBadge{
+#soApp #profileView .specialOneBadge{
   border:1px solid rgba(80,240,230,.35);
   background: rgba(10,18,22,.55);
   color: rgba(200,255,250,.98);
@@ -1167,7 +2298,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
   font-weight:600;
 }
 /* Favorite styling */
-#profileView .favBadge{
+#soApp #profileView .favBadge{
   border:1px solid rgba(255,215,140,.22);
   background: rgba(255,215,140,.10);
   color: rgba(255,235,190,.95);
@@ -1183,22 +2314,22 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    ========================================================= */
 
 /* Default: hide both */
-#profileView .favBadge{ display:none !important; }
-#profileView .specialBadge{ display:none !important; }
+#soApp #profileView .favBadge{ display:none !important; }
+#soApp #profileView .specialBadge{ display:none !important; }
 
 /* Show when flags are present */
-#profileView.isFavProfile .favBadge{ display:inline-flex !important; }
-#profileView.isSpecialProfile .specialBadge{ display:inline-flex !important; }
+#soApp #profileView.isFavProfile .favBadge{ display:inline-flex !important; }
+#soApp #profileView.isSpecialProfile .specialBadge{ display:inline-flex !important; }
 
 
 /* Notes category tabs */
-.notesTabs{
+#soApp .notesTabs{
   display:flex;
   gap:8px;
   flex-wrap:wrap;
   margin:8px 0 8px;
 }
-.notesTabs .tabBtn{
+#soApp .notesTabs .tabBtn{
   border:1px solid rgba(255,255,255,0.14);
   background: rgba(255,255,255,0.06);
   color: var(--text);
@@ -1208,55 +2339,55 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
   font-size:12px;
   line-height:1;
 }
-.notesTabs .tabBtn.active{
+#soApp .notesTabs .tabBtn.active{
   background: rgba(56,189,248,0.18);
   border-color: rgba(56,189,248,0.35);
   box-shadow: 0 0 0 1px rgba(56,189,248,0.10), 0 0 18px rgba(56,189,248,0.12);
 }
-.notesPanel{
+#soApp .notesPanel{
   min-height: 92px;
 }
 
 /* Cycle tracker (local-only) */
-.cyclePanel{
+#soApp .cyclePanel{
   min-height: 280px;
   padding:12px;
   border:1px solid rgba(255,255,255,0.14);
   border-radius:14px;
   background: rgba(255,255,255,0.04);
 }
-.cycleGrid{ display:flex; flex-direction:column; gap:10px; }
-.cycleRow{
+#soApp .cycleGrid{ display:flex; flex-direction:column; gap:10px; }
+#soApp .cycleRow{
   display:grid;
   grid-template-columns: 1fr 1fr;
   gap:10px;
 }
 @media (max-width: 520px){
-  .cycleRow{ grid-template-columns: 1fr; }
+  #soApp .cycleRow{ grid-template-columns: 1fr; }
 }
-.miniLabel{
+#soApp .miniLabel{
   font-size:12px;
   opacity:.86;
   margin-bottom:6px;
 }
-.cycleActions{
+#soApp .cycleActions{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
   align-items:center;
 }
-.cycleHint{
+#soApp .cycleHint{
   font-size:12px;
   opacity:.86;
   line-height:1.35;
 }
-.cycleLegend{
+#soApp .cycleLegend{
   display:inline-flex;
   gap:8px;
   flex-wrap:wrap;
   margin-left:8px;
 }
-.cycleLegend .leg{
+#soApp .cycleLegend .leg{
   display:inline-flex;
   gap:6px;
   align-items:center;
@@ -1265,26 +2396,26 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
   border:1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.04);
 }
-.cycleLegend .legPeriod{ box-shadow: 0 0 0 1px rgba(255,80,120,0.15), 0 0 16px rgba(255,80,120,0.10); }
-.cycleLegend .legPred{ box-shadow: 0 0 0 1px rgba(255,80,120,0.10), 0 0 16px rgba(255,80,120,0.06); opacity:.9; }
-.cycleLegend .legFert{ box-shadow: 0 0 0 1px rgba(16,185,129,0.14), 0 0 16px rgba(16,185,129,0.08); }
-.cycleLegend .legOvu{ box-shadow: 0 0 0 1px rgba(251,191,36,0.14), 0 0 16px rgba(251,191,36,0.08); }
+#soApp .cycleLegend .legPeriod{ box-shadow: 0 0 0 1px rgba(255,80,120,0.15), 0 0 16px rgba(255,80,120,0.10); }
+#soApp .cycleLegend .legPred{ box-shadow: 0 0 0 1px rgba(255,80,120,0.10), 0 0 16px rgba(255,80,120,0.06); opacity:.9; }
+#soApp .cycleLegend .legFert{ box-shadow: 0 0 0 1px rgba(16,185,129,0.14), 0 0 16px rgba(16,185,129,0.08); }
+#soApp .cycleLegend .legOvu{ box-shadow: 0 0 0 1px rgba(251,191,36,0.14), 0 0 16px rgba(251,191,36,0.08); }
 
-.cycleSummary{
+#soApp .cycleSummary{
   font-size:12px;
   padding:10px 12px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.10);
   background: rgba(0,0,0,0.18);
 }
-.cycleSummary b{ font-weight:700; }
+#soApp .cycleSummary b{ font-weight:700; }
 
-.cycleList{
+#soApp .cycleList{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
 }
-.cycleChip{
+#soApp .cycleChip{
   display:inline-flex;
   gap:8px;
   align-items:center;
@@ -1294,35 +2425,35 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
   background: rgba(255,255,255,0.04);
   font-size:12px;
 }
-.cycleChip .x{
+#soApp .cycleChip .x{
   cursor:pointer;
   padding:2px 6px;
   border-radius:10px;
   border:1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.04);
 }
-.cycleChip .x:hover{ background: rgba(255,255,255,0.08); }
+#soApp .cycleChip .x:hover{ background: rgba(255,255,255,0.08); }
 
-.cycleCalWrap{
+#soApp .cycleCalWrap{
   border:1px solid rgba(255,255,255,0.10);
   border-radius:14px;
   padding:10px;
   background: rgba(0,0,0,0.12);
 }
-.cycleCalHdr{
+#soApp .cycleCalHdr{
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:10px;
   margin-bottom:8px;
 }
-.cycleMonthLabel{
+#soApp .cycleMonthLabel{
   font-weight:700;
   letter-spacing:.3px;
   font-size:13px;
   opacity:.95;
 }
-.cycleWeekdays{
+#soApp .cycleWeekdays{
   display:grid;
   grid-template-columns: repeat(7, 1fr);
   gap:6px;
@@ -1331,12 +2462,12 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
   margin-bottom:6px;
   text-align:center;
 }
-.cycleCal{
+#soApp .cycleCal{
   display:grid;
   grid-template-columns: repeat(7, 1fr);
   gap:6px;
 }
-.cDay{
+#soApp .cDay{
   position:relative;
   min-height:34px;
   border-radius:12px;
@@ -1349,45 +2480,45 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
   cursor:pointer;
   user-select:none;
 }
-.cDay.off{
+#soApp .cDay.off{
   opacity:.45;
   background: rgba(255,255,255,0.02);
 }
-.cDay.today{
+#soApp .cDay.today{
   box-shadow: 0 0 0 2px rgba(56,189,248,0.18), 0 0 18px rgba(56,189,248,0.12);
 }
-.cDay.period{
+#soApp .cDay.period{
   border-color: rgba(255,80,120,0.35);
   background: rgba(255,80,120,0.14);
   box-shadow: 0 0 0 1px rgba(255,80,120,0.10), 0 0 18px rgba(255,80,120,0.10);
 }
-.cDay.pred{
+#soApp .cDay.pred{
   border-color: rgba(255,80,120,0.22);
   background: rgba(255,80,120,0.08);
 }
-.cDay.fert{
+#soApp .cDay.fert{
   border-color: rgba(16,185,129,0.26);
   background: rgba(16,185,129,0.10);
   box-shadow: 0 0 0 1px rgba(16,185,129,0.08), 0 0 18px rgba(16,185,129,0.08);
 }
-.cDay.ov{
+#soApp .cDay.ov{
   border-color: rgba(251,191,36,0.30);
   background: rgba(251,191,36,0.12);
 }
-.cDay.sel{
+#soApp .cDay.sel{
   outline: 2px solid rgba(56,189,248,0.35);
 }
 
-.hidden{ display:none !important; }
+#soApp .hidden{ display:none !important; }
 
 /* Favorite Colors input */
-.colorInputRow{
+#soApp .colorInputRow{
   display:flex;
   gap:10px;
   align-items:center;
 }
-.smallBtn{ padding:8px 12px; font-size:12px; border-radius:10px; }
-.favColorsPills{
+#soApp .smallBtn{ padding:8px 12px; font-size:12px; border-radius:10px; }
+#soApp .favColorsPills{
   display:flex;
   flex-wrap:wrap;
   gap:10px;
@@ -1395,7 +2526,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 }
 
 /* Liquid rain-glass color pills (readable) */
-.colorPillGlass{
+#soApp .colorPillGlass{
   --c: 95,140,255;
   --a: 0.42;
   --g: 0.95;
@@ -1431,7 +2562,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
   -webkit-backdrop-filter: blur(14px) saturate(155%);
   backdrop-filter: blur(14px) saturate(155%);
 }
-.colorPillGlass::before{
+#soApp .colorPillGlass::before{
   content:"";
   position:absolute;
   top:-18%;
@@ -1448,7 +2579,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
   opacity:0.60;
   pointer-events:none;
 }
-.colorPillGlass::after{
+#soApp .colorPillGlass::after{
   content:"";
   position:absolute;
   inset:-7px;
@@ -1460,7 +2591,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
   opacity: var(--g);
   z-index:-1;
 }
-.colorPillGlass .drops{
+#soApp .colorPillGlass .drops{
   position:absolute;
   inset:-2px;
   pointer-events:none;
@@ -1477,23 +2608,23 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
     radial-gradient(circle at 92% 30%, rgba(255,255,255,0.48) 0 1.3px, rgba(255,255,255,0.10) 2.6px, rgba(255,255,255,0) 6.2px);
   filter: blur(0.15px);
 }
-.colorPillGlass .x{
+#soApp .colorPillGlass .x{
   opacity:0.85;
   margin-left:10px;
   font-weight:900;
   cursor:pointer;
 }
-.colorPillGlass .x:hover{ opacity:1; }
+#soApp .colorPillGlass .x:hover{ opacity:1; }
 
 
-.notesPanelBox{
+#soApp .notesPanelBox{
   padding:8px 10px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.05);
   white-space: pre-wrap;
 }
-.favColorsInline{
+#soApp .favColorsInline{
   display:flex;
   flex-wrap:wrap;
   gap:10px;
@@ -1505,20 +2636,25 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    MOBILE PACK (Handy Optimierung)
    ============================= */
 @media (max-width: 560px){
-  
-  .wrap{
+  #soApp header{
+    padding: 14px 12px 8px;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  #soApp .wrap{
     padding: 0 12px 12px;
     gap: 12px;
   }
-  #map{ height: 48vh; min-height: 340px; }
-  .list{ max-height: 46vh; }
-  .item{
+  #soApp #map{ height: 48vh; min-height: 340px; }
+  #soApp .list{ max-height: 46vh; }
+  #soApp .item{
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
   }
-  .actions{ justify-content: flex-start; }
-  .nick{
+  #soApp .actions{ justify-content: flex-start; }
+  #soApp .nick{
     white-space: normal;
     overflow: hidden;
     text-overflow: clip;
@@ -1526,33 +2662,31 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
   }
-  .infoBlock{
+  #soApp .infoBlock{
     white-space: normal;
     line-height: 1.25;
   }
-  #profileView .badgeRow,
-  #profileView .badges,
-  #profileView .tagRow{
+  #soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
     flex-wrap: wrap !important;
     row-gap: 6px;
   }
-  .notesTabs{
+  #soApp .notesTabs{
     margin: 6px 0 6px;
     gap: 6px;
   }
-  .notesTabs .tabBtn{
+  #soApp .notesTabs .tabBtn{
     padding: 8px 10px;
   }
-  .colorInputRow{
+  #soApp .colorInputRow{
     flex-direction: column;
     align-items: stretch;
   }
-  .smallBtn{ width: 100%; }
+  #soApp .smallBtn{ width: 100%; }
 }
 @media (max-width: 380px){
-  #map{ height: 44vh; min-height: 320px; }
-  .list{ max-height: 44vh; }
-  .item{ padding: 12px 12px; }
+  #soApp #map{ height: 44vh; min-height: 320px; }
+  #soApp .list{ max-height: 44vh; }
+  #soApp .item{ padding: 12px 12px; }
 }
 
 
@@ -1562,29 +2696,29 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    ============================= */
 @media (max-width: 560px){
   /* Formular-Card angenehmer und “appiger” */
-  .panel{
+  #soApp .panel{
     padding: 14px;
   }
 
   /* Felder untereinander, mehr Luft */
-  .row{
+  #soApp .row{
     flex-direction: column;
     gap: 12px;
   }
 
   /* iOS/Android: 16px verhindert Auto-Zoom beim Tippen */
-  input, textarea, select{
+  #soApp input, #soApp textarea, #soApp select{
     font-size: 16px;
     padding: 12px 12px;
     border-radius: 14px;
   }
 
-  textarea{
+  #soApp textarea{
     min-height: 140px;
   }
 
   /* Buttons immer griffbereit (sticky) */
-  .btns{
+  #soApp .btns{
     position: sticky;
     bottom: 10px;
     z-index: 25;
@@ -1598,22 +2732,22 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
     gap: 10px;
   }
   /* Save prominent */
-  #saveBtn{
+  #soApp #saveBtn{
     grid-column: 1 / -1;
   }
-  .btns button{
+  #soApp .btns button{
     width: 100%;
     justify-content: center;
   }
 
   /* Notes Tabs: horizontal scroll statt quetschen */
-  .notesTabs{
+  #soApp .notesTabs{
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 4px;
   }
-  .notesTabs::-webkit-scrollbar{ height: 6px; }
+  #soApp .notesTabs::-webkit-scrollbar{ height: 6px; }
 }
 
 
@@ -1622,51 +2756,48 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    Makes the top edit area cleaner & easier on phones
    ============================= */
 @media (max-width: 560px){
-  
-  .hdrRight{ width:100%; text-align:left; }
-  .hdrRight .hdrTitle{ display:none !important; }
-  .hdrSub{ font-size:12px !important; opacity:.9; line-height:1.25; }
+  #soApp header{ padding: 12px 12px 10px !important; }
+  #soApp .hdrRight{ width:100%; text-align:left; }
+  #soApp .hdrRight .hdrTitle{ display:none !important; }
+  #soApp .hdrSub{ font-size:12px !important; opacity:.9; line-height:1.25; }
 
-  .panel{ padding: 14px 12px !important; }
-  .panel .row{
+  #soApp .panel{ padding: 14px 12px !important; }
+  #soApp .panel .row{
     display: grid !important;
     grid-template-columns: 1fr !important;
     gap: 12px !important;
     margin-bottom: 12px !important;
   }
-  .panel .row:first-of-type{ grid-template-columns: 1fr !important; }
+  #soApp .panel .row:first-of-type{ grid-template-columns: 1fr !important; }
 
-  .panel label{
+  #soApp .panel label{
     font-size: 12px !important;
     letter-spacing: .2px;
     margin-bottom: 6px !important;
     opacity: .92;
   }
-  .panel input,
-  .panel select,
-  .panel textarea{
+  #soApp .panel input, #soApp .panel select, #soApp .panel textarea{
     width: 100%;
     font-size: 16px !important;
     padding: 12px 14px !important;
     border-radius: 14px !important;
   }
-  input[type="date"]{ min-height: 46px; }
+  #soApp input[type="date"]{ min-height: 46px; }
 
-  .hint, .bdayCountdown{
+  #soApp .hint, #soApp .bdayCountdown{
     font-size: 12px !important;
     line-height: 1.25;
     margin-top: 6px !important;
   }
 
-  .panel .row .smallBtn,
-  .panel .row button.smallBtn{
+  #soApp .panel .row .smallBtn, #soApp .panel .row button.smallBtn{
     width: 100% !important;
   }
 }
 
 @media (max-width: 380px){
-  .panel{ padding: 12px 10px !important; }
-  .panel input, .panel select, .panel textarea{ padding: 11px 12px !important; }
+  #soApp .panel{ padding: 12px 10px !important; }
+  #soApp .panel input, #soApp .panel select, #soApp .panel textarea{ padding: 11px 12px !important; }
 }
 
 
@@ -1674,19 +2805,19 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    MOBILE MAP POPUP TUNING
    ============================= */
 @media (max-width: 560px){
-  .leaflet-popup-content-wrapper{
+  #soApp .leaflet-popup-content-wrapper{
     max-width: 260px;
     padding: 8px;
   }
-  .leaflet-popup-content{
+  #soApp .leaflet-popup-content{
     margin: 6px;
     font-size: 13px;
     line-height: 1.25;
   }
-  .popup-image-wrap{
+  #soApp .popup-image-wrap{
     position: relative;
   }
-  .popup-card-btn{
+  #soApp .popup-card-btn{
     position: absolute;
     right: 6px;
     bottom: 6px;
@@ -1701,7 +2832,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
     justify-content: center;
     cursor: pointer;
   }
-  .popup-card-btn:hover{
+  #soApp .popup-card-btn:hover{
     background: rgba(30,30,36,0.9);
   }
 }
@@ -1712,13 +2843,13 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    ============================= */
 
 /* Color pills (Map + Profile) a bit smaller */
-.colorPillGlass{
+#soApp .colorPillGlass{
   padding: 8px 12px !important;
   font-size: 11px !important;
   font-weight: 800;
   letter-spacing: 0.2px;
 }
-.colorPillGlass .xBtn{
+#soApp .colorPillGlass .xBtn{
   width: 18px !important;
   height: 18px !important;
   margin-left: 8px !important;
@@ -1728,10 +2859,10 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 }
 
 /* Notes tabs: more "segmented / glass" and nicer on mobile */
-.notesTabs{
+#soApp .notesTabs{
   gap: 6px !important;
 }
-.notesTabs .tabBtn{
+#soApp .notesTabs .tabBtn{
   padding: 7px 10px !important;
   font-size: 12px !important;
   border-radius: 999px !important;
@@ -1741,10 +2872,10 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
   backdrop-filter: blur(8px);
   transition: transform .12s ease, background .12s ease, border-color .12s ease;
 }
-.notesTabs .tabBtn:active{
+#soApp .notesTabs .tabBtn:active{
   transform: scale(0.98);
 }
-.notesTabs .tabBtn.active{
+#soApp .notesTabs .tabBtn.active{
   background: rgba(56,189,248,0.20) !important;
   border-color: rgba(56,189,248,0.40) !important;
   box-shadow: 0 10px 26px rgba(56,189,248,0.12), 0 10px 24px rgba(0,0,0,0.22);
@@ -1752,15 +2883,15 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 
 /* Mobile: tabs scroll horizontally instead of wrapping into ugly multi-lines */
 @media (max-width: 560px){
-  .notesTabs{
+  #soApp .notesTabs{
     flex-wrap: nowrap !important;
     overflow-x: auto;
     padding-bottom: 6px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none; /* Firefox */
   }
-  .notesTabs::-webkit-scrollbar{ display:none; } /* Chrome/Safari */
-  .notesTabs .tabBtn{
+  #soApp .notesTabs::-webkit-scrollbar{ display:none; } /* Chrome/Safari */
+  #soApp .notesTabs .tabBtn{
     flex: 0 0 auto;
     white-space: nowrap;
   }
@@ -1772,35 +2903,35 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
    ============================= */
 
 /* Always include padding/border in width calculations */
-*, *::before, *::after { box-sizing: border-box; }
+#soApp *, #soApp *::before, #soApp *::after{ box-sizing: border-box; }
 
 /* Avoid horizontal scrolling */
- .friendsmap-scope { overflow-x: hidden; }
-.wrap, main, header, .panel, .list, #profileView { max-width: 100%; }
+#soApp, #soApp{ overflow-x: hidden; }
+#soApp .wrap, #soApp main, #soApp header, #soApp .panel, #soApp .list, #soApp #profileView{ max-width: 100%; }
 
 /* Ensure all images / cards never exceed container */
-img, video, canvas, svg { max-width: 100%; height: auto; }
+#soApp img, #soApp video, #soApp canvas, #soApp svg{ max-width: 100%; height: auto; }
 
 /* Wrap long text gracefully */
-.nick, .infoBlock, .meta, .metaLine, .small, .statLine, .notePreview, .popup *{
+#soApp .nick, #soApp .infoBlock, #soApp .meta, #soApp .metaLine, #soApp .small, #soApp .statLine, #soApp .notePreview, #soApp .popup *{
   overflow-wrap: anywhere;
   word-break: break-word;
 }
 
 /* Buttons/rows: allow wrapping instead of pushing layout wider */
-.actions, .badgeRow, .badges, .tagRow, .pillRow, .notesTabs{
+#soApp .actions, #soApp .badgeRow, #soApp .badges, #soApp .tagRow, #soApp .pillRow, #soApp .notesTabs{
   max-width: 100%;
 }
 
 /* Some flex rows may force overflow; allow wrap on narrow screens */
 @media (max-width: 560px){
-  .row{ flex-wrap: wrap !important; }
-  .row > *{ min-width: 0; } /* critical for flex text overflow */
-  .actions{ flex-wrap: wrap; gap: 8px; }
-  .actions > *{ min-width: 0; }
+  #soApp .row{ flex-wrap: wrap !important; }
+  #soApp .row > *{ min-width: 0; } /* critical for flex text overflow */
+  #soApp .actions{ flex-wrap: wrap; gap: 8px; }
+  #soApp .actions > *{ min-width: 0; }
 
   /* Inputs: full width, no weird min widths */
-  input, select, textarea{
+  #soApp input, #soApp select, #soApp textarea{
     max-width: 100%;
     width: 100%;
     min-width: 0;
@@ -1814,10 +2945,10 @@ img, video, canvas, svg { max-width: 100%; height: auto; }
 @media (max-width: 560px){
 
   /* Cards should not clip inner content/shadows on mobile */
-  .card{ overflow: visible !important; }
+  #soApp .card{ overflow: visible !important; }
 
   /* Zodiac line in editor: allow wrapping + slightly smaller */
-  #zodiacLine{
+  #soApp #zodiacLine{
     display:block;
     white-space: normal !important;
     overflow: visible !important;
@@ -1827,7 +2958,7 @@ img, video, canvas, svg { max-width: 100%; height: auto; }
   }
 
   /* Profile cards value lines: wrap instead of overflowing */
-  #profileView .profileCard .v{
+  #soApp #profileView .profileCard .v{
     white-space: normal !important;
     overflow: visible !important;
     text-overflow: clip !important;
@@ -1839,12 +2970,12 @@ img, video, canvas, svg { max-width: 100%; height: auto; }
   }
 
   /* Notes tabs: keep inside the card, no clipping at right edge */
-  .notesTabs{
+  #soApp .notesTabs{
     padding-right: 10px;
   }
 
   /* Buttons inside rows shouldn't force width */
-  .notesTabs .tabBtn{
+  #soApp .notesTabs .tabBtn{
     max-width: 100%;
   }
 }
@@ -1855,21 +2986,26 @@ img, video, canvas, svg { max-width: 100%; height: auto; }
    - reserve scrollbar gutter to prevent width jump
    - kill any hidden overflow widths on mobile
    ============================= */
-html{
+#soApp{
   scrollbar-gutter: stable both-edges; /* Firefox/Chromium: prevents width jump */
 }
-
+#soApp{
+  overflow-y: scroll; /* always reserve vertical scrollbar space */
+}
 
 /* Safety: nothing in views should exceed viewport */
-#listView, #profileView, #mapView, .wrap, main, 
+#soApp #listView, #soApp #profileView, #soApp #mapView, #soApp .wrap, #soApp main, #soApp header{
+  width: 100%;
+  max-width: 100%;
+}
 
 /* Leaflet popup / dist info must not enforce min-width on mobile */
 @media (max-width: 560px){
-  .leaflet-popup-content{
+  #soApp .leaflet-popup-content{
     min-width: 0 !important;
     max-width: 260px !important;
   }
-  .distInfo{
+  #soApp .distInfo{
     min-width: 0 !important;
     max-width: 100% !important;
   }
@@ -1881,19 +3017,19 @@ html{
    ============================= */
 
 /* Do NOT reserve both edges (causes big right gutter when scrollbar appears) */
-html{ scrollbar-gutter: stable; }
+#soApp{ scrollbar-gutter: stable; }
 
 /* Mobile: avoid nested scroll container in #profileView that triggers width recalculation */
 @media (max-width: 560px){
-  #profileView{
+  #soApp #profileView{
     overflow: visible !important;
     height: auto !important;
     max-width: 100%;
   }
-  #mapView{
+  #soApp #mapView{
     height: auto !important;
   }
-  .rightView{
+  #soApp .rightView{
     height: auto !important;
     overflow: visible !important;
   }
@@ -1906,12 +3042,7 @@ html{ scrollbar-gutter: stable; }
 @media (max-width: 560px){
 
   /* Allow long info/zodiac strings to wrap instead of forcing wider layout */
-  .infoBlock,
-  .zodiacItem,
-  #zodiacLine,
-  #profileView .profileTitle,
-  #profileView .profileTitle b,
-  #profileView .profileCard .v{
+  #soApp .infoBlock, #soApp .zodiacItem, #soApp #zodiacLine, #soApp #profileView .profileTitle, #soApp #profileView .profileTitle b, #soApp #profileView .profileCard .v{
     white-space: normal !important;
     overflow-wrap: anywhere !important;
     word-break: break-word !important;
@@ -1920,14 +3051,11 @@ html{ scrollbar-gutter: stable; }
   }
 
   /* Badges: prevent them from pushing width; keep single line with ellipsis if needed */
-  #profileView .badgeRow,
-  #profileView .badges,
-  #profileView .tagRow{
+  #soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
     min-width: 0 !important;
     max-width: 100% !important;
   }
-  #profileView .specialOneBadge,
-  #profileView .favBadge{
+  #soApp #profileView .specialOneBadge, #soApp #profileView .favBadge{
     max-width: 100% !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
@@ -1935,7 +3063,7 @@ html{ scrollbar-gutter: stable; }
   }
 
   /* As a final safety net: no element may exceed viewport width */
-  #profileView *{
+  #soApp #profileView *{
     max-width: 100%;
   }
 }
@@ -1949,47 +3077,59 @@ html{ scrollbar-gutter: stable; }
 @media (max-width: 560px){
 
   /* Revert card overflow to avoid horizontal scroll from glows */
-  .card,
-  .panel,
-  .profileCard,
-  #profileView{
+  #soApp .card, #soApp .panel, #soApp .profileCard, #soApp #profileView{
     overflow: hidden !important;
   }
 
   /* Keep notes tabs inside the card without needing overflow:visible */
-  .notesTabs{
+  #soApp .notesTabs{
     padding-right: 14px !important;
   }
 
   /* Ensure inner content doesn't sit flush to the edge */
-  .card .sectionTitle,
-  .card .row,
-  .card .notesTabs,
-  .card .pillRow{
+  #soApp .card .sectionTitle, #soApp .card .row, #soApp .card .notesTabs, #soApp .card .pillRow{
     max-width: 100%;
   }
 }
 
 
-</style>
 
-<div class="friendsmap-scope friendsmap-wrap">
+/* --- Site integration overrides (prevents affecting global layout) --- */
+#soApp{height:auto; min-height:0;}
+#soApp .wrap{height:auto;}
+
+</style>
+<section id="soApp" class="soApp">
+<header>
+  <div class="brand">
+    <div>
+      <h1>World Friends Map</h1>
+      <div class="sub">by Silituz</div>
+    </div>
+  </div>
+
+  <div class="hdrRight">
+    <div class="hdrTitle"><span class="stats-title">- Stats -</span></div>
+    <div class="hdrSub" id="statsText">Friends: 0 · Countries: 0 · Longest friendship: —</div>
+  </div>
+</header>
+
 <div class="wrap">
   <div class="card">
     <div class="panel">
 
       <div class="row">
         <div>
-          <label>{{ page.t_lbl_nickname | default: page.lbl_nickname }}</label>
-          <input id="nickname" placeholder="{{ page.t_ph_nickname | default: page.ph_nickname }}" />
+          <label>Nickname *</label>
+          <input id="nickname" placeholder="e.g. Sun / Polina / ..." />
         </div>
         <div>
-          <label>{{ page.t_lbl_birthdate | default: page.lbl_birthdate }}</label>
+          <label>Birthdate (optional)</label>
           <input id="birthdate" type="date" />
           <div id="bdayCountdown" class="bdayCountdown"></div>
           <div class="zodiacBox">
             <div class="zodiacItem">
-              <span id="zodiacLine">{{ page.t_zodiac_line_initial | default: page.zodiac_line_initial }}</span>
+              <span id="zodiacLine">Zodiac: — | Chinese Element: — | Chinese Zodiac: —</span>
             </div>
           </div>
         </div>
@@ -1997,11 +3137,11 @@ html{ scrollbar-gutter: stable; }
 
       <div class="row">
         <div>
-          <label>{{ page.t_lbl_birthplace | default: page.lbl_birthplace }}</label>
-          <input id="birthplace" placeholder="{{ page.t_ph_birthplace | default: page.ph_birthplace }}" />
+          <label>Birthplace (optional)</label>
+          <input id="birthplace" placeholder="e.g. Warsaw, Poland" />
         </div>
         <div>
-          <label>{{ page.t_lbl_met_on | default: page.lbl_met_on }}</label>
+          <label>Met on (date, optional)</label>
 <input id="metOn" type="date" />
           <div id="metKnownForLine" class="bdayCountdown"></div>
 </div>
@@ -2009,34 +3149,34 @@ html{ scrollbar-gutter: stable; }
 
       <div class="row">
         <div>
-          <label>{{ page.t_lbl_current_address | default: page.lbl_current_address }}</label>
-          <input id="currentAddress" placeholder="{{ page.t_ph_current_address | default: page.ph_current_address }}" />
-          <div class="hint">{{ page.t_hint_autogeocode | default: page.hint_autogeocode }}</div>
+          <label>Current address (optional)</label>
+          <input id="currentAddress" placeholder="e.g. Los Angeles, CA" />
+          <div class="hint">Used for coordinates (auto-geocode) if coordinates are empty.</div>
         </div>
         <div>
-          <label>{{ page.t_lbl_timezone | default: page.lbl_timezone }}</label>
-          <input id="timezone" placeholder="{{ page.t_ph_timezone | default: page.ph_timezone }}" list="tzlist" />
+          <label>Timezone (IANA) *</label>
+          <input id="timezone" placeholder="e.g. America/Los_Angeles" list="tzlist" />
           <datalist id="tzlist"></datalist>
-          <div class="hint">{{ page.t_hint_timezone_examples | default: page.hint_timezone_examples }}</div>
+          <div class="hint">Examples: <span class="kbd">Europe/Berlin</span>, <span class="kbd">America/Los_Angeles</span>, <span class="kbd">Asia/Tokyo</span></div>
         </div>
       </div>
 
       <div class="row">
         <div>
-          <label>{{ page.t_lbl_native_lang | default: page.lbl_native_lang }}</label>
-          <input id="nativeLang" placeholder="{{ page.t_ph_native_lang | default: page.ph_native_lang }}" />
+          <label>Native language (optional)</label>
+          <input id="nativeLang" placeholder="e.g. Spanish" />
         </div>
         <div>
-          <label>{{ page.t_lbl_other_langs | default: page.lbl_other_langs }}</label>
-          <input id="otherLangs" placeholder="{{ page.t_ph_other_langs | default: page.ph_other_langs }}" />
+          <label>Other languages (optional)</label>
+          <input id="otherLangs" placeholder="e.g. English, Russian" />
         </div>
       </div>
 
       <div class="row">
         <div>
-          <label>{{ page.t_lbl_image | default: page.lbl_image }}</label>
+          <label>Image (upload, optional)</label>
           <input id="imageFile" type="file" accept="image/*" />
-          <div class="hint">{{ page.t_hint_image_storage | default: page.hint_image_storage }}</div>
+          <div class="hint">Stored locally (compressed). No external hosting needed.</div>
           <div class="preview" id="imgPreview" style="display:none">
             <img id="imgPreviewEl" alt="Preview"/>
             <div class="hint" id="imgPreviewText">—</div>
@@ -2051,56 +3191,56 @@ html{ scrollbar-gutter: stable; }
 
       <div class="row">
         <div>
-                    <label>{{ page.t_section_notes | default: page.section_notes | default: "Notes" }}</label>
+                    <label>Notes</label>
           <div class="notesTabs" id="notesTabs">
-            <button type="button" class="tabBtn active" data-notes-tab="important">{{ page.t_tab_important | default: page.tab_important | default: "🚨 Important" }}</button>
-            <button type="button" class="tabBtn" data-notes-tab="work">{{ page.t_tab_work | default: page.tab_work | default: "💼 Work &amp; 🚀 Projects" }}</button>
-            <button type="button" class="tabBtn" data-notes-tab="food">{{ page.t_tab_food | default: page.tab_food | default: "🍕 Food &amp; More" }}</button>
-            <button type="button" class="tabBtn" data-notes-tab="other">{{ page.t_tab_other | default: page.tab_other | default: "📦 Other" }}</button>
-            <button type="button" class="tabBtn" data-notes-tab="cycle">{{ page.t_tab_cycle | default: page.tab_cycle | default: "🩸 Cycle" }}</button>
+            <button type="button" class="tabBtn active" data-notes-tab="important">🚨 Important</button>
+            <button type="button" class="tabBtn" data-notes-tab="work">💼 Work &amp; 🚀 Projects</button>
+            <button type="button" class="tabBtn" data-notes-tab="food">🍕 Food &amp; More</button>
+            <button type="button" class="tabBtn" data-notes-tab="other">📦 Other</button>
+            <button type="button" class="tabBtn" data-notes-tab="cycle">🩸 Cycle</button>
           </div>
 
           <div class="notesPanels">
-            <textarea id="notes_important" class="notesPanel" data-notes-panel="important" placeholder="{{ page.t_ph_notes_important | default: page.ph_notes_important | default: 'Things that are urgent, critical, or should not be forgotten' }}"></textarea>
-            <textarea id="notes_work" class="notesPanel hidden" data-notes-panel="work" placeholder="{{ page.t_ph_notes_work | default: page.ph_notes_work | default: 'Work-related tasks, projects and ideas' }}"></textarea>
-            <textarea id="notes_food" class="notesPanel hidden" data-notes-panel="food" placeholder="{{ page.t_ph_notes_food | default: page.ph_notes_food | default: 'Food and drinks, restaurant ideas, places worth trying' }}"></textarea>
-            <textarea id="notes_other" class="notesPanel hidden" data-notes-panel="other" placeholder="{{ page.t_ph_notes_other | default: page.ph_notes_other | default: 'Miscellaneous notes' }}"></textarea>
+            <textarea id="notes_important" class="notesPanel" data-notes-panel="important" placeholder="Things that are urgent, critical, or should not be forgotten"></textarea>
+            <textarea id="notes_work" class="notesPanel hidden" data-notes-panel="work" placeholder="Work-related tasks, projects and ideas"></textarea>
+            <textarea id="notes_food" class="notesPanel hidden" data-notes-panel="food" placeholder="Food and drinks, restaurant ideas, places worth trying"></textarea>
+            <textarea id="notes_other" class="notesPanel hidden" data-notes-panel="other" placeholder="Miscellaneous notes"></textarea>
             <div id="cyclePanel" class="notesPanel hidden cyclePanel" data-notes-panel="cycle">
               <div class="cycleGrid">
                 <div class="cycleRow">
                   <div>
-                    <div class="miniLabel">{{ page.t_cycle_lbl_start | default: page.cycle_lbl_start | default: 'Last period start' }}</div>
+                    <div class="miniLabel">Last period start</div>
                     <input id="cycleStart" type="date" />
                   </div>
                   <div>
-                    <div class="miniLabel">{{ page.t_cycle_lbl_end | default: page.cycle_lbl_end | default: 'Last period end' }}</div>
+                    <div class="miniLabel">Last period end</div>
                     <input id="cycleEnd" type="date" />
                   </div>
                 </div>
 
                 <div class="cycleRow">
                   <div>
-                    <div class="miniLabel">{{ page.t_cycle_lbl_cycle_len | default: page.cycle_lbl_cycle_len | default: 'Cycle length (days)' }}</div>
+                    <div class="miniLabel">Cycle length (days)</div>
                     <input id="cycleLen" type="number" min="15" max="60" step="1" placeholder="28" />
                   </div>
                   <div>
-                    <div class="miniLabel">{{ page.t_cycle_lbl_period_len | default: page.cycle_lbl_period_len | default: 'Period length (days)' }}</div>
+                    <div class="miniLabel">Period length (days)</div>
                     <input id="periodLen" type="number" min="1" max="15" step="1" placeholder="5" />
                   </div>
                 </div>
 
                 <div class="cycleActions">
-                  <button type="button" id="cycleAddBtn" class="btn secondary smallBtn">{{ page.t_cycle_btn_add_range | default: page.cycle_btn_add_range | default: 'Add 🩸 range' }}</button>
-                  <button type="button" id="cycleClearBtn" class="btn danger smallBtn">{{ page.t_btn_clear | default: page.btn_clear | default: 'Clear' }}</button>
+                  <button type="button" id="cycleAddBtn" class="btn secondary smallBtn">Add 🩸 range</button>
+                  <button type="button" id="cycleClearBtn" class="btn danger smallBtn">Clear</button>
                 </div>
 
                 <div class="cycleHint">
-                  {{ page.t_cycle_hint_storage | default: page.cycle_hint_storage | default: 'Stored locally per person. Predictions are estimates (not medical advice).' }}
+                  Stored locally per person. Predictions are estimates (not medical advice).
                   <span class="cycleLegend">
-                    <span class="leg legPeriod">{{ page.t_cycle_leg_period | default: page.cycle_leg_period | default: '🩸 period' }}</span>
-                    <span class="leg legPred">{{ page.t_cycle_leg_predicted | default: page.cycle_leg_predicted | default: '🩸 predicted' }}</span>
-                    <span class="leg legFert">{{ page.t_cycle_leg_fertile | default: page.cycle_leg_fertile | default: '🌿 fertile' }}</span>
-                    <span class="leg legOvu">{{ page.t_cycle_leg_ovulation | default: page.cycle_leg_ovulation | default: '⭐ ovulation' }}</span>
+                    <span class="leg legPeriod">🩸 period</span>
+                    <span class="leg legPred">🩸 predicted</span>
+                    <span class="leg legFert">🌿 fertile</span>
+                    <span class="leg legOvu">⭐ ovulation</span>
                   </span>
                 </div>
 
@@ -2109,17 +3249,17 @@ html{ scrollbar-gutter: stable; }
 
                 <div class="cycleCalWrap">
                   <div class="cycleCalHdr">
-                    <button type="button" class="btn secondary smallBtn" id="cyclePrev" title="{{ page.t_cycle_prev_month | default: page.cycle_prev_month | default: 'Previous month' }}">‹</button>
+                    <button type="button" class="btn secondary smallBtn" id="cyclePrev" title="Previous month">‹</button>
                     <div id="cycleMonthLabel" class="cycleMonthLabel">—</div>
-                    <button type="button" class="btn secondary smallBtn" id="cycleNext" title="{{ page.t_cycle_next_month | default: page.cycle_next_month | default: 'Next month' }}">›</button>
+                    <button type="button" class="btn secondary smallBtn" id="cycleNext" title="Next month">›</button>
                   </div>
                   <div class="cycleWeekdays">
-                    <span>{{ page.t_cycle_wd_mon | default: page.cycle_wd_mon | default: 'Mon' }}</span><span>{{ page.t_cycle_wd_tue | default: page.cycle_wd_tue | default: 'Tue' }}</span><span>{{ page.t_cycle_wd_wed | default: page.cycle_wd_wed | default: 'Wed' }}</span><span>{{ page.t_cycle_wd_thu | default: page.cycle_wd_thu | default: 'Thu' }}</span><span>{{ page.t_cycle_wd_fri | default: page.cycle_wd_fri | default: 'Fri' }}</span><span>{{ page.t_cycle_wd_sat | default: page.cycle_wd_sat | default: 'Sat' }}</span><span>{{ page.t_cycle_wd_sun | default: page.cycle_wd_sun | default: 'Sun' }}</span>
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
                   </div>
                   <div class="cycleCal" id="cycleCal"></div>
                 </div>
 
-                <div class="hint">{{ page.t_cycle_hint_calendar | default: page.cycle_hint_calendar | default: 'Tip: click days in the calendar to pick start/end.' }}</div>
+                <div class="hint">Tip: click days in the calendar to pick start/end.</div>
               </div>
             </div>
 
@@ -2129,44 +3269,44 @@ html{ scrollbar-gutter: stable; }
 
       <div class="row">
         <div>
-          <label>{{ page.t_lbl_fav_colors | default: page.lbl_fav_colors }}</label>
+          <label>Favorite Colors</label>
           <div class="colorInputRow">
-            <input id="favColorInput" type="text" placeholder="{{ page.t_ph_add_color | default: page.ph_add_color }}" />
-            <button id="addFavColorBtn" type="button" class="secondary smallBtn">{{ page.t_btn_add | default: page.btn_add }}</button>
+            <input id="favColorInput" type="text" placeholder="Add a color (e.g. turquoise, gold, #ff8800)" />
+            <button id="addFavColorBtn" type="button" class="secondary smallBtn">Add</button>
           </div>
           <div id="favColorsPills" class="favColorsPills"></div>
-          <div class="hint">{{ page.t_hint_colors_limit | default: page.hint_colors_limit }}</div>
+          <div class="hint">Up to 6 colors.</div>
         </div>
       </div>
 
       <div class="btns">
-        <button id="saveBtn">{{ page.t_btn_save | default: page.btn_save }}</button>
-        <button id="newBtn" class="secondary">{{ page.t_btn_new | default: page.btn_new }}</button>
-        <button id="deleteBtn" class="danger" disabled>{{ page.t_btn_delete | default: page.btn_delete }}</button>
-        <button id="removeImgBtn" class="secondary" title="{{ page.t_tt_remove_image | default: page.tt_remove_image }}">{{ page.t_btn_remove_image | default: page.btn_remove_image }}</button>
+        <button id="saveBtn">Save / Set marker</button>
+        <button id="newBtn" class="secondary">New</button>
+        <button id="deleteBtn" class="danger" disabled>Delete</button>
+        <button id="removeImgBtn" class="secondary" title="Remove image from entry">Remove image</button>
       </div>
 
       <div class="hr"></div>
 
       <div class="hint">
-        • {{ page.t_hint_osm_line1 | default: page.hint_osm_line1 }}<br>
-        • {{ page.t_hint_localstorage_line2 | default: page.hint_localstorage_line2 }}
+        • Current address can be auto-geocoded via OpenStreetMap (Nominatim).<br>
+        • Everything is stored in <b>localStorage</b> in this browser. Use Export/Import to move data to another device.
       </div>
     </div>
 
       <div class="searchBar">
-    <input id="search" placeholder="{{ page.t_ph_search | default: page.ph_search }}" />
+    <input id="search" placeholder="Search (name, notes, dates, timezone…)" />
   </div>
 
 
   <div class="filterBar" id="filterBar" aria-label="List filters">
-    <button class="fChip active" data-filter="all" type="button">{{ page.t_filter_all | default: page.filter_all }}</button>
-    <button class="fChip" data-filter="fav" type="button">⭐ {{ page.t_filter_fav | default: page.filter_fav }}</button>
-    <button class="fChip" data-filter="now" type="button">💚 {{ page.t_filter_now | default: page.filter_now }}</button>
-    <button class="fChip" data-filter="maybe" type="button">💛 {{ page.t_filter_maybe | default: page.filter_maybe }}</button>
-    <button class="fChip" data-filter="sleep" type="button">❤️ {{ page.t_filter_sleep | default: page.filter_sleep }}</button>
-    <button class="fChip" data-filter="bday" type="button">🎂 {{ page.t_filter_bday | default: page.filter_bday }}</button>
-    <button class="fChip" data-filter="friend" type="button">🎈 {{ page.t_filter_friendship | default: page.filter_friendship }}</button>
+    <button class="fChip active" data-filter="all" type="button">All</button>
+    <button class="fChip" data-filter="fav" type="button">⭐ Favorites</button>
+    <button class="fChip" data-filter="now" type="button">💚 Now</button>
+    <button class="fChip" data-filter="maybe" type="button">💛 Maybe</button>
+    <button class="fChip" data-filter="sleep" type="button">❤️ Sleeping</button>
+    <button class="fChip" data-filter="bday" type="button">🎂 Birthday</button>
+    <button class="fChip" data-filter="friend" type="button">🎈 Friendship</button>
   </div>
 
 <!-- Alphabet helper (A–Z) -->
@@ -2177,25 +3317,25 @@ html{ scrollbar-gutter: stable; }
     <div class="footer-tools">
       <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
         <div class="btns">
-          <button id="exportBtn" class="secondary">{{ page.t_btn_export | default: page.btn_export }}</button>
-          <button id="importBtn" class="secondary">{{ page.t_btn_import | default: page.btn_import }}</button>
-          <button id="clusterToggleBtn" class="secondary">🧷 {{ page.t_btn_cluster_on | default: page.btn_cluster_on }}</button>
+          <button id="exportBtn" class="secondary">Export JSON</button>
+          <button id="importBtn" class="secondary">Import JSON (file)</button>
+          <button id="clusterToggleBtn" class="secondary">🧷 Cluster: On</button>
           
-          <button id="myLocBtn" class="secondary" title="{{ page.t_tt_my_location | default: page.tt_my_location }}">📍 {{ page.t_btn_my_location | default: page.btn_my_location }}</button>
-          <button id="clearAllBtn" class="danger">{{ page.t_btn_delete_all | default: page.btn_delete_all }}</button>
+          <button id="myLocBtn" class="secondary" title="Show my current location marker">📍 My location</button>
+          <button id="clearAllBtn" class="danger">Delete all</button>
         </div>
 
         <div class="toggleRow">
           <input id="mergeImport" type="checkbox" />
           <label for="mergeImport" style="margin:0; cursor:pointer;">
-            {{ page.t_toggle_merge | default: page.toggle_merge }}
+            Merge on import (recommended if you already have entries here)
           </label>
         </div>
 
         <div class="toggleRow">
           <input id="notesLock" type="checkbox" />
           <label for="notesLock" style="margin:0; cursor:pointer;">
-            🔒 {{ page.t_toggle_hide_notes | default: page.toggle_hide_notes }}
+            🔒 Hide notes (safe for screenshots)
           </label>
         </div>
 </div>
@@ -2215,14 +3355,14 @@ html{ scrollbar-gutter: stable; }
         <div class="profileTitle">
           <b id="profileName">—</b>
           <div class="badgeRow">
-            <div class="specialOneBadge">♾️ {{ page.t_badge_special | default: page.badge_special }}</div>
-            <div class="favBadge">⭐ {{ page.t_badge_favorite | default: page.badge_favorite }}</div>
+            <div class="specialOneBadge">♾️ My Special One</div>
+            <div class="favBadge">⭐ Favorite</div>
           </div>
           <span id="profileSub">—</span>
         </div>
         <div class="btns" style="gap:8px; justify-content:flex-end;">
-          <button id="profileBack" class="secondary" title="{{ page.t_tt_back_to_map | default: page.tt_back_to_map }}">🗺️ {{ page.t_btn_map | default: page.btn_map }}</button>
-          <button id="profileEdit" class="secondary" title="{{ page.t_tt_edit | default: page.tt_edit }}">✏️ {{ page.t_btn_edit | default: page.btn_edit }}</button>
+          <button id="profileBack" class="secondary" title="Back to map">🗺️ Map</button>
+          <button id="profileEdit" class="secondary" title="Load into form">✏️ Edit</button>
           <button id="profilePin" class="secondary" title="Center on map">📍</button>
         </div>
       </div>
@@ -2238,50 +3378,13 @@ html{ scrollbar-gutter: stable; }
   <div class="imgModalInner" role="dialog" aria-modal="true" aria-label="Image preview">
     <img id="imgModalImg" alt="Preview" />
     <div class="imgModalHint">
-      <span>{{ page.t_img_tip_close | default: page.img_tip_close }}</span>
-      <button id="imgModalClose" class="secondary" style="padding:8px 12px;">{{ page.t_btn_close | default: page.btn_close }}</button>
+      <span>Tip: click outside or press <span class="kbd">Esc</span> to close</span>
+      <button id="imgModalClose" class="secondary" style="padding:8px 12px;">Close</button>
     </div>
   </div>
 </div>
 
 <script>
-  // ==============================
-  // i18n helpers (DE/EN via frontmatter)
-  // ==============================
-  const LANG = {{ page.lang | default: "en" | jsonify }};
-  const T = {
-    zodiac_initial: {{ page.t_zodiac_line_initial | default: page.zodiac_initial | default: "Zodiac: — | Chinese Element: — | Chinese Zodiac: —" | jsonify }},
-    zodiac_tpl: {{ page.t_zodiac_line_tpl | default: page.zodiac_line_tpl | default: "Zodiac: %{western} | Chinese Element: %{element} | Chinese Zodiac: %{chinese}" | jsonify }},
-
-    known_for_tpl: {{ page.t_known_for_tpl | default: page.known_for_tpl | default: "Known for %{years} years, %{months} months and %{days} days" | jsonify }},
-    known_for_label: {{ page.t_known_for_label | default: page.known_for_label | default: "Known for" | jsonify }},
-    known_for_short_tpl: {{ page.t_known_for_short_tpl | default: page.known_for_short_tpl | default: "%{years}y %{months}m %{days}d" | jsonify }},
-
-    profile_friendship_title: {{ page.t_profile_friendship_title | default: page.profile_friendship_title | default: "🎈 Friendship" | jsonify }},
-    profile_met_on: {{ page.t_profile_met_on | default: page.profile_met_on | default: "Met on" | jsonify }},
-    profile_known_for: {{ page.t_profile_known_for | default: page.profile_known_for | default: "Known for" | jsonify }},
-
-    cycle_msg_no_range_yet: {{ page.t_cycle_msg_no_range_yet | default: page.cycle_msg_no_range_yet | default: "No recorded period range yet. Add one to get predictions." | jsonify }},
-    cycle_msg_add_range_enable: {{ page.t_cycle_msg_add_range_enable | default: page.cycle_msg_add_range_enable | default: "Add a period range to enable predictions for next period & fertile window." | jsonify }},
-    cycle_lbl_last: {{ page.t_cycle_lbl_last | default: page.cycle_lbl_last | default: "Last" | jsonify }},
-    cycle_lbl_next: {{ page.t_cycle_lbl_next | default: page.cycle_lbl_next | default: "Next" | jsonify }},
-    cycle_lbl_fertile: {{ page.t_cycle_lbl_fertile2 | default: page.cycle_lbl_fertile2 | default: "Fertile" | jsonify }},
-    cycle_lbl_ovulation: {{ page.t_cycle_lbl_ovulation2 | default: page.cycle_lbl_ovulation2 | default: "Ovulation" | jsonify }},
-    cycle_lbl_avg_cycle: {{ page.t_cycle_lbl_avg_cycle | default: page.cycle_lbl_avg_cycle | default: "Avg cycle" | jsonify }},
-    cycle_lbl_period: {{ page.t_cycle_lbl_period2 | default: page.cycle_lbl_period2 | default: "Period" | jsonify }},
-    cycle_in_days_tpl: {{ page.t_cycle_in_days_tpl | default: page.cycle_in_days_tpl | default: " (in %{d}d)" | jsonify }},
-    cycle_today: {{ page.t_cycle_today | default: page.cycle_today | default: " (today)" | jsonify }},
-    cycle_overdue: {{ page.t_cycle_overdue | default: page.cycle_overdue | default: " (overdue?)" | jsonify }},
-
-    cycle_day_unit: {{ page.t_cycle_day_unit | default: page.cycle_day_unit | default: "d" | jsonify }},
-
-    toast_unknown_color: {{ page.t_toast_unknown_color | default: page.toast_unknown_color | default: "Unknown color. Try a CSS color name or a hex value like #ff8800." | jsonify }},
-  };
-
-  function tpl(str, vars){
-    return String(str || "").replace(/%\{(\w+)\}/g, (_,k)=> (vars && k in vars) ? String(vars[k]) : "");
-  }
-
   // ==============================
   // Storage key
   // ==============================
@@ -2636,7 +3739,7 @@ function yearsMonthsDaysSince(startISO){
       return;
     }
     const { years, months, days } = diff;
-    line.textContent = tpl(T.known_for_tpl, { years, months, days });
+    line.textContent = `Known for ${years} years, ${months} months and ${days} days`;
   }
 
 function updateBirthdayCountdownUI(){
@@ -2770,9 +3873,9 @@ function updateBirthdayCountdownUI(){
 
   function formatZodiacLineHTML(birthdateStr){
     // birthdateStr: YYYY-MM-DD
-    if(!birthdateStr) return T.zodiac_initial;
+    if(!birthdateStr) return `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
     const d = new Date(birthdateStr + "T00:00:00");
-    if(Number.isNaN(d.getTime())) return T.zodiac_initial;
+    if(Number.isNaN(d.getTime())) return `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
 
     const sign = westernZodiac(d.getMonth()+1, d.getDate());
     const signEmoji = westernZodiacEmoji(sign);
@@ -2892,17 +3995,17 @@ function updateBirthdayCountdownUI(){
     const file = e.target.files?.[0];
     if(!file){ clearPendingImage(false); return; }
     if(!file.type.startsWith("image/")){
-      toast({{ page.t_toast_select_image | jsonify }});
+      toast("Please select an image file");
       clearPendingImage();
       return;
     }
     try{
-      toast({{ page.t_toast_preparing_image | jsonify }});
+      toast("Preparing image…");
       pendingImageData = await fileToCompressedBase64(file, { maxWidth:560, maxHeight:560, quality:0.78, type:"image/jpeg" });
       showPreview(pendingImageData, file.name);
-      toast({{ page.t_toast_image_ready | jsonify }});
+      toast("Image ready ✅");
     }catch{
-      toast({{ page.t_toast_image_fail | jsonify }});
+      toast("Could not process image");
       clearPendingImage();
     }
   });
@@ -3011,10 +4114,10 @@ function setSpecial(id){
   // ==============================
   const NOTES_CATS = ["important","work","food","other"];
   const NOTES_LABEL = {
-    important: {{ page.t_tab_important | default: page.tab_important | default: "🚨 Important" | jsonify }},
-    work: {{ page.t_tab_work | default: page.tab_work | default: "💼 Work & 🚀 Projects" | jsonify }},
-    food: {{ page.t_tab_food | default: page.tab_food | default: "🍕 Food & More" | jsonify }},
-    other: {{ page.t_tab_other | default: page.tab_other | default: "📦 Other" | jsonify }},
+    important: "🚨 Important",
+    work: "💼 Work & 🚀 Projects",
+    food: "🍕 Food & More",
+    other: "📦 Other"
   };
 
   function normalizeNotes(notes){
@@ -3287,23 +4390,23 @@ function setSpecial(id){
     if(notesHidden) return "";
     const info = computeCycleInfo(cycle);
     if(!info) return "";
-    const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? T.cycle_overdue : tpl(T.cycle_in_days_tpl, { d: info.daysToNext }));
-    return `<div class="pline"><b>🩸 ${escapeHTML(T.cycle_lbl_next)}:</b> ${escapeHTML(fmtDate(info.nextStart))}${dn} · <b>🌿 ${escapeHTML(T.cycle_lbl_fertile)}:</b> ${escapeHTML(fmtDate(info.fertileStart))}–${escapeHTML(fmtDate(info.fertileEnd))} ⭐ ${escapeHTML(fmtDate(info.ovulation))}</div>`;
+    const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? " (overdue?)" : ` (in ${info.daysToNext}d)`);
+    return `<div class="pline"><b>🩸 Next:</b> ${escapeHTML(fmtDate(info.nextStart))}${dn} · <b>🌿 Fertile:</b> ${escapeHTML(fmtDate(info.fertileStart))}–${escapeHTML(fmtDate(info.fertileEnd))} ⭐ ${escapeHTML(fmtDate(info.ovulation))}</div>`;
   }
 
   function cycleCardHTML(cycle){
     if(notesHidden) return "";
     const info = computeCycleInfo(cycle);
     if(!info) return "";
-    const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? T.cycle_overdue : ` (in ${info.daysToNext} days)`);
+    const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? " (overdue?)" : ` (in ${info.daysToNext} days)`);
     return `
       <div class="profileCard">
         <div class="k">🩸 Cycle</div>
         <div class="v">
-          ${escapeHTML(T.cycle_lbl_last)}: <b>${escapeHTML(fmtRangeYMD(info.lastStart, info.lastEnd))}</b><br>
-          ${escapeHTML(T.cycle_lbl_next)}: <b>${escapeHTML(fmtRangeYMD(info.nextStart, info.nextEnd))}</b>${dn}<br>
-          ${escapeHTML(T.cycle_lbl_fertile)}: <b>${escapeHTML(fmtRangeYMD(info.fertileStart, info.fertileEnd))}</b> · ${escapeHTML(T.cycle_lbl_ovulation)}: <b>${escapeHTML(fmtDate(info.ovulation))}</b><br>
-          ${escapeHTML(T.cycle_lbl_avg_cycle)}: ${info.cycle.cycleLength}${T.cycle_day_unit} · ${escapeHTML(T.cycle_lbl_period)}: ${info.cycle.periodLength}${T.cycle_day_unit}
+          Last: <b>${escapeHTML(fmtRangeYMD(info.lastStart, info.lastEnd))}</b><br>
+          Next: <b>${escapeHTML(fmtRangeYMD(info.nextStart, info.nextEnd))}</b>${dn}<br>
+          Fertile: <b>${escapeHTML(fmtRangeYMD(info.fertileStart, info.fertileEnd))}</b> · Ovulation: <b>${escapeHTML(fmtDate(info.ovulation))}</b><br>
+          Avg cycle: ${info.cycle.cycleLength}d · Period: ${info.cycle.periodLength}d
         </div>
       </div>
     `;
@@ -3367,10 +4470,10 @@ function setSpecial(id){
     // Summary
     if(!info){
       sum.innerHTML = hasAny
-        ? T.cycle_msg_no_range_yet
-        : T.cycle_msg_add_range_enable;
+        ? `No recorded period range yet. Add one to get predictions.`
+        : `Add a period range to enable predictions for next period & fertile window.`;
     }else{
-      const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? T.cycle_overdue : ` (in ${info.daysToNext} days)`);
+      const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? " (overdue?)" : ` (in ${info.daysToNext} days)`);
       sum.innerHTML = `
         <div><b>Last:</b> ${escapeHTML(fmtRangeYMD(info.lastStart, info.lastEnd))}</div>
         <div><b>Next:</b> ${escapeHTML(fmtRangeYMD(info.nextStart, info.nextEnd))}${dn}</div>
@@ -3386,7 +4489,7 @@ function setSpecial(id){
     }else{
       list.innerHTML = periods.map(p=>{
         const txt = fmtRangeYMD(p.start, p.end);
-        return `<span class="cycleChip">🩸 ${escapeHTML(txt)} <span class="x" title="{{ page.t_cycle_remove | default: page.cycle_remove | default: 'Remove' }}" data-del="${escapeHTML(p.start)}|${escapeHTML(p.end)}">✕</span></span>`;
+        return `<span class="cycleChip">🩸 ${escapeHTML(txt)} <span class="x" title="Remove" data-del="${escapeHTML(p.start)}|${escapeHTML(p.end)}">✕</span></span>`;
       }).join("");
     }
 
@@ -3460,7 +4563,7 @@ function setSpecial(id){
       const e0 = ($("cycleEnd")?.value || "").trim();
       let e = isValidFullDate(e0) ? e0 : "";
       if(!e && isValidFullDate(s)){
-        // If no end date is provided, preview a range based on "{{ page.t_cycle_lbl_period_len | default: page.cycle_lbl_period_len | default: 'Period length (days)' }}"
+        // If no end date is provided, preview a range based on "Period length (days)"
         const pl = normalizeCycle(formCycle).periodLength || 5;
         e = addDaysYMD(s, Math.max(0, pl - 1)) || s;
       }
@@ -3556,11 +4659,11 @@ function setSpecial(id){
         let start = (startEl?.value||"").trim();
         const e0 = (endEl?.value||"").trim();
         if(!isValidFullDate(start)){
-          toast({{ page.t_toast_pick_valid_start | jsonify }});
+          toast("Pick a valid start date");
           return;
         }
 
-        // If no end date is provided, auto-create a range using "{{ page.t_cycle_lbl_period_len | default: page.cycle_lbl_period_len | default: 'Period length (days)' }}"
+        // If no end date is provided, auto-create a range using "Period length (days)"
         const pl = normalizeCycle(formCycle).periodLength || 5;
         let end = isValidFullDate(e0) ? e0 : (addDaysYMD(start, Math.max(0, pl - 1)) || start);
 
@@ -3585,17 +4688,17 @@ function setSpecial(id){
         if(endEl) endEl.value = "";
 
         updateCycleUI();
-        toast({{ page.t_toast_period_saved | jsonify }});
+        toast("Period saved ✅");
       });
     }
 
     // Clear
     if(clearBtn){
       clearBtn.addEventListener("click", ()=>{
-        const ok = confirm({{ page.t_confirm_clear_cycle | jsonify }});
+        const ok = confirm("Clear all cycle data for this person?");
         if(!ok) return;
         clearCycleForm();
-        toast({{ page.t_toast_cycle_cleared | jsonify }});
+        toast("Cycle cleared");
       });
     }
 
@@ -3651,43 +4754,7 @@ function setSpecial(id){
     return [Number(m[1]), Number(m[2]), Number(m[3])];
   }
 
-  
-  // Localized color helpers (accept common DE names, display localized labels)
-  const COLOR_INPUT_MAP_DE = {
-    "türkis":"turquoise","tuerkis":"turquoise",
-    "rot":"red","blau":"blue","grün":"green","gruen":"green",
-    "gelb":"yellow","orange":"orange","lila":"purple","violett":"violet",
-    "pink":"pink","rosa":"pink",
-    "schwarz":"black","weiß":"white","weiss":"white",
-    "gold":"gold","silber":"silver",
-    "braun":"brown","grau":"gray","hellgrau":"lightgray","dunkelgrau":"dimgray"
-  };
-  const COLOR_DISPLAY_DE = {
-    "turquoise":"türkis","red":"rot","blue":"blau","green":"grün","yellow":"gelb",
-    "purple":"lila","violet":"violett","pink":"pink","black":"schwarz","white":"weiß",
-    "gold":"gold","silver":"silber","brown":"braun","gray":"grau","lightgray":"hellgrau","dimgray":"dunkelgrau",
-    "orange":"orange"
-  };
-
-  function normalizeColorInput(raw){
-    const s = String(raw||"").trim();
-    if(!s) return s;
-    if(String(LANG).toLowerCase()==="de"){
-      const key = s.toLowerCase();
-      return COLOR_INPUT_MAP_DE[key] || s;
-    }
-    return s;
-  }
-  function displayColorLabel(raw){
-    const s = String(raw||"").trim();
-    if(!s) return s;
-    if(String(LANG).toLowerCase()==="de"){
-      const key = s.toLowerCase();
-      return COLOR_DISPLAY_DE[key] || s;
-    }
-    return s;
-  }
-function glassVarsForRGB(rgb){
+  function glassVarsForRGB(rgb){
     const [r,g,b] = rgb;
     const lumin = (0.2126*r + 0.7152*g + 0.0722*b) / 255;
     // dark colors: a bit more tint, less glow
@@ -3729,7 +4796,7 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
       pill.style.setProperty("--c", `${rgb[0]},${rgb[1]},${rgb[2]}`);
       pill.style.setProperty("--a", String(a));
       pill.style.setProperty("--g", String(glow));
-      pill.textContent = displayColorLabel(c);
+      pill.textContent = c;
       const drops = document.createElement("span");
       drops.className = "drops";
       pill.appendChild(drops);
@@ -3767,11 +4834,11 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
     // validate color
     const rgb = resolveToRGB(raw);
     if(!rgb){
-      toast(T.toast_unknown_color);
+      toast("Unknown color. Try a CSS color name or a hex value like #ff8800.");
       return;
     }
     if(formFavColors.length >= 6){
-      toast({{ page.t_toast_max_colors | jsonify }});
+      toast("Max 6 colors");
       return;
     }
     const key = raw.toLowerCase();
@@ -4217,10 +5284,10 @@ setInterval(updateNightLayer, 30000);
         if(tz) $("timezone").value = tz;
         toast(tz ? "Coordinates + timezone set ✅" : "Coordinates set (timezone unknown)");
       }catch{
-        toast({{ page.t_toast_coords_set_tz_failed | jsonify }});
+        toast("Coordinates set (timezone lookup failed)");
       }
     }else{
-      toast({{ page.t_toast_coords_set_map | jsonify }});
+      toast("Coordinates set (map click)");
     }
   });
 
@@ -4529,7 +5596,7 @@ const img = entry.imageData
     $("profileView").classList.toggle("isSpecialProfile", !!specialId && entry.id===specialId );
 
         $("profileView").classList.toggle("isBothProfileBadges", !!entry.fav && !!specialId && entry.id===specialId );
-$("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">{{ page.t_local_time | default: page.local_time }}</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}` : (entry.connection ? escapeHTML(entry.connection) : "—");
+$("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}` : (entry.connection ? escapeHTML(entry.connection) : "—");
 
     const imgBlock = entry.imageData
       ? `
@@ -4581,7 +5648,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
         const s = yearsMonthsDaysSince(entry.metOn);
         const metTxt = escapeHTML(fmtDate(entry.metOn));
         if(s){
-          return `<div class="profileCard"><div class="k">${escapeHTML(T.profile_friendship_title)}</div><div class="v">${escapeHTML(T.profile_met_on)}: ${metTxt}<br>${escapeHTML(T.profile_known_for)}: <b>${escapeHTML(tpl(T.known_for_short_tpl, {years:s.years, months:s.months, days:s.days}))}</b></div></div>`;
+          return `<div class="profileCard"><div class="k">🎈 Friendship</div><div class="v">Met on: ${metTxt}<br>Known for: <b>${s.years}y ${s.months}m ${s.days}d</b></div></div>`;
         }
         return `<div class="profileCard"><div class="k">🎈 Friendship</div><div class="v">Met on: ${metTxt}</div></div>`;
       })() : "";
@@ -4677,7 +5744,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     const name = $("profileName").textContent;
     const e = entries.find(x=>x.nickname===name) || entries.find(x=>x.id===selectedId);
     if(e) selectEntry(e.id);
-    toast({{ page.t_toast_entry_loaded | jsonify }});
+    toast("Entry loaded");
   });
   $("profilePin").addEventListener("click", ()=>{
     const name = $("profileName").textContent;
@@ -4753,7 +5820,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     if(opts.panMap !== false && typeof entry.lat === "number" && typeof entry.lon === "number"){
       map.setView([entry.lat, entry.lon], Math.max(map.getZoom(), 4));
     }
-    toast({{ page.t_toast_entry_loaded | jsonify }});
+    toast("Entry loaded");
     renderList();
   }
 
@@ -4785,15 +5852,15 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
             const tz = await resolveTimezone(g.lat, g.lon);
             if(tz){
               $("timezone").value = tz;
-              toast({{ page.t_toast_addr_tz_found | jsonify }});
+              toast("Address + timezone found ✅");
             }else{
-              toast({{ page.t_toast_addr_found_tz_unknown | jsonify }});
+              toast("Address found (timezone unknown)");
             }
           }catch{
-            toast({{ page.t_toast_addr_found_tz_failed | jsonify }});
+            toast("Address found (timezone lookup failed)");
           }
         }else{
-          toast({{ page.t_toast_addr_found | jsonify }});
+          toast("Address found");
         }
       }
     }catch{}
@@ -4815,8 +5882,8 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     const favColors = getFavColorsFromForm();
     const cycle = getCycleFromForm();
 
-    if(!nickname){ toast({{ page.t_toast_need_nickname | jsonify }}); return; }
-    if(!tz){ toast({{ page.t_toast_need_timezone | jsonify }}); return; }
+    if(!nickname){ toast("Please enter a nickname"); return; }
+    if(!tz){ toast("Please enter an IANA timezone"); return; }
 
 
     // Overwrite confirmation (same nickname)
@@ -4831,7 +5898,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
 
     if(conflictIdx >= 0){
       const target = entries[conflictIdx];
-      const ok = confirm(`${{ page.t_confirm_overwrite_prefix | jsonify }}\n\n${target.nickname}\n\n${{ page.t_confirm_overwrite_suffix | jsonify }}`);
+      const ok = confirm(`Overwrite existing entry?\n\n${target.nickname}\n\nThe current data will be replaced.`);
       if(!ok) return;
       overwriteTargetId = target.id;
       if(selectedId) deleteAfterOverwriteId = selectedId; // merging two entries
@@ -4840,7 +5907,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     let [lat, lon] = parseCoords($("coords").value);
 
     if((!Number.isFinite(lat) || !Number.isFinite(lon)) && currentAddress){
-      toast({{ page.t_toast_finding_address | jsonify }});
+      toast("Finding current address…");
       try{
         const g = await geocodeAddress(currentAddress);
         if(g){
@@ -4851,7 +5918,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     }
 
     if(!Number.isFinite(lat) || !Number.isFinite(lon)){
-      toast({{ page.t_toast_need_coords_or_address | jsonify }});
+      toast("Please set coordinates (map click) or enter a current address");
       return;
     }
 
@@ -4876,7 +5943,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
           imageData: newImageData,
           updatedAt: now
         };
-        toast({{ page.t_toast_updated | jsonify }});
+        toast("Updated");
       }
     } else {
       entries.unshift({
@@ -4890,7 +5957,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
         imageData: pendingImageData ?? null,
         createdAt: now, updatedAt: now
       });
-      toast({{ page.t_toast_saved | jsonify }});
+      toast("Saved");
     }
 
     pendingImageData = null;
@@ -4920,7 +5987,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
   function handleDelete(){
     if(!selectedId) return;
     const e = entries.find(x=>x.id===selectedId);
-    const ok = confirm(`${{ page.t_confirm_delete_one_prefix | jsonify }}\n\n${e?.nickname ?? ""}`);
+    const ok = confirm(`Really delete this entry?\n\n${e?.nickname ?? ""}`);
     if(!ok) return;
     // keep Special consistent
     if(specialId === selectedId){
@@ -4931,18 +5998,18 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     selectedId = null;
     save();
     clearForm();
-    toast({{ page.t_toast_deleted | jsonify }});
+    toast("Deleted");
   }
 
   $("removeImgBtn").addEventListener("click", ()=>{
     if(!selectedId){
       clearPendingImage();
-      toast({{ page.t_toast_image_removed_new | jsonify }});
+      toast("Image removed (new entry)");
       return;
     }
     $("removeImgBtn").dataset.remove = "1";
     clearPendingImage();
-    toast({{ page.t_toast_image_will_remove | jsonify }});
+    toast("Image will be removed on save");
   });
 
   // ==============================
@@ -5029,11 +6096,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
       }
     }
 
-    const statsTpl = {{ page.t_stats_template | jsonify }};
-    el.textContent = statsTpl
-      .replace(/\%\{friends\}/g, String(friends))
-      .replace(/\%\{countries\}/g, String(countries.size))
-      .replace(/\%\{longest\}/g, String(longest ? formatYMDShort(longest.ymd) : "—"));
+    el.textContent = `Friends: ${friends} · Countries: ${countries.size} · Longest friendship: ${longest ? formatYMDShort(longest.ymd) : "—"}`;
   }
 
 function renderList(){
@@ -5190,7 +6253,7 @@ function renderList(){
             ${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}
           </div>
 
-          <div class="tiny"><span class="localLabel">{{ page.t_local_time | default: page.local_time }}</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
+          <div class="tiny"><span class="localLabel">Local Time</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
         </div>
         <div class="actions">
           ${avatar}
@@ -5217,7 +6280,7 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
         e.fav = !e.fav;
                 e.updatedAt = new Date().toISOString();
         save();
-        toast(e.fav ? {{ page.t_toast_fav_add | jsonify }} : {{ page.t_toast_fav_remove | jsonify }});
+        toast(e.fav ? "Added to favorites ⭐" : "Removed from favorites");
       });
 
       // Special (turquoise) - only one person globally
@@ -5255,7 +6318,7 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
     if(e && $("profileView").style.display !== "none"){
       const t = personLocalTime(e.tz) || "—";
       $("profileSub").innerHTML = e.tz
-        ? `<span class="pheart">${heartForTimezone(e.tz)}</span> <span class="localLabel">{{ page.t_local_time | default: page.local_time }}</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t)}</span> <span class="pline">(${escapeHTML(e.tz)})</span>${e.connection ? " · " + escapeHTML(e.connection) : ""}`
+        ? `<span class="pheart">${heartForTimezone(e.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t)}</span> <span class="pline">(${escapeHTML(e.tz)})</span>${e.connection ? " · " + escapeHTML(e.connection) : ""}`
         : (e.connection ? escapeHTML(e.connection) : "—");
     }
   }
@@ -5281,7 +6344,7 @@ function exportJSON(){
     URL.revokeObjectURL(a.href);
 
     navigator.clipboard?.writeText(data).catch(()=>{});
-    toast({{ page.t_toast_export | jsonify }});
+    toast("Export created (file + clipboard)");
   }
 
   function sanitizeEntriesArray(data){
@@ -5387,7 +6450,7 @@ function exportJSON(){
       const { cleaned, incomingSpecialId } = parseImportPayload(parsed);
 
       if(cleaned.length === 0){
-        toast({{ page.t_toast_import_no_entries | jsonify }});
+        toast("Import failed: JSON has no valid entries");
         return;
       }
 
@@ -5395,10 +6458,10 @@ function exportJSON(){
 
       if(doMerge){
         entries = mergeImported(entries, cleaned);
-        toast({{ page.t_toast_import_merged | jsonify }});
+        toast("Imported (merged) ✅");
       }else{
         entries = cleaned;
-        toast({{ page.t_toast_import_replaced | jsonify }});
+        toast("Imported (replaced) ✅");
       }
 
       // Apply imported specialId if present and valid
@@ -5414,7 +6477,7 @@ function exportJSON(){
       save();
       clearForm();
     }catch{
-      toast({{ page.t_toast_import_file_fail | jsonify }});
+      toast("Could not import file");
     }finally{
       // allow importing same file again
       e.target.value = "";
@@ -5422,13 +6485,13 @@ function exportJSON(){
   });
 
   function clearAll(){
-    const ok = confirm({{ page.t_confirm_delete_all | jsonify }});
+    const ok = confirm("Really delete ALL entries from this browser?");
     if(!ok) return;
     entries = [];
     selectedId = null;
     save();
     clearForm();
-    toast({{ page.t_toast_all_deleted | jsonify }});
+    toast("All deleted");
     showMapView();
   }
 
@@ -5488,7 +6551,7 @@ function exportJSON(){
     updateClusterToggleButton();
     _clusterBtn.addEventListener("click", ()=>{
       setClusteringEnabled(!clusteringEnabled);
-      toast(clusteringEnabled ? {{ page.t_toast_cluster_enabled | jsonify }} : {{ page.t_toast_cluster_disabled | jsonify }});
+      toast(clusteringEnabled ? "Clustering enabled ✅" : "Clustering disabled ✅");
     });
   }
 
@@ -5497,25 +6560,25 @@ function exportJSON(){
   if(_myLocBtn){
     _myLocBtn.addEventListener("click", ()=>{
       if(!navigator.geolocation){
-        toast({{ page.t_toast_geo_not_supported | jsonify }});
+        toast("Geolocation not supported");
         return;
       }
-      toast({{ page.t_toast_geo_getting | jsonify }});
+      toast("Getting your location…");
       navigator.geolocation.getCurrentPosition(
         (pos)=>{
           const lat = pos.coords.latitude;
           const lon = pos.coords.longitude;
           setMyLocationMarker(lat, lon);
-          toast({{ page.t_toast_geo_set | jsonify }});
+          toast("My location marker set ✅");
         },
         ()=>{
-          toast({{ page.t_toast_geo_failed | jsonify }});
+          toast("Could not get location (permission?)");
           try{
-            const manual = prompt({{ page.t_prompt_geo_manual | jsonify }});
+            const manual = prompt("Enter a city/address to set My Location manually (English):");
             if(manual && manual.trim()){
               geocodeAddress(manual.trim()).then(r=>{
-                if(r){ setMyLocationMarker(r.lat, r.lon); toast({{ page.t_toast_geo_set_manual | jsonify }}); }
-                else toast({{ page.t_toast_geo_not_found | jsonify }});
+                if(r){ setMyLocationMarker(r.lat, r.lon); toast("My location set (manual) ✅"); }
+                else toast("Could not find that place");
               }).catch(()=>toast("Manual lookup failed"));
             }
           }catch{}
@@ -5606,11 +6669,11 @@ function distClear(){
 function distAddPoint(lat, lon, label){
   distancePoints.push({lat, lon, label: label || ""});
   if(distancePoints.length === 1){
-    distHint({{ page.t_dist_hint_second | jsonify }});
+    distHint('📏 <b>Distance mode</b>: choose the <b>2nd point</b> (profile pin or map).');
   }
   if(distancePoints.length === 2){
     distDraw();
-    distHint({{ page.t_dist_hint_done | jsonify }});
+    distHint('📏 <b>Done</b>. Click another pin/map to start a new measurement, or tap 📏 to exit.');
   }
 }
 
@@ -5812,11 +6875,11 @@ function distToggle(){
   btn && btn.classList.toggle("active", distanceMode);
   distClear();
   if(distanceMode){
-    distHint({{ page.t_dist_hint_first | jsonify }});
-    toast && toast({{ page.t_toast_distance_on | jsonify }});
+    distHint('📏 <b>Distance mode</b>: choose the <b>1st point</b> (profile pin or map).');
+    toast && toast("Distance tool enabled");
   }else{
     distHint("");
-    toast && toast({{ page.t_toast_distance_off | jsonify }});
+    toast && toast("Distance tool disabled");
   }
 }
 
@@ -5839,7 +6902,7 @@ try{
       try{ ev.originalEvent && ev.originalEvent.stopPropagation && ev.originalEvent.stopPropagation(); }catch{}
       if(distancePoints.length >= 2) distClear();
       const ll = ml.getLatLng ? ml.getLatLng() : null;
-      if(ll) distAddPoint(ll.lat, ll.lng, {{ page.t_my_location_label | jsonify }});
+      if(ll) distAddPoint(ll.lat, ll.lng, "My location");
     });
   }
 }catch{}
@@ -5983,4 +7046,4 @@ document.addEventListener("DOMContentLoaded", ()=>{
 <button id="distanceFloatingBtn" title="Distance tool">📏</button>
 
 <div id="distanceHint"></div>
-</div>
+</section>
