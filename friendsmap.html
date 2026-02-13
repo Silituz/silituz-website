@@ -1,92 +1,139 @@
 ---
 layout: default
 lang: de
-title: "Social Organizer"
+title: Social Organizer
 permalink: /social-organizer/
 robots: noindex
-
-so_title: "Social Organizer"
-so_sub: "von Silituz"
-
-t_stats_title: "- Statistik -"
-t_stats_initial: "Freunde: 0 · Länder: 0 · Längste Freundschaft: —"
-t_stats_template: "Freunde: %{friends} · Länder: %{countries} · Längste Freundschaft: %{longest}"
-
-t_lbl_nickname: "Spitzname *"
-t_ph_nickname: "z.B. Sun / Polina / ..."
-t_lbl_birthdate: "Geburtstag (optional)"
-t_zodiac_line_initial: "Sternzeichen: — | Chinesisches Element: — | Chinesisches Zeichen: —"
-t_lbl_birthplace: "Geburtsort (optional)"
-t_ph_birthplace: "z.B. Warschau, Polen"
-t_lbl_met_on: "Kennenlern-Tag (Datum, optional)"
-t_lbl_current_address: "Aktueller Ort / Adresse (optional)"
-t_ph_current_address: "z.B. Los Angeles, CA"
-t_hint_autogeocode: "Wird für Koordinaten genutzt (Auto-Geocode), wenn Koordinaten leer sind."
-t_lbl_timezone: "Zeitzone (IANA) *"
-t_ph_timezone: "z.B. America/Los_Angeles"
-t_hint_timezone_examples: "Beispiele: <span class='kbd'>Europe/Berlin</span>, <span class='kbd'>America/Los_Angeles</span>, <span class='kbd'>Asia/Tokyo</span>"
-t_lbl_native_lang: "Muttersprache (optional)"
-t_ph_native_lang: "z.B. Spanisch"
-t_lbl_other_langs: "Weitere Sprachen (optional)"
-t_ph_other_langs: "z.B. Englisch, Russisch"
-t_lbl_image: "Bild (Upload, optional)"
-t_hint_image_storage: "Wird lokal gespeichert (komprimiert). Kein externes Hosting nötig."
-t_lbl_fav_colors: "Lieblingsfarben"
-t_ph_add_color: "Farbe hinzufügen (z.B. türkis, gold, #ff8800)"
-t_btn_add: "Hinzufügen"
-t_hint_colors_limit: "Bis zu 6 Farben."
-
-t_btn_save: "Speichern / Marker setzen"
-t_btn_new: "Neu"
-t_btn_delete: "Löschen"
-t_btn_remove_image: "Bild entfernen"
-t_tt_remove_image: "Bild aus dem Eintrag entfernen"
-
-t_hint_osm_line1: "Aktueller Ort kann automatisch über OpenStreetMap (Nominatim) geocodiert werden."
-t_hint_localstorage_line2: "Alles wird in <b>localStorage</b> in diesem Browser gespeichert. Nutze Export/Import, um Daten auf ein anderes Gerät zu übertragen."
-
-t_ph_search: "Suche (Name, Notizen, Daten, Zeitzone …)"
-t_filter_all: "Alle"
-t_filter_fav: "Favoriten"
-t_filter_now: "Jetzt"
-t_filter_maybe: "Vielleicht"
-t_filter_sleep: "Schläft"
-t_filter_bday: "Geburtstag"
-t_filter_friendship: "Freundschaft"
-
-t_btn_export: "Export JSON"
-t_btn_import: "Import JSON (Datei)"
-t_btn_cluster_on: "Cluster: An"
-t_btn_cluster_off: "Cluster: Aus"
-t_btn_my_location: "Mein Standort"
-t_tt_my_location: "Meinen aktuellen Standort-Marker anzeigen"
-t_btn_delete_all: "Alles löschen"
-t_toggle_merge: "Beim Import zusammenführen (empfohlen, wenn du hier schon Einträge hast)"
-t_toggle_hide_notes: "Notizen ausblenden (sicher für Screenshots)"
-
-t_badge_special: "Mein Special One"
-t_badge_favorite: "Favorit"
-t_btn_map: "Karte"
-t_btn_edit: "Bearbeiten"
-t_tt_back_to_map: "Zurück zur Karte"
-t_tt_edit: "In Formular laden"
-
-t_local_time: "Ortszeit"
-
-t_toast_export: "Export erstellt (Datei + Zwischenablage)"
-t_toast_fav_add: "Zu Favoriten hinzugefügt ⭐"
-t_toast_fav_remove: "Aus Favoriten entfernt"
-t_toast_cluster_enabled: "Clustering aktiviert ✅"
-t_toast_cluster_disabled: "Clustering deaktiviert ✅"
-
-t_toast_geo_not_supported: "Geolocation wird nicht unterstützt"
-t_toast_geo_getting: "Standort wird ermittelt…"
-t_toast_geo_set: "Standort-Marker gesetzt ✅"
-t_toast_geo_failed: "Standort konnte nicht ermittelt werden (Berechtigung?)"
-t_prompt_geo_manual: "Stadt/Adresse eingeben, um den Standort manuell zu setzen:"
-t_toast_geo_set_manual: "Standort gesetzt (manuell) ✅"
-t_toast_geo_not_found: "Ort nicht gefunden"
-t_toast_geo_manual_failed: "Manuelle Suche fehlgeschlagen"
+so_title: Social Organizer
+so_sub: von Silituz
+t_stats_title: '- Statistik -'
+t_stats_initial: 'Freunde: 0 · Länder: 0 · Längste Freundschaft: —'
+t_stats_template: 'Freunde: %{friends} · Länder: %{countries} · Längste Freundschaft:
+  %{longest}'
+t_lbl_nickname: Spitzname *
+t_ph_nickname: z.B. Sun / Polina / ...
+t_lbl_birthdate: Geburtstag (optional)
+t_zodiac_line_initial: 'Sternzeichen: — | Chinesisches Element: — | Chinesisches Zeichen:
+  —'
+t_lbl_birthplace: Geburtsort (optional)
+t_ph_birthplace: z.B. Warschau, Polen
+t_lbl_met_on: Kennenlern-Tag (Datum, optional)
+t_lbl_current_address: Aktueller Ort / Adresse (optional)
+t_ph_current_address: z.B. Los Angeles, CA
+t_hint_autogeocode: Wird für Koordinaten genutzt (Auto-Geocode), wenn Koordinaten
+  leer sind.
+t_lbl_timezone: Zeitzone (IANA) *
+t_ph_timezone: z.B. America/Los_Angeles
+t_hint_timezone_examples: 'Beispiele: <span class=''kbd''>Europe/Berlin</span>, <span
+  class=''kbd''>America/Los_Angeles</span>, <span class=''kbd''>Asia/Tokyo</span>'
+t_lbl_native_lang: Muttersprache (optional)
+t_ph_native_lang: z.B. Spanisch
+t_lbl_other_langs: Weitere Sprachen (optional)
+t_ph_other_langs: z.B. Englisch, Russisch
+t_lbl_image: Bild (Upload, optional)
+t_hint_image_storage: Wird lokal gespeichert (komprimiert). Kein externes Hosting
+  nötig.
+t_lbl_fav_colors: Lieblingsfarben
+t_ph_add_color: 'Farbe hinzufügen (z.B. türkis, gold, #ff8800)'
+t_btn_add: Hinzufügen
+t_hint_colors_limit: Bis zu 6 Farben.
+t_btn_save: Speichern / Marker setzen
+t_btn_new: Neu
+t_btn_delete: Löschen
+t_btn_remove_image: Bild entfernen
+t_tt_remove_image: Bild aus dem Eintrag entfernen
+t_hint_osm_line1: Aktueller Ort kann automatisch über OpenStreetMap (Nominatim) geocodiert
+  werden.
+t_hint_localstorage_line2: Alles wird in <b>localStorage</b> in diesem Browser gespeichert.
+  Nutze Export/Import, um Daten auf ein anderes Gerät zu übertragen.
+t_ph_search: Suche (Name, Notizen, Daten, Zeitzone …)
+t_filter_all: Alle
+t_filter_fav: Favoriten
+t_filter_now: Jetzt
+t_filter_maybe: Vielleicht
+t_filter_sleep: Schläft
+t_filter_bday: Geburtstag
+t_filter_friendship: Freundschaft
+t_btn_export: Export JSON
+t_btn_import: Import JSON (Datei)
+t_btn_cluster_on: 'Cluster: An'
+t_btn_cluster_off: 'Cluster: Aus'
+t_btn_my_location: Mein Standort
+t_tt_my_location: Meinen aktuellen Standort-Marker anzeigen
+t_btn_delete_all: Alles löschen
+t_toggle_merge: Beim Import zusammenführen (empfohlen, wenn du hier schon Einträge
+  hast)
+t_toggle_hide_notes: Notizen ausblenden (sicher für Screenshots)
+t_badge_special: Mein Special One
+t_badge_favorite: Favorit
+t_btn_map: Karte
+t_btn_edit: Bearbeiten
+t_tt_back_to_map: Zurück zur Karte
+t_tt_edit: In Formular laden
+t_local_time: Ortszeit
+t_toast_export: Export erstellt (Datei + Zwischenablage)
+t_toast_fav_add: Zu Favoriten hinzugefügt ⭐
+t_toast_fav_remove: Aus Favoriten entfernt
+t_toast_cluster_enabled: Clustering aktiviert ✅
+t_toast_cluster_disabled: Clustering deaktiviert ✅
+t_toast_geo_not_supported: Geolocation wird nicht unterstützt
+t_toast_geo_getting: Standort wird ermittelt…
+t_toast_geo_set: Standort-Marker gesetzt ✅
+t_toast_geo_failed: Standort konnte nicht ermittelt werden (Berechtigung?)
+t_prompt_geo_manual: 'Stadt/Adresse eingeben, um den Standort manuell zu setzen:'
+t_toast_geo_set_manual: Standort gesetzt (manuell) ✅
+t_toast_geo_not_found: Ort nicht gefunden
+t_toast_geo_manual_failed: Manuelle Suche fehlgeschlagen
+t_btn_close: Schließen
+t_img_tip_close: 'Tipp: außerhalb klicken oder <span class="kbd">Esc</span> drücken
+  zum Schließen'
+t_confirm_clear_cycle: Alle Zyklus-Daten für diese Person löschen?
+t_confirm_overwrite_prefix: Vorhandenen Eintrag überschreiben?
+t_confirm_overwrite_suffix: Die aktuellen Daten werden ersetzt.
+t_confirm_delete_one_prefix: Diesen Eintrag wirklich löschen?
+t_confirm_delete_all: Wirklich ALLE Einträge aus diesem Browser löschen?
+t_dist_hint_first: '📏 <b>Distanz-Modus</b>: wähle den <b>1. Punkt</b> (Profil-Pin
+  oder Karte).'
+t_dist_hint_second: '📏 <b>Distanz-Modus</b>: wähle den <b>2. Punkt</b> (Profil-Pin
+  oder Karte).'
+t_dist_hint_done: 📏 <b>Fertig</b>. Klicke einen anderen Pin/Karte für eine neue Messung
+  oder tippe 📏 zum Beenden.
+t_my_location_label: Mein Standort
+t_toast_select_image: Bitte wähle eine Bilddatei
+t_toast_preparing_image: Bild wird vorbereitet…
+t_toast_image_ready: Bild bereit ✅
+t_toast_image_fail: Bild konnte nicht verarbeitet werden
+t_toast_entry_loaded: Eintrag geladen
+t_toast_addr_tz_found: Adresse + Zeitzone gefunden ✅
+t_toast_addr_found_tz_unknown: Adresse gefunden (Zeitzone unbekannt)
+t_toast_addr_found_tz_failed: Adresse gefunden (Zeitzonen-Suche fehlgeschlagen)
+t_toast_addr_found: Adresse gefunden
+t_toast_need_nickname: Bitte Spitznamen eingeben
+t_toast_need_timezone: Bitte eine IANA-Zeitzone eingeben
+t_toast_finding_address: Aktueller Ort wird gesucht…
+t_toast_need_coords_or_address: Bitte Koordinaten setzen (Klick auf Karte) oder eine
+  Adresse eingeben
+t_toast_updated: Aktualisiert
+t_toast_saved: Gespeichert
+t_toast_deleted: Gelöscht
+t_toast_all_deleted: Alles gelöscht
+t_toast_coords_set_map: Koordinaten gesetzt (Klick auf Karte)
+t_toast_coords_set_tz_failed: Koordinaten gesetzt (Zeitzonen-Suche fehlgeschlagen)
+t_toast_place_not_found: Ort nicht gefunden
+t_toast_geo_permission: Standort konnte nicht ermittelt werden (Berechtigung?)
+t_toast_import_file_fail: Import-Datei konnte nicht gelesen werden
+t_toast_import_merged: Importiert (zusammengeführt) ✅
+t_toast_import_replaced: Importiert (ersetzt) ✅
+t_toast_import_no_entries: 'Import fehlgeschlagen: JSON enthält keine gültigen Einträge'
+t_toast_manual_lookup_failed: Manuelle Suche fehlgeschlagen
+t_toast_max_colors: Max. 6 Farben
+t_toast_period_saved: Periode gespeichert ✅
+t_toast_pick_valid_start: Bitte ein gültiges Startdatum wählen
+t_toast_image_removed_new: Bild entfernt (neuer Eintrag)
+t_toast_image_will_remove: Bild wird beim Speichern entfernt
+t_toast_cycle_cleared: Zyklus zurückgesetzt
+t_toast_distance_on: Distanz-Tool aktiviert
+t_toast_distance_off: Distanz-Tool deaktiviert
 ---
 
 {% include friendsmap_shared.html %}
