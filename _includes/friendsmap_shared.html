@@ -178,6 +178,35 @@
     .item:hover{background: rgba(0,0,0,.12)}
     .item.selected{outline: 1px solid rgba(122,167,255,.35); outline-offset:-1px}
 
+    /* ===== Restored selection glow (scoped) ===== */
+    .friendsmap-wrap .item{ position: relative; }
+    .friendsmap-wrap .item::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(420px 120px at 18% 0%, rgba(122,167,255,.10), transparent 60%);
+      opacity:.45;
+      pointer-events:none;
+    }
+    .friendsmap-wrap .item::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      opacity:0;
+      pointer-events:none;
+    }
+    .friendsmap-wrap .item.isSelected{
+      background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.06));
+      box-shadow: 0 0 0 2px rgba(80,255,190,.22), 0 22px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(80,255,190,.14) inset, 0 0 60px rgba(80,255,190,.28);
+      transform: translateY(-1px);
+    }
+    .friendsmap-wrap .item.isSelected::before{
+      background: radial-gradient(520px 160px at 18% 0%, rgba(190,225,255,.16), transparent 62%);
+      opacity:.9;
+    }
+    .friendsmap-wrap .item.isSelected::after{ opacity:.72; }
+
+
     .meta{min-width:0}
     .nick{font-weight:700; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
     .tiny{font-size:12px; color:var(--muted); margin-top:3px}
@@ -2022,56 +2051,56 @@ html{ scrollbar-gutter: stable; }
 
       <div class="row">
         <div>
-                    <label>{{ page.t_notes | default: page.notes | default: 'Notes' }}</label>
+                    <label>{{ page.t_section_notes | default: page.section_notes | default: "Notes" }}</label>
           <div class="notesTabs" id="notesTabs">
-            <button type="button" class="tabBtn active" data-notes-tab="important">🚨 Important</button>
-            <button type="button" class="tabBtn" data-notes-tab="work">💼 Work &amp; 🚀 Projects</button>
-            <button type="button" class="tabBtn" data-notes-tab="food">🍕 Food &amp; More</button>
-            <button type="button" class="tabBtn" data-notes-tab="other">📦 Other</button>
-            <button type="button" class="tabBtn" data-notes-tab="cycle">🩸 Cycle</button>
+            <button type="button" class="tabBtn active" data-notes-tab="important">{{ page.t_tab_important | default: page.tab_important | default: "🚨 Important" }}</button>
+            <button type="button" class="tabBtn" data-notes-tab="work">{{ page.t_tab_work | default: page.tab_work | default: "💼 Work &amp; 🚀 Projects" }}</button>
+            <button type="button" class="tabBtn" data-notes-tab="food">{{ page.t_tab_food | default: page.tab_food | default: "🍕 Food &amp; More" }}</button>
+            <button type="button" class="tabBtn" data-notes-tab="other">{{ page.t_tab_other | default: page.tab_other | default: "📦 Other" }}</button>
+            <button type="button" class="tabBtn" data-notes-tab="cycle">{{ page.t_tab_cycle | default: page.tab_cycle | default: "🩸 Cycle" }}</button>
           </div>
 
           <div class="notesPanels">
-            <textarea id="notes_important" class="notesPanel" data-notes-panel="important" placeholder="Things that are urgent, critical, or should not be forgotten"></textarea>
-            <textarea id="notes_work" class="notesPanel hidden" data-notes-panel="work" placeholder="Work-related tasks, projects and ideas"></textarea>
-            <textarea id="notes_food" class="notesPanel hidden" data-notes-panel="food" placeholder="Food and drinks, restaurant ideas, places worth trying"></textarea>
-            <textarea id="notes_other" class="notesPanel hidden" data-notes-panel="other" placeholder="Miscellaneous notes"></textarea>
+            <textarea id="notes_important" class="notesPanel" data-notes-panel="important" placeholder="{{ page.t_ph_notes_important | default: page.ph_notes_important | default: 'Things that are urgent, critical, or should not be forgotten' }}"></textarea>
+            <textarea id="notes_work" class="notesPanel hidden" data-notes-panel="work" placeholder="{{ page.t_ph_notes_work | default: page.ph_notes_work | default: 'Work-related tasks, projects and ideas' }}"></textarea>
+            <textarea id="notes_food" class="notesPanel hidden" data-notes-panel="food" placeholder="{{ page.t_ph_notes_food | default: page.ph_notes_food | default: 'Food and drinks, restaurant ideas, places worth trying' }}"></textarea>
+            <textarea id="notes_other" class="notesPanel hidden" data-notes-panel="other" placeholder="{{ page.t_ph_notes_other | default: page.ph_notes_other | default: 'Miscellaneous notes' }}"></textarea>
             <div id="cyclePanel" class="notesPanel hidden cyclePanel" data-notes-panel="cycle">
               <div class="cycleGrid">
                 <div class="cycleRow">
                   <div>
-                    <div class="miniLabel">Last period start</div>
+                    <div class="miniLabel">{{ page.t_cycle_lbl_start | default: page.cycle_lbl_start | default: 'Last period start' }}</div>
                     <input id="cycleStart" type="date" />
                   </div>
                   <div>
-                    <div class="miniLabel">{{ page.t_last_period_end | default: page.last_period_end | default: 'Last period end' }}</div>
+                    <div class="miniLabel">{{ page.t_cycle_lbl_end | default: page.cycle_lbl_end | default: 'Last period end' }}</div>
                     <input id="cycleEnd" type="date" />
                   </div>
                 </div>
 
                 <div class="cycleRow">
                   <div>
-                    <div class="miniLabel">Cycle length (days)</div>
+                    <div class="miniLabel">{{ page.t_cycle_lbl_cycle_len | default: page.cycle_lbl_cycle_len | default: 'Cycle length (days)' }}</div>
                     <input id="cycleLen" type="number" min="15" max="60" step="1" placeholder="28" />
                   </div>
                   <div>
-                    <div class="miniLabel">Period length (days)</div>
+                    <div class="miniLabel">{{ page.t_cycle_lbl_period_len | default: page.cycle_lbl_period_len | default: 'Period length (days)' }}</div>
                     <input id="periodLen" type="number" min="1" max="15" step="1" placeholder="5" />
                   </div>
                 </div>
 
                 <div class="cycleActions">
-                  <button type="button" id="cycleAddBtn" class="btn secondary smallBtn">{{ page.t_add_range | default: page.add_range | default: 'Add 🩸 range' }}</button>
-                  <button type="button" id="cycleClearBtn" class="btn danger smallBtn">Clear</button>
+                  <button type="button" id="cycleAddBtn" class="btn secondary smallBtn">{{ page.t_cycle_btn_add_range | default: page.cycle_btn_add_range | default: 'Add 🩸 range' }}</button>
+                  <button type="button" id="cycleClearBtn" class="btn danger smallBtn">{{ page.t_btn_clear | default: page.btn_clear | default: 'Clear' }}</button>
                 </div>
 
                 <div class="cycleHint">
-                  {{ page.t_cycle_hint | default: page.cycle_hint | default: 'Stored locally per person. Predictions are estimates (not medical advice).' }}
+                  {{ page.t_cycle_hint_storage | default: page.cycle_hint_storage | default: 'Stored locally per person. Predictions are estimates (not medical advice).' }}
                   <span class="cycleLegend">
-                    <span class="leg legPeriod">{{ page.t_leg_period | default: page.leg_period | default: '🩸 period' }}</span>
-                    <span class="leg legPred">{{ page.t_leg_predicted | default: page.leg_predicted | default: '🩸 predicted' }}</span>
-                    <span class="leg legFert">{{ page.t_leg_fertile | default: page.leg_fertile | default: '🌿 fertile' }}</span>
-                    <span class="leg legOvu">{{ page.t_leg_ovulation | default: page.leg_ovulation | default: '⭐ ovulation' }}</span>
+                    <span class="leg legPeriod">{{ page.t_cycle_leg_period | default: page.cycle_leg_period | default: '🩸 period' }}</span>
+                    <span class="leg legPred">{{ page.t_cycle_leg_predicted | default: page.cycle_leg_predicted | default: '🩸 predicted' }}</span>
+                    <span class="leg legFert">{{ page.t_cycle_leg_fertile | default: page.cycle_leg_fertile | default: '🌿 fertile' }}</span>
+                    <span class="leg legOvu">{{ page.t_cycle_leg_ovulation | default: page.cycle_leg_ovulation | default: '⭐ ovulation' }}</span>
                   </span>
                 </div>
 
@@ -2080,17 +2109,17 @@ html{ scrollbar-gutter: stable; }
 
                 <div class="cycleCalWrap">
                   <div class="cycleCalHdr">
-                    <button type="button" class="btn secondary smallBtn" id="cyclePrev" title="Previous month">‹</button>
+                    <button type="button" class="btn secondary smallBtn" id="cyclePrev" title="{{ page.t_cycle_prev_month | default: page.cycle_prev_month | default: 'Previous month' }}">‹</button>
                     <div id="cycleMonthLabel" class="cycleMonthLabel">—</div>
-                    <button type="button" class="btn secondary smallBtn" id="cycleNext" title="Next month">›</button>
+                    <button type="button" class="btn secondary smallBtn" id="cycleNext" title="{{ page.t_cycle_next_month | default: page.cycle_next_month | default: 'Next month' }}">›</button>
                   </div>
                   <div class="cycleWeekdays">
-                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                    <span>{{ page.t_cycle_wd_mon | default: page.cycle_wd_mon | default: 'Mon' }}</span><span>{{ page.t_cycle_wd_tue | default: page.cycle_wd_tue | default: 'Tue' }}</span><span>{{ page.t_cycle_wd_wed | default: page.cycle_wd_wed | default: 'Wed' }}</span><span>{{ page.t_cycle_wd_thu | default: page.cycle_wd_thu | default: 'Thu' }}</span><span>{{ page.t_cycle_wd_fri | default: page.cycle_wd_fri | default: 'Fri' }}</span><span>{{ page.t_cycle_wd_sat | default: page.cycle_wd_sat | default: 'Sat' }}</span><span>{{ page.t_cycle_wd_sun | default: page.cycle_wd_sun | default: 'Sun' }}</span>
                   </div>
                   <div class="cycleCal" id="cycleCal"></div>
                 </div>
 
-                <div class="hint">Tip: click days in the calendar to pick start/end.</div>
+                <div class="hint">{{ page.t_cycle_hint_calendar | default: page.cycle_hint_calendar | default: 'Tip: click days in the calendar to pick start/end.' }}</div>
               </div>
             </div>
 
@@ -2216,6 +2245,43 @@ html{ scrollbar-gutter: stable; }
 </div>
 
 <script>
+  // ==============================
+  // i18n helpers (DE/EN via frontmatter)
+  // ==============================
+  const LANG = {{ page.lang | default: "en" | jsonify }};
+  const T = {
+    zodiac_initial: {{ page.t_zodiac_line_initial | default: page.zodiac_initial | default: "Zodiac: — | Chinese Element: — | Chinese Zodiac: —" | jsonify }},
+    zodiac_tpl: {{ page.t_zodiac_line_tpl | default: page.zodiac_line_tpl | default: "Zodiac: %{western} | Chinese Element: %{element} | Chinese Zodiac: %{chinese}" | jsonify }},
+
+    known_for_tpl: {{ page.t_known_for_tpl | default: page.known_for_tpl | default: "Known for %{years} years, %{months} months and %{days} days" | jsonify }},
+    known_for_label: {{ page.t_known_for_label | default: page.known_for_label | default: "Known for" | jsonify }},
+    known_for_short_tpl: {{ page.t_known_for_short_tpl | default: page.known_for_short_tpl | default: "%{years}y %{months}m %{days}d" | jsonify }},
+
+    profile_friendship_title: {{ page.t_profile_friendship_title | default: page.profile_friendship_title | default: "🎈 Friendship" | jsonify }},
+    profile_met_on: {{ page.t_profile_met_on | default: page.profile_met_on | default: "Met on" | jsonify }},
+    profile_known_for: {{ page.t_profile_known_for | default: page.profile_known_for | default: "Known for" | jsonify }},
+
+    cycle_msg_no_range_yet: {{ page.t_cycle_msg_no_range_yet | default: page.cycle_msg_no_range_yet | default: "No recorded period range yet. Add one to get predictions." | jsonify }},
+    cycle_msg_add_range_enable: {{ page.t_cycle_msg_add_range_enable | default: page.cycle_msg_add_range_enable | default: "Add a period range to enable predictions for next period & fertile window." | jsonify }},
+    cycle_lbl_last: {{ page.t_cycle_lbl_last | default: page.cycle_lbl_last | default: "Last" | jsonify }},
+    cycle_lbl_next: {{ page.t_cycle_lbl_next | default: page.cycle_lbl_next | default: "Next" | jsonify }},
+    cycle_lbl_fertile: {{ page.t_cycle_lbl_fertile2 | default: page.cycle_lbl_fertile2 | default: "Fertile" | jsonify }},
+    cycle_lbl_ovulation: {{ page.t_cycle_lbl_ovulation2 | default: page.cycle_lbl_ovulation2 | default: "Ovulation" | jsonify }},
+    cycle_lbl_avg_cycle: {{ page.t_cycle_lbl_avg_cycle | default: page.cycle_lbl_avg_cycle | default: "Avg cycle" | jsonify }},
+    cycle_lbl_period: {{ page.t_cycle_lbl_period2 | default: page.cycle_lbl_period2 | default: "Period" | jsonify }},
+    cycle_in_days_tpl: {{ page.t_cycle_in_days_tpl | default: page.cycle_in_days_tpl | default: " (in %{d}d)" | jsonify }},
+    cycle_today: {{ page.t_cycle_today | default: page.cycle_today | default: " (today)" | jsonify }},
+    cycle_overdue: {{ page.t_cycle_overdue | default: page.cycle_overdue | default: " (overdue?)" | jsonify }},
+
+    cycle_day_unit: {{ page.t_cycle_day_unit | default: page.cycle_day_unit | default: "d" | jsonify }},
+
+    toast_unknown_color: {{ page.t_toast_unknown_color | default: page.toast_unknown_color | default: "Unknown color. Try a CSS color name or a hex value like #ff8800." | jsonify }},
+  };
+
+  function tpl(str, vars){
+    return String(str || "").replace(/%\{(\w+)\}/g, (_,k)=> (vars && k in vars) ? String(vars[k]) : "");
+  }
+
   // ==============================
   // Storage key
   // ==============================
@@ -2570,7 +2636,7 @@ function yearsMonthsDaysSince(startISO){
       return;
     }
     const { years, months, days } = diff;
-    line.textContent = `Known for ${years} years, ${months} months and ${days} days`;
+    line.textContent = tpl(T.known_for_tpl, { years, months, days });
   }
 
 function updateBirthdayCountdownUI(){
@@ -2704,9 +2770,9 @@ function updateBirthdayCountdownUI(){
 
   function formatZodiacLineHTML(birthdateStr){
     // birthdateStr: YYYY-MM-DD
-    if(!birthdateStr) return `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
+    if(!birthdateStr) return T.zodiac_initial;
     const d = new Date(birthdateStr + "T00:00:00");
-    if(Number.isNaN(d.getTime())) return `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
+    if(Number.isNaN(d.getTime())) return T.zodiac_initial;
 
     const sign = westernZodiac(d.getMonth()+1, d.getDate());
     const signEmoji = westernZodiacEmoji(sign);
@@ -2945,10 +3011,10 @@ function setSpecial(id){
   // ==============================
   const NOTES_CATS = ["important","work","food","other"];
   const NOTES_LABEL = {
-    important: "🚨 Important",
-    work: "💼 Work & 🚀 Projects",
-    food: "🍕 Food & More",
-    other: "📦 Other"
+    important: {{ page.t_tab_important | default: page.tab_important | default: "🚨 Important" | jsonify }},
+    work: {{ page.t_tab_work | default: page.tab_work | default: "💼 Work & 🚀 Projects" | jsonify }},
+    food: {{ page.t_tab_food | default: page.tab_food | default: "🍕 Food & More" | jsonify }},
+    other: {{ page.t_tab_other | default: page.tab_other | default: "📦 Other" | jsonify }},
   };
 
   function normalizeNotes(notes){
@@ -3221,23 +3287,23 @@ function setSpecial(id){
     if(notesHidden) return "";
     const info = computeCycleInfo(cycle);
     if(!info) return "";
-    const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? " (overdue?)" : ` (in ${info.daysToNext}d)`);
-    return `<div class="pline"><b>🩸 Next:</b> ${escapeHTML(fmtDate(info.nextStart))}${dn} · <b>🌿 Fertile:</b> ${escapeHTML(fmtDate(info.fertileStart))}–${escapeHTML(fmtDate(info.fertileEnd))} ⭐ ${escapeHTML(fmtDate(info.ovulation))}</div>`;
+    const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? T.cycle_overdue : tpl(T.cycle_in_days_tpl, { d: info.daysToNext }));
+    return `<div class="pline"><b>🩸 ${escapeHTML(T.cycle_lbl_next)}:</b> ${escapeHTML(fmtDate(info.nextStart))}${dn} · <b>🌿 ${escapeHTML(T.cycle_lbl_fertile)}:</b> ${escapeHTML(fmtDate(info.fertileStart))}–${escapeHTML(fmtDate(info.fertileEnd))} ⭐ ${escapeHTML(fmtDate(info.ovulation))}</div>`;
   }
 
   function cycleCardHTML(cycle){
     if(notesHidden) return "";
     const info = computeCycleInfo(cycle);
     if(!info) return "";
-    const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? " (overdue?)" : ` (in ${info.daysToNext} days)`);
+    const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? T.cycle_overdue : ` (in ${info.daysToNext} days)`);
     return `
       <div class="profileCard">
         <div class="k">🩸 Cycle</div>
         <div class="v">
-          Last: <b>${escapeHTML(fmtRangeYMD(info.lastStart, info.lastEnd))}</b><br>
-          Next: <b>${escapeHTML(fmtRangeYMD(info.nextStart, info.nextEnd))}</b>${dn}<br>
-          Fertile: <b>${escapeHTML(fmtRangeYMD(info.fertileStart, info.fertileEnd))}</b> · Ovulation: <b>${escapeHTML(fmtDate(info.ovulation))}</b><br>
-          Avg cycle: ${info.cycle.cycleLength}d · Period: ${info.cycle.periodLength}d
+          ${escapeHTML(T.cycle_lbl_last)}: <b>${escapeHTML(fmtRangeYMD(info.lastStart, info.lastEnd))}</b><br>
+          ${escapeHTML(T.cycle_lbl_next)}: <b>${escapeHTML(fmtRangeYMD(info.nextStart, info.nextEnd))}</b>${dn}<br>
+          ${escapeHTML(T.cycle_lbl_fertile)}: <b>${escapeHTML(fmtRangeYMD(info.fertileStart, info.fertileEnd))}</b> · ${escapeHTML(T.cycle_lbl_ovulation)}: <b>${escapeHTML(fmtDate(info.ovulation))}</b><br>
+          ${escapeHTML(T.cycle_lbl_avg_cycle)}: ${info.cycle.cycleLength}${T.cycle_day_unit} · ${escapeHTML(T.cycle_lbl_period)}: ${info.cycle.periodLength}${T.cycle_day_unit}
         </div>
       </div>
     `;
@@ -3301,10 +3367,10 @@ function setSpecial(id){
     // Summary
     if(!info){
       sum.innerHTML = hasAny
-        ? `No recorded period range yet. Add one to get predictions.`
-        : `Add a period range to enable predictions for next period & fertile window.`;
+        ? T.cycle_msg_no_range_yet
+        : T.cycle_msg_add_range_enable;
     }else{
-      const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? " (overdue?)" : ` (in ${info.daysToNext} days)`);
+      const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? T.cycle_overdue : ` (in ${info.daysToNext} days)`);
       sum.innerHTML = `
         <div><b>Last:</b> ${escapeHTML(fmtRangeYMD(info.lastStart, info.lastEnd))}</div>
         <div><b>Next:</b> ${escapeHTML(fmtRangeYMD(info.nextStart, info.nextEnd))}${dn}</div>
@@ -3320,7 +3386,7 @@ function setSpecial(id){
     }else{
       list.innerHTML = periods.map(p=>{
         const txt = fmtRangeYMD(p.start, p.end);
-        return `<span class="cycleChip">🩸 ${escapeHTML(txt)} <span class="x" title="Remove" data-del="${escapeHTML(p.start)}|${escapeHTML(p.end)}">✕</span></span>`;
+        return `<span class="cycleChip">🩸 ${escapeHTML(txt)} <span class="x" title="{{ page.t_cycle_remove | default: page.cycle_remove | default: 'Remove' }}" data-del="${escapeHTML(p.start)}|${escapeHTML(p.end)}">✕</span></span>`;
       }).join("");
     }
 
@@ -3394,7 +3460,7 @@ function setSpecial(id){
       const e0 = ($("cycleEnd")?.value || "").trim();
       let e = isValidFullDate(e0) ? e0 : "";
       if(!e && isValidFullDate(s)){
-        // If no end date is provided, preview a range based on "Period length (days)"
+        // If no end date is provided, preview a range based on "{{ page.t_cycle_lbl_period_len | default: page.cycle_lbl_period_len | default: 'Period length (days)' }}"
         const pl = normalizeCycle(formCycle).periodLength || 5;
         e = addDaysYMD(s, Math.max(0, pl - 1)) || s;
       }
@@ -3494,7 +3560,7 @@ function setSpecial(id){
           return;
         }
 
-        // If no end date is provided, auto-create a range using "Period length (days)"
+        // If no end date is provided, auto-create a range using "{{ page.t_cycle_lbl_period_len | default: page.cycle_lbl_period_len | default: 'Period length (days)' }}"
         const pl = normalizeCycle(formCycle).periodLength || 5;
         let end = isValidFullDate(e0) ? e0 : (addDaysYMD(start, Math.max(0, pl - 1)) || start);
 
@@ -3585,7 +3651,43 @@ function setSpecial(id){
     return [Number(m[1]), Number(m[2]), Number(m[3])];
   }
 
-  function glassVarsForRGB(rgb){
+  
+  // Localized color helpers (accept common DE names, display localized labels)
+  const COLOR_INPUT_MAP_DE = {
+    "türkis":"turquoise","tuerkis":"turquoise",
+    "rot":"red","blau":"blue","grün":"green","gruen":"green",
+    "gelb":"yellow","orange":"orange","lila":"purple","violett":"violet",
+    "pink":"pink","rosa":"pink",
+    "schwarz":"black","weiß":"white","weiss":"white",
+    "gold":"gold","silber":"silver",
+    "braun":"brown","grau":"gray","hellgrau":"lightgray","dunkelgrau":"dimgray"
+  };
+  const COLOR_DISPLAY_DE = {
+    "turquoise":"türkis","red":"rot","blue":"blau","green":"grün","yellow":"gelb",
+    "purple":"lila","violet":"violett","pink":"pink","black":"schwarz","white":"weiß",
+    "gold":"gold","silver":"silber","brown":"braun","gray":"grau","lightgray":"hellgrau","dimgray":"dunkelgrau",
+    "orange":"orange"
+  };
+
+  function normalizeColorInput(raw){
+    const s = String(raw||"").trim();
+    if(!s) return s;
+    if(String(LANG).toLowerCase()==="de"){
+      const key = s.toLowerCase();
+      return COLOR_INPUT_MAP_DE[key] || s;
+    }
+    return s;
+  }
+  function displayColorLabel(raw){
+    const s = String(raw||"").trim();
+    if(!s) return s;
+    if(String(LANG).toLowerCase()==="de"){
+      const key = s.toLowerCase();
+      return COLOR_DISPLAY_DE[key] || s;
+    }
+    return s;
+  }
+function glassVarsForRGB(rgb){
     const [r,g,b] = rgb;
     const lumin = (0.2126*r + 0.7152*g + 0.0722*b) / 255;
     // dark colors: a bit more tint, less glow
@@ -3627,7 +3729,7 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
       pill.style.setProperty("--c", `${rgb[0]},${rgb[1]},${rgb[2]}`);
       pill.style.setProperty("--a", String(a));
       pill.style.setProperty("--g", String(glow));
-      pill.textContent = c;
+      pill.textContent = displayColorLabel(c);
       const drops = document.createElement("span");
       drops.className = "drops";
       pill.appendChild(drops);
@@ -3665,7 +3767,7 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
     // validate color
     const rgb = resolveToRGB(raw);
     if(!rgb){
-      toast("Unknown color. Try a CSS color name or a hex value like #ff8800.");
+      toast(T.toast_unknown_color);
       return;
     }
     if(formFavColors.length >= 6){
@@ -4479,7 +4581,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
         const s = yearsMonthsDaysSince(entry.metOn);
         const metTxt = escapeHTML(fmtDate(entry.metOn));
         if(s){
-          return `<div class="profileCard"><div class="k">🎈 Friendship</div><div class="v">Met on: ${metTxt}<br>Known for: <b>${s.years}y ${s.months}m ${s.days}d</b></div></div>`;
+          return `<div class="profileCard"><div class="k">${escapeHTML(T.profile_friendship_title)}</div><div class="v">${escapeHTML(T.profile_met_on)}: ${metTxt}<br>${escapeHTML(T.profile_known_for)}: <b>${escapeHTML(tpl(T.known_for_short_tpl, {years:s.years, months:s.months, days:s.days}))}</b></div></div>`;
         }
         return `<div class="profileCard"><div class="k">🎈 Friendship</div><div class="v">Met on: ${metTxt}</div></div>`;
       })() : "";
