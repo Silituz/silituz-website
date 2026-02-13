@@ -3103,14 +3103,14 @@
 <header>
   <div class="brand">
     <div>
-      <h1>World Friends Map</h1>
+      <h1>Social Organizer</h1>
       <div class="sub">by Silituz</div>
     </div>
   </div>
 
   <div class="hdrRight">
     <div class="hdrTitle"><span class="stats-title">- Stats -</span></div>
-    <div class="hdrSub" id="statsText">Friends: 0 · Countries: 0 · Longest friendship: —</div>
+    <div class="hdrSub" id="statsText">People: 0 · Countries: 0 · Longest bond: —</div>
   </div>
 </header>
 
@@ -3306,7 +3306,7 @@
     <button class="fChip" data-filter="maybe" type="button">💛 Maybe</button>
     <button class="fChip" data-filter="sleep" type="button">❤️ Sleeping</button>
     <button class="fChip" data-filter="bday" type="button">🎂 Birthday</button>
-    <button class="fChip" data-filter="friend" type="button">🎈 Friendship</button>
+    <button class="fChip" data-filter="friend" type="button">🎈 Bond</button>
   </div>
 
 <!-- Alphabet helper (A–Z) -->
@@ -3393,11 +3393,520 @@
   let notesHidden = (localStorage.getItem(NOTES_LOCK_KEY) === "1");
   const $ = (id) => document.getElementById(id);
 
+  // ==============================
+  // i18n (DE/EN)
+  // ==============================
+  const LANG = (document.documentElement.lang || "de").toLowerCase().startsWith("en") ? "en" : "de";
+  const LOCALE = (LANG === "de") ? "de-DE" : "en-US";
+
+  const I18N = {
+    en: {
+      appTitle: "Social Organizer",
+      byline: "by Silituz",
+      statsTitle: "- Stats -",
+      statsLine: "People: {people} · Countries: {countries} · Longest bond: {longest}",
+
+      lblNickname: "Name / Nickname *",
+      phNickname: "e.g. Sun / Polina / ...",
+      lblBirthdate: "Birthdate (optional)",
+      lblBirthplace: "Birthplace (optional)",
+      phBirthplace: "e.g. Warsaw, Poland",
+      lblMetOn: "Met on (date, optional)",
+      lblCurrentAddress: "Current address (optional)",
+      phCurrentAddress: "e.g. Los Angeles, CA",
+      hintAutoGeo: "Used for coordinates (auto-geocode) if coordinates are empty.",
+      lblTimezone: "Timezone (IANA) *",
+      phTimezone: "e.g. America/Los_Angeles",
+      tzHintHTML: "Examples: <span class=\"kbd\">Europe/Berlin</span>, <span class=\"kbd\">America/Los_Angeles</span>, <span class=\"kbd\">Asia/Tokyo</span>",
+      lblNativeLang: "Native language (optional)",
+      phNativeLang: "e.g. Spanish",
+      lblOtherLangs: "Other languages (optional)",
+      phOtherLangs: "e.g. English, Russian",
+      lblImage: "Image (upload, optional)",
+      hintImageStored: "Stored locally (compressed). No external hosting needed.",
+      lblCoords: "Coordinates (optional)",
+      phCoords: "lat, lon (or click on the map)",
+      hintMapClick: "Click on the map to set the location.",
+
+      lblNotes: "Notes",
+      tabImportant: "Important",
+      tabWork: "Work & Projects",
+      tabFood: "Food & More",
+      tabOther: "Other",
+      tabCycle: "Cycle",
+      phNotesImportant: "Things that are urgent, critical, or should not be forgotten",
+      phNotesWork: "Work-related tasks, projects and ideas",
+      phNotesFood: "Food and drinks, restaurant ideas, places worth trying",
+      phNotesOther: "Miscellaneous notes",
+
+      cycleLastStart: "Last period start",
+      cycleLastEnd: "Last period end",
+      cycleLen: "Cycle length (days)",
+      periodLen: "Period length (days)",
+      cycleAdd: "Add 🩸 range",
+      cycleClear: "Clear",
+      cycleHint: "Stored locally per person. Predictions are estimates (not medical advice).",
+      cycleLegendPeriod: "period",
+      cycleLegendPred: "predicted",
+      cycleLegendFert: "fertile",
+      cycleLegendOvu: "ovulation",
+      cyclePrevTitle: "Previous month",
+      cycleNextTitle: "Next month",
+      weekdays: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+      cyclePickTip: "Tip: click days in the calendar to pick start/end.",
+
+      lblFavColors: "Favorite Colors",
+      phFavColor: "Add a color (e.g. turquoise, gold, #ff8800)",
+      btnAddColor: "Add",
+      hintMaxColors: "Up to 6 colors.",
+
+      btnSave: "Save / Set marker",
+      btnNew: "New",
+      btnDelete: "Delete",
+      btnRemoveImage: "Remove image",
+      titleRemoveImage: "Remove image from entry",
+
+      storageHintHTML: "• Current address can be auto-geocoded via OpenStreetMap (Nominatim).<br>• Everything is stored in <b>localStorage</b> in this browser. Use Export/Import to move data to another device.",
+
+      searchPlaceholder: "Search (name, notes, dates, timezone…)",
+      filterAll: "All",
+      filterFav: "⭐ Favorites",
+      filterNow: "💚 Now",
+      filterMaybe: "💛 Maybe",
+      filterSleep: "❤️ Sleeping",
+      filterBday: "🎂 Birthday",
+      filterBond: "🎈 Bond",
+
+      btnExport: "Export JSON",
+      btnImport: "Import JSON (file)",
+      clusterOn: "🧷 Cluster: On",
+      clusterOff: "🧷 Cluster: Off",
+      myLocationBtn: "📍 My location",
+      myLocationTitle: "Show my current location marker",
+      btnDeleteAll: "Delete all",
+      mergeImportLabel: "Merge on import (recommended if you already have entries here)",
+      notesLockLabel: "🔒 Hide notes (safe for screenshots)",
+
+      badgeSpecial: "♾️ My Special One",
+      badgeFav: "⭐ Favorite",
+      profileBackText: "🗺️ Map",
+      profileBackTitle: "Back to map",
+      profileEditText: "✏️ Edit",
+      profileEditTitle: "Load into form",
+      profilePinTitle: "Center on map",
+
+      modalAria: "Image preview",
+      modalTipHTML: "Tip: click outside or press <span class=\"kbd\">Esc</span> to close",
+      modalClose: "Close",
+
+      zodiacLineEmpty: "Zodiac: — | Chinese Element: — | Chinese Zodiac: —",
+      zodiacLine: "Zodiac: {zodiac} | Chinese Element: {element} | Chinese Zodiac: {animal}",
+      knownFor: "Known for {years} years, {months} months and {days} days",
+      nextBirthday: "Next birthday in {months} month(s) and {days} day(s){turns}",
+
+      confirmCycleClear: "Clear all cycle data for this person?",
+      confirmOverwrite: "Overwrite existing entry?\n\n{name}\n\nThe current data will be replaced.",
+      confirmDeleteEntry: "Really delete this entry?\n\n{name}",
+      confirmDeleteAll: "Really delete ALL entries from this browser?",
+
+      distanceToolTitle: "Distance tool",
+      pointLabel: "Point",
+      myLocationLabel: "My location"
+    },
+
+    de: {
+      appTitle: "Social Organizer",
+      byline: "von Silituz",
+      statsTitle: "- Statistik -",
+      statsLine: "Personen: {people} · Länder: {countries} · Längste Verbindung: {longest}",
+
+      lblNickname: "Name / Spitzname *",
+      phNickname: "z.B. Sun / Polina / ...",
+      lblBirthdate: "Geburtsdatum (optional)",
+      lblBirthplace: "Geburtsort (optional)",
+      phBirthplace: "z.B. Warschau, Polen",
+      lblMetOn: "Kennengelernt am (optional)",
+      lblCurrentAddress: "Aktueller Ort (optional)",
+      phCurrentAddress: "z.B. Los Angeles, CA",
+      hintAutoGeo: "Wird für Koordinaten (Auto-Geocoding) genutzt, wenn Koordinaten leer sind.",
+      lblTimezone: "Zeitzone (IANA) *",
+      phTimezone: "z.B. America/Los_Angeles",
+      tzHintHTML: "Beispiele: <span class=\"kbd\">Europe/Berlin</span>, <span class=\"kbd\">America/Los_Angeles</span>, <span class=\"kbd\">Asia/Tokyo</span>",
+      lblNativeLang: "Muttersprache (optional)",
+      phNativeLang: "z.B. Spanisch",
+      lblOtherLangs: "Weitere Sprachen (optional)",
+      phOtherLangs: "z.B. Englisch, Russisch",
+      lblImage: "Bild (Upload, optional)",
+      hintImageStored: "Lokal gespeichert (komprimiert). Kein externes Hosting nötig.",
+      lblCoords: "Koordinaten (optional)",
+      phCoords: "lat, lon (oder auf die Karte klicken)",
+      hintMapClick: "Klicke auf die Karte, um den Ort zu setzen.",
+
+      lblNotes: "Notizen",
+      tabImportant: "Wichtig",
+      tabWork: "Arbeit & Projekte",
+      tabFood: "Essen & mehr",
+      tabOther: "Sonstiges",
+      tabCycle: "Zyklus",
+      phNotesImportant: "Dinge, die dringend sind, kritisch oder nicht vergessen werden dürfen",
+      phNotesWork: "Arbeitsbezogene Aufgaben, Projekte und Ideen",
+      phNotesFood: "Essen & Getränke, Restaurant-Ideen, Orte die man probieren sollte",
+      phNotesOther: "Sonstige Notizen",
+
+      cycleLastStart: "Letzter Periodenstart",
+      cycleLastEnd: "Letztes Periodenende",
+      cycleLen: "Zykluslänge (Tage)",
+      periodLen: "Periodenlänge (Tage)",
+      cycleAdd: "🩸 Zeitraum hinzufügen",
+      cycleClear: "Löschen",
+      cycleHint: "Lokal pro Person gespeichert. Vorhersagen sind Schätzungen (keine medizinische Beratung).",
+      cycleLegendPeriod: "Periode",
+      cycleLegendPred: "Vorhersage",
+      cycleLegendFert: "fruchtbar",
+      cycleLegendOvu: "Eisprung",
+      cyclePrevTitle: "Vorheriger Monat",
+      cycleNextTitle: "Nächster Monat",
+      weekdays: ["Mo","Di","Mi","Do","Fr","Sa","So"],
+      cyclePickTip: "Tipp: Klicke im Kalender auf Tage, um Start/Ende zu wählen.",
+
+      lblFavColors: "Lieblingsfarben",
+      phFavColor: "Farbe hinzufügen (z.B. türkis, gold, #ff8800)",
+      btnAddColor: "Hinzufügen",
+      hintMaxColors: "Bis zu 6 Farben.",
+
+      btnSave: "Speichern / Marker setzen",
+      btnNew: "Neu",
+      btnDelete: "Löschen",
+      btnRemoveImage: "Bild entfernen",
+      titleRemoveImage: "Bild aus Eintrag entfernen",
+
+      storageHintHTML: "• Aktueller Ort kann über OpenStreetMap (Nominatim) automatisch geocodet werden.<br>• Alles wird im <b>localStorage</b> dieses Browsers gespeichert. Nutze Export/Import, um Daten auf ein anderes Gerät zu übertragen.",
+
+      searchPlaceholder: "Suche (Name, Notizen, Daten, Zeitzone…)",
+      filterAll: "Alle",
+      filterFav: "⭐ Favoriten",
+      filterNow: "💚 Jetzt",
+      filterMaybe: "💛 Vielleicht",
+      filterSleep: "❤️ Schläft",
+      filterBday: "🎂 Geburtstag",
+      filterBond: "🎈 Kennenlernen",
+
+      btnExport: "Export JSON",
+      btnImport: "Import JSON (Datei)",
+      clusterOn: "🧷 Cluster: An",
+      clusterOff: "🧷 Cluster: Aus",
+      myLocationBtn: "📍 Mein Standort",
+      myLocationTitle: "Meinen aktuellen Standort-Marker anzeigen",
+      btnDeleteAll: "Alles löschen",
+      mergeImportLabel: "Beim Import zusammenführen (empfohlen, wenn du hier bereits Einträge hast)",
+      notesLockLabel: "🔒 Notizen ausblenden (sicher für Screenshots)",
+
+      badgeSpecial: "♾️ Mein Lieblingsmensch",
+      badgeFav: "⭐ Favorit",
+      profileBackText: "🗺️ Karte",
+      profileBackTitle: "Zur Karte",
+      profileEditText: "✏️ Bearbeiten",
+      profileEditTitle: "In Formular laden",
+      profilePinTitle: "Auf Karte zentrieren",
+
+      modalAria: "Bildvorschau",
+      modalTipHTML: "Tipp: Außerhalb klicken oder <span class=\"kbd\">Esc</span> zum Schließen",
+      modalClose: "Schließen",
+
+      zodiacLineEmpty: "Sternzeichen: — | Chinesisches Element: — | Chinesisches Tierkreiszeichen: —",
+      zodiacLine: "Sternzeichen: {zodiac} | Chinesisches Element: {element} | Chinesisches Tierkreiszeichen: {animal}",
+      knownFor: "Schon seit {years} Jahren, {months} Monaten und {days} Tagen",
+      nextBirthday: "Nächster Geburtstag in {months} Monat(en) und {days} Tag(en){turns}",
+
+      confirmCycleClear: "Alle Zyklusdaten für diese Person löschen?",
+      confirmOverwrite: "Vorhandenen Eintrag überschreiben?\n\n{name}\n\nDie aktuellen Daten werden ersetzt.",
+      confirmDeleteEntry: "Diesen Eintrag wirklich löschen?\n\n{name}",
+      confirmDeleteAll: "Wirklich ALLE Einträge in diesem Browser löschen?",
+
+      distanceToolTitle: "Entfernungs-Tool",
+      pointLabel: "Punkt",
+      myLocationLabel: "Mein Standort"
+    }
+  };
+
+  const T = I18N[LANG] || I18N.en;
+  function tr(key, vars={}){
+    let s = (T && T[key]) || (I18N.en && I18N.en[key]) || key;
+    for(const k in vars){
+      s = s.replaceAll(`{${k}}`, String(vars[k]));
+    }
+    return s;
+  }
+
+  function applyStaticI18N(){
+    // Header
+    const head = document.querySelector('#soApp header');
+    if(head){
+      const h1 = head.querySelector('h1');
+      if(h1) h1.textContent = tr('appTitle');
+      const sub = head.querySelector('.sub');
+      if(sub) sub.textContent = tr('byline');
+      const st = head.querySelector('.stats-title');
+      if(st) st.textContent = tr('statsTitle');
+      const stats = document.getElementById('statsText');
+      if(stats) stats.textContent = tr('statsLine', {people:0, countries:0, longest:'—'});
+    }
+
+    const setLabel = (inputId, key)=>{
+      const inp = document.getElementById(inputId);
+      const lab = inp?.parentElement?.querySelector('label');
+      if(lab) lab.textContent = tr(key);
+    };
+    const setPH = (inputId, key)=>{
+      const inp = document.getElementById(inputId);
+      if(inp) inp.placeholder = tr(key);
+    };
+    const setHintAfter = (inputId, selector, html)=>{
+      const inp = document.getElementById(inputId);
+      const box = inp?.parentElement?.querySelector(selector);
+      if(box){
+        if(html) box.innerHTML = html;
+      }
+    };
+
+    // Form
+    setLabel('nickname','lblNickname'); setPH('nickname','phNickname');
+    setLabel('birthdate','lblBirthdate');
+    setLabel('birthplace','lblBirthplace'); setPH('birthplace','phBirthplace');
+    setLabel('metOn','lblMetOn');
+    setLabel('currentAddress','lblCurrentAddress'); setPH('currentAddress','phCurrentAddress');
+    // Hint under currentAddress
+    const ca = document.getElementById('currentAddress');
+    if(ca){
+      const hint = ca.parentElement?.querySelector('.hint');
+      if(hint) hint.textContent = tr('hintAutoGeo');
+    }
+
+    setLabel('timezone','lblTimezone'); setPH('timezone','phTimezone');
+    const tz = document.getElementById('timezone');
+    if(tz){
+      const hints = tz.parentElement?.querySelectorAll('.hint');
+      if(hints && hints[0]) hints[0].innerHTML = tr('tzHintHTML');
+    }
+
+    setLabel('nativeLang','lblNativeLang'); setPH('nativeLang','phNativeLang');
+    setLabel('otherLangs','lblOtherLangs'); setPH('otherLangs','phOtherLangs');
+
+    setLabel('imageFile','lblImage');
+    const img = document.getElementById('imageFile');
+    if(img){
+      const hint = img.parentElement?.querySelector('.hint');
+      if(hint) hint.textContent = tr('hintImageStored');
+    }
+
+    setLabel('coords','lblCoords'); setPH('coords','phCoords');
+    const coords = document.getElementById('coords');
+    if(coords){
+      const hint = coords.parentElement?.querySelector('.hint');
+      if(hint) hint.textContent = tr('hintMapClick');
+    }
+
+    // Notes
+    const notesWrap = document.getElementById('notesTabs')?.parentElement;
+    const notesLabel = notesWrap?.querySelector('label');
+    if(notesLabel) notesLabel.textContent = tr('lblNotes');
+
+    const tab = (k, emoji)=>{
+      const b = document.querySelector(`#notesTabs [data-notes-tab='${k}']`);
+      if(!b) return;
+      const map = {important:'tabImportant', work:'tabWork', food:'tabFood', other:'tabOther', cycle:'tabCycle'};
+      b.textContent = `${emoji} ${tr(map[k])}`;
+    };
+    tab('important','🚨');
+    tab('work','💼');
+    tab('food','🍕');
+    tab('other','📦');
+    tab('cycle','🩸');
+
+    setPH('notes_important','phNotesImportant');
+    setPH('notes_work','phNotesWork');
+    setPH('notes_food','phNotesFood');
+    setPH('notes_other','phNotesOther');
+
+    // Cycle panel labels
+    const mini = document.querySelectorAll('#cyclePanel .miniLabel');
+    const miniKeys = ['cycleLastStart','cycleLastEnd','cycleLen','periodLen'];
+    mini.forEach((el,i)=>{ if(miniKeys[i]) el.textContent = tr(miniKeys[i]); });
+    const addBtn = document.getElementById('cycleAddBtn');
+    if(addBtn) addBtn.textContent = tr('cycleAdd');
+    const clrBtn = document.getElementById('cycleClearBtn');
+    if(clrBtn) clrBtn.textContent = tr('cycleClear');
+    const cHint = document.querySelector('#cyclePanel .cycleHint');
+    if(cHint){
+      // keep legend spans
+      const legend = cHint.querySelector('.cycleLegend');
+      const textNode = cHint.childNodes[0];
+      if(textNode) textNode.textContent = tr('cycleHint') + ' ';
+      const p = legend?.querySelector('.legPeriod'); if(p) p.textContent = `🩸 ${tr('cycleLegendPeriod')}`;
+      const pr = legend?.querySelector('.legPred'); if(pr) pr.textContent = `🩸 ${tr('cycleLegendPred')}`;
+      const f = legend?.querySelector('.legFert'); if(f) f.textContent = `🌿 ${tr('cycleLegendFert')}`;
+      const o = legend?.querySelector('.legOvu'); if(o) o.textContent = `⭐ ${tr('cycleLegendOvu')}`;
+    }
+    const prev = document.getElementById('cyclePrev'); if(prev) prev.title = tr('cyclePrevTitle');
+    const next = document.getElementById('cycleNext'); if(next) next.title = tr('cycleNextTitle');
+    const wds = document.querySelectorAll('.cycleWeekdays span');
+    wds.forEach((el,i)=>{ if(T.weekdays && T.weekdays[i]) el.textContent = T.weekdays[i]; });
+    const pickTip = document.querySelector('#cyclePanel .hint');
+    if(pickTip) pickTip.textContent = tr('cyclePickTip');
+
+    // Favorite colors
+    const favInput = document.getElementById('favColorInput');
+    if(favInput){
+      favInput.placeholder = tr('phFavColor');
+      const lbl = favInput.closest('.row')?.querySelector('label');
+      if(lbl) lbl.textContent = tr('lblFavColors');
+    }
+    const addColorBtn = document.getElementById('addFavColorBtn');
+    if(addColorBtn) addColorBtn.textContent = tr('btnAddColor');
+    const colorHint = document.querySelector('#favColorsPills')?.parentElement?.querySelector('.hint');
+    if(colorHint) colorHint.textContent = tr('hintMaxColors');
+
+    // Main buttons
+    const save = document.getElementById('saveBtn'); if(save) save.textContent = tr('btnSave');
+    const nw = document.getElementById('newBtn'); if(nw) nw.textContent = tr('btnNew');
+    const del = document.getElementById('deleteBtn'); if(del) del.textContent = tr('btnDelete');
+    const rm = document.getElementById('removeImgBtn'); if(rm){ rm.textContent = tr('btnRemoveImage'); rm.title = tr('titleRemoveImage'); }
+
+    // Storage hint
+    const sh = document.querySelector('#soApp .panel .hr + .hint');
+    if(sh) sh.innerHTML = tr('storageHintHTML');
+
+    // Search
+    const s = document.getElementById('search');
+    if(s) s.placeholder = tr('searchPlaceholder');
+
+    // Filter chips
+    document.querySelectorAll('#filterBar .fChip').forEach(btn=>{
+      const f = btn.getAttribute('data-filter');
+      const map = {all:'filterAll', fav:'filterFav', now:'filterNow', maybe:'filterMaybe', sleep:'filterSleep', bday:'filterBday', friend:'filterBond'};
+      if(map[f]) btn.textContent = tr(map[f]);
+    });
+
+    // Footer tools
+    const ex = document.getElementById('exportBtn'); if(ex) ex.textContent = tr('btnExport');
+    const im = document.getElementById('importBtn'); if(im) im.textContent = tr('btnImport');
+    const cl = document.getElementById('clusterToggleBtn'); if(cl) cl.textContent = (window.clusteringEnabled ? tr('clusterOn') : tr('clusterOff'));
+    const ml = document.getElementById('myLocBtn'); if(ml){ ml.textContent = tr('myLocationBtn'); ml.title = tr('myLocationTitle'); }
+    const ca2 = document.getElementById('clearAllBtn'); if(ca2) ca2.textContent = tr('btnDeleteAll');
+
+    const miLbl = document.querySelector("label[for='mergeImport']"); if(miLbl) miLbl.textContent = tr('mergeImportLabel');
+    const nlLbl = document.querySelector("label[for='notesLock']"); if(nlLbl) nlLbl.textContent = tr('notesLockLabel');
+
+    // Profile view labels
+    const sp = document.querySelector('#profileView .specialOneBadge'); if(sp) sp.textContent = tr('badgeSpecial');
+    const fb = document.querySelector('#profileView .favBadge'); if(fb) fb.textContent = tr('badgeFav');
+
+    const pb = document.getElementById('profileBack'); if(pb){ pb.textContent = tr('profileBackText'); pb.title = tr('profileBackTitle'); }
+    const pe = document.getElementById('profileEdit'); if(pe){ pe.textContent = tr('profileEditText'); pe.title = tr('profileEditTitle'); }
+    const pp = document.getElementById('profilePin'); if(pp) pp.title = tr('profilePinTitle');
+
+    // Modal
+    const modal = document.getElementById('imgModal');
+    if(modal){
+      const inner = modal.querySelector('.imgModalInner');
+      if(inner) inner.setAttribute('aria-label', tr('modalAria'));
+      const tip = modal.querySelector('.imgModalHint span');
+      if(tip) tip.innerHTML = tr('modalTipHTML');
+      const close = document.getElementById('imgModalClose');
+      if(close) close.textContent = tr('modalClose');
+    }
+
+    // Distance tool title
+    const distBtn = document.getElementById('distanceFloatingBtn');
+    if(distBtn) distBtn.title = tr('distanceToolTitle');
+  }
+
+  function trHTML(html){
+    if(LANG !== 'de') return html;
+    // small, safe label replacements for generated HTML (popups/profile)
+    return String(html)
+      .replaceAll('Local Time:', 'Ortszeit:')
+      .replaceAll('Local time:', 'Ortszeit:')
+      .replaceAll('Coordinates:', 'Koordinaten:')
+      .replaceAll('<b>Birthplace:</b>', '<b>Geburtsort:</b>')
+      .replaceAll('<b>Birthdate:</b>', '<b>Geburtsdatum:</b>')
+      .replaceAll('<b>Met on:</b>', '<b>Kennengelernt am:</b>')
+      .replaceAll('<b>Current:</b>', '<b>Aktuell:</b>')
+      .replaceAll('<b>Native:</b>', '<b>Muttersprache:</b>')
+      .replaceAll('<b>Other:</b>', '<b>Weitere:</b>')
+      .replaceAll('Click to enlarge', 'Klicken zum Vergrößern')
+      .replaceAll('Open card', 'Profil öffnen')
+      .replaceAll('My location', tr('myLocationLabel'))
+      .replaceAll('Distance', 'Entfernung')
+      .replaceAll('Current', 'Aktuell')
+      .replaceAll('Birthday', 'Geburtstag')
+      .replaceAll('Friendship', 'Kennenlernen').replaceAll('Bond', 'Kennenlernen')
+      .replaceAll('Next birthday:', 'Nächster Geburtstag:')
+      .replaceAll('Birthdate:', 'Geburtsdatum:')
+      .replaceAll('Met on:', 'Kennengelernt am:')
+      .replaceAll('Known for:', 'Schon:')
+      .replaceAll('Birthplace', 'Geburtsort')
+      .replaceAll('Native language', 'Muttersprache')
+      .replaceAll('Other languages', 'Weitere Sprachen')
+      .replaceAll('No extra details saved.', 'Keine zusätzlichen Details gespeichert.');
+  }
+
+  // Apply immediately (script is at the end of the body)
+  try{ applyStaticI18N(); }catch(e){}
+
+
+
   function toast(msg){
-    const t = $("toast");
-    t.textContent = msg;
-    t.classList.add("show");
-    setTimeout(()=> t.classList.remove("show"), 2200);
+    const tEl = $("toast");
+    const TOAST_DE = {
+      "Please select an image file": "Bitte wähle eine Bilddatei aus",
+      "Preparing image…": "Bild wird vorbereitet…",
+      "Image ready ✅": "Bild fertig ✅",
+      "Could not process image": "Bild konnte nicht verarbeitet werden",
+      "Pick a valid start date": "Bitte ein gültiges Startdatum wählen",
+      "Period saved ✅": "Periode gespeichert ✅",
+      "Cycle cleared": "Zyklus gelöscht",
+      "Unknown color. Try a CSS color name or a hex value like #ff8800.": "Unbekannte Farbe. Nutze einen CSS-Farbnamen oder einen Hex-Wert wie #ff8800.",
+      "Max 6 colors": "Max. 6 Farben",
+      "Coordinates + timezone set ✅": "Koordinaten + Zeitzone gesetzt ✅",
+      "Coordinates set (timezone unknown)": "Koordinaten gesetzt (Zeitzone unbekannt)",
+      "Coordinates set (timezone lookup failed)": "Koordinaten gesetzt (Zeitzonen-Abfrage fehlgeschlagen)",
+      "Coordinates set (map click)": "Koordinaten gesetzt (Klick auf Karte)",
+      "Entry loaded": "Eintrag geladen",
+      "Address + timezone found ✅": "Adresse + Zeitzone gefunden ✅",
+      "Address found (timezone unknown)": "Adresse gefunden (Zeitzone unbekannt)",
+      "Address found (timezone lookup failed)": "Adresse gefunden (Zeitzonen-Abfrage fehlgeschlagen)",
+      "Address found": "Adresse gefunden",
+      "Please enter a nickname": "Bitte einen Spitznamen eingeben",
+      "Please enter an IANA timezone": "Bitte eine IANA-Zeitzone eingeben",
+      "Finding current address…": "Adresse wird gesucht…",
+      "Please set coordinates (map click) or enter a current address": "Bitte Koordinaten setzen (Klick auf Karte) oder einen aktuellen Ort eingeben",
+      "Updated": "Aktualisiert",
+      "Saved": "Gespeichert",
+      "Deleted": "Gelöscht",
+      "Image removed (new entry)": "Bild entfernt (neuer Eintrag)",
+      "Image will be removed on save": "Bild wird beim Speichern entfernt",
+      "Export created (file + clipboard)": "Export erstellt (Datei + Zwischenablage)",
+      "Import failed: JSON has no valid entries": "Import fehlgeschlagen: JSON enthält keine gültigen Einträge",
+      "Imported (merged) ✅": "Importiert (zusammengeführt) ✅",
+      "Imported (replaced) ✅": "Importiert (ersetzt) ✅",
+      "Could not import file": "Datei konnte nicht importiert werden",
+      "All deleted": "Alles gelöscht",
+      "Geolocation not supported": "Geolocation wird nicht unterstützt",
+      "Getting your location…": "Standort wird ermittelt…",
+      "My location marker set ✅": "Standort-Marker gesetzt ✅",
+      "Could not get location (permission?)": "Standort konnte nicht ermittelt werden (Berechtigung?)",
+      "My location set (manual) ✅": "Standort gesetzt (manuell) ✅",
+      "Could not find that place": "Ort nicht gefunden",
+      "Manual lookup failed": "Manuelle Suche fehlgeschlagen",
+      "Distance tool enabled": "Entfernungs-Tool aktiviert",
+      "Distance tool disabled": "Entfernungs-Tool deaktiviert"
+    };
+
+    const out = (LANG === "de" && TOAST_DE[msg]) ? TOAST_DE[msg] : msg;
+    tEl.textContent = out;
+    tEl.classList.add("show");
+    setTimeout(()=> tEl.classList.remove("show"), 2200);
   }
   function safeParseJSON(str){ try{ return JSON.parse(str); }catch{ return null; } }
   function uuid(){ return (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+"_"+Math.random().toString(16).slice(2))); }
@@ -3438,7 +3947,7 @@
     const modeEmoji = (km < 1000) ? "🚗" : "✈️";
 
     const hrs = estimateHours(km);
-    const kmTxt = Math.round(km).toLocaleString("en-US");
+    const kmTxt = Math.round(km).toLocaleString(LOCALE);
     const hTxt = (Math.round(hrs * 10) / 10).toFixed(1);
     return `${kmTxt} km (≈ ${hTxt} h ${modeEmoji})`;
   }
@@ -3501,7 +4010,7 @@ function fmtDate(iso){
   function getLocalHour(tz){
     if(!tz) return null;
     try{
-      const dtf = new Intl.DateTimeFormat("en-US", { timeZone: tz, hour: "2-digit", hour12: false });
+      const dtf = new Intl.DateTimeFormat(LOCALE, { timeZone: tz, hour: "2-digit", hour12: false });
       const parts = dtf.formatToParts(new Date());
       const h = parts.find(p=>p.type==="hour")?.value;
       const hour = Number(h);
@@ -3514,7 +4023,7 @@ function fmtDate(iso){
   function getLocalSeconds(tz){
     if(!tz) return null;
     try{
-      const dtf = new Intl.DateTimeFormat("en-US", {
+      const dtf = new Intl.DateTimeFormat(LOCALE, {
         timeZone: tz,
         hour: "2-digit",
         minute: "2-digit",
@@ -3739,7 +4248,7 @@ function yearsMonthsDaysSince(startISO){
       return;
     }
     const { years, months, days } = diff;
-    line.textContent = `Known for ${years} years, ${months} months and ${days} days`;
+    line.textContent = tr("knownFor", { years, months, days });
   }
 
 function updateBirthdayCountdownUI(){
@@ -3752,6 +4261,13 @@ function updateBirthdayCountdownUI(){
       return;
     }
     const { months, days, age } = diff;
+
+    if(LANG === 'de'){
+      const turns = (age === null) ? "" : ` (wird ${age})`;
+      el.textContent = `Nächster Geburtstag in ${months} Monat(en) und ${days} Tag(en)${turns}`;
+      return;
+    }
+
     const turns = (age === null) ? "" : ` (turns ${age})`;
     el.textContent = `Next birthday in ${months} month${months===1?"":"s"} and ${days} day${days===1?"":"s"}${turns}`;
   }
@@ -3873,9 +4389,9 @@ function updateBirthdayCountdownUI(){
 
   function formatZodiacLineHTML(birthdateStr){
     // birthdateStr: YYYY-MM-DD
-    if(!birthdateStr) return `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
+    if(!birthdateStr) return tr("zodiacLineEmpty");
     const d = new Date(birthdateStr + "T00:00:00");
-    if(Number.isNaN(d.getTime())) return `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
+    if(Number.isNaN(d.getTime())) return tr("zodiacLineEmpty");
 
     const sign = westernZodiac(d.getMonth()+1, d.getDate());
     const signEmoji = westernZodiacEmoji(sign);
@@ -3900,7 +4416,7 @@ function updateBirthdayCountdownUI(){
       ? `<a class="zodiacLink" href="${animalUrl}" target="_blank" rel="noopener noreferrer">${escapeHTML(animalLabel)}</a>`
       : `${escapeHTML(animalLabel)}`;
 
-    return `Zodiac: ${signHTML} | Chinese Element: ${escapeHTML(elLabel)} | Chinese Zodiac: ${animalHTML}`;
+    return tr("zodiacLine", { zodiac: signHTML, element: escapeHTML(elLabel), animal: animalHTML });
   }
 
   function updateZodiacUI(){
@@ -4391,7 +4907,7 @@ function setSpecial(id){
     const info = computeCycleInfo(cycle);
     if(!info) return "";
     const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? " (overdue?)" : ` (in ${info.daysToNext}d)`);
-    return `<div class="pline"><b>🩸 Next:</b> ${escapeHTML(fmtDate(info.nextStart))}${dn} · <b>🌿 Fertile:</b> ${escapeHTML(fmtDate(info.fertileStart))}–${escapeHTML(fmtDate(info.fertileEnd))} ⭐ ${escapeHTML(fmtDate(info.ovulation))}</div>`;
+    return `<div class="pline"><b>🩸 Next:</b> ${escapeHTML(fmtDate(info.nextStart))}${dn} · <b>🌿 Fertile:</b> ${escapeHTML(fmtDate(info.fertileStart))}–${escapeHTML(fmtDate(info.fertileEnd))} ⭐ ${escapeHTML(fmtDate(info.ovulation))}</div>`);
   }
 
   function cycleCardHTML(cycle){
@@ -4409,7 +4925,7 @@ function setSpecial(id){
           Avg cycle: ${info.cycle.cycleLength}d · Period: ${info.cycle.periodLength}d
         </div>
       </div>
-    `;
+    `);
   }
 
   // ---- Form UI state ----
@@ -4695,7 +5211,7 @@ function setSpecial(id){
     // Clear
     if(clearBtn){
       clearBtn.addEventListener("click", ()=>{
-        const ok = confirm("Clear all cycle data for this person?");
+        const ok = confirm(tr("confirmCycleClear"));
         if(!ok) return;
         clearCycleForm();
         toast("Cycle cleared");
@@ -5145,7 +5661,7 @@ setInterval(updateNightLayer, 30000);
   function updateClusterToggleButton(){
     const b = $("clusterToggleBtn");
     if(!b) return;
-    b.textContent = clusteringEnabled ? "🧷 Cluster: On" : "🧷 Cluster: Off";
+    b.textContent = clusteringEnabled ? tr("clusterOn") : tr("clusterOff");
   }
 
   function setClusteringEnabled(on){
@@ -5200,7 +5716,7 @@ setInterval(updateNightLayer, 30000);
   let myLocLon = null;
 
   function myLocPopupHTML(lat, lon){
-    return `<div class="popup">
+    return trHTML(`<div class="popup">
       <div class="pname"><span class="pheart">📍</span><span class="pnick">My location</span></div>
       <div class="pline"><span class="localLabel">Local time:</span> <span class="localTimeVal">${myLocalTime()}</span></div>
       <div class="pline">Coordinates: ${Number(lat).toFixed(5)}, ${Number(lon).toFixed(5)}</div>
@@ -5269,7 +5785,7 @@ setInterval(updateNightLayer, 30000);
         fillColor: 'rgba(220,90,90,.35)',
         fillOpacity: .65
       }).addTo(map);
-      distAddPoint(lat, lng, "Point");
+      distAddPoint(lat, lng, tr("pointLabel"));
       return;
     }
 
@@ -5292,7 +5808,7 @@ setInterval(updateNightLayer, 30000);
   });
 
 async function geocodeAddress(addr){
-    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=en&namedetails=1&q=${encodeURIComponent(addr)}`;
+    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=${LANG}&namedetails=1&q=${encodeURIComponent(addr)}`;
     const res = await fetch(url, { method:"GET" });
     if(!res.ok) throw new Error("Geocoding failed");
     const data = await res.json();
@@ -5370,7 +5886,7 @@ const img = entry.imageData
       `
       : "";
 
-    return `
+    return trHTML(`
       <div class="popup" data-entryid="${escapeHTML(entry.id)}">
         <div class="pname"><span class="pheart">${heartForTimezone(entry.tz)}</span><span class="pnick">${escapeHTML(entry.nickname)}</span></div>
         ${timeLine}
@@ -5384,7 +5900,7 @@ const img = entry.imageData
         ${notes}
         ${img}
       </div>
-    `;
+    `);
   }
 
   function colorForHeart(h){
@@ -5596,7 +6112,7 @@ const img = entry.imageData
     $("profileView").classList.toggle("isSpecialProfile", !!specialId && entry.id===specialId );
 
         $("profileView").classList.toggle("isBothProfileBadges", !!entry.fav && !!specialId && entry.id===specialId );
-$("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}` : (entry.connection ? escapeHTML(entry.connection) : "—");
+$("profileSub").innerHTML = entry.tz ? trHTML(`<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}`) : (entry.connection ? escapeHTML(entry.connection) : "—");
 
     const imgBlock = entry.imageData
       ? `
@@ -5648,9 +6164,9 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
         const s = yearsMonthsDaysSince(entry.metOn);
         const metTxt = escapeHTML(fmtDate(entry.metOn));
         if(s){
-          return `<div class="profileCard"><div class="k">🎈 Friendship</div><div class="v">Met on: ${metTxt}<br>Known for: <b>${s.years}y ${s.months}m ${s.days}d</b></div></div>`;
+          return `<div class="profileCard"><div class="k">🎈 Bond</div><div class="v">Met on: ${metTxt}<br>Known for: <b>${s.years}y ${s.months}m ${s.days}d</b></div></div>`;
         }
-        return `<div class="profileCard"><div class="k">🎈 Friendship</div><div class="v">Met on: ${metTxt}</div></div>`;
+        return `<div class="profileCard"><div class="k">🎈 Bond</div><div class="v">Met on: ${metTxt}</div></div>`;
       })() : "";
 
     const cards = [
@@ -5666,7 +6182,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
       notesCardHTML(entry.notes)
     ].filter(Boolean).join("");
 
-    $("profileBody").innerHTML = `
+    $("profileBody").innerHTML = trHTML(`
       ${imgBlock}
       <div class="profileGrid">
         ${cards || `<div class="profileCard"><div class="k">Info</div><div class="v">No extra details saved.</div></div>`}
@@ -6096,7 +6612,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
       }
     }
 
-    el.textContent = `Friends: ${friends} · Countries: ${countries.size} · Longest friendship: ${longest ? formatYMDShort(longest.ymd) : "—"}`;
+    el.textContent = tr("statsLine", { people: friends, countries: countries.size, longest: (longest ? formatYMDShort(longest.ymd) : "—") });
   }
 
 function renderList(){
@@ -6207,7 +6723,7 @@ function renderList(){
       }else if(activeFilter === "friend"){
         const s = yearsMonthsDaysSince(e.metOn);
         if(s){
-          inlineInfo = `<span class="badge" title="Friendship duration">🎈 <b>${s.years}y ${s.months}m ${s.days}d</b></span>`;
+          inlineInfo = `<span class="badge" title="Bond duration">🎈 <b>${s.years}y ${s.months}m ${s.days}d</b></span>`;
         }
       }
 
@@ -6339,7 +6855,7 @@ function exportJSON(){
     const blob = new Blob([data], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "world-friends-map.v2.json";
+    a.download = "social-organizer.v2.json";
     a.click();
     URL.revokeObjectURL(a.href);
 
@@ -6485,7 +7001,7 @@ function exportJSON(){
   });
 
   function clearAll(){
-    const ok = confirm("Really delete ALL entries from this browser?");
+    const ok = confirm(tr("confirmDeleteAll"));
     if(!ok) return;
     entries = [];
     selectedId = null;
@@ -6699,7 +7215,7 @@ async function reverseGeocodeMidpoint(lat, lon){
   const key = `${lat.toFixed(3)},${lon.toFixed(3)}`;
   if(__midpointCache.has(key)) return __midpointCache.get(key);
 
-  const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=10&addressdetails=1&accept-language=en`;
+  const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=10&addressdetails=1&accept-language=${LANG}`;
   try{
     const res = await fetch(url, { method: "GET" });
     if(!res.ok) throw new Error("bad response");
@@ -6902,7 +7418,7 @@ try{
       try{ ev.originalEvent && ev.originalEvent.stopPropagation && ev.originalEvent.stopPropagation(); }catch{}
       if(distancePoints.length >= 2) distClear();
       const ll = ml.getLatLng ? ml.getLatLng() : null;
-      if(ll) distAddPoint(ll.lat, ll.lng, "My location");
+      if(ll) distAddPoint(ll.lat, ll.lng, tr("myLocationLabel"));
     });
   }
 }catch{}
