@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Social Organizer</title>
+  <title>World Friends Map</title>
 
   <!-- Leaflet (Map) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -3195,6 +3195,36 @@ html{ scrollbar-gutter: stable; }
   }
 }
 
+
+/* =========================================================
+   SITE HEADER FIX (only affects the website header on this page)
+   - FriendsMap uses generic `header{...}` rules, which would
+     otherwise restyle the site header from default.html.
+   - We reset layout + give the header the same blue-ish vibe.
+   ========================================================= */
+body > header.sticky{
+  padding: 0 !important;
+  display: block !important;
+  gap: 0 !important;
+  align-items: stretch !important;
+  justify-content: initial !important;
+
+  /* blue / glassy background like the page */
+  background:
+    radial-gradient(1200px 600px at 15% 10%, rgba(122,167,255,.18), transparent 55%),
+    radial-gradient(900px 500px at 80% 20%, rgba(125,255,178,.12), transparent 55%),
+    linear-gradient(180deg, rgba(7,10,18,.78), rgba(11,15,26,.60)) !important;
+
+  border-bottom-color: rgba(255,255,255,.10) !important;
+  backdrop-filter: blur(10px) saturate(140%) !important;
+}
+
+/* Keep the inner container spacing exactly like the other pages */
+body > header.sticky > .container{
+  padding-top: 1.5rem !important;  /* = py-6 */
+  padding-bottom: 1.5rem !important;
+}
+
 </style>
 </head>
 
@@ -3202,7 +3232,7 @@ html{ scrollbar-gutter: stable; }
 <header>
   <div class="brand">
     <div>
-      <h1>Social Organizer</h1>
+      <h1>World Friends Map</h1>
       <div class="sub">by Silituz</div>
     </div>
   </div>
@@ -7148,6 +7178,4 @@ document.addEventListener("DOMContentLoaded", ()=>{
 </body>
 
 </html>
-
-
 
