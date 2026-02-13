@@ -1,20 +1,29 @@
-<!-- Social Organizer (scoped include) -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Social Organizer</title>
+
+  <!-- Leaflet (Map) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Leaflet.markercluster (Pin clustering) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-<style>
+
+  <style>
 
 
 
 
 
 
+:root{--special-band-height: var(--special-band-height);}
 
-#soApp{--special-band-height: var(--special-band-height);}
-
-    #soApp{
+    :root{
       --bg:#0b0f1a;
       --text:#e9eefc;
       --muted:#a9b4d0;
@@ -25,9 +34,9 @@
       --shadow: 0 14px 40px rgba(0,0,0,.35);
       --radius:18px;
     }
-    #soApp *{box-sizing:border-box}
-    #soApp, #soApp{height:100%}
-    #soApp{
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       background: radial-gradient(1200px 600px at 15% 10%, rgba(122,167,255,.18), transparent 55%),
@@ -35,24 +44,24 @@
                   linear-gradient(180deg, #070a12, #0b0f1a 40%, #070a12);
       color:var(--text);
     }
-    #soApp header{
+    header{
       padding:18px 18px 10px;
       display:flex;
       gap:12px;
       align-items:center;
       justify-content:space-between;
     }
-    #soApp .brand{display:flex; align-items:center; gap:10px; user-select:none;}
-    #soApp .dot{
+    .brand{display:flex; align-items:center; gap:10px; user-select:none;}
+    .dot{
       width:14px;height: var(--special-band-height);border-radius:999px;
       background: radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,.2) 32%, transparent 60%),
                   linear-gradient(135deg, rgba(122,167,255,1), rgba(125,255,178,1));
       box-shadow: 0 0 20px rgba(122,167,255,.35);
     }
-    #soApp h1{font-size:16px; margin:0; letter-spacing:.2px; color: rgb(16, 185, 129)}
-    #soApp .sub{font-size:12px;color:var(--muted); margin-top:2px}
+    h1{font-size:16px; margin:0; letter-spacing:.2px; color: rgb(16, 185, 129)}
+    .sub{font-size:12px;color:var(--muted); margin-top:2px}
 
-    #soApp .wrap{
+    .wrap{
       display:grid;
       grid-template-columns: 480px 1fr;
       gap:14px;
@@ -60,29 +69,29 @@
       height: calc(100% - 64px);
     }
     @media (max-width: 980px){
-      #soApp .wrap{grid-template-columns:1fr; height:auto}
-      #soApp #map{height:55vh}
+      .wrap{grid-template-columns:1fr; height:auto}
+      #map{height:55vh}
     }
 
-    #soApp .card{
+    .card{
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
     }
-    #soApp .panel{
+    .panel{
       padding:14px;
       display:flex;
       flex-direction:column;
       gap:12px;
     }
 
-    #soApp .row{display:flex; gap:10px}
-    #soApp .row > *{flex:1}
+    .row{display:flex; gap:10px}
+    .row > *{flex:1}
 
-    #soApp label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px;}
-    #soApp input, #soApp textarea, #soApp select{
+    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px;}
+    input, textarea, select{
       width:100%;
       padding:10px 10px;
       border-radius: 12px;
@@ -91,10 +100,10 @@
       color: var(--text);
       outline:none;
     }
-    #soApp textarea{min-height: var(--special-band-height); resize: vertical}
-    #soApp .hint{font-size:12px; color: var(--muted); line-height:1.35;}
+    textarea{min-height: var(--special-band-height); resize: vertical}
+    .hint{font-size:12px; color: var(--muted); line-height:1.35;}
 
-    #soApp .zodiacBox{
+    .zodiacBox{
       margin-top:8px;
       padding:10px 10px;
       border-radius:12px;
@@ -106,21 +115,21 @@
       align-items:center;
       justify-content:space-between;
     }
-    #soApp .zodiacLink{
+    .zodiacLink{
       color: var(--accent);
       text-decoration: none;
       border-bottom: 1px dashed rgba(122,167,255,.45);
     }
-    #soApp .zodiacLink:hover{ text-decoration: underline; }
-    #soApp .zodiacItem{
+    .zodiacLink:hover{ text-decoration: underline; }
+    .zodiacItem{
       font-size:12px;
       color: var(--muted);
       white-space:nowrap;
     }
-    #soApp .zodiacItem b{color:var(--text)}
+    .zodiacItem b{color:var(--text)}
 
-    #soApp .btns{display:flex; gap:10px; flex-wrap:wrap}
-    #soApp button{
+    .btns{display:flex; gap:10px; flex-wrap:wrap}
+    button{
       border:none;
       border-radius: 999px;
       padding:10px 14px;
@@ -130,12 +139,12 @@
       transition: .15s ease;
       border:1px solid rgba(122,167,255,.28);
     }
-    #soApp button:hover{transform: translateY(-1px); background: rgba(122,167,255,.24)}
-    #soApp button.secondary{background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10)}
-    #soApp button.danger{background: rgba(255,107,107,.16); border-color: rgba(255,107,107,.28)}
-    #soApp button:disabled{opacity:.5; cursor:not-allowed; transform:none}
+    button:hover{transform: translateY(-1px); background: rgba(122,167,255,.24)}
+    button.secondary{background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10)}
+    button.danger{background: rgba(255,107,107,.16); border-color: rgba(255,107,107,.28)}
+    button:disabled{opacity:.5; cursor:not-allowed; transform:none}
 
-    #soApp .pill{
+    .pill{
       padding:6px 10px;
       border-radius:999px;
       background: rgba(255,255,255,.06);
@@ -145,10 +154,10 @@
       white-space:nowrap;
     }
 
-    #soApp .hr{height: var(--special-band-height); background: var(--line); margin: 2px 0}
+    .hr{height: var(--special-band-height); background: var(--line); margin: 2px 0}
 
     /* Alphabet bar */
-    #soApp .alphaBar{
+    .alphaBar{
       display:flex;
       flex-wrap:wrap;
       gap:6px;
@@ -157,7 +166,7 @@
       border-bottom:1px solid var(--line);
       background: rgba(0,0,0,.05);
     }
-    #soApp .alphaBar .aBtn{
+    .alphaBar .aBtn{
       padding:6px 9px;
       font-size:12px;
       border-radius:999px;
@@ -165,18 +174,18 @@
       border:1px solid rgba(255,255,255,.10);
       color: var(--muted);
     }
-    #soApp .alphaBar .aBtn:hover{transform:none; background: rgba(255,255,255,.10)}
-    #soApp .alphaBar .aBtn:disabled{opacity:.35; cursor:not-allowed}
+    .alphaBar .aBtn:hover{transform:none; background: rgba(255,255,255,.10)}
+    .alphaBar .aBtn:disabled{opacity:.35; cursor:not-allowed}
 
     /* List */
-    #soApp .list{
+    .list{
       padding:0;
       margin:0;
       list-style:none;
       max-height: 34vh;
       overflow:auto;
     }
-    #soApp .item{
+    .item{
       padding:12px 14px;
       border-bottom:1px solid var(--line);
       display:flex;
@@ -185,16 +194,16 @@
       justify-content:space-between;
       background: rgba(0,0,0,.05);
     }
-    #soApp .item:hover{background: rgba(0,0,0,.12)}
-    #soApp .item.selected{outline: 1px solid rgba(122,167,255,.35); outline-offset:-1px}
+    .item:hover{background: rgba(0,0,0,.12)}
+    .item.selected{outline: 1px solid rgba(122,167,255,.35); outline-offset:-1px}
 
-    #soApp .meta{min-width:0}
-    #soApp .nick{font-weight:700; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-    #soApp .tiny{font-size:12px; color:var(--muted); margin-top:3px}
+    .meta{min-width:0}
+    .nick{font-weight:700; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .tiny{font-size:12px; color:var(--muted); margin-top:3px}
 
-    #soApp .actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
+    .actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
 
-    #soApp .iconBtn{
+    .iconBtn{
       padding:8px 10px;
       border-radius:999px;
       background: rgba(255,255,255,.06);
@@ -202,9 +211,9 @@
       color: var(--text);
       cursor:pointer;
     }
-    #soApp .iconBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
+    .iconBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
 
-    #soApp .avatar{
+    .avatar{
       width:34px;
       height: var(--special-band-height);
       border-radius: 10px;
@@ -212,7 +221,7 @@
       border:1px solid rgba(255,255,255,.12);
       cursor:pointer;
     }
-    #soApp .avatarPh{
+    .avatarPh{
       width:34px;
       height: var(--special-band-height);
       border-radius: 10px;
@@ -226,17 +235,17 @@
     }
 
     /* Map & right panel */
-    #soApp #map{height:100%; min-height: 420px}
+    #map{height:100%; min-height: 420px}
 
-    #soApp .rightView{height:100%}
-    #soApp #mapView{height:100%}
+    .rightView{height:100%}
+    #mapView{height:100%}
 
-    #soApp #profileView{
+    #profileView{
       height:100%;
       display:none;
       overflow:auto;
     }
-    #soApp .profileHead{
+    .profileHead{
       position: sticky;
       top: 0;
       z-index: 2;
@@ -249,32 +258,32 @@
       align-items:center;
       justify-content:space-between;
     }
-    #soApp .profileTitle{
+    .profileTitle{
       min-width:0;
       display:flex;
       flex-direction:column;
       gap:2px;
     }
-    #soApp .profileTitle b{
+    .profileTitle b{
       font-size:14px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    #soApp .profileTitle span{font-size:12px; color:var(--muted)}
-    #soApp .profileBody{padding:14px; display:flex; flex-direction:column; gap:12px}
-    #soApp .profileGrid{display:grid; grid-template-columns: 1fr; gap:10px}
+    .profileTitle span{font-size:12px; color:var(--muted)}
+    .profileBody{padding:14px; display:flex; flex-direction:column; gap:12px}
+    .profileGrid{display:grid; grid-template-columns: 1fr; gap:10px}
 
-    #soApp .profileCard{
+    .profileCard{
       padding:12px;
       border:1px solid rgba(255,255,255,.10);
       border-radius: 14px;
       background: rgba(0,0,0,.14);
     }
-    #soApp .profileCard .k{font-size:12px; color:var(--muted); margin-bottom:4px}
-    #soApp .profileCard .v{font-size:13px; color:var(--text); white-space:pre-wrap; word-break:break-word}
+    .profileCard .k{font-size:12px; color:var(--muted); margin-bottom:4px}
+    .profileCard .v{font-size:13px; color:var(--text); white-space:pre-wrap; word-break:break-word}
 
-    #soApp .profileImg{
+    .profileImg{
       width:110px;
       height: var(--special-band-height);
       border-radius: 16px;
@@ -282,13 +291,13 @@
       border:1px solid rgba(255,255,255,.12);
       cursor:pointer;
     }
-    #soApp .profileTop{position: relative;
+    .profileTop{position: relative;
       display:flex;
       gap:12px;
       align-items:flex-start;
     }
 
-    #soApp .footer-tools{
+    .footer-tools{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
@@ -299,7 +308,7 @@
       background: rgba(0,0,0,.06);
     }
 
-    #soApp .toast{
+    .toast{
       position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
       background: rgba(18,26,43,.92);
       border:1px solid rgba(255,255,255,.12);
@@ -313,9 +322,9 @@
       transition: .18s ease;
       z-index: 50;
     }
-    #soApp .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px)}
+    .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px)}
 
-    #soApp .kbd{
+    .kbd{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size:12px;
       padding:2px 6px;
@@ -326,7 +335,7 @@
     }
 
     /* Leaflet popup (match dark theme) */
-    #soApp .leaflet-popup-content-wrapper{
+    .leaflet-popup-content-wrapper{
       background: rgba(12,18,34,.96);
       color: var(--text);
       border: 1px solid rgba(255,255,255,.12);
@@ -335,7 +344,7 @@
       /* wider but visually smaller */
       max-width: min(680px, 94vw);
     }
-    #soApp .leaflet-popup-content{
+    .leaflet-popup-content{
       /* smaller padding + better use of width */
       margin: 10px 12px;
       min-width: 320px;
@@ -343,49 +352,49 @@
       line-height: 1.35;
     }
     @media (max-width: 420px){
-      #soApp .leaflet-popup-content{ min-width: 0; margin: 10px 10px; }
+      .leaflet-popup-content{ min-width: 0; margin: 10px 10px; }
     }
-    #soApp .leaflet-popup-tip{
+    .leaflet-popup-tip{
       background: rgba(12,18,34,.96);
       border: 1px solid rgba(255,255,255,.12);
       box-shadow: var(--shadow);
     }
-    #soApp .leaflet-container a.leaflet-popup-close-button{
+    .leaflet-container a.leaflet-popup-close-button{
       color: var(--muted);
       width: 28px;
       height: var(--special-band-height);
       line-height: var(--special-band-height);
       font-size: 18px;
     }
-    #soApp .leaflet-container a.leaflet-popup-close-button:hover{
+    .leaflet-container a.leaflet-popup-close-button:hover{
       color: var(--text);
       background: transparent;
     }
-    #soApp .popup{
+    .popup{
       color: var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
-    #soApp .popup .pnotes{ white-space: pre-line; }
-    #soApp .popup .pname{font-weight:800; font-size:13.5px; margin:0 0 6px}
-    #soApp .popup .pline{font-size:12px; margin:3px 0; color: var(--muted)}
-    #soApp .popup .ptime{font-weight:700; color: var(--text)}
-    #soApp .popup .thumbRow{display:flex; gap:10px; align-items:center; margin-top:8px}
-    #soApp .popup img.thumb{width:72px;height: var(--special-band-height);border-radius:12px;object-fit:cover;cursor:pointer;display:block; border:1px solid rgba(255,255,255,.12)}
-    #soApp .popup .thumbHint{font-size:12px; color: var(--muted); opacity:.9}
+    .popup .pnotes{ white-space: pre-line; }
+    .popup .pname{font-weight:800; font-size:13.5px; margin:0 0 6px}
+    .popup .pline{font-size:12px; margin:3px 0; color: var(--muted)}
+    .popup .ptime{font-weight:700; color: var(--text)}
+    .popup .thumbRow{display:flex; gap:10px; align-items:center; margin-top:8px}
+    .popup img.thumb{width:72px;height: var(--special-band-height);border-radius:12px;object-fit:cover;cursor:pointer;display:block; border:1px solid rgba(255,255,255,.12)}
+    .popup .thumbHint{font-size:12px; color: var(--muted); opacity:.9}
 
 /* Preview in form */
-    #soApp .preview{
+    .preview{
       display:flex;
       gap:10px;
       align-items:center;
       margin-top:6px;
     }
-    #soApp .preview img{
+    .preview img{
       width:48px;height: var(--special-band-height);border-radius:12px; object-fit:cover;
       border:1px solid rgba(255,255,255,.12);
     }
 
-    #soApp .toggleRow{
+    .toggleRow{
       display:flex; align-items:center; gap:10px;
       padding:8px 10px;
       border:1px solid rgba(255,255,255,.10);
@@ -394,10 +403,10 @@
       color: var(--muted);
       font-size:12px;
     }
-    #soApp .toggleRow input{width:auto; margin:0}
+    .toggleRow input{width:auto; margin:0}
 
     /* Image modal */
-    #soApp .imgModal{
+    .imgModal{
       position:fixed;
       inset:0;
       display:none;
@@ -408,8 +417,8 @@
       backdrop-filter: blur(8px);
       z-index: 9999;
     }
-    #soApp .imgModal.show{display:flex}
-    #soApp .imgModalInner{
+    .imgModal.show{display:flex}
+    .imgModalInner{
       position: relative;
       z-index: 10000;
       max-width: min(920px, 92vw);
@@ -423,7 +432,7 @@
       flex-direction:column;
       gap:10px;
     }
-    #soApp .imgModalInner img{
+    .imgModalInner img{
       max-width: 100%;
       max-height: 74vh;
       border-radius: 14px;
@@ -431,7 +440,7 @@
       object-fit: contain;
       background: rgba(0,0,0,.2);
     }
-    #soApp .imgModalHint{
+    .imgModalHint{
       font-size:12px;
       color: var(--muted);
       display:flex;
@@ -440,17 +449,17 @@
       gap:12px;
     }
   
-    #soApp .heart{
+    .heart{
       font-size: 14px;
       line-height: 1;
       margin-right: 8px;
     }
-    #soApp .searchBar{
+    .searchBar{
       padding:12px 12px 0;
       border-top:1px solid rgba(255,255,255,.06);
       background: rgba(0,0,0,.10);
     }
-    #soApp .searchBar input{
+    .searchBar input{
       width:100%;
       padding:10px 12px;
       border-radius:12px;
@@ -462,7 +471,7 @@
     }
     
     /* Filter chips (list) */
-    #soApp .filterBar{
+    .filterBar{
       padding:10px 12px 0;
       display:flex;
       flex-wrap:wrap;
@@ -470,7 +479,7 @@
       border-top:1px solid rgba(255,255,255,.06);
       background: rgba(0,0,0,.10);
     }
-    #soApp .fChip{
+    .fChip{
       padding:7px 10px;
       font-size:12px;
       border-radius:999px;
@@ -481,14 +490,14 @@
       user-select:none;
       transition: .12s ease;
     }
-    #soApp .fChip:hover{ background: rgba(255,255,255,.10); }
-    #soApp .fChip.active{
+    .fChip:hover{ background: rgba(255,255,255,.10); }
+    .fChip.active{
       color: var(--text);
       border-color: rgba(122,167,255,.55);
       background: rgba(122,167,255,.18);
       box-shadow: 0 0 0 4px rgba(122,167,255,.12);
     }
-    #soApp .badge{
+    .badge{
       display:inline-flex;
       align-items:center;
       gap:6px;
@@ -501,8 +510,8 @@
       white-space:nowrap;
       margin-left:8px;
     }
-    #soApp .badge b{ color: var(--text); font-weight:700; }
-    #soApp .starBtn{
+    .badge b{ color: var(--text); font-weight:700; }
+    .starBtn{
       padding:8px 10px;
       border-radius:999px;
       background: rgba(255,255,255,.06);
@@ -510,13 +519,13 @@
       color: var(--text);
       cursor:pointer;
     }
-    #soApp .starBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
-    #soApp .starBtn.on{
+    .starBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
+    .starBtn.on{
       background: rgba(255,215,0,.12);
       border-color: rgba(255,215,0,.28);
     }
 
-    #soApp .starInline{
+    .starInline{
       margin-left:8px;
       width:26px;
       height: var(--special-band-height);
@@ -530,28 +539,28 @@
       padding:0;
       line-height:1;
     }
-    #soApp .starInline:hover{ background: rgba(255,255,255,.08); }
-    #soApp .starInline.on{
+    .starInline:hover{ background: rgba(255,255,255,.08); }
+    .starInline.on{
       background: rgba(255,215,0,.12);
       border-color: rgba(255,215,0,.28);
     }
 
-    #soApp .bdayCountdown{
+    .bdayCountdown{
       margin-top:6px;
       font-size:12px;
       color:var(--muted);
     }
 
     /* Emerald highlight for name + Local Time */
-    #soApp .ename, #soApp .popup .pnick, #soApp #profileName, #soApp .localLabel, #soApp .localTimeVal{
+    .ename, .popup .pnick, #profileName, .localLabel, .localTimeVal{
       color: var(--emerald) !important;
     }
-    #soApp #profileName{ font-weight:800; }
-    #soApp .popup .pname{ margin:0 0 6px; }
-    #soApp .popup .pname .pheart{ margin-right:6px; }
+    #profileName{ font-weight:800; }
+    .popup .pname{ margin:0 0 6px; }
+    .popup .pname .pheart{ margin-right:6px; }
 
     /* Map legend (bottom-right) */
-    #soApp .mapLegend{
+    .mapLegend{
       padding:8px 10px;
       border-radius: 12px;
       border:1px solid rgba(255,255,255,.10);
@@ -572,32 +581,32 @@
        ============================= */
     @media (max-width: 480px) {
       /* erste Zeile: Nickname + Birthdate */
-      #soApp .panel .row:first-of-type{
+      .panel .row:first-of-type {
         display: grid;
         grid-template-columns: 2.2fr 1fr; /* Name breiter, Birthday schmaler */
         gap: 10px;
       }
 
       /* Inputs selbst etwas komfortabler */
-      #soApp .panel .row:first-of-type input{
+      .panel .row:first-of-type input {
         padding: 12px 12px;
         font-size: 14px;
       }
 
       /* Birthdate darf sich nicht aufblähen */
-      #soApp #birthdate{ min-width: 0; }
+      #birthdate { min-width: 0; }
     }
 
     /* My location marker (special) */
-    #soApp .myLocWrap{ position: relative; width: 22px; height: var(--special-band-height); }
-    #soApp .myLocDot{
+    .myLocWrap{ position: relative; width: 22px; height: var(--special-band-height); }
+    .myLocDot{
       position:absolute; inset:0;
       border-radius:999px;
       background: rgba(0, 229, 255, .92);
       border: 2px solid rgba(255,255,255,.92);
       box-shadow: 0 0 18px rgba(0, 229, 255, .55);
     }
-    #soApp .myLocRing{
+    .myLocRing{
       position:absolute; inset:-6px;
       border-radius:999px;
       border: 2px solid rgba(0, 229, 255, .55);
@@ -614,7 +623,7 @@
     /* =============================
        CLUSTER PINS (zoomed out)
        ============================= */
-    #soApp .clusterPin{
+    .clusterPin{
       width: 40px;
       height: var(--special-band-height);
       border-radius: 999px;
@@ -631,12 +640,12 @@
       position: relative;
       overflow: hidden;
     }
-    #soApp .clusterPin::before{
+    .clusterPin::before{
       content:""; position:absolute; inset:0;
       background: linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,0));
       pointer-events:none;
     }
-    #soApp .clusterPin::after{
+    .clusterPin::after{
       content:"";
       position:absolute;
       width: 56px;
@@ -652,16 +661,16 @@
    ============================= */
 
 /* 1) Tap / click feedback */
-#soApp button, #soApp .iconBtn, #soApp .fChip, #soApp .starBtn, #soApp .starInline, #soApp .aBtn{
+button, .iconBtn, .fChip, .starBtn, .starInline, .aBtn {
   transition: transform .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
 }
-#soApp button:active, #soApp .iconBtn:active, #soApp .fChip:active, #soApp .starBtn:active, #soApp .starInline:active, #soApp .aBtn:active{
+button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:active, .aBtn:active {
   transform: translateY(1px) scale(0.98);
   box-shadow: 0 0 0 4px rgba(122,167,255,.14);
 }
 
 /* 2) Popup soft fade-in */
-#soApp .leaflet-popup{
+.leaflet-popup {
   animation: popupIn .16s ease-out;
 }
 @keyframes popupIn {
@@ -670,7 +679,7 @@
 }
 
 /* 3) List selection pulse */
-#soApp .item.selected{
+.item.selected {
   animation: selectPulse .22s ease-out;
 }
 @keyframes selectPulse {
@@ -686,30 +695,30 @@
    ============================= */
 @media (max-width: 480px) {
   /* First form row (Nickname + Birthdate) */
-  #soApp .panel .row:first-of-type{
+  .panel .row:first-of-type {
     display: grid !important;
     grid-template-columns: 2.4fr 1fr !important;
     gap: 10px !important;
     align-items: start;
   }
-  #soApp .panel .row:first-of-type > div{ min-width: 0; }
-  #soApp #nickname, #soApp #birthdate{ min-width: 0; }
+  .panel .row:first-of-type > div { min-width: 0; }
+  #nickname, #birthdate { min-width: 0; }
 }
 
 
 /* Header stats (top-right) */
-#soApp .hdrRight{ text-align:right; }
-#soApp .hdrTitle{ color: var(--green); font-weight:800; letter-spacing:.2px; }
-#soApp .hdrSub{ color: var(--muted); font-size:12.5px; margin-top:2px; max-width: 48vw; }
+.hdrRight{ text-align:right; }
+.hdrTitle{ color: var(--green); font-weight:800; letter-spacing:.2px; }
+.hdrSub{ color: var(--muted); font-size:12.5px; margin-top:2px; max-width: 48vw; }
 @media (max-width: 480px){
-  #soApp .hdrSub{ max-width: 60vw; }
+  .hdrSub{ max-width: 60vw; }
 }
 
 
-#soApp .stats-title{color:#10b981; font-weight:600;}
+.stats-title{color:#10b981; font-weight:600;}
 
     /* Framed info line under name (Birthday / Friendship sort) */
-    #soApp .infoBlock{
+    .infoBlock{
       display:inline-flex;
       align-items:center;
       gap:6px;
@@ -723,14 +732,14 @@
       white-space:nowrap;
       max-width:100%;
     }
-    #soApp .infoBlock b{font-weight:700;}
+    .infoBlock b{font-weight:700;}
 
 
 /* ============================
    Premium UI polish (no new features)
    ============================ */
-#soApp, #soApp{ text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-#soApp{
+html,body{ text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+:root{
   --card: rgba(255,255,255,.055);
   --card2: rgba(255,255,255,.075);
   --cardBorder: rgba(255,255,255,.12);
@@ -743,7 +752,7 @@
 }
 
 /* subtle background depth */
-#soApp::before{
+body::before{
   content:"";
   position:fixed;
   inset:-20vh -10vw;
@@ -757,8 +766,8 @@
 }
 
 /* list feels like premium cards */
-#soApp .list{ padding: 6px; }
-#soApp .item{
+.list{ padding: 6px; }
+.item{
   margin: 8px 6px;
   border-bottom: none;
   border-radius: 16px;
@@ -770,7 +779,7 @@
   position: relative;
   overflow: hidden;
 }
-#soApp .item::before{
+.item::before{
   content:"";
   position:absolute;
   inset:-2px;
@@ -778,15 +787,17 @@
   opacity:.9;
   pointer-events:none;
 }
-#soApp .item:hover{
+.item:hover{
   transform: translateY(-1px);
   box-shadow: var(--shadowLift);
   border-color: var(--cardBorder2);
 }
-#soApp .item:active{ transform: translateY(0px) scale(.995); }
+.item:active{ transform: translateY(0px) scale(.995); }
 
 /* heart glow accents (purely visual) */
-#soApp .item.heartGreen::after, #soApp .item.heartYellow::after, #soApp .item.heartRed::after{
+.item.heartGreen::after,
+.item.heartYellow::after,
+.item.heartRed::after{
   content:"";
   position:absolute;
   inset:-40px -40px auto auto;
@@ -797,96 +808,96 @@
   opacity:.55;
   pointer-events:none;
 }
-#soApp .item.heartGreen::after{ background: radial-gradient(circle, var(--glowGreen), transparent 60%); }
-#soApp .item.heartYellow::after{ background: radial-gradient(circle, var(--glowYellow), transparent 60%); }
-#soApp .item.heartRed::after{ background: radial-gradient(circle, var(--glowRed), transparent 60%); }
+.item.heartGreen::after{ background: radial-gradient(circle, var(--glowGreen), transparent 60%); }
+.item.heartYellow::after{ background: radial-gradient(circle, var(--glowYellow), transparent 60%); }
+.item.heartRed::after{ background: radial-gradient(circle, var(--glowRed), transparent 60%); }
 
 /* typography hierarchy */
-#soApp .nick{ gap:8px; }
-#soApp .ename{
+.nick{ gap:8px; }
+.ename{
   letter-spacing: .15px;
 }
-#soApp .tiny{
+.tiny{
   line-height: 1.35;
   opacity: .92;
 }
-#soApp .localLabel{ opacity:.85; }
+.localLabel{ opacity:.85; }
 
 /* framed info blocks: slightly more "chip" */
-#soApp .infoBlock{
+.infoBlock{
   border: 1px solid rgba(255,255,255,.16);
   background: rgba(255,255,255,.07);
   box-shadow: 0 10px 22px rgba(0,0,0,.22);
 }
-#soApp .infoBlock b{ letter-spacing:.2px; }
+.infoBlock b{ letter-spacing:.2px; }
 
 /* micro motion (respect reduced motion) */
 @media (prefers-reduced-motion: no-preference){
-  #soApp .item{ animation: itemIn .22s ease both; }
+  .item{ animation: itemIn .22s ease both; }
   @keyframes itemIn{
     from{ opacity:0; transform: translateY(4px); }
     to{ opacity:1; transform: translateY(0); }
   }
-  #soApp .iconBtn, #soApp .secondary, #soApp .badge, #soApp .chip, #soApp .aBtn{
+  .iconBtn, .secondary, .badge, .chip, .aBtn{
     transition: transform .14s ease, background .14s ease, border-color .14s ease, opacity .14s ease;
   }
-  #soApp .iconBtn:hover, #soApp .secondary:hover{ transform: translateY(-1px); }
+  .iconBtn:hover, .secondary:hover{ transform: translateY(-1px); }
 }
 
 /* mobile tuning */
 @media (max-width: 560px){
-  #soApp .list{ max-height: 42vh; }
-  #soApp .item{ margin: 8px 4px; }
+  .list{ max-height: 42vh; }
+  .item{ margin: 8px 4px; }
 }
 
 
 /* Selected list item (visual focus) */
-#soApp .item.isSelected{
+.item.isSelected{
   border-color: rgba(255,255,255,.32);
   background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.06));
   box-shadow: 0 0 0 2px rgba(80,255,190,.22), 0 22px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(80,255,190,.14) inset, 0 0 60px rgba(80,255,190,.28);
   transform: translateY(-1px);
 }
-#soApp .item.isSelected::before{
+.item.isSelected::before{
   background: radial-gradient(520px 160px at 18% 0%, rgba(190,225,255,.16), transparent 62%);
 }
-#soApp .item.isSelected::after{
+.item.isSelected::after{
   opacity:.72;
 }
 
 
 /* Favorite card accent (subtle, premium) */
-#soApp .item.isFav{
+.item.isFav{
   border-color: rgba(255, 230, 140, .16);
 }
-#soApp .item.isFav::before{
+.item.isFav::before{
   background:
     radial-gradient(420px 120px at 18% 0%, rgba(255, 230, 140, .10), transparent 62%),
     radial-gradient(520px 160px at 68% 10%, rgba(255, 190, 90, .06), transparent 65%);
 }
 
 /* Selected + Favorite = special spotlight */
-#soApp .item.isSelected.isFav{
+.item.isSelected.isFav{
   border-color: rgba(255, 230, 140, .28);
   box-shadow:
     0 26px 80px rgba(0,0,0,.58),
     0 0 0 1px rgba(255, 230, 140, .12) inset,
     0 0 60px rgba(255, 220, 120, .26);
 }
-#soApp .item.isSelected.isFav::after{
+.item.isSelected.isFav::after{
   opacity:.78;
   background: radial-gradient(circle, rgba(255, 220, 120, .42), transparent 60%);
 }
 
 /* tiny shimmer line (very subtle) */
-#soApp .item.isSelected.isFav .ename{
+.item.isSelected.isFav .ename{
   text-shadow: 0 0 18px rgba(255, 220, 120, .18);
 }
 
 
 
 /* Selected + Favorite + My Special One -> Special wins */
-#soApp .item.isSelected.isFav.isSpecial{
+.item.isSelected.isFav.isSpecial{
   border-color: rgba(90, 235, 230, .42) !important;
   box-shadow:
     0 0 0 2px rgba(80,240,230,.45),
@@ -894,22 +905,22 @@
     0 0 0 1px rgba(90, 235, 230, .14) inset,
     0 0 78px rgba(80,240,230,.40) !important;
 }
-#soApp .item.isSelected.isFav.isSpecial::after{
+.item.isSelected.isFav.isSpecial::after{
   opacity: 1 !important;
   background: radial-gradient(520px 170px at 50% 0%, rgba(80,235,230,.22), transparent 65%) !important;
 }
 /* === Strong selection glow (frame-focused, no background lift) === */
-#soApp .item.isSelected{
+.item.isSelected{
   background: linear-gradient(180deg, var(--card2), var(--card)); /* keep original */
   box-shadow:
     0 0 0 1.5px rgba(160,200,255,.55),
     0 0 22px rgba(120,170,255,.55),
     0 14px 42px rgba(0,0,0,.55);
 }
-#soApp .item.isSelected::before{ opacity:.35; }
+.item.isSelected::before{ opacity:.35; }
 
 /* Favorite selection = different color identity (golden) */
-#soApp .item.isSelected.isFav{
+.item.isSelected.isFav{
   box-shadow:
     0 0 0 1.5px rgba(255,215,140,.75),
     0 0 26px rgba(255,210,120,.75),
@@ -918,7 +929,7 @@
 
 /* Optional soft pulse on select (very subtle) */
 @media (prefers-reduced-motion: no-preference){
-  #soApp .item.isSelected{
+  .item.isSelected{
     animation: selectPulse .6s ease-out 1;
   }
   @keyframes selectPulse{
@@ -939,7 +950,7 @@
 
 
 /* === Unified Visit Card Background (Option A) === */
-#soApp .profileCard, #soApp .visitCard, #soApp .profile{
+.profileCard, .visitCard, .profile{
   background:
     linear-gradient(180deg, rgba(20,28,40,.92), rgba(14,20,30,.92));
   border: 1px solid rgba(255,255,255,.14);
@@ -949,25 +960,29 @@
 }
 
 /* Inner sections calmer & glass-like */
-#soApp .profileCard .section, #soApp .visitCard .section, #soApp .profile .section{
+.profileCard .section,
+.visitCard .section,
+.profile .section{
   background: rgba(255,255,255,.04);
   border: 1px solid rgba(255,255,255,.10);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
 }
 
 /* Remove competing gradients inside visit card */
-#soApp .profileCard .section::before, #soApp .visitCard .section::before, #soApp .profile .section::before{
+.profileCard .section::before,
+.visitCard .section::before,
+.profile .section::before{
   display:none !important;
 }
 
 
 /* === Profile / Visit Card: Option A + C (unified but pep) === */
-#soApp #profileView{
+#profileView{
   position: relative;
   overflow: hidden; /* keep glows inside the visit card area */
   background: linear-gradient(180deg, rgba(14,18,28,.92), rgba(10,13,20,.92));
 }
-#soApp #profileView::before{
+#profileView::before{
   content:"";
   position: absolute; /* was fixed -> leaked behind list in profile mode */
   inset: -22% -18%;
@@ -979,10 +994,10 @@
     radial-gradient(900px 700px at 55% 95%, rgba(255,120,180,.06), transparent 66%);
   opacity: .95;
 }
-#soApp #profileView > *{ position: relative; z-index: 1; }
+#profileView > *{ position: relative; z-index: 1; }
 
 /* Favorite profile: gold spotlight (only here, not everywhere) */
-#soApp #profileView.isFavProfile::before{
+#profileView.isFavProfile::before{
   background:
     radial-gradient(980px 700px at 22% 10%, rgba(255, 220, 120, .18), transparent 64%),
     radial-gradient(860px 620px at 78% 18%, rgba(255, 200, 90, .10), transparent 66%),
@@ -990,87 +1005,104 @@
 }
 
 /* Calm inner cards (avoid multi competing gradients) */
-#soApp .profileCard{
+.profileCard{
   background: rgba(255,255,255,.04) !important;
   border: 1px solid rgba(255,255,255,.10) !important;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.04) !important;
 }
-#soApp .profileCard::before{ display:none !important; }
+.profileCard::before{ display:none !important; }
 
 
 /* === Profile mode: remove ALL glow effects === */
-#soApp #profileView .item, #soApp #profileView .item.isSelected, #soApp #profileView .item.isFav, #soApp #profileView .item::before, #soApp #profileView .item::after{
+#profileView .item,
+#profileView .item.isSelected,
+#profileView .item.isFav,
+#profileView .item::before,
+#profileView .item::after{
   box-shadow: none !important;
   filter: none !important;
 }
 
-#soApp.profileMode .item.isSelected{
+body.profileMode .item.isSelected{
   box-shadow: 0 0 0 1px rgba(255,255,255,.18) !important;
 }
 
-#soApp.profileMode .leaflet-popup-content-wrapper, #soApp.profileMode .leaflet-popup-tip{
+body.profileMode .leaflet-popup-content-wrapper,
+body.profileMode .leaflet-popup-tip{
   box-shadow: none !important;
 }
 
 
 /* === When profile (visit card) is open: disable list selection glow completely === */
-#soApp.profileMode .item.isSelected, #soApp.profileMode .item.isSelected.isFav, #soApp.profileMode .item.isSelected.fromMap, #soApp.profileMode .item.isSelected.fromList{
+body.profileMode .item.isSelected,
+body.profileMode .item.isSelected.isFav,
+body.profileMode .item.isSelected.fromMap,
+body.profileMode .item.isSelected.fromList{
   box-shadow: none !important;
   transform: none !important;
 }
-#soApp.profileMode .item.isSelected::after, #soApp.profileMode .item.isSelected::before{
+body.profileMode .item.isSelected::after,
+body.profileMode .item.isSelected::before{
   display:none !important;
 }
-#soApp.profileMode .item.isSelected{
+body.profileMode .item.isSelected{
   border-color: rgba(255,255,255,.18) !important;
 }
 
 
 /* === Nuclear option: kill ALL glow sources while profileMode is active === */
 /* 1) Remove global background glows */
-#soApp.profileMode::before, #soApp.profileMode::after{
+body.profileMode::before,
+body.profileMode::after{
   opacity: 0 !important;
   display:none !important;
 }
 
 /* 2) Remove profileView stage glows */
-#soApp.profileMode #profileView::before, #soApp.profileMode #profileView::after, #soApp.profileMode #profileView.isFavProfile::before{
+body.profileMode #profileView::before,
+body.profileMode #profileView::after,
+body.profileMode #profileView.isFavProfile::before{
   display:none !important;
   opacity:0 !important;
 }
 
 /* 3) Remove list item ambient glows (heart blobs + card sheen) */
-#soApp.profileMode .item::before, #soApp.profileMode .item::after, #soApp.profileMode .item.heartGreen::after, #soApp.profileMode .item.heartYellow::after, #soApp.profileMode .item.heartRed::after{
+body.profileMode .item::before,
+body.profileMode .item::after,
+body.profileMode .item.heartGreen::after,
+body.profileMode .item.heartYellow::after,
+body.profileMode .item.heartRed::after{
   display:none !important;
   opacity:0 !important;
 }
 
 /* 4) Ensure no shadows anywhere in list items during profileMode */
-#soApp.profileMode .item, #soApp.profileMode .item *{
+body.profileMode .item,
+body.profileMode .item *{
   box-shadow: none !important;
   text-shadow: none !important;
   filter: none !important;
 }
 
 /* Keep a minimal selection border so you still know what's selected */
-#soApp.profileMode .item.isSelected{
+body.profileMode .item.isSelected{
   border-color: rgba(255,255,255,.18) !important;
 }
 
 /* In profileMode we still want the selected person to gently glow (frame only) */
-#soApp.profileMode .item.isSelected{
+body.profileMode .item.isSelected{
   box-shadow:
     0 0 0 1.5px rgba(160,200,255,.45) !important,
     0 0 18px rgba(120,170,255,.38) !important,
     0 14px 42px rgba(0,0,0,.55) !important;
 }
-#soApp.profileMode .item.isSelected.isFav{
+body.profileMode .item.isSelected.isFav{
   box-shadow:
     0 0 0 1.5px rgba(255,215,140,.55) !important,
     0 0 22px rgba(255,210,120,.48) !important,
     0 16px 46px rgba(0,0,0,.60) !important;
 }
-#soApp.profileMode .item.isSelected.isSpecial{
+body.profileMode .item.isSelected.isSpecial{
   box-shadow:
     0 0 0 1.5px rgba(80,240,230,.55) !important,
     0 0 24px rgba(80,240,230,.50) !important,
@@ -1079,31 +1111,37 @@
 
 
 /* === Unify left panel background (top edit area, list, footer) === */
-#soApp{
+:root{
   --leftStage: rgba(10,13,20,.94);
   --leftStageSolid: rgba(10,13,20,.98);
   --leftBorder: rgba(255,255,255,.10);
 }
 
 /* Left main card becomes the single source of truth */
-#soApp .card{
+.card{
   background: var(--leftStage) !important;
   border-color: var(--leftBorder) !important;
 }
 
 /* Ensure all left sub-areas use the exact same background */
-#soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .list, #soApp .footer-tools, #soApp .hint, #soApp .panel{
+.searchBar,
+.filterBar,
+.alphaBar,
+.list,
+.footer-tools,
+.hint,
+.panel{
   background: var(--leftStage) !important;
 }
 
 /* The list itself is <ul>; make sure it doesn't look like a different strip */
-#soApp .list{
+.list{
   border-top: 1px solid rgba(255,255,255,.06) !important;
   border-bottom: 1px solid rgba(255,255,255,.06) !important;
 }
 
 /* Footer area: same color, no gradient differences */
-#soApp .footer-tools{
+.footer-tools{
   background: var(--leftStage) !important;
   border-top: 1px solid rgba(255,255,255,.08) !important;
   box-shadow: none !important;
@@ -1111,33 +1149,40 @@
 }
 
 /* If there is any form container in left area, unify it too */
-#soApp .form, #soApp .formGrid, #soApp .formWrap, #soApp .formSection, #soApp #form, #soApp #editor, #soApp #left, #soApp .left{
+.form,
+.formGrid,
+.formWrap,
+.formSection,
+#form,
+#editor,
+#left,
+.left{
   background: transparent !important;
 }
 
 
 /* === Further unify: remove subtle overlays + make profile panel match === */
-#soApp::before{ opacity: .18 !important; } /* keep slight ambience but reduce banding */
+body::before{ opacity: .18 !important; } /* keep slight ambience but reduce banding */
 
 /* Remove any card sheen overlays that can shift perceived color */
-#soApp .card::before{ display:none !important; }
-#soApp .item::before{ opacity:.35; } /* keep gentle, not affecting stage strips */
+.card::before{ display:none !important; }
+.item::before{ opacity:.35; } /* keep gentle, not affecting stage strips */
 
 /* Ensure the list strips are not influenced by transparency */
-#soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .list, #soApp .footer-tools, #soApp .hint, #soApp .panel{
+.searchBar, .filterBar, .alphaBar, .list, .footer-tools, .hint, .panel{
   background: var(--leftStageSolid) !important;
 }
 
 /* Profile / Visit card area: same background family */
-#soApp #profileView{
+#profileView{
   background: var(--leftStageSolid) !important;
 }
-#soApp #profileView .profileHead{
+#profileView .profileHead{
   background: var(--leftStageSolid) !important;
   border-bottom: 1px solid rgba(255,255,255,.08) !important;
   box-shadow: none !important;
 }
-#soApp #profileView .profileCard{
+#profileView .profileCard{
   background: var(--leftStageSolid) !important;
   border: 1px solid rgba(255,255,255,.10) !important;
   box-shadow: none !important;
@@ -1145,12 +1190,13 @@
 
 
 /* === Absolute solid stage: eliminate all perceived color shifts === */
-#soApp{
+:root{
   --stageSolid: #0A0D14; /* single source of truth */
 }
 
 /* Turn off any backdrop / translucency that can vary with content behind */
-#soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .list, #soApp .footer-tools, #soApp .hint, #soApp .panel, #soApp .card, #soApp #profileView, #soApp #profileView .profileHead, #soApp #profileView .profileCard{
+.searchBar, .filterBar, .alphaBar, .list, .footer-tools, .hint, .panel,
+.card, #profileView, #profileView .profileHead, #profileView .profileCard{
   background-color: var(--stageSolid) !important;
   background-image: none !important;
   backdrop-filter: none !important;
@@ -1158,60 +1204,74 @@
 }
 
 /* Kill all overlay sheens that can change perceived brightness */
-#soApp::before{ display:none !important; }
-#soApp .card::before, #soApp .card::after, #soApp .searchBar::before, #soApp .filterBar::before, #soApp .alphaBar::before, #soApp .footer-tools::before, #soApp #profileView::before, #soApp #profileView::after, #soApp #profileView .profileHead::before, #soApp #profileView .profileHead::after, #soApp .profileCard::before, #soApp .profileCard::after{
+body::before{ display:none !important; }
+.card::before, .card::after,
+.searchBar::before, .filterBar::before, .alphaBar::before, .footer-tools::before,
+#profileView::before, #profileView::after, #profileView .profileHead::before, #profileView .profileHead::after,
+.profileCard::before, .profileCard::after{
   display:none !important;
 }
 
 /* Ensure borders are consistent (no gradients) */
-#soApp .card, #soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .footer-tools, #soApp .panel, #soApp .hint, #soApp #profileView .profileHead, #soApp #profileView .profileCard{
+.card, .searchBar, .filterBar, .alphaBar, .footer-tools, .panel, .hint,
+#profileView .profileHead, #profileView .profileCard{
   border-color: rgba(255,255,255,.10) !important;
   box-shadow: none !important;
 }
 
 /* Keep list items premium without affecting stage color */
-#soApp .item{
+.item{
   background-image: none !important;
 }
 
 
 /* === One background everywhere (kills hard cuts in edit/list/profile) === */
-#soApp{ --stageSolid: #0A0D14; }
+:root{ --stageSolid: #0A0D14; }
 
 /* Make the page itself the single background */
-#soApp, #soApp{
+html, body{
   background: var(--stageSolid) !important;
   background-image: none !important;
 }
 
 /* Common outer wrappers (safety net) */
-#soApp #app, #soApp .app, #soApp .wrap, #soApp .container, #soApp .main, #soApp .layout, #soApp .shell{
+#app, .app, .wrap, .container, .main, .layout, .shell{
   background: var(--stageSolid) !important;
   background-image: none !important;
 }
 
 /* Left + Profile panes: no separate gradients/alphas */
-#soApp .card, #soApp #profileView, #soApp #profileView .profileHead, #soApp #profileView .profileCard, #soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .list, #soApp .footer-tools, #soApp .hint, #soApp .panel{
+.card, #profileView, #profileView .profileHead, #profileView .profileCard,
+.searchBar, .filterBar, .alphaBar, .list, .footer-tools, .hint, .panel{
   background: var(--stageSolid) !important;
   background-image: none !important;
   background-color: var(--stageSolid) !important;
 }
 
 /* Remove any remaining pseudo background layers that could create bands */
-#soApp::before, #soApp::after, #soApp .card::before, #soApp .card::after, #soApp .searchBar::before, #soApp .searchBar::after, #soApp .filterBar::before, #soApp .filterBar::after, #soApp .alphaBar::before, #soApp .alphaBar::after, #soApp .list::before, #soApp .list::after, #soApp .footer-tools::before, #soApp .footer-tools::after, #soApp #profileView::before, #soApp #profileView::after, #soApp #profileView .profileHead::before, #soApp #profileView .profileHead::after, #soApp #profileView .profileCard::before, #soApp #profileView .profileCard::after{
+body::before, body::after,
+.card::before, .card::after,
+.searchBar::before, .searchBar::after,
+.filterBar::before, .filterBar::after,
+.alphaBar::before, .alphaBar::after,
+.list::before, .list::after,
+.footer-tools::before, .footer-tools::after,
+#profileView::before, #profileView::after,
+#profileView .profileHead::before, #profileView .profileHead::after,
+#profileView .profileCard::before, #profileView .profileCard::after{
   display:none !important;
   opacity:0 !important;
 }
 
 /* Make separators subtle (so they don't look like 'cuts') */
-#soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .footer-tools, #soApp .card, #soApp #profileView .profileHead, #soApp #profileView .profileCard{
+.searchBar, .filterBar, .alphaBar, .footer-tools, .card, #profileView .profileHead, #profileView .profileCard{
   border-color: rgba(255,255,255,.08) !important;
 }
 
 
 
 /* === My Special One (only when Special + Favorite) === */
-#soApp #profileView .specialOneBadge{
+#profileView .specialOneBadge{
   display:none;
   align-items:center;
   gap:6px;
@@ -1225,10 +1285,10 @@
   margin-top:6px;
   white-space:nowrap;
 }
-#soApp #profileView.isSpecialProfile .specialOneBadge{ display:inline-flex; }
+#profileView.isSpecialProfile .specialOneBadge{ display:inline-flex; }
 
 /* === Favorite top band on profile image row (gold) === */
-#soApp #profileView.isFavProfile 
+#profileView.isFavProfile 
 
 /* === Special top band overrides Favorite when both === */
 #profileView.isSpecialProfile 
@@ -1253,12 +1313,12 @@
   box-shadow: 0 0 18px rgba(255,215,140,.16);
   margin-top:6px;
 }
-#soApp #profileView.isFavProfile .favBadge{ display:inline-flex; }
+#profileView.isFavProfile .favBadge{ display:inline-flex; }
 
-#soApp #profileView.isFavProfile .profileHead{
+#profileView.isFavProfile .profileHead{
   border-bottom-color: rgba(255,215,140,.22) !important;
 }
-#soApp #profileView.isFavProfile .profileHead::after{
+#profileView.isFavProfile .profileHead::after{
   content:"";
   position:absolute;
   left:12px; right:12px; bottom:-1px;
@@ -1268,7 +1328,7 @@
 
 
 /* === Map popup glow: normal (cool) vs favorite (gold) === */
-#soApp .leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+.leaflet-popup.normPopup .leaflet-popup-content-wrapper{
   background: rgba(14,18,28,.96);
   color: rgba(255,255,255,.92);
   border:1px solid rgba(80,255,190,.46);
@@ -1277,11 +1337,11 @@
     0 0 46px rgba(80,255,190,.40),
     0 28px 90px rgba(0,0,0,.62);
 }
-#soApp .leaflet-popup.normPopup .leaflet-popup-tip{
+.leaflet-popup.normPopup .leaflet-popup-tip{
   background: rgba(14,18,28,.96);
   box-shadow: 0 0 46px rgba(80,255,190,.36);
 }
-#soApp .leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+.leaflet-popup.favPopup .leaflet-popup-content-wrapper{
   background: rgba(16,14,18,.96);
   color: rgba(255,255,255,.92);
   border:1px solid rgba(255,215,140,.52);
@@ -1290,14 +1350,14 @@
     0 0 38px rgba(255,210,120,.62),
     0 30px 96px rgba(0,0,0,.66);
 }
-#soApp .leaflet-popup.favPopup .leaflet-popup-tip{
+.leaflet-popup.favPopup .leaflet-popup-tip{
   background: rgba(16,14,18,.96);
   box-shadow: 0 0 38px rgba(255,210,120,.52);
 }
 
 
 /* === Favorite strip: wider + smoother gradient === */
-#soApp #profileView.isFavProfile .profileHead::after{
+#profileView.isFavProfile .profileHead::after{
   height:4px !important;
   background: linear-gradient(
     90deg,
@@ -1311,34 +1371,34 @@
 }
 
 /* === Popup glow: slightly richer colors === */
-#soApp .leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+.leaflet-popup.favPopup .leaflet-popup-content-wrapper{
   border-color: rgba(255,215,140,.65) !important;
   box-shadow:
     0 0 0 1px rgba(255,215,140,.30) inset,
     0 0 68px rgba(255,210,120,.85),
     0 36px 120px rgba(0,0,0,.70) !important;
 }
-#soApp .leaflet-popup.favPopup .leaflet-popup-tip{
+.leaflet-popup.favPopup .leaflet-popup-tip{
   box-shadow: 0 0 68px rgba(255,210,120,.72) !important;
 }
 
-#soApp .leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+.leaflet-popup.normPopup .leaflet-popup-content-wrapper{
   border-color: rgba(140,190,255,.55) !important;
   box-shadow:
     0 0 0 1px rgba(140,190,255,.25) inset,
     0 0 64px rgba(120,170,255,.78),
     0 34px 112px rgba(0,0,0,.68) !important;
 }
-#soApp .leaflet-popup.normPopup .leaflet-popup-tip{
+.leaflet-popup.normPopup .leaflet-popup-tip{
   box-shadow: 0 0 64px rgba(120,170,255,.65) !important;
 }
 
 
 /* === Fav band (visit card): thicker gradient like reference === */
-#soApp #profileView .profileHead{ position: relative; overflow: hidden; }
+#profileView .profileHead{ position: relative; overflow: hidden; }
 
-#soApp #profileView.isFavProfile .profileHead
-/* keep the bottom strip too, #soApp slightly wider */
+#profileView.isFavProfile .profileHead
+/* keep the bottom strip too, slightly wider */
 #profileView.isFavProfile .profileHead::after{
   height:5px !important;
 }
@@ -1346,12 +1406,12 @@
 
 /* === Final tweak: favorite band exactly like reference === */
 /* remove top glow band, keep ONLY the bottom gradient bar */
-#soApp #profileView.isFavProfile .profileHead::before{
+#profileView.isFavProfile .profileHead::before{
   display:none !important;
 }
 
 /* bottom band: centered, softer edges, correct vertical spacing */
-#soApp #profileView.isFavProfile .profileHead::after{
+#profileView.isFavProfile .profileHead::after{
   height:6px !important;
   bottom:-1px !important;
   background: linear-gradient(
@@ -1366,10 +1426,10 @@
 }
 
 /* === Special One: recolor the SAME bottom band to turquoise (no second bar) === */
-#soApp #profileView.isSpecialProfile .profileHead{
+#profileView.isSpecialProfile .profileHead{
   border-bottom-color: rgba(80,240,230,.22) !important;
 }
-#soApp #profileView.isSpecialProfile .profileHead::after{
+#profileView.isSpecialProfile .profileHead::after{
   content:"";
   position:absolute;
   left:12px; right:12px;
@@ -1388,11 +1448,11 @@
 
 
 /* === Fix: make favorite band truly thicker and visible === */
-#soApp #profileView .profileHead{
+#profileView .profileHead{
   overflow: visible !important; /* allow band to extend */
 }
 
-#soApp #profileView.isFavProfile .profileHead::after{
+#profileView.isFavProfile .profileHead::after{
   content:"";
   position:absolute;
   left:-16px;
@@ -1414,7 +1474,7 @@
 
 
 /* === Only change: favorite band to 30px height === */
-#soApp #profileView.isFavProfile .profileHead::after{
+#profileView.isFavProfile .profileHead::after{
   height:30px !important;
   bottom:-14px !important;
   box-shadow: 0 0 32px rgba(255,215,140,.65) !important;
@@ -1422,7 +1482,7 @@
 
 
 /* === Unblock favorite band: override earlier 'display:none' safety reset === */
-#soApp #profileView.isFavProfile .profileHead::after{
+#profileView.isFavProfile .profileHead::after{
   display:block !important;
   opacity:1 !important;
   content:"" !important;
@@ -1430,7 +1490,7 @@
 
 
 /* === Adjust favorite band to half thickness === */
-#soApp #profileView.isFavProfile .profileHead::after{
+#profileView.isFavProfile .profileHead::after{
   height:15px !important;   /* half of 30px */
   bottom:-7px !important;
   box-shadow: 0 0 20px rgba(255,215,140,.55) !important;
@@ -1438,7 +1498,7 @@
 
 
 /* === Refine favorite band: slightly thinner, remove hard center line === */
-#soApp #profileView.isFavProfile .profileHead::after{
+#profileView.isFavProfile .profileHead::after{
   height:12px !important;          /* a bit thinner */
   bottom:-6px !important;
   /* smoother gradient without a sharp center line */
@@ -1455,7 +1515,7 @@
 
 
 /* === Final micro-tune: 10px band, no hard center line at all === */
-#soApp #profileView.isFavProfile .profileHead::after{
+#profileView.isFavProfile .profileHead::after{
   height:10px !important;
   bottom:-5px !important;
   background: linear-gradient(
@@ -1470,17 +1530,18 @@
 }
 
 /* ensure no other rule adds a center highlight */
-#soApp #profileView.isFavProfile .profileHead::after::before, #soApp #profileView.isFavProfile .profileHead::after::after{
+#profileView.isFavProfile .profileHead::after::before,
+#profileView.isFavProfile .profileHead::after::after{
   display:none !important;
 }
 
 
 /* === Ultra-fix: 11px band + explicitly kill centerline sources === */
-#soApp #profileView.isFavProfile .profileHead{
+#profileView.isFavProfile .profileHead{
   border-bottom-color: transparent !important; /* kill 1px border line */
 }
 
-#soApp #profileView.isFavProfile .profileHead::after{
+#profileView.isFavProfile .profileHead::after{
   height:11px !important;
   bottom:-5px !important;
   background: linear-gradient(
@@ -1495,13 +1556,14 @@
 }
 
 /* absolutely ensure no 1px hairline from any pseudo/border */
-#soApp #profileView.isFavProfile .profileHead, #soApp #profileView.isFavProfile .profileHead *{
+#profileView.isFavProfile .profileHead,
+#profileView.isFavProfile .profileHead *{
   outline: none !important;
 }
 
 
 /* === Final: richer gold color, same size === */
-#soApp #profileView.isFavProfile .profileHead::after{
+#profileView.isFavProfile .profileHead::after{
   height:11px !important;
   bottom:-5px !important;
   background: linear-gradient(
@@ -1517,7 +1579,7 @@
 
 
 /* === Floating Distance Tool Button (always visible) === */
-#soApp #distanceFloatingBtn{
+#distanceFloatingBtn{
   position: fixed;
   left: 16px;
   bottom: 16px;
@@ -1531,14 +1593,14 @@
   cursor: pointer;
   box-shadow: 0 6px 18px rgba(0,0,0,.35);
 }
-#soApp #distanceFloatingBtn.active{
+#distanceFloatingBtn.active{
   background: rgba(220,90,90,.18);
   box-shadow: 0 0 16px rgba(220,90,90,.45);
 }
 
 
 /* === Distance Tool (armed) === */
-#soApp #distanceFloatingBtn{
+#distanceFloatingBtn{
   display:flex;
   align-items:center;
   justify-content:center;
@@ -1547,12 +1609,12 @@
   height: var(--special-band-height);
   padding:0 !important;
 }
-#soApp #distanceFloatingBtn.active{
+#distanceFloatingBtn.active{
   background: rgba(220,90,90,.18) !important;
   box-shadow: 0 0 16px rgba(220,90,90,.45) !important;
 }
 
-#soApp #distanceHint{
+#distanceHint{
   position: fixed;
   left: 66px;
   bottom: 16px;
@@ -1567,9 +1629,9 @@
   line-height: 1.15;
   display:none;
 }
-#soApp #distanceHint b{ color: rgba(255,185,185,.98); }
+#distanceHint b{ color: rgba(255,185,185,.98); }
 
-#soApp .distanceLabel{
+.distanceLabel{
   background: rgba(10,13,20,.92);
   color: rgba(255,200,200,.95);
   border: 1px solid rgba(220,90,90,.55);
@@ -1580,7 +1642,7 @@
   line-height: 1.15;
   box-shadow: 0 10px 25px rgba(0,0,0,.35);
 }
-#soApp .distanceMid{
+.distanceMid{
   width: 16px;
   height: var(--special-band-height);
   border-radius: 999px;
@@ -1590,7 +1652,7 @@
 
 
 /* === Distance Tool refinements === */
-#soApp .distanceLabel{
+.distanceLabel{
   background: rgba(5,7,12,.96) !important;
   color: rgba(255,245,245,.98) !important;
   border: 1px solid rgba(255,120,120,.72) !important;
@@ -1602,7 +1664,7 @@
   text-shadow: 0 1px 0 rgba(0,0,0,.65);
   box-shadow: 0 12px 30px rgba(0,0,0,.55), 0 0 18px rgba(220,90,90,.18);
 }
-#soApp .distanceMid{
+.distanceMid{
   width: 14px !important;
   height: 14px !important;
   border-radius: 999px;
@@ -1611,7 +1673,7 @@
   box-shadow: 0 0 16px rgba(220,90,90,.25);
   position: relative;
 }
-#soApp .distanceMid::after{
+.distanceMid::after{
   content:"";
   position:absolute;
   left:50%; top:50%;
@@ -1620,14 +1682,14 @@
   border-radius:999px;
   background: rgba(255,180,180,.95);
 }
-#soApp #distanceHint{
+#distanceHint{
   border-color: rgba(220,90,90,.28) !important;
   color: rgba(255,235,235,.90) !important;
 }
 
 
 /* === Distance Info Popup (red glow) === */
-#soApp .leaflet-popup.distInfoPopup .leaflet-popup-content-wrapper{
+.leaflet-popup.distInfoPopup .leaflet-popup-content-wrapper{
   background: rgba(8,10,16,.96);
   color: rgba(255,245,245,.95);
   border: 1px solid rgba(220,90,90,.65);
@@ -1637,38 +1699,38 @@
     0 28px 90px rgba(0,0,0,.62);
   border-radius: 14px;
 }
-#soApp .leaflet-popup.distInfoPopup .leaflet-popup-tip{
+.leaflet-popup.distInfoPopup .leaflet-popup-tip{
   background: rgba(8,10,16,.96);
   box-shadow: 0 0 28px rgba(220,90,90,.45);
 }
-#soApp .distInfo{
+.distInfo{
   font-size: 12px;
   line-height: 1.25;
   min-width: 250px;
 }
-#soApp .distInfo .row{
+.distInfo .row{
   display:flex;
   justify-content:space-between;
   gap:10px;
   padding: 3px 0;
   border-bottom: 1px solid rgba(255,255,255,.06);
 }
-#soApp .distInfo .row:last-child{ border-bottom:none; }
-#soApp .distInfo .k{ opacity:.85; }
-#soApp .distInfo .v{ font-weight:700; color: rgba(255,220,220,.98); }
-#soApp .distInfo .title{
+.distInfo .row:last-child{ border-bottom:none; }
+.distInfo .k{ opacity:.85; }
+.distInfo .v{ font-weight:700; color: rgba(255,220,220,.98); }
+.distInfo .title{
   font-size: 13px;
   font-weight: 800;
   margin-bottom: 6px;
   color: rgba(255,230,230,.98);
 }
-#soApp .distInfo .controls{
+.distInfo .controls{
   display:flex;
   align-items:center;
   gap:8px;
   margin: 6px 0 8px 0;
 }
-#soApp .distInfo select{
+.distInfo select{
   background: rgba(12,15,24,.9);
   color: rgba(255,245,245,.95);
   border: 1px solid rgba(220,90,90,.35);
@@ -1678,7 +1740,7 @@
 }
 
 /* numbered markers for point 1 / 2 */
-#soApp .distPointBadge{
+.distPointBadge{
   width: 18px;
   height: var(--special-band-height);
   border-radius: 999px;
@@ -1695,7 +1757,7 @@
 
 
 /* Nearest place marker (same red family) */
-#soApp .nearestPlacePin{
+.nearestPlacePin{
   width: 14px;
   height: var(--special-band-height);
   border-radius: 999px;
@@ -1706,7 +1768,7 @@
 
 
 /* Midpoint pin marker (styled like map pin, red glow) */
-#soApp .midpointPin{
+.midpointPin{
   width: 22px;
   height: var(--special-band-height);
   background: linear-gradient(180deg, rgba(255,120,120,.95), rgba(180,60,60,.95));
@@ -1718,7 +1780,7 @@
   border: 2px solid rgba(255,200,200,.85);
   position: relative;
 }
-#soApp .midpointPin::after{
+.midpointPin::after{
   content:"";
   width: 8px;
   height: var(--special-band-height);
@@ -1732,15 +1794,15 @@
 
 
 /* === Special person (turquoise) === */
-#soApp .item.isSpecial{
+.item.isSpecial{
   border-color: rgba(90, 235, 230, .22);
 }
-#soApp .item.isSpecial::before{
+.item.isSpecial::before{
   background:
     radial-gradient(420px 120px at 18% 0%, rgba(80, 235, 230, .12), transparent 62%),
     radial-gradient(520px 160px at 68% 10%, rgba(40, 190, 220, .08), transparent 65%);
 }
-#soApp .item.isSelected.isSpecial{
+.item.isSelected.isSpecial{
   border-color: rgba(90, 235, 230, .42);
   box-shadow:
     0 0 0 2px rgba(80,240,230,.45),
@@ -1752,14 +1814,14 @@
   0%,100%{ filter: drop-shadow(0 0 0 rgba(80,235,230,0)); opacity:.0; }
   50%{ filter: drop-shadow(0 0 16px rgba(80,235,230,.55)); opacity:.75; }
 }
-#soApp .item.isSelected.isSpecial::after{
+.item.isSelected.isSpecial::after{
   opacity: 1 !important;
   background: radial-gradient(520px 170px at 50% 0%, rgba(80,235,230,.18), transparent 65%);
   animation: specialPulse 2.4s ease-in-out infinite;
 }
 
 /* inline "special" button next to favorite star */
-#soApp .diamondInline{
+.diamondInline{
   margin-left: 8px;
   border: 1px solid rgba(90,235,230,.28);
   background: rgba(8,12,20,.35);
@@ -1770,7 +1832,7 @@
   line-height: 1;
   cursor: pointer;
 }
-#soApp .diamondInline.on{
+.diamondInline.on{
   border-color: rgba(90,235,230,.55);
   background: rgba(80,235,230,.10);
   box-shadow: 0 0 18px rgba(80,235,230,.22);
@@ -1778,12 +1840,12 @@
 
 
 /* === Special ∞ animation (turquoise, always running) === */
-#soApp .diamondInline.specialOn{
+.diamondInline.specialOn{
   position: relative;
   color: rgba(120,255,245,.98) !important;
   text-shadow: 0 0 10px rgba(80,240,230,.55), 0 0 18px rgba(80,240,230,.25);
 }
-#soApp .diamondInline.specialOn::before{
+.diamondInline.specialOn::before{
   content:"";
   position:absolute;
   inset:-6px;
@@ -1794,7 +1856,7 @@
   animation: spGlow 1.8s ease-in-out infinite;
   pointer-events:none;
 }
-#soApp .diamondInline.specialOn{
+.diamondInline.specialOn{
   animation: spFloat 2.2s ease-in-out infinite;
 }
 @keyframes spGlow{
@@ -1808,22 +1870,22 @@
 
 
 /* === Special (turquoise) list highlight (like fav) === */
-#soApp .item.isSpecial{
+.item.isSpecial{
   border-color: rgba(80,240,230,.22);
 }
-#soApp .item.isSpecial::before{
+.item.isSpecial::before{
   background:
     radial-gradient(420px 120px at 18% 0%, rgba(80,240,230,.14), transparent 62%),
     radial-gradient(520px 160px at 68% 10%, rgba(0,200,190,.10), transparent 66%);
 }
-#soApp .item.isSpecial.isSelected{
+.item.isSpecial.isSelected{
   box-shadow: 0 22px 70px rgba(0,0,0,.55), 0 0 26px rgba(80,240,230,.35);
   border-color: rgba(80,240,230,.38);
 }
 
 
 /* === Special (turquoise) profile background + top band === */
-#soApp .isSpecialProfile::before{
+.isSpecialProfile::before{
   background:
     radial-gradient(980px 700px at 22% 10%, rgba(80,240,230,.18), transparent 64%),
     radial-gradient(860px 620px at 78% 18%, rgba(0,200,190,.12), transparent 66%),
@@ -1832,19 +1894,19 @@
 
 
 /* === Special (turquoise) map popup glow === */
-#soApp .leaflet-popup.specialPopup .leaflet-popup-content-wrapper{
+.leaflet-popup.specialPopup .leaflet-popup-content-wrapper{
   border-color: rgba(80,240,230,.38);
   box-shadow: 0 0 0 1px rgba(80,240,230,.18) inset, 0 0 120px rgba(80,240,230,.85), 0 38px 140px rgba(0,0,0,.74);
 }
-#soApp .leaflet-popup.specialPopup .leaflet-popup-tip{
+.leaflet-popup.specialPopup .leaflet-popup-tip{
   background: rgba(12,18,34,.96);
   box-shadow: 0 0 120px rgba(80,240,230,.80);
 }
 
 
 /* === Mi Vida (Special) list aura + subtle motion === */
-#soApp .item.isSpecial{ position: relative; border-color: rgba(80,240,230,.28) !important; }
-#soApp .item.isSpecial::before{
+.item.isSpecial{ position: relative; border-color: rgba(80,240,230,.28) !important; }
+.item.isSpecial::before{
   content:""; position:absolute; inset:-1px; border-radius:22px; pointer-events:none;
   background:
     radial-gradient(520px 160px at 20% 0%, rgba(80,240,230,.22), transparent 62%),
@@ -1852,7 +1914,7 @@
     radial-gradient(520px 200px at 55% 110%, rgba(80,240,230,.12), transparent 70%);
   opacity:.85; animation:mividaAura 4.2s ease-in-out infinite;
 }
-#soApp .item.isSpecial::after{
+.item.isSpecial::after{
   content:""; position:absolute; inset:-2px; border-radius:24px; pointer-events:none;
   box-shadow: 0 0 0 1px rgba(80,240,230,.10) inset, 0 0 22px rgba(80,240,230,.28), 0 0 50px rgba(80,240,230,.14);
   opacity:.55; animation:mividaGlow 2.8s ease-in-out infinite;
@@ -1862,7 +1924,7 @@
 
 
 /* === Mi Vida badge + special top band === */
-#soApp .badge.specialBadge{
+.badge.specialBadge{
   display:inline-flex; align-items:center; gap:.45rem;
   padding:.38rem .75rem; border-radius:999px;
   border:1px solid rgba(80,240,230,.35);
@@ -1874,15 +1936,15 @@
 
 
 /* === Popup wrappers: make each clearly different === */
-#soApp .leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+.leaflet-popup.normPopup .leaflet-popup-content-wrapper{
   border-color: rgba(120,160,255,.16);
   box-shadow: 0 0 0 1px rgba(120,160,255,.14) inset, 0 0 64px rgba(120,170,255,.70), 0 34px 112px rgba(0,0,0,.68);
 }
-#soApp .leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+.leaflet-popup.favPopup .leaflet-popup-content-wrapper{
   border-color: rgba(255,210,120,.22);
   box-shadow: 0 0 0 1px rgba(255,210,120,.18) inset, 0 0 68px rgba(255,210,120,.78), 0 36px 120px rgba(0,0,0,.70);
 }
-#soApp .leaflet-popup.specialPopup .leaflet-popup-content-wrapper{
+.leaflet-popup.specialPopup .leaflet-popup-content-wrapper{
   border-color: rgba(80,240,230,.32);
   box-shadow: 0 0 0 1px rgba(80,240,230,.16) inset, 0 0 78px rgba(80,240,230,.70), 0 34px 120px rgba(0,0,0,.70);
 }
@@ -1890,10 +1952,10 @@
 
 
 /* === Stronger profile (visit card) glow to match Favorite style === */
-#soApp #profileView{
+#profileView{
   position: relative;
 }
-#soApp #profileView.isFavProfile{
+#profileView.isFavProfile{
   border: 1px solid rgba(255,215,140,.28) !important;
   border-radius: 18px !important;
   box-shadow:
@@ -1901,16 +1963,17 @@
     0 0 54px rgba(255,215,140,.22),
     0 28px 90px rgba(0,0,0,.62) !important;
 }
-#soApp #profileView.isFavProfile .profileCard{
+#profileView.isFavProfile .profileCard{
   border-color: rgba(255,215,140,.18) !important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.04),
     0 0 26px rgba(255,215,140,.14) !important;
 }
-#soApp #profileView.isFavProfile .profileHead
+#profileView.isFavProfile .profileHead
 
 /* =========================================================
-   My Special One: use SAME bar as Favorite (recolored), #soApp no extra second bar, #soApp and Special wins over Favorite.
+   My Special One: use SAME bar as Favorite (recolored),
+   no extra second bar, and Special wins over Favorite.
    ========================================================= */
 #profileView.isSpecialProfile 
 
@@ -1928,7 +1991,7 @@
 }
 
 /* ensure Special still wins even when Favorite is also present */
-#soApp #profileView.isFavProfile.isSpecialProfile .profileHead::after{
+#profileView.isFavProfile.isSpecialProfile .profileHead::after{
   height:5px !important;
   background: linear-gradient(
     90deg,
@@ -1952,13 +2015,13 @@
      when BOTH Favorite + Special are active (like your first screenshot).
    ========================================================= */
 
-#soApp #profileView .profileHead{
+#profileView .profileHead{
   position: relative !important;
   overflow: visible !important;
 }
 
 /* Base band (disabled by default) */
-#soApp #profileView .profileHead::after{
+#profileView .profileHead::after{
   content: "" !important;
   position: absolute !important;
   left: -18px !important;   /* a touch wider */
@@ -1972,7 +2035,7 @@
 }
 
 /* Favorite band (gold) */
-#soApp #profileView.isFavProfile .profileHead::after{
+#profileView.isFavProfile .profileHead::after{
   display: block !important;
   background: linear-gradient(
     90deg,
@@ -1986,7 +2049,7 @@
 }
 
 /* Special band (turquoise) — MUST work even when Favorite is OFF */
-#soApp #profileView.isSpecialProfile .profileHead::after{
+#profileView.isSpecialProfile .profileHead::after{
   display: block !important;
   background: linear-gradient(
     90deg,
@@ -2000,29 +2063,31 @@
 }
 
 /* Both active: Special wins + a bit thicker and slightly lower */
-#soApp #profileView.isFavProfile.isSpecialProfile .profileHead::after{
+#profileView.isFavProfile.isSpecialProfile .profileHead::after{
   height: 22px !important;   /* thicker like screenshot 1 */
   bottom: -10px !important;  /* lower so it never touches Local Time */
   box-shadow: 0 0 30px rgba(80,240,230,.78) !important;
 }
 
 /* Also give the content a hair more breathing room only when both badges show */
-#soApp #profileView.isBothProfileBadges .profileTop{
+#profileView.isBothProfileBadges .profileTop{
   margin-top: 2px !important;
 }
 
 /* Special-only: kill any 1px divider illusion */
-#soApp #profileView.isSpecialProfile .profileHead{
+#profileView.isSpecialProfile .profileHead{
   border-bottom-color: transparent !important;
 }
 
 
 
 /* Special only */
-#soApp .profile-card.is-special:not(.is-favorite) .special-band, #soApp .profile-card.is-special:not(.is-favorite)
+.profile-card.is-special:not(.is-favorite) .special-band,
+.profile-card.is-special:not(.is-favorite)
 
 /* Special + Favorite */
-.profile-card.is-special.is-favorite .special-band, #soApp .profile-card.is-special.is-favorite
+.profile-card.is-special.is-favorite .special-band,
+.profile-card.is-special.is-favorite
 
 
 :root{
@@ -2031,13 +2096,13 @@
 }
 
 /* base band */
-#soApp .special-band{
+.special-band{
   height: var(--band-height-special-only);
   box-shadow: 0 0 6px rgba(64,224,208,.55);
 }
 
 /* Special + Favorite → thinner & calmer */
-#soApp .profile-card.is-special.is-favorite .special-band{
+.profile-card.is-special.is-favorite .special-band{
   height: var(--band-height-special-favorite) !important;
   box-shadow: 0 0 3px rgba(64,224,208,.45);
 }
@@ -2050,7 +2115,7 @@
    - No layout / image shifting
    ========================================================= */
 
-#soApp #profileView{ --profile-top-band-h: 4px; } /* thin, unified */
+#profileView{ --profile-top-band-h: 4px; } /* thin, unified */
 
 
 
@@ -2069,11 +2134,11 @@
    UNIFIED PROFILE TOP BAND (FINAL ALIGNMENT)
    - Same thickness for Favorite, Special, and both
    ========================================================= */
-#soApp #profileView{
+#profileView{
   --profile-top-band-h: 4px;
 }
 
-#soApp #profileView .profileTop::after{
+#profileView .profileTop::after{
   display:block !important;
   height: var(--profile-top-band-h) !important;
 }
@@ -2092,12 +2157,12 @@
    - Special-only & Fav+Special use turquoise palette but same effect style.
    ========================================================= */
 
-#soApp #profileView{
+#profileView{
   --profile-top-band-h: 4px;
 }
 
 /* Make sure the band exists and is always the same thickness */
-#soApp #profileView .profileTop::after{
+#profileView .profileTop::after{
   display:block !important;
   top:0 !important;
   height: var(--profile-top-band-h) !important;
@@ -2107,7 +2172,7 @@
 }
 
 /* FAVORITE (gold) - reference effects */
-#soApp #profileView.isFavProfile:not(.isSpecialProfile) .profileTop::after{
+#profileView.isFavProfile:not(.isSpecialProfile) .profileTop::after{
   background: linear-gradient(90deg,
     rgba(0,0,0,0),
     rgba(255,220,120,1),
@@ -2118,7 +2183,7 @@
 }
 
 /* SPECIAL (turquoise) - same style, only color changed */
-#soApp #profileView.isSpecialProfile .profileTop::after{
+#profileView.isSpecialProfile .profileTop::after{
   background: linear-gradient(90deg,
     rgba(0,0,0,0),
     rgba(80,240,230,1),
@@ -2140,7 +2205,7 @@
    ========================================================= */
 
 /* Special-only: same structure as Favorite */
-#soApp .item.isSelected.isSpecial{
+.item.isSelected.isSpecial{
   border-color: rgba(90, 235, 230, .28) !important;
   box-shadow:
     0 26px 80px rgba(0,0,0,.58),
@@ -2149,7 +2214,7 @@
 }
 
 /* Favorite + Special: same as Favorite too (but turquoise wins) */
-#soApp .item.isSelected.isFav.isSpecial{
+.item.isSelected.isFav.isSpecial{
   border-color: rgba(90, 235, 230, .28) !important;
   box-shadow:
     0 26px 80px rgba(0,0,0,.58),
@@ -2158,14 +2223,16 @@
 }
 
 /* Radial highlight: copy Favorite ::after behavior */
-#soApp .item.isSelected.isSpecial::after, #soApp .item.isSelected.isFav.isSpecial::after{
+.item.isSelected.isSpecial::after,
+.item.isSelected.isFav.isSpecial::after{
   opacity:.78 !important;
   background: radial-gradient(circle, rgba(80,240,230,.42), transparent 60%) !important;
   animation: none !important;
 }
 
 /* Name glow: copy Favorite behavior */
-#soApp .item.isSelected.isSpecial .ename, #soApp .item.isSelected.isFav.isSpecial .ename{
+.item.isSelected.isSpecial .ename,
+.item.isSelected.isFav.isSpecial .ename{
   text-shadow: 0 0 18px rgba(80,240,230,.18) !important;
 }
 
@@ -2177,16 +2244,21 @@
    ========================================================= */
 
 /* Ensure badge container is inline */
-#soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
+#profileView .badgeRow,
+#profileView .badges,
+#profileView .tagRow{
   display:flex !important;
   align-items:center;
   gap:8px;
 }
 
 /* Ensure both badges are visible */
-#soApp #profileView .specialBadge, #soApp /* Order: Special first, #soApp Favorite second */
+#profileView .specialBadge,
+
+
+/* Order: Special first, Favorite second */
 #profileView .specialBadge{ order: 1; }
-#soApp #profileView .favBadge{ order: 2; }
+#profileView .favBadge{ order: 2; }
 
 
 /* =========================================================
@@ -2197,14 +2269,17 @@
    ========================================================= */
 
 /* Badge row */
-#soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
+#profileView .badgeRow,
+#profileView .badges,
+#profileView .tagRow{
   display:flex !important;
   align-items:center;
   gap:6px;
 }
 
 /* Base badge size (smaller) */
-#soApp #profileView .specialBadge, #soApp #profileView .favBadge{
+#profileView .specialBadge,
+#profileView .favBadge{
   font-size: 12px !important;
   padding: 4px 8px !important;
   border-radius: 999px;
@@ -2212,7 +2287,7 @@
 }
 
 /* Special badge (turquoise, calm) */
-#soApp #profileView .specialBadge{
+#profileView .specialBadge{
   background: rgba(80,240,230,.12);
   border: 1px solid rgba(80,240,230,.45);
   color: rgb(160,245,235);
@@ -2231,7 +2306,9 @@
    ========================================================= */
 
 /* Force badge row inline */
-#soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
+#profileView .badgeRow,
+#profileView .badges,
+#profileView .tagRow{
   display:flex !important;
   flex-wrap: nowrap !important;
   align-items:center;
@@ -2239,7 +2316,10 @@
 }
 
 /* Compact badges: width fits text */
-#soApp #profileView .specialBadge, #soApp /* Ensure Favorite is NOT pushed to new line */
+#profileView .specialBadge,
+
+
+/* Ensure Favorite is NOT pushed to new line */
 #profileView .favBadge{
   margin-top: 0 !important;
 }
@@ -2252,7 +2332,10 @@
    ========================================================= */
 
 /* Unify badge height & vertical alignment */
-#soApp #profileView .specialBadge, #soApp /* Ensure Special badge is not visually smaller */
+#profileView .specialBadge,
+
+
+/* Ensure Special badge is not visually smaller */
 #profileView .specialBadge{
   line-height: 1.1 !important;
 }
@@ -2264,14 +2347,15 @@
    - Badges are compact (fit text)
    - Local Time stays below badges (profileSub)
    ========================================================= */
-#soApp #profileView .profileTitle{ gap:4px; }
-#soApp #profileView .badgeRow{
+#profileView .profileTitle{ gap:4px; }
+#profileView .badgeRow{
   display:flex;
   align-items:center;
   gap:6px;
   flex-wrap:nowrap;
 }
-#soApp #profileView .specialOneBadge, #soApp #profileView .favBadge{
+#profileView .specialOneBadge,
+#profileView .favBadge{
   margin-top:0 !important;
   margin-left:0 !important;
   width:auto !important;
@@ -2286,11 +2370,11 @@
 }
 
 /* show rules */
-#soApp #profileView.isSpecialProfile .specialOneBadge{ display:inline-flex; }
-#soApp #profileView.isFavProfile .favBadge{ display:inline-flex; }
+#profileView.isSpecialProfile .specialOneBadge{ display:inline-flex; }
+#profileView.isFavProfile .favBadge{ display:inline-flex; }
 
 /* Special styling */
-#soApp #profileView .specialOneBadge{
+#profileView .specialOneBadge{
   border:1px solid rgba(80,240,230,.35);
   background: rgba(10,18,22,.55);
   color: rgba(200,255,250,.98);
@@ -2298,7 +2382,7 @@
   font-weight:600;
 }
 /* Favorite styling */
-#soApp #profileView .favBadge{
+#profileView .favBadge{
   border:1px solid rgba(255,215,140,.22);
   background: rgba(255,215,140,.10);
   color: rgba(255,235,190,.95);
@@ -2314,22 +2398,22 @@
    ========================================================= */
 
 /* Default: hide both */
-#soApp #profileView .favBadge{ display:none !important; }
-#soApp #profileView .specialBadge{ display:none !important; }
+#profileView .favBadge{ display:none !important; }
+#profileView .specialBadge{ display:none !important; }
 
 /* Show when flags are present */
-#soApp #profileView.isFavProfile .favBadge{ display:inline-flex !important; }
-#soApp #profileView.isSpecialProfile .specialBadge{ display:inline-flex !important; }
+#profileView.isFavProfile .favBadge{ display:inline-flex !important; }
+#profileView.isSpecialProfile .specialBadge{ display:inline-flex !important; }
 
 
 /* Notes category tabs */
-#soApp .notesTabs{
+.notesTabs{
   display:flex;
   gap:8px;
   flex-wrap:wrap;
   margin:8px 0 8px;
 }
-#soApp .notesTabs .tabBtn{
+.notesTabs .tabBtn{
   border:1px solid rgba(255,255,255,0.14);
   background: rgba(255,255,255,0.06);
   color: var(--text);
@@ -2339,55 +2423,55 @@
   font-size:12px;
   line-height:1;
 }
-#soApp .notesTabs .tabBtn.active{
+.notesTabs .tabBtn.active{
   background: rgba(56,189,248,0.18);
   border-color: rgba(56,189,248,0.35);
   box-shadow: 0 0 0 1px rgba(56,189,248,0.10), 0 0 18px rgba(56,189,248,0.12);
 }
-#soApp .notesPanel{
+.notesPanel{
   min-height: 92px;
 }
 
 /* Cycle tracker (local-only) */
-#soApp .cyclePanel{
+.cyclePanel{
   min-height: 280px;
   padding:12px;
   border:1px solid rgba(255,255,255,0.14);
   border-radius:14px;
   background: rgba(255,255,255,0.04);
 }
-#soApp .cycleGrid{ display:flex; flex-direction:column; gap:10px; }
-#soApp .cycleRow{
+.cycleGrid{ display:flex; flex-direction:column; gap:10px; }
+.cycleRow{
   display:grid;
   grid-template-columns: 1fr 1fr;
   gap:10px;
 }
 @media (max-width: 520px){
-  #soApp .cycleRow{ grid-template-columns: 1fr; }
+  .cycleRow{ grid-template-columns: 1fr; }
 }
-#soApp .miniLabel{
+.miniLabel{
   font-size:12px;
   opacity:.86;
   margin-bottom:6px;
 }
-#soApp .cycleActions{
+.cycleActions{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
   align-items:center;
 }
-#soApp .cycleHint{
+.cycleHint{
   font-size:12px;
   opacity:.86;
   line-height:1.35;
 }
-#soApp .cycleLegend{
+.cycleLegend{
   display:inline-flex;
   gap:8px;
   flex-wrap:wrap;
   margin-left:8px;
 }
-#soApp .cycleLegend .leg{
+.cycleLegend .leg{
   display:inline-flex;
   gap:6px;
   align-items:center;
@@ -2396,26 +2480,26 @@
   border:1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.04);
 }
-#soApp .cycleLegend .legPeriod{ box-shadow: 0 0 0 1px rgba(255,80,120,0.15), 0 0 16px rgba(255,80,120,0.10); }
-#soApp .cycleLegend .legPred{ box-shadow: 0 0 0 1px rgba(255,80,120,0.10), 0 0 16px rgba(255,80,120,0.06); opacity:.9; }
-#soApp .cycleLegend .legFert{ box-shadow: 0 0 0 1px rgba(16,185,129,0.14), 0 0 16px rgba(16,185,129,0.08); }
-#soApp .cycleLegend .legOvu{ box-shadow: 0 0 0 1px rgba(251,191,36,0.14), 0 0 16px rgba(251,191,36,0.08); }
+.cycleLegend .legPeriod{ box-shadow: 0 0 0 1px rgba(255,80,120,0.15), 0 0 16px rgba(255,80,120,0.10); }
+.cycleLegend .legPred{ box-shadow: 0 0 0 1px rgba(255,80,120,0.10), 0 0 16px rgba(255,80,120,0.06); opacity:.9; }
+.cycleLegend .legFert{ box-shadow: 0 0 0 1px rgba(16,185,129,0.14), 0 0 16px rgba(16,185,129,0.08); }
+.cycleLegend .legOvu{ box-shadow: 0 0 0 1px rgba(251,191,36,0.14), 0 0 16px rgba(251,191,36,0.08); }
 
-#soApp .cycleSummary{
+.cycleSummary{
   font-size:12px;
   padding:10px 12px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.10);
   background: rgba(0,0,0,0.18);
 }
-#soApp .cycleSummary b{ font-weight:700; }
+.cycleSummary b{ font-weight:700; }
 
-#soApp .cycleList{
+.cycleList{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
 }
-#soApp .cycleChip{
+.cycleChip{
   display:inline-flex;
   gap:8px;
   align-items:center;
@@ -2425,35 +2509,35 @@
   background: rgba(255,255,255,0.04);
   font-size:12px;
 }
-#soApp .cycleChip .x{
+.cycleChip .x{
   cursor:pointer;
   padding:2px 6px;
   border-radius:10px;
   border:1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.04);
 }
-#soApp .cycleChip .x:hover{ background: rgba(255,255,255,0.08); }
+.cycleChip .x:hover{ background: rgba(255,255,255,0.08); }
 
-#soApp .cycleCalWrap{
+.cycleCalWrap{
   border:1px solid rgba(255,255,255,0.10);
   border-radius:14px;
   padding:10px;
   background: rgba(0,0,0,0.12);
 }
-#soApp .cycleCalHdr{
+.cycleCalHdr{
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:10px;
   margin-bottom:8px;
 }
-#soApp .cycleMonthLabel{
+.cycleMonthLabel{
   font-weight:700;
   letter-spacing:.3px;
   font-size:13px;
   opacity:.95;
 }
-#soApp .cycleWeekdays{
+.cycleWeekdays{
   display:grid;
   grid-template-columns: repeat(7, 1fr);
   gap:6px;
@@ -2462,12 +2546,12 @@
   margin-bottom:6px;
   text-align:center;
 }
-#soApp .cycleCal{
+.cycleCal{
   display:grid;
   grid-template-columns: repeat(7, 1fr);
   gap:6px;
 }
-#soApp .cDay{
+.cDay{
   position:relative;
   min-height:34px;
   border-radius:12px;
@@ -2480,45 +2564,45 @@
   cursor:pointer;
   user-select:none;
 }
-#soApp .cDay.off{
+.cDay.off{
   opacity:.45;
   background: rgba(255,255,255,0.02);
 }
-#soApp .cDay.today{
+.cDay.today{
   box-shadow: 0 0 0 2px rgba(56,189,248,0.18), 0 0 18px rgba(56,189,248,0.12);
 }
-#soApp .cDay.period{
+.cDay.period{
   border-color: rgba(255,80,120,0.35);
   background: rgba(255,80,120,0.14);
   box-shadow: 0 0 0 1px rgba(255,80,120,0.10), 0 0 18px rgba(255,80,120,0.10);
 }
-#soApp .cDay.pred{
+.cDay.pred{
   border-color: rgba(255,80,120,0.22);
   background: rgba(255,80,120,0.08);
 }
-#soApp .cDay.fert{
+.cDay.fert{
   border-color: rgba(16,185,129,0.26);
   background: rgba(16,185,129,0.10);
   box-shadow: 0 0 0 1px rgba(16,185,129,0.08), 0 0 18px rgba(16,185,129,0.08);
 }
-#soApp .cDay.ov{
+.cDay.ov{
   border-color: rgba(251,191,36,0.30);
   background: rgba(251,191,36,0.12);
 }
-#soApp .cDay.sel{
+.cDay.sel{
   outline: 2px solid rgba(56,189,248,0.35);
 }
 
-#soApp .hidden{ display:none !important; }
+.hidden{ display:none !important; }
 
 /* Favorite Colors input */
-#soApp .colorInputRow{
+.colorInputRow{
   display:flex;
   gap:10px;
   align-items:center;
 }
-#soApp .smallBtn{ padding:8px 12px; font-size:12px; border-radius:10px; }
-#soApp .favColorsPills{
+.smallBtn{ padding:8px 12px; font-size:12px; border-radius:10px; }
+.favColorsPills{
   display:flex;
   flex-wrap:wrap;
   gap:10px;
@@ -2526,7 +2610,7 @@
 }
 
 /* Liquid rain-glass color pills (readable) */
-#soApp .colorPillGlass{
+.colorPillGlass{
   --c: 95,140,255;
   --a: 0.42;
   --g: 0.95;
@@ -2562,7 +2646,7 @@
   -webkit-backdrop-filter: blur(14px) saturate(155%);
   backdrop-filter: blur(14px) saturate(155%);
 }
-#soApp .colorPillGlass::before{
+.colorPillGlass::before{
   content:"";
   position:absolute;
   top:-18%;
@@ -2579,7 +2663,7 @@
   opacity:0.60;
   pointer-events:none;
 }
-#soApp .colorPillGlass::after{
+.colorPillGlass::after{
   content:"";
   position:absolute;
   inset:-7px;
@@ -2591,7 +2675,7 @@
   opacity: var(--g);
   z-index:-1;
 }
-#soApp .colorPillGlass .drops{
+.colorPillGlass .drops{
   position:absolute;
   inset:-2px;
   pointer-events:none;
@@ -2608,23 +2692,23 @@
     radial-gradient(circle at 92% 30%, rgba(255,255,255,0.48) 0 1.3px, rgba(255,255,255,0.10) 2.6px, rgba(255,255,255,0) 6.2px);
   filter: blur(0.15px);
 }
-#soApp .colorPillGlass .x{
+.colorPillGlass .x{
   opacity:0.85;
   margin-left:10px;
   font-weight:900;
   cursor:pointer;
 }
-#soApp .colorPillGlass .x:hover{ opacity:1; }
+.colorPillGlass .x:hover{ opacity:1; }
 
 
-#soApp .notesPanelBox{
+.notesPanelBox{
   padding:8px 10px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.05);
   white-space: pre-wrap;
 }
-#soApp .favColorsInline{
+.favColorsInline{
   display:flex;
   flex-wrap:wrap;
   gap:10px;
@@ -2636,25 +2720,25 @@
    MOBILE PACK (Handy Optimierung)
    ============================= */
 @media (max-width: 560px){
-  #soApp header{
+  header{
     padding: 14px 12px 8px;
     flex-wrap: wrap;
     gap: 10px;
     align-items: flex-start;
   }
-  #soApp .wrap{
+  .wrap{
     padding: 0 12px 12px;
     gap: 12px;
   }
-  #soApp #map{ height: 48vh; min-height: 340px; }
-  #soApp .list{ max-height: 46vh; }
-  #soApp .item{
+  #map{ height: 48vh; min-height: 340px; }
+  .list{ max-height: 46vh; }
+  .item{
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
   }
-  #soApp .actions{ justify-content: flex-start; }
-  #soApp .nick{
+  .actions{ justify-content: flex-start; }
+  .nick{
     white-space: normal;
     overflow: hidden;
     text-overflow: clip;
@@ -2662,31 +2746,33 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
   }
-  #soApp .infoBlock{
+  .infoBlock{
     white-space: normal;
     line-height: 1.25;
   }
-  #soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
+  #profileView .badgeRow,
+  #profileView .badges,
+  #profileView .tagRow{
     flex-wrap: wrap !important;
     row-gap: 6px;
   }
-  #soApp .notesTabs{
+  .notesTabs{
     margin: 6px 0 6px;
     gap: 6px;
   }
-  #soApp .notesTabs .tabBtn{
+  .notesTabs .tabBtn{
     padding: 8px 10px;
   }
-  #soApp .colorInputRow{
+  .colorInputRow{
     flex-direction: column;
     align-items: stretch;
   }
-  #soApp .smallBtn{ width: 100%; }
+  .smallBtn{ width: 100%; }
 }
 @media (max-width: 380px){
-  #soApp #map{ height: 44vh; min-height: 320px; }
-  #soApp .list{ max-height: 44vh; }
-  #soApp .item{ padding: 12px 12px; }
+  #map{ height: 44vh; min-height: 320px; }
+  .list{ max-height: 44vh; }
+  .item{ padding: 12px 12px; }
 }
 
 
@@ -2696,29 +2782,29 @@
    ============================= */
 @media (max-width: 560px){
   /* Formular-Card angenehmer und “appiger” */
-  #soApp .panel{
+  .panel{
     padding: 14px;
   }
 
   /* Felder untereinander, mehr Luft */
-  #soApp .row{
+  .row{
     flex-direction: column;
     gap: 12px;
   }
 
   /* iOS/Android: 16px verhindert Auto-Zoom beim Tippen */
-  #soApp input, #soApp textarea, #soApp select{
+  input, textarea, select{
     font-size: 16px;
     padding: 12px 12px;
     border-radius: 14px;
   }
 
-  #soApp textarea{
+  textarea{
     min-height: 140px;
   }
 
   /* Buttons immer griffbereit (sticky) */
-  #soApp .btns{
+  .btns{
     position: sticky;
     bottom: 10px;
     z-index: 25;
@@ -2732,22 +2818,22 @@
     gap: 10px;
   }
   /* Save prominent */
-  #soApp #saveBtn{
+  #saveBtn{
     grid-column: 1 / -1;
   }
-  #soApp .btns button{
+  .btns button{
     width: 100%;
     justify-content: center;
   }
 
   /* Notes Tabs: horizontal scroll statt quetschen */
-  #soApp .notesTabs{
+  .notesTabs{
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 4px;
   }
-  #soApp .notesTabs::-webkit-scrollbar{ height: 6px; }
+  .notesTabs::-webkit-scrollbar{ height: 6px; }
 }
 
 
@@ -2756,48 +2842,51 @@
    Makes the top edit area cleaner & easier on phones
    ============================= */
 @media (max-width: 560px){
-  #soApp header{ padding: 12px 12px 10px !important; }
-  #soApp .hdrRight{ width:100%; text-align:left; }
-  #soApp .hdrRight .hdrTitle{ display:none !important; }
-  #soApp .hdrSub{ font-size:12px !important; opacity:.9; line-height:1.25; }
+  header{ padding: 12px 12px 10px !important; }
+  .hdrRight{ width:100%; text-align:left; }
+  .hdrRight .hdrTitle{ display:none !important; }
+  .hdrSub{ font-size:12px !important; opacity:.9; line-height:1.25; }
 
-  #soApp .panel{ padding: 14px 12px !important; }
-  #soApp .panel .row{
+  .panel{ padding: 14px 12px !important; }
+  .panel .row{
     display: grid !important;
     grid-template-columns: 1fr !important;
     gap: 12px !important;
     margin-bottom: 12px !important;
   }
-  #soApp .panel .row:first-of-type{ grid-template-columns: 1fr !important; }
+  .panel .row:first-of-type{ grid-template-columns: 1fr !important; }
 
-  #soApp .panel label{
+  .panel label{
     font-size: 12px !important;
     letter-spacing: .2px;
     margin-bottom: 6px !important;
     opacity: .92;
   }
-  #soApp .panel input, #soApp .panel select, #soApp .panel textarea{
+  .panel input,
+  .panel select,
+  .panel textarea{
     width: 100%;
     font-size: 16px !important;
     padding: 12px 14px !important;
     border-radius: 14px !important;
   }
-  #soApp input[type="date"]{ min-height: 46px; }
+  input[type="date"]{ min-height: 46px; }
 
-  #soApp .hint, #soApp .bdayCountdown{
+  .hint, .bdayCountdown{
     font-size: 12px !important;
     line-height: 1.25;
     margin-top: 6px !important;
   }
 
-  #soApp .panel .row .smallBtn, #soApp .panel .row button.smallBtn{
+  .panel .row .smallBtn,
+  .panel .row button.smallBtn{
     width: 100% !important;
   }
 }
 
 @media (max-width: 380px){
-  #soApp .panel{ padding: 12px 10px !important; }
-  #soApp .panel input, #soApp .panel select, #soApp .panel textarea{ padding: 11px 12px !important; }
+  .panel{ padding: 12px 10px !important; }
+  .panel input, .panel select, .panel textarea{ padding: 11px 12px !important; }
 }
 
 
@@ -2805,19 +2894,19 @@
    MOBILE MAP POPUP TUNING
    ============================= */
 @media (max-width: 560px){
-  #soApp .leaflet-popup-content-wrapper{
+  .leaflet-popup-content-wrapper{
     max-width: 260px;
     padding: 8px;
   }
-  #soApp .leaflet-popup-content{
+  .leaflet-popup-content{
     margin: 6px;
     font-size: 13px;
     line-height: 1.25;
   }
-  #soApp .popup-image-wrap{
+  .popup-image-wrap{
     position: relative;
   }
-  #soApp .popup-card-btn{
+  .popup-card-btn{
     position: absolute;
     right: 6px;
     bottom: 6px;
@@ -2832,7 +2921,7 @@
     justify-content: center;
     cursor: pointer;
   }
-  #soApp .popup-card-btn:hover{
+  .popup-card-btn:hover{
     background: rgba(30,30,36,0.9);
   }
 }
@@ -2843,13 +2932,13 @@
    ============================= */
 
 /* Color pills (Map + Profile) a bit smaller */
-#soApp .colorPillGlass{
+.colorPillGlass{
   padding: 8px 12px !important;
   font-size: 11px !important;
   font-weight: 800;
   letter-spacing: 0.2px;
 }
-#soApp .colorPillGlass .xBtn{
+.colorPillGlass .xBtn{
   width: 18px !important;
   height: 18px !important;
   margin-left: 8px !important;
@@ -2859,10 +2948,10 @@
 }
 
 /* Notes tabs: more "segmented / glass" and nicer on mobile */
-#soApp .notesTabs{
+.notesTabs{
   gap: 6px !important;
 }
-#soApp .notesTabs .tabBtn{
+.notesTabs .tabBtn{
   padding: 7px 10px !important;
   font-size: 12px !important;
   border-radius: 999px !important;
@@ -2872,10 +2961,10 @@
   backdrop-filter: blur(8px);
   transition: transform .12s ease, background .12s ease, border-color .12s ease;
 }
-#soApp .notesTabs .tabBtn:active{
+.notesTabs .tabBtn:active{
   transform: scale(0.98);
 }
-#soApp .notesTabs .tabBtn.active{
+.notesTabs .tabBtn.active{
   background: rgba(56,189,248,0.20) !important;
   border-color: rgba(56,189,248,0.40) !important;
   box-shadow: 0 10px 26px rgba(56,189,248,0.12), 0 10px 24px rgba(0,0,0,0.22);
@@ -2883,15 +2972,15 @@
 
 /* Mobile: tabs scroll horizontally instead of wrapping into ugly multi-lines */
 @media (max-width: 560px){
-  #soApp .notesTabs{
+  .notesTabs{
     flex-wrap: nowrap !important;
     overflow-x: auto;
     padding-bottom: 6px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none; /* Firefox */
   }
-  #soApp .notesTabs::-webkit-scrollbar{ display:none; } /* Chrome/Safari */
-  #soApp .notesTabs .tabBtn{
+  .notesTabs::-webkit-scrollbar{ display:none; } /* Chrome/Safari */
+  .notesTabs .tabBtn{
     flex: 0 0 auto;
     white-space: nowrap;
   }
@@ -2903,35 +2992,35 @@
    ============================= */
 
 /* Always include padding/border in width calculations */
-#soApp *, #soApp *::before, #soApp *::after{ box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; }
 
 /* Avoid horizontal scrolling */
-#soApp, #soApp{ overflow-x: hidden; }
-#soApp .wrap, #soApp main, #soApp header, #soApp .panel, #soApp .list, #soApp #profileView{ max-width: 100%; }
+html, body { overflow-x: hidden; }
+.wrap, main, header, .panel, .list, #profileView { max-width: 100%; }
 
 /* Ensure all images / cards never exceed container */
-#soApp img, #soApp video, #soApp canvas, #soApp svg{ max-width: 100%; height: auto; }
+img, video, canvas, svg { max-width: 100%; height: auto; }
 
 /* Wrap long text gracefully */
-#soApp .nick, #soApp .infoBlock, #soApp .meta, #soApp .metaLine, #soApp .small, #soApp .statLine, #soApp .notePreview, #soApp .popup *{
+.nick, .infoBlock, .meta, .metaLine, .small, .statLine, .notePreview, .popup *{
   overflow-wrap: anywhere;
   word-break: break-word;
 }
 
 /* Buttons/rows: allow wrapping instead of pushing layout wider */
-#soApp .actions, #soApp .badgeRow, #soApp .badges, #soApp .tagRow, #soApp .pillRow, #soApp .notesTabs{
+.actions, .badgeRow, .badges, .tagRow, .pillRow, .notesTabs{
   max-width: 100%;
 }
 
 /* Some flex rows may force overflow; allow wrap on narrow screens */
 @media (max-width: 560px){
-  #soApp .row{ flex-wrap: wrap !important; }
-  #soApp .row > *{ min-width: 0; } /* critical for flex text overflow */
-  #soApp .actions{ flex-wrap: wrap; gap: 8px; }
-  #soApp .actions > *{ min-width: 0; }
+  .row{ flex-wrap: wrap !important; }
+  .row > *{ min-width: 0; } /* critical for flex text overflow */
+  .actions{ flex-wrap: wrap; gap: 8px; }
+  .actions > *{ min-width: 0; }
 
   /* Inputs: full width, no weird min widths */
-  #soApp input, #soApp select, #soApp textarea{
+  input, select, textarea{
     max-width: 100%;
     width: 100%;
     min-width: 0;
@@ -2945,10 +3034,10 @@
 @media (max-width: 560px){
 
   /* Cards should not clip inner content/shadows on mobile */
-  #soApp .card{ overflow: visible !important; }
+  .card{ overflow: visible !important; }
 
   /* Zodiac line in editor: allow wrapping + slightly smaller */
-  #soApp #zodiacLine{
+  #zodiacLine{
     display:block;
     white-space: normal !important;
     overflow: visible !important;
@@ -2958,7 +3047,7 @@
   }
 
   /* Profile cards value lines: wrap instead of overflowing */
-  #soApp #profileView .profileCard .v{
+  #profileView .profileCard .v{
     white-space: normal !important;
     overflow: visible !important;
     text-overflow: clip !important;
@@ -2970,12 +3059,12 @@
   }
 
   /* Notes tabs: keep inside the card, no clipping at right edge */
-  #soApp .notesTabs{
+  .notesTabs{
     padding-right: 10px;
   }
 
   /* Buttons inside rows shouldn't force width */
-  #soApp .notesTabs .tabBtn{
+  .notesTabs .tabBtn{
     max-width: 100%;
   }
 }
@@ -2986,26 +3075,26 @@
    - reserve scrollbar gutter to prevent width jump
    - kill any hidden overflow widths on mobile
    ============================= */
-#soApp{
+html{
   scrollbar-gutter: stable both-edges; /* Firefox/Chromium: prevents width jump */
 }
-#soApp{
+body{
   overflow-y: scroll; /* always reserve vertical scrollbar space */
 }
 
 /* Safety: nothing in views should exceed viewport */
-#soApp #listView, #soApp #profileView, #soApp #mapView, #soApp .wrap, #soApp main, #soApp header{
+#listView, #profileView, #mapView, .wrap, main, header{
   width: 100%;
   max-width: 100%;
 }
 
 /* Leaflet popup / dist info must not enforce min-width on mobile */
 @media (max-width: 560px){
-  #soApp .leaflet-popup-content{
+  .leaflet-popup-content{
     min-width: 0 !important;
     max-width: 260px !important;
   }
-  #soApp .distInfo{
+  .distInfo{
     min-width: 0 !important;
     max-width: 100% !important;
   }
@@ -3017,19 +3106,19 @@
    ============================= */
 
 /* Do NOT reserve both edges (causes big right gutter when scrollbar appears) */
-#soApp{ scrollbar-gutter: stable; }
+html{ scrollbar-gutter: stable; }
 
 /* Mobile: avoid nested scroll container in #profileView that triggers width recalculation */
 @media (max-width: 560px){
-  #soApp #profileView{
+  #profileView{
     overflow: visible !important;
     height: auto !important;
     max-width: 100%;
   }
-  #soApp #mapView{
+  #mapView{
     height: auto !important;
   }
-  #soApp .rightView{
+  .rightView{
     height: auto !important;
     overflow: visible !important;
   }
@@ -3042,7 +3131,12 @@
 @media (max-width: 560px){
 
   /* Allow long info/zodiac strings to wrap instead of forcing wider layout */
-  #soApp .infoBlock, #soApp .zodiacItem, #soApp #zodiacLine, #soApp #profileView .profileTitle, #soApp #profileView .profileTitle b, #soApp #profileView .profileCard .v{
+  .infoBlock,
+  .zodiacItem,
+  #zodiacLine,
+  #profileView .profileTitle,
+  #profileView .profileTitle b,
+  #profileView .profileCard .v{
     white-space: normal !important;
     overflow-wrap: anywhere !important;
     word-break: break-word !important;
@@ -3051,11 +3145,14 @@
   }
 
   /* Badges: prevent them from pushing width; keep single line with ellipsis if needed */
-  #soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
+  #profileView .badgeRow,
+  #profileView .badges,
+  #profileView .tagRow{
     min-width: 0 !important;
     max-width: 100% !important;
   }
-  #soApp #profileView .specialOneBadge, #soApp #profileView .favBadge{
+  #profileView .specialOneBadge,
+  #profileView .favBadge{
     max-width: 100% !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
@@ -3063,7 +3160,7 @@
   }
 
   /* As a final safety net: no element may exceed viewport width */
-  #soApp #profileView *{
+  #profileView *{
     max-width: 100%;
   }
 }
@@ -3077,40 +3174,42 @@
 @media (max-width: 560px){
 
   /* Revert card overflow to avoid horizontal scroll from glows */
-  #soApp .card, #soApp .panel, #soApp .profileCard, #soApp #profileView{
+  .card,
+  .panel,
+  .profileCard,
+  #profileView{
     overflow: hidden !important;
   }
 
   /* Keep notes tabs inside the card without needing overflow:visible */
-  #soApp .notesTabs{
+  .notesTabs{
     padding-right: 14px !important;
   }
 
   /* Ensure inner content doesn't sit flush to the edge */
-  #soApp .card .sectionTitle, #soApp .card .row, #soApp .card .notesTabs, #soApp .card .pillRow{
+  .card .sectionTitle,
+  .card .row,
+  .card .notesTabs,
+  .card .pillRow{
     max-width: 100%;
   }
 }
 
-
-
-/* --- Site integration overrides (prevents affecting global layout) --- */
-#soApp{height:auto; min-height:0;}
-#soApp .wrap{height:auto;}
-
 </style>
-<section id="soApp" class="soApp">
+</head>
+
+<body>
 <header>
   <div class="brand">
     <div>
-      <h1>Social Organizer</h1>
-      <div class="sub">by Silituz</div>
+      <h1>{{ page.so_title }}</h1>
+      <div class="sub">{{ page.so_sub }}</div>
     </div>
   </div>
 
   <div class="hdrRight">
-    <div class="hdrTitle"><span class="stats-title">- Stats -</span></div>
-    <div class="hdrSub" id="statsText">People: 0 · Countries: 0 · Longest bond: —</div>
+    <div class="hdrTitle"><span class="stats-title">{{ page.t_stats_title }}</span></div>
+    <div class="hdrSub" id="statsText">{{ page.t_stats_initial }}</div>
   </div>
 </header>
 
@@ -3120,16 +3219,16 @@
 
       <div class="row">
         <div>
-          <label>Nickname *</label>
-          <input id="nickname" placeholder="e.g. Sun / Polina / ..." />
+          <label>{{ page.t_lbl_nickname }}</label>
+          <input id="nickname" placeholder="{{ page.t_ph_nickname }}" />
         </div>
         <div>
-          <label>Birthdate (optional)</label>
+          <label>{{ page.t_lbl_birthdate }}</label>
           <input id="birthdate" type="date" />
           <div id="bdayCountdown" class="bdayCountdown"></div>
           <div class="zodiacBox">
             <div class="zodiacItem">
-              <span id="zodiacLine">Zodiac: — | Chinese Element: — | Chinese Zodiac: —</span>
+              <span id="zodiacLine">{{ page.t_zodiac_line_initial }}</span>
             </div>
           </div>
         </div>
@@ -3137,11 +3236,11 @@
 
       <div class="row">
         <div>
-          <label>Birthplace (optional)</label>
-          <input id="birthplace" placeholder="e.g. Warsaw, Poland" />
+          <label>{{ page.t_lbl_birthplace }}</label>
+          <input id="birthplace" placeholder="{{ page.t_ph_birthplace }}" />
         </div>
         <div>
-          <label>Met on (date, optional)</label>
+          <label>{{ page.t_lbl_met_on }}</label>
 <input id="metOn" type="date" />
           <div id="metKnownForLine" class="bdayCountdown"></div>
 </div>
@@ -3149,34 +3248,34 @@
 
       <div class="row">
         <div>
-          <label>Current address (optional)</label>
-          <input id="currentAddress" placeholder="e.g. Los Angeles, CA" />
-          <div class="hint">Used for coordinates (auto-geocode) if coordinates are empty.</div>
+          <label>{{ page.t_lbl_current_address }}</label>
+          <input id="currentAddress" placeholder="{{ page.t_ph_current_address }}" />
+          <div class="hint">{{ page.t_hint_autogeocode }}</div>
         </div>
         <div>
-          <label>Timezone (IANA) *</label>
-          <input id="timezone" placeholder="e.g. America/Los_Angeles" list="tzlist" />
+          <label>{{ page.t_lbl_timezone }}</label>
+          <input id="timezone" placeholder="{{ page.t_ph_timezone }}" list="tzlist" />
           <datalist id="tzlist"></datalist>
-          <div class="hint">Examples: <span class="kbd">Europe/Berlin</span>, <span class="kbd">America/Los_Angeles</span>, <span class="kbd">Asia/Tokyo</span></div>
+          <div class="hint">{{ page.t_hint_timezone_examples }}</div>
         </div>
       </div>
 
       <div class="row">
         <div>
-          <label>Native language (optional)</label>
-          <input id="nativeLang" placeholder="e.g. Spanish" />
+          <label>{{ page.t_lbl_native_lang }}</label>
+          <input id="nativeLang" placeholder="{{ page.t_ph_native_lang }}" />
         </div>
         <div>
-          <label>Other languages (optional)</label>
-          <input id="otherLangs" placeholder="e.g. English, Russian" />
+          <label>{{ page.t_lbl_other_langs }}</label>
+          <input id="otherLangs" placeholder="{{ page.t_ph_other_langs }}" />
         </div>
       </div>
 
       <div class="row">
         <div>
-          <label>Image (upload, optional)</label>
+          <label>{{ page.t_lbl_image }}</label>
           <input id="imageFile" type="file" accept="image/*" />
-          <div class="hint">Stored locally (compressed). No external hosting needed.</div>
+          <div class="hint">{{ page.t_hint_image_storage }}</div>
           <div class="preview" id="imgPreview" style="display:none">
             <img id="imgPreviewEl" alt="Preview"/>
             <div class="hint" id="imgPreviewText">—</div>
@@ -3269,44 +3368,44 @@
 
       <div class="row">
         <div>
-          <label>Favorite Colors</label>
+          <label>{{ page.t_lbl_fav_colors }}</label>
           <div class="colorInputRow">
-            <input id="favColorInput" type="text" placeholder="Add a color (e.g. turquoise, gold, #ff8800)" />
-            <button id="addFavColorBtn" type="button" class="secondary smallBtn">Add</button>
+            <input id="favColorInput" type="text" placeholder="{{ page.t_ph_add_color }}" />
+            <button id="addFavColorBtn" type="button" class="secondary smallBtn">{{ page.t_btn_add }}</button>
           </div>
           <div id="favColorsPills" class="favColorsPills"></div>
-          <div class="hint">Up to 6 colors.</div>
+          <div class="hint">{{ page.t_hint_colors_limit }}</div>
         </div>
       </div>
 
       <div class="btns">
-        <button id="saveBtn">Save / Set marker</button>
-        <button id="newBtn" class="secondary">New</button>
-        <button id="deleteBtn" class="danger" disabled>Delete</button>
-        <button id="removeImgBtn" class="secondary" title="Remove image from entry">Remove image</button>
+        <button id="saveBtn">{{ page.t_btn_save }}</button>
+        <button id="newBtn" class="secondary">{{ page.t_btn_new }}</button>
+        <button id="deleteBtn" class="danger" disabled>{{ page.t_btn_delete }}</button>
+        <button id="removeImgBtn" class="secondary" title="{{ page.t_tt_remove_image }}">{{ page.t_btn_remove_image }}</button>
       </div>
 
       <div class="hr"></div>
 
       <div class="hint">
-        • Current address can be auto-geocoded via OpenStreetMap (Nominatim).<br>
-        • Everything is stored in <b>localStorage</b> in this browser. Use Export/Import to move data to another device.
+        • {{ page.t_hint_osm_line1 }}<br>
+        • {{ page.t_hint_localstorage_line2 }}
       </div>
     </div>
 
       <div class="searchBar">
-    <input id="search" placeholder="Search (name, notes, dates, timezone…)" />
+    <input id="search" placeholder="{{ page.t_ph_search }}" />
   </div>
 
 
   <div class="filterBar" id="filterBar" aria-label="List filters">
-    <button class="fChip active" data-filter="all" type="button">All</button>
-    <button class="fChip" data-filter="fav" type="button">⭐ Favorites</button>
-    <button class="fChip" data-filter="now" type="button">💚 Now</button>
-    <button class="fChip" data-filter="maybe" type="button">💛 Maybe</button>
-    <button class="fChip" data-filter="sleep" type="button">❤️ Sleeping</button>
-    <button class="fChip" data-filter="bday" type="button">🎂 Birthday</button>
-    <button class="fChip" data-filter="friend" type="button">🎈 Bond</button>
+    <button class="fChip active" data-filter="all" type="button">{{ page.t_filter_all }}</button>
+    <button class="fChip" data-filter="fav" type="button">⭐ {{ page.t_filter_fav }}</button>
+    <button class="fChip" data-filter="now" type="button">💚 {{ page.t_filter_now }}</button>
+    <button class="fChip" data-filter="maybe" type="button">💛 {{ page.t_filter_maybe }}</button>
+    <button class="fChip" data-filter="sleep" type="button">❤️ {{ page.t_filter_sleep }}</button>
+    <button class="fChip" data-filter="bday" type="button">🎂 {{ page.t_filter_bday }}</button>
+    <button class="fChip" data-filter="friend" type="button">🎈 {{ page.t_filter_friendship }}</button>
   </div>
 
 <!-- Alphabet helper (A–Z) -->
@@ -3317,25 +3416,25 @@
     <div class="footer-tools">
       <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
         <div class="btns">
-          <button id="exportBtn" class="secondary">Export JSON</button>
-          <button id="importBtn" class="secondary">Import JSON (file)</button>
-          <button id="clusterToggleBtn" class="secondary">🧷 Cluster: On</button>
+          <button id="exportBtn" class="secondary">{{ page.t_btn_export }}</button>
+          <button id="importBtn" class="secondary">{{ page.t_btn_import }}</button>
+          <button id="clusterToggleBtn" class="secondary">🧷 {{ page.t_btn_cluster_on }}</button>
           
-          <button id="myLocBtn" class="secondary" title="Show my current location marker">📍 My location</button>
-          <button id="clearAllBtn" class="danger">Delete all</button>
+          <button id="myLocBtn" class="secondary" title="{{ page.t_tt_my_location }}">📍 {{ page.t_btn_my_location }}</button>
+          <button id="clearAllBtn" class="danger">{{ page.t_btn_delete_all }}</button>
         </div>
 
         <div class="toggleRow">
           <input id="mergeImport" type="checkbox" />
           <label for="mergeImport" style="margin:0; cursor:pointer;">
-            Merge on import (recommended if you already have entries here)
+            {{ page.t_toggle_merge }}
           </label>
         </div>
 
         <div class="toggleRow">
           <input id="notesLock" type="checkbox" />
           <label for="notesLock" style="margin:0; cursor:pointer;">
-            🔒 Hide notes (safe for screenshots)
+            🔒 {{ page.t_toggle_hide_notes }}
           </label>
         </div>
 </div>
@@ -3355,14 +3454,14 @@
         <div class="profileTitle">
           <b id="profileName">—</b>
           <div class="badgeRow">
-            <div class="specialOneBadge">♾️ My Special One</div>
-            <div class="favBadge">⭐ Favorite</div>
+            <div class="specialOneBadge">♾️ {{ page.t_badge_special }}</div>
+            <div class="favBadge">⭐ {{ page.t_badge_favorite }}</div>
           </div>
           <span id="profileSub">—</span>
         </div>
         <div class="btns" style="gap:8px; justify-content:flex-end;">
-          <button id="profileBack" class="secondary" title="Back to map">🗺️ Map</button>
-          <button id="profileEdit" class="secondary" title="Load into form">✏️ Edit</button>
+          <button id="profileBack" class="secondary" title="{{ page.t_tt_back_to_map }}">🗺️ {{ page.t_btn_map }}</button>
+          <button id="profileEdit" class="secondary" title="{{ page.t_tt_edit }}">✏️ {{ page.t_btn_edit }}</button>
           <button id="profilePin" class="secondary" title="Center on map">📍</button>
         </div>
       </div>
@@ -3393,520 +3492,11 @@
   let notesHidden = (localStorage.getItem(NOTES_LOCK_KEY) === "1");
   const $ = (id) => document.getElementById(id);
 
-  // ==============================
-  // i18n (DE/EN)
-  // ==============================
-  const LANG = (document.documentElement.lang || "de").toLowerCase().startsWith("en") ? "en" : "de";
-  const LOCALE = (LANG === "de") ? "de-DE" : "en-US";
-
-  const I18N = {
-    en: {
-      appTitle: "Social Organizer",
-      byline: "by Silituz",
-      statsTitle: "- Stats -",
-      statsLine: "People: {people} · Countries: {countries} · Longest bond: {longest}",
-
-      lblNickname: "Name / Nickname *",
-      phNickname: "e.g. Sun / Polina / ...",
-      lblBirthdate: "Birthdate (optional)",
-      lblBirthplace: "Birthplace (optional)",
-      phBirthplace: "e.g. Warsaw, Poland",
-      lblMetOn: "Met on (date, optional)",
-      lblCurrentAddress: "Current address (optional)",
-      phCurrentAddress: "e.g. Los Angeles, CA",
-      hintAutoGeo: "Used for coordinates (auto-geocode) if coordinates are empty.",
-      lblTimezone: "Timezone (IANA) *",
-      phTimezone: "e.g. America/Los_Angeles",
-      tzHintHTML: "Examples: <span class=\"kbd\">Europe/Berlin</span>, <span class=\"kbd\">America/Los_Angeles</span>, <span class=\"kbd\">Asia/Tokyo</span>",
-      lblNativeLang: "Native language (optional)",
-      phNativeLang: "e.g. Spanish",
-      lblOtherLangs: "Other languages (optional)",
-      phOtherLangs: "e.g. English, Russian",
-      lblImage: "Image (upload, optional)",
-      hintImageStored: "Stored locally (compressed). No external hosting needed.",
-      lblCoords: "Coordinates (optional)",
-      phCoords: "lat, lon (or click on the map)",
-      hintMapClick: "Click on the map to set the location.",
-
-      lblNotes: "Notes",
-      tabImportant: "Important",
-      tabWork: "Work & Projects",
-      tabFood: "Food & More",
-      tabOther: "Other",
-      tabCycle: "Cycle",
-      phNotesImportant: "Things that are urgent, critical, or should not be forgotten",
-      phNotesWork: "Work-related tasks, projects and ideas",
-      phNotesFood: "Food and drinks, restaurant ideas, places worth trying",
-      phNotesOther: "Miscellaneous notes",
-
-      cycleLastStart: "Last period start",
-      cycleLastEnd: "Last period end",
-      cycleLen: "Cycle length (days)",
-      periodLen: "Period length (days)",
-      cycleAdd: "Add 🩸 range",
-      cycleClear: "Clear",
-      cycleHint: "Stored locally per person. Predictions are estimates (not medical advice).",
-      cycleLegendPeriod: "period",
-      cycleLegendPred: "predicted",
-      cycleLegendFert: "fertile",
-      cycleLegendOvu: "ovulation",
-      cyclePrevTitle: "Previous month",
-      cycleNextTitle: "Next month",
-      weekdays: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-      cyclePickTip: "Tip: click days in the calendar to pick start/end.",
-
-      lblFavColors: "Favorite Colors",
-      phFavColor: "Add a color (e.g. turquoise, gold, #ff8800)",
-      btnAddColor: "Add",
-      hintMaxColors: "Up to 6 colors.",
-
-      btnSave: "Save / Set marker",
-      btnNew: "New",
-      btnDelete: "Delete",
-      btnRemoveImage: "Remove image",
-      titleRemoveImage: "Remove image from entry",
-
-      storageHintHTML: "• Current address can be auto-geocoded via OpenStreetMap (Nominatim).<br>• Everything is stored in <b>localStorage</b> in this browser. Use Export/Import to move data to another device.",
-
-      searchPlaceholder: "Search (name, notes, dates, timezone…)",
-      filterAll: "All",
-      filterFav: "⭐ Favorites",
-      filterNow: "💚 Now",
-      filterMaybe: "💛 Maybe",
-      filterSleep: "❤️ Sleeping",
-      filterBday: "🎂 Birthday",
-      filterBond: "🎈 Bond",
-
-      btnExport: "Export JSON",
-      btnImport: "Import JSON (file)",
-      clusterOn: "🧷 Cluster: On",
-      clusterOff: "🧷 Cluster: Off",
-      myLocationBtn: "📍 My location",
-      myLocationTitle: "Show my current location marker",
-      btnDeleteAll: "Delete all",
-      mergeImportLabel: "Merge on import (recommended if you already have entries here)",
-      notesLockLabel: "🔒 Hide notes (safe for screenshots)",
-
-      badgeSpecial: "♾️ My Special One",
-      badgeFav: "⭐ Favorite",
-      profileBackText: "🗺️ Map",
-      profileBackTitle: "Back to map",
-      profileEditText: "✏️ Edit",
-      profileEditTitle: "Load into form",
-      profilePinTitle: "Center on map",
-
-      modalAria: "Image preview",
-      modalTipHTML: "Tip: click outside or press <span class=\"kbd\">Esc</span> to close",
-      modalClose: "Close",
-
-      zodiacLineEmpty: "Zodiac: — | Chinese Element: — | Chinese Zodiac: —",
-      zodiacLine: "Zodiac: {zodiac} | Chinese Element: {element} | Chinese Zodiac: {animal}",
-      knownFor: "Known for {years} years, {months} months and {days} days",
-      nextBirthday: "Next birthday in {months} month(s) and {days} day(s){turns}",
-
-      confirmCycleClear: "Clear all cycle data for this person?",
-      confirmOverwrite: "Overwrite existing entry?\n\n{name}\n\nThe current data will be replaced.",
-      confirmDeleteEntry: "Really delete this entry?\n\n{name}",
-      confirmDeleteAll: "Really delete ALL entries from this browser?",
-
-      distanceToolTitle: "Distance tool",
-      pointLabel: "Point",
-      myLocationLabel: "My location"
-    },
-
-    de: {
-      appTitle: "Social Organizer",
-      byline: "von Silituz",
-      statsTitle: "- Statistik -",
-      statsLine: "Personen: {people} · Länder: {countries} · Längste Verbindung: {longest}",
-
-      lblNickname: "Name / Spitzname *",
-      phNickname: "z.B. Sun / Polina / ...",
-      lblBirthdate: "Geburtsdatum (optional)",
-      lblBirthplace: "Geburtsort (optional)",
-      phBirthplace: "z.B. Warschau, Polen",
-      lblMetOn: "Kennengelernt am (optional)",
-      lblCurrentAddress: "Aktueller Ort (optional)",
-      phCurrentAddress: "z.B. Los Angeles, CA",
-      hintAutoGeo: "Wird für Koordinaten (Auto-Geocoding) genutzt, wenn Koordinaten leer sind.",
-      lblTimezone: "Zeitzone (IANA) *",
-      phTimezone: "z.B. America/Los_Angeles",
-      tzHintHTML: "Beispiele: <span class=\"kbd\">Europe/Berlin</span>, <span class=\"kbd\">America/Los_Angeles</span>, <span class=\"kbd\">Asia/Tokyo</span>",
-      lblNativeLang: "Muttersprache (optional)",
-      phNativeLang: "z.B. Spanisch",
-      lblOtherLangs: "Weitere Sprachen (optional)",
-      phOtherLangs: "z.B. Englisch, Russisch",
-      lblImage: "Bild (Upload, optional)",
-      hintImageStored: "Lokal gespeichert (komprimiert). Kein externes Hosting nötig.",
-      lblCoords: "Koordinaten (optional)",
-      phCoords: "lat, lon (oder auf die Karte klicken)",
-      hintMapClick: "Klicke auf die Karte, um den Ort zu setzen.",
-
-      lblNotes: "Notizen",
-      tabImportant: "Wichtig",
-      tabWork: "Arbeit & Projekte",
-      tabFood: "Essen & mehr",
-      tabOther: "Sonstiges",
-      tabCycle: "Zyklus",
-      phNotesImportant: "Dinge, die dringend sind, kritisch oder nicht vergessen werden dürfen",
-      phNotesWork: "Arbeitsbezogene Aufgaben, Projekte und Ideen",
-      phNotesFood: "Essen & Getränke, Restaurant-Ideen, Orte die man probieren sollte",
-      phNotesOther: "Sonstige Notizen",
-
-      cycleLastStart: "Letzter Periodenstart",
-      cycleLastEnd: "Letztes Periodenende",
-      cycleLen: "Zykluslänge (Tage)",
-      periodLen: "Periodenlänge (Tage)",
-      cycleAdd: "🩸 Zeitraum hinzufügen",
-      cycleClear: "Löschen",
-      cycleHint: "Lokal pro Person gespeichert. Vorhersagen sind Schätzungen (keine medizinische Beratung).",
-      cycleLegendPeriod: "Periode",
-      cycleLegendPred: "Vorhersage",
-      cycleLegendFert: "fruchtbar",
-      cycleLegendOvu: "Eisprung",
-      cyclePrevTitle: "Vorheriger Monat",
-      cycleNextTitle: "Nächster Monat",
-      weekdays: ["Mo","Di","Mi","Do","Fr","Sa","So"],
-      cyclePickTip: "Tipp: Klicke im Kalender auf Tage, um Start/Ende zu wählen.",
-
-      lblFavColors: "Lieblingsfarben",
-      phFavColor: "Farbe hinzufügen (z.B. türkis, gold, #ff8800)",
-      btnAddColor: "Hinzufügen",
-      hintMaxColors: "Bis zu 6 Farben.",
-
-      btnSave: "Speichern / Marker setzen",
-      btnNew: "Neu",
-      btnDelete: "Löschen",
-      btnRemoveImage: "Bild entfernen",
-      titleRemoveImage: "Bild aus Eintrag entfernen",
-
-      storageHintHTML: "• Aktueller Ort kann über OpenStreetMap (Nominatim) automatisch geocodet werden.<br>• Alles wird im <b>localStorage</b> dieses Browsers gespeichert. Nutze Export/Import, um Daten auf ein anderes Gerät zu übertragen.",
-
-      searchPlaceholder: "Suche (Name, Notizen, Daten, Zeitzone…)",
-      filterAll: "Alle",
-      filterFav: "⭐ Favoriten",
-      filterNow: "💚 Jetzt",
-      filterMaybe: "💛 Vielleicht",
-      filterSleep: "❤️ Schläft",
-      filterBday: "🎂 Geburtstag",
-      filterBond: "🎈 Kennenlernen",
-
-      btnExport: "Export JSON",
-      btnImport: "Import JSON (Datei)",
-      clusterOn: "🧷 Cluster: An",
-      clusterOff: "🧷 Cluster: Aus",
-      myLocationBtn: "📍 Mein Standort",
-      myLocationTitle: "Meinen aktuellen Standort-Marker anzeigen",
-      btnDeleteAll: "Alles löschen",
-      mergeImportLabel: "Beim Import zusammenführen (empfohlen, wenn du hier bereits Einträge hast)",
-      notesLockLabel: "🔒 Notizen ausblenden (sicher für Screenshots)",
-
-      badgeSpecial: "♾️ Mein Lieblingsmensch",
-      badgeFav: "⭐ Favorit",
-      profileBackText: "🗺️ Karte",
-      profileBackTitle: "Zur Karte",
-      profileEditText: "✏️ Bearbeiten",
-      profileEditTitle: "In Formular laden",
-      profilePinTitle: "Auf Karte zentrieren",
-
-      modalAria: "Bildvorschau",
-      modalTipHTML: "Tipp: Außerhalb klicken oder <span class=\"kbd\">Esc</span> zum Schließen",
-      modalClose: "Schließen",
-
-      zodiacLineEmpty: "Sternzeichen: — | Chinesisches Element: — | Chinesisches Tierkreiszeichen: —",
-      zodiacLine: "Sternzeichen: {zodiac} | Chinesisches Element: {element} | Chinesisches Tierkreiszeichen: {animal}",
-      knownFor: "Schon seit {years} Jahren, {months} Monaten und {days} Tagen",
-      nextBirthday: "Nächster Geburtstag in {months} Monat(en) und {days} Tag(en){turns}",
-
-      confirmCycleClear: "Alle Zyklusdaten für diese Person löschen?",
-      confirmOverwrite: "Vorhandenen Eintrag überschreiben?\n\n{name}\n\nDie aktuellen Daten werden ersetzt.",
-      confirmDeleteEntry: "Diesen Eintrag wirklich löschen?\n\n{name}",
-      confirmDeleteAll: "Wirklich ALLE Einträge in diesem Browser löschen?",
-
-      distanceToolTitle: "Entfernungs-Tool",
-      pointLabel: "Punkt",
-      myLocationLabel: "Mein Standort"
-    }
-  };
-
-  const T = I18N[LANG] || I18N.en;
-  function tr(key, vars={}){
-    let s = (T && T[key]) || (I18N.en && I18N.en[key]) || key;
-    for(const k in vars){
-      s = s.replaceAll(`{${k}}`, String(vars[k]));
-    }
-    return s;
-  }
-
-  function applyStaticI18N(){
-    // Header
-    const head = document.querySelector('#soApp header');
-    if(head){
-      const h1 = head.querySelector('h1');
-      if(h1) h1.textContent = tr('appTitle');
-      const sub = head.querySelector('.sub');
-      if(sub) sub.textContent = tr('byline');
-      const st = head.querySelector('.stats-title');
-      if(st) st.textContent = tr('statsTitle');
-      const stats = document.getElementById('statsText');
-      if(stats) stats.textContent = tr('statsLine', {people:0, countries:0, longest:'—'});
-    }
-
-    const setLabel = (inputId, key)=>{
-      const inp = document.getElementById(inputId);
-      const lab = inp?.parentElement?.querySelector('label');
-      if(lab) lab.textContent = tr(key);
-    };
-    const setPH = (inputId, key)=>{
-      const inp = document.getElementById(inputId);
-      if(inp) inp.placeholder = tr(key);
-    };
-    const setHintAfter = (inputId, selector, html)=>{
-      const inp = document.getElementById(inputId);
-      const box = inp?.parentElement?.querySelector(selector);
-      if(box){
-        if(html) box.innerHTML = html;
-      }
-    };
-
-    // Form
-    setLabel('nickname','lblNickname'); setPH('nickname','phNickname');
-    setLabel('birthdate','lblBirthdate');
-    setLabel('birthplace','lblBirthplace'); setPH('birthplace','phBirthplace');
-    setLabel('metOn','lblMetOn');
-    setLabel('currentAddress','lblCurrentAddress'); setPH('currentAddress','phCurrentAddress');
-    // Hint under currentAddress
-    const ca = document.getElementById('currentAddress');
-    if(ca){
-      const hint = ca.parentElement?.querySelector('.hint');
-      if(hint) hint.textContent = tr('hintAutoGeo');
-    }
-
-    setLabel('timezone','lblTimezone'); setPH('timezone','phTimezone');
-    const tz = document.getElementById('timezone');
-    if(tz){
-      const hints = tz.parentElement?.querySelectorAll('.hint');
-      if(hints && hints[0]) hints[0].innerHTML = tr('tzHintHTML');
-    }
-
-    setLabel('nativeLang','lblNativeLang'); setPH('nativeLang','phNativeLang');
-    setLabel('otherLangs','lblOtherLangs'); setPH('otherLangs','phOtherLangs');
-
-    setLabel('imageFile','lblImage');
-    const img = document.getElementById('imageFile');
-    if(img){
-      const hint = img.parentElement?.querySelector('.hint');
-      if(hint) hint.textContent = tr('hintImageStored');
-    }
-
-    setLabel('coords','lblCoords'); setPH('coords','phCoords');
-    const coords = document.getElementById('coords');
-    if(coords){
-      const hint = coords.parentElement?.querySelector('.hint');
-      if(hint) hint.textContent = tr('hintMapClick');
-    }
-
-    // Notes
-    const notesWrap = document.getElementById('notesTabs')?.parentElement;
-    const notesLabel = notesWrap?.querySelector('label');
-    if(notesLabel) notesLabel.textContent = tr('lblNotes');
-
-    const tab = (k, emoji)=>{
-      const b = document.querySelector(`#notesTabs [data-notes-tab='${k}']`);
-      if(!b) return;
-      const map = {important:'tabImportant', work:'tabWork', food:'tabFood', other:'tabOther', cycle:'tabCycle'};
-      b.textContent = `${emoji} ${tr(map[k])}`;
-    };
-    tab('important','🚨');
-    tab('work','💼');
-    tab('food','🍕');
-    tab('other','📦');
-    tab('cycle','🩸');
-
-    setPH('notes_important','phNotesImportant');
-    setPH('notes_work','phNotesWork');
-    setPH('notes_food','phNotesFood');
-    setPH('notes_other','phNotesOther');
-
-    // Cycle panel labels
-    const mini = document.querySelectorAll('#cyclePanel .miniLabel');
-    const miniKeys = ['cycleLastStart','cycleLastEnd','cycleLen','periodLen'];
-    mini.forEach((el,i)=>{ if(miniKeys[i]) el.textContent = tr(miniKeys[i]); });
-    const addBtn = document.getElementById('cycleAddBtn');
-    if(addBtn) addBtn.textContent = tr('cycleAdd');
-    const clrBtn = document.getElementById('cycleClearBtn');
-    if(clrBtn) clrBtn.textContent = tr('cycleClear');
-    const cHint = document.querySelector('#cyclePanel .cycleHint');
-    if(cHint){
-      // keep legend spans
-      const legend = cHint.querySelector('.cycleLegend');
-      const textNode = cHint.childNodes[0];
-      if(textNode) textNode.textContent = tr('cycleHint') + ' ';
-      const p = legend?.querySelector('.legPeriod'); if(p) p.textContent = `🩸 ${tr('cycleLegendPeriod')}`;
-      const pr = legend?.querySelector('.legPred'); if(pr) pr.textContent = `🩸 ${tr('cycleLegendPred')}`;
-      const f = legend?.querySelector('.legFert'); if(f) f.textContent = `🌿 ${tr('cycleLegendFert')}`;
-      const o = legend?.querySelector('.legOvu'); if(o) o.textContent = `⭐ ${tr('cycleLegendOvu')}`;
-    }
-    const prev = document.getElementById('cyclePrev'); if(prev) prev.title = tr('cyclePrevTitle');
-    const next = document.getElementById('cycleNext'); if(next) next.title = tr('cycleNextTitle');
-    const wds = document.querySelectorAll('.cycleWeekdays span');
-    wds.forEach((el,i)=>{ if(T.weekdays && T.weekdays[i]) el.textContent = T.weekdays[i]; });
-    const pickTip = document.querySelector('#cyclePanel .hint');
-    if(pickTip) pickTip.textContent = tr('cyclePickTip');
-
-    // Favorite colors
-    const favInput = document.getElementById('favColorInput');
-    if(favInput){
-      favInput.placeholder = tr('phFavColor');
-      const lbl = favInput.closest('.row')?.querySelector('label');
-      if(lbl) lbl.textContent = tr('lblFavColors');
-    }
-    const addColorBtn = document.getElementById('addFavColorBtn');
-    if(addColorBtn) addColorBtn.textContent = tr('btnAddColor');
-    const colorHint = document.querySelector('#favColorsPills')?.parentElement?.querySelector('.hint');
-    if(colorHint) colorHint.textContent = tr('hintMaxColors');
-
-    // Main buttons
-    const save = document.getElementById('saveBtn'); if(save) save.textContent = tr('btnSave');
-    const nw = document.getElementById('newBtn'); if(nw) nw.textContent = tr('btnNew');
-    const del = document.getElementById('deleteBtn'); if(del) del.textContent = tr('btnDelete');
-    const rm = document.getElementById('removeImgBtn'); if(rm){ rm.textContent = tr('btnRemoveImage'); rm.title = tr('titleRemoveImage'); }
-
-    // Storage hint
-    const sh = document.querySelector('#soApp .panel .hr + .hint');
-    if(sh) sh.innerHTML = tr('storageHintHTML');
-
-    // Search
-    const s = document.getElementById('search');
-    if(s) s.placeholder = tr('searchPlaceholder');
-
-    // Filter chips
-    document.querySelectorAll('#filterBar .fChip').forEach(btn=>{
-      const f = btn.getAttribute('data-filter');
-      const map = {all:'filterAll', fav:'filterFav', now:'filterNow', maybe:'filterMaybe', sleep:'filterSleep', bday:'filterBday', friend:'filterBond'};
-      if(map[f]) btn.textContent = tr(map[f]);
-    });
-
-    // Footer tools
-    const ex = document.getElementById('exportBtn'); if(ex) ex.textContent = tr('btnExport');
-    const im = document.getElementById('importBtn'); if(im) im.textContent = tr('btnImport');
-    const cl = document.getElementById('clusterToggleBtn'); if(cl) cl.textContent = (window.clusteringEnabled ? tr('clusterOn') : tr('clusterOff'));
-    const ml = document.getElementById('myLocBtn'); if(ml){ ml.textContent = tr('myLocationBtn'); ml.title = tr('myLocationTitle'); }
-    const ca2 = document.getElementById('clearAllBtn'); if(ca2) ca2.textContent = tr('btnDeleteAll');
-
-    const miLbl = document.querySelector("label[for='mergeImport']"); if(miLbl) miLbl.textContent = tr('mergeImportLabel');
-    const nlLbl = document.querySelector("label[for='notesLock']"); if(nlLbl) nlLbl.textContent = tr('notesLockLabel');
-
-    // Profile view labels
-    const sp = document.querySelector('#profileView .specialOneBadge'); if(sp) sp.textContent = tr('badgeSpecial');
-    const fb = document.querySelector('#profileView .favBadge'); if(fb) fb.textContent = tr('badgeFav');
-
-    const pb = document.getElementById('profileBack'); if(pb){ pb.textContent = tr('profileBackText'); pb.title = tr('profileBackTitle'); }
-    const pe = document.getElementById('profileEdit'); if(pe){ pe.textContent = tr('profileEditText'); pe.title = tr('profileEditTitle'); }
-    const pp = document.getElementById('profilePin'); if(pp) pp.title = tr('profilePinTitle');
-
-    // Modal
-    const modal = document.getElementById('imgModal');
-    if(modal){
-      const inner = modal.querySelector('.imgModalInner');
-      if(inner) inner.setAttribute('aria-label', tr('modalAria'));
-      const tip = modal.querySelector('.imgModalHint span');
-      if(tip) tip.innerHTML = tr('modalTipHTML');
-      const close = document.getElementById('imgModalClose');
-      if(close) close.textContent = tr('modalClose');
-    }
-
-    // Distance tool title
-    const distBtn = document.getElementById('distanceFloatingBtn');
-    if(distBtn) distBtn.title = tr('distanceToolTitle');
-  }
-
-  function trHTML(html){
-    if(LANG !== 'de') return html;
-    // small, safe label replacements for generated HTML (popups/profile)
-    return String(html)
-      .replaceAll('Local Time:', 'Ortszeit:')
-      .replaceAll('Local time:', 'Ortszeit:')
-      .replaceAll('Coordinates:', 'Koordinaten:')
-      .replaceAll('<b>Birthplace:</b>', '<b>Geburtsort:</b>')
-      .replaceAll('<b>Birthdate:</b>', '<b>Geburtsdatum:</b>')
-      .replaceAll('<b>Met on:</b>', '<b>Kennengelernt am:</b>')
-      .replaceAll('<b>Current:</b>', '<b>Aktuell:</b>')
-      .replaceAll('<b>Native:</b>', '<b>Muttersprache:</b>')
-      .replaceAll('<b>Other:</b>', '<b>Weitere:</b>')
-      .replaceAll('Click to enlarge', 'Klicken zum Vergrößern')
-      .replaceAll('Open card', 'Profil öffnen')
-      .replaceAll('My location', tr('myLocationLabel'))
-      .replaceAll('Distance', 'Entfernung')
-      .replaceAll('Current', 'Aktuell')
-      .replaceAll('Birthday', 'Geburtstag')
-      .replaceAll('Friendship', 'Kennenlernen').replaceAll('Bond', 'Kennenlernen')
-      .replaceAll('Next birthday:', 'Nächster Geburtstag:')
-      .replaceAll('Birthdate:', 'Geburtsdatum:')
-      .replaceAll('Met on:', 'Kennengelernt am:')
-      .replaceAll('Known for:', 'Schon:')
-      .replaceAll('Birthplace', 'Geburtsort')
-      .replaceAll('Native language', 'Muttersprache')
-      .replaceAll('Other languages', 'Weitere Sprachen')
-      .replaceAll('No extra details saved.', 'Keine zusätzlichen Details gespeichert.');
-  }
-
-  // Apply immediately (script is at the end of the body)
-  try{ applyStaticI18N(); }catch(e){}
-
-
-
   function toast(msg){
-    const tEl = $("toast");
-    const TOAST_DE = {
-      "Please select an image file": "Bitte wähle eine Bilddatei aus",
-      "Preparing image…": "Bild wird vorbereitet…",
-      "Image ready ✅": "Bild fertig ✅",
-      "Could not process image": "Bild konnte nicht verarbeitet werden",
-      "Pick a valid start date": "Bitte ein gültiges Startdatum wählen",
-      "Period saved ✅": "Periode gespeichert ✅",
-      "Cycle cleared": "Zyklus gelöscht",
-      "Unknown color. Try a CSS color name or a hex value like #ff8800.": "Unbekannte Farbe. Nutze einen CSS-Farbnamen oder einen Hex-Wert wie #ff8800.",
-      "Max 6 colors": "Max. 6 Farben",
-      "Coordinates + timezone set ✅": "Koordinaten + Zeitzone gesetzt ✅",
-      "Coordinates set (timezone unknown)": "Koordinaten gesetzt (Zeitzone unbekannt)",
-      "Coordinates set (timezone lookup failed)": "Koordinaten gesetzt (Zeitzonen-Abfrage fehlgeschlagen)",
-      "Coordinates set (map click)": "Koordinaten gesetzt (Klick auf Karte)",
-      "Entry loaded": "Eintrag geladen",
-      "Address + timezone found ✅": "Adresse + Zeitzone gefunden ✅",
-      "Address found (timezone unknown)": "Adresse gefunden (Zeitzone unbekannt)",
-      "Address found (timezone lookup failed)": "Adresse gefunden (Zeitzonen-Abfrage fehlgeschlagen)",
-      "Address found": "Adresse gefunden",
-      "Please enter a nickname": "Bitte einen Spitznamen eingeben",
-      "Please enter an IANA timezone": "Bitte eine IANA-Zeitzone eingeben",
-      "Finding current address…": "Adresse wird gesucht…",
-      "Please set coordinates (map click) or enter a current address": "Bitte Koordinaten setzen (Klick auf Karte) oder einen aktuellen Ort eingeben",
-      "Updated": "Aktualisiert",
-      "Saved": "Gespeichert",
-      "Deleted": "Gelöscht",
-      "Image removed (new entry)": "Bild entfernt (neuer Eintrag)",
-      "Image will be removed on save": "Bild wird beim Speichern entfernt",
-      "Export created (file + clipboard)": "Export erstellt (Datei + Zwischenablage)",
-      "Import failed: JSON has no valid entries": "Import fehlgeschlagen: JSON enthält keine gültigen Einträge",
-      "Imported (merged) ✅": "Importiert (zusammengeführt) ✅",
-      "Imported (replaced) ✅": "Importiert (ersetzt) ✅",
-      "Could not import file": "Datei konnte nicht importiert werden",
-      "All deleted": "Alles gelöscht",
-      "Geolocation not supported": "Geolocation wird nicht unterstützt",
-      "Getting your location…": "Standort wird ermittelt…",
-      "My location marker set ✅": "Standort-Marker gesetzt ✅",
-      "Could not get location (permission?)": "Standort konnte nicht ermittelt werden (Berechtigung?)",
-      "My location set (manual) ✅": "Standort gesetzt (manuell) ✅",
-      "Could not find that place": "Ort nicht gefunden",
-      "Manual lookup failed": "Manuelle Suche fehlgeschlagen",
-      "Distance tool enabled": "Entfernungs-Tool aktiviert",
-      "Distance tool disabled": "Entfernungs-Tool deaktiviert"
-    };
-
-    const out = (LANG === "de" && TOAST_DE[msg]) ? TOAST_DE[msg] : msg;
-    tEl.textContent = out;
-    tEl.classList.add("show");
-    setTimeout(()=> tEl.classList.remove("show"), 2200);
+    const t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(()=> t.classList.remove("show"), 2200);
   }
   function safeParseJSON(str){ try{ return JSON.parse(str); }catch{ return null; } }
   function uuid(){ return (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+"_"+Math.random().toString(16).slice(2))); }
@@ -3947,7 +3537,7 @@
     const modeEmoji = (km < 1000) ? "🚗" : "✈️";
 
     const hrs = estimateHours(km);
-    const kmTxt = Math.round(km).toLocaleString(LOCALE);
+    const kmTxt = Math.round(km).toLocaleString("en-US");
     const hTxt = (Math.round(hrs * 10) / 10).toFixed(1);
     return `${kmTxt} km (≈ ${hTxt} h ${modeEmoji})`;
   }
@@ -4010,7 +3600,7 @@ function fmtDate(iso){
   function getLocalHour(tz){
     if(!tz) return null;
     try{
-      const dtf = new Intl.DateTimeFormat(LOCALE, { timeZone: tz, hour: "2-digit", hour12: false });
+      const dtf = new Intl.DateTimeFormat("en-US", { timeZone: tz, hour: "2-digit", hour12: false });
       const parts = dtf.formatToParts(new Date());
       const h = parts.find(p=>p.type==="hour")?.value;
       const hour = Number(h);
@@ -4023,7 +3613,7 @@ function fmtDate(iso){
   function getLocalSeconds(tz){
     if(!tz) return null;
     try{
-      const dtf = new Intl.DateTimeFormat(LOCALE, {
+      const dtf = new Intl.DateTimeFormat("en-US", {
         timeZone: tz,
         hour: "2-digit",
         minute: "2-digit",
@@ -4248,7 +3838,7 @@ function yearsMonthsDaysSince(startISO){
       return;
     }
     const { years, months, days } = diff;
-    line.textContent = tr("knownFor", { years, months, days });
+    line.textContent = `Known for ${years} years, ${months} months and ${days} days`;
   }
 
 function updateBirthdayCountdownUI(){
@@ -4261,13 +3851,6 @@ function updateBirthdayCountdownUI(){
       return;
     }
     const { months, days, age } = diff;
-
-    if(LANG === 'de'){
-      const turns = (age === null) ? "" : ` (wird ${age})`;
-      el.textContent = `Nächster Geburtstag in ${months} Monat(en) und ${days} Tag(en)${turns}`;
-      return;
-    }
-
     const turns = (age === null) ? "" : ` (turns ${age})`;
     el.textContent = `Next birthday in ${months} month${months===1?"":"s"} and ${days} day${days===1?"":"s"}${turns}`;
   }
@@ -4389,9 +3972,9 @@ function updateBirthdayCountdownUI(){
 
   function formatZodiacLineHTML(birthdateStr){
     // birthdateStr: YYYY-MM-DD
-    if(!birthdateStr) return tr("zodiacLineEmpty");
+    if(!birthdateStr) return `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
     const d = new Date(birthdateStr + "T00:00:00");
-    if(Number.isNaN(d.getTime())) return tr("zodiacLineEmpty");
+    if(Number.isNaN(d.getTime())) return `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
 
     const sign = westernZodiac(d.getMonth()+1, d.getDate());
     const signEmoji = westernZodiacEmoji(sign);
@@ -4416,7 +3999,7 @@ function updateBirthdayCountdownUI(){
       ? `<a class="zodiacLink" href="${animalUrl}" target="_blank" rel="noopener noreferrer">${escapeHTML(animalLabel)}</a>`
       : `${escapeHTML(animalLabel)}`;
 
-    return tr("zodiacLine", { zodiac: signHTML, element: escapeHTML(elLabel), animal: animalHTML });
+    return `Zodiac: ${signHTML} | Chinese Element: ${escapeHTML(elLabel)} | Chinese Zodiac: ${animalHTML}`;
   }
 
   function updateZodiacUI(){
@@ -4907,7 +4490,7 @@ function setSpecial(id){
     const info = computeCycleInfo(cycle);
     if(!info) return "";
     const dn = (info.daysToNext===null) ? "" : (info.daysToNext<0 ? " (overdue?)" : ` (in ${info.daysToNext}d)`);
-    return `<div class="pline"><b>🩸 Next:</b> ${escapeHTML(fmtDate(info.nextStart))}${dn} · <b>🌿 Fertile:</b> ${escapeHTML(fmtDate(info.fertileStart))}–${escapeHTML(fmtDate(info.fertileEnd))} ⭐ ${escapeHTML(fmtDate(info.ovulation))}</div>`);
+    return `<div class="pline"><b>🩸 Next:</b> ${escapeHTML(fmtDate(info.nextStart))}${dn} · <b>🌿 Fertile:</b> ${escapeHTML(fmtDate(info.fertileStart))}–${escapeHTML(fmtDate(info.fertileEnd))} ⭐ ${escapeHTML(fmtDate(info.ovulation))}</div>`;
   }
 
   function cycleCardHTML(cycle){
@@ -4925,7 +4508,7 @@ function setSpecial(id){
           Avg cycle: ${info.cycle.cycleLength}d · Period: ${info.cycle.periodLength}d
         </div>
       </div>
-    `);
+    `;
   }
 
   // ---- Form UI state ----
@@ -5211,7 +4794,7 @@ function setSpecial(id){
     // Clear
     if(clearBtn){
       clearBtn.addEventListener("click", ()=>{
-        const ok = confirm(tr("confirmCycleClear"));
+        const ok = confirm("Clear all cycle data for this person?");
         if(!ok) return;
         clearCycleForm();
         toast("Cycle cleared");
@@ -5661,7 +5244,7 @@ setInterval(updateNightLayer, 30000);
   function updateClusterToggleButton(){
     const b = $("clusterToggleBtn");
     if(!b) return;
-    b.textContent = clusteringEnabled ? tr("clusterOn") : tr("clusterOff");
+    b.textContent = clusteringEnabled ? "🧷 Cluster: On" : "🧷 Cluster: Off";
   }
 
   function setClusteringEnabled(on){
@@ -5716,7 +5299,7 @@ setInterval(updateNightLayer, 30000);
   let myLocLon = null;
 
   function myLocPopupHTML(lat, lon){
-    return trHTML(`<div class="popup">
+    return `<div class="popup">
       <div class="pname"><span class="pheart">📍</span><span class="pnick">My location</span></div>
       <div class="pline"><span class="localLabel">Local time:</span> <span class="localTimeVal">${myLocalTime()}</span></div>
       <div class="pline">Coordinates: ${Number(lat).toFixed(5)}, ${Number(lon).toFixed(5)}</div>
@@ -5785,7 +5368,7 @@ setInterval(updateNightLayer, 30000);
         fillColor: 'rgba(220,90,90,.35)',
         fillOpacity: .65
       }).addTo(map);
-      distAddPoint(lat, lng, tr("pointLabel"));
+      distAddPoint(lat, lng, "Point");
       return;
     }
 
@@ -5808,7 +5391,7 @@ setInterval(updateNightLayer, 30000);
   });
 
 async function geocodeAddress(addr){
-    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=${LANG}&namedetails=1&q=${encodeURIComponent(addr)}`;
+    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=en&namedetails=1&q=${encodeURIComponent(addr)}`;
     const res = await fetch(url, { method:"GET" });
     if(!res.ok) throw new Error("Geocoding failed");
     const data = await res.json();
@@ -5886,7 +5469,7 @@ const img = entry.imageData
       `
       : "";
 
-    return trHTML(`
+    return `
       <div class="popup" data-entryid="${escapeHTML(entry.id)}">
         <div class="pname"><span class="pheart">${heartForTimezone(entry.tz)}</span><span class="pnick">${escapeHTML(entry.nickname)}</span></div>
         ${timeLine}
@@ -5900,7 +5483,7 @@ const img = entry.imageData
         ${notes}
         ${img}
       </div>
-    `);
+    `;
   }
 
   function colorForHeart(h){
@@ -6112,7 +5695,7 @@ const img = entry.imageData
     $("profileView").classList.toggle("isSpecialProfile", !!specialId && entry.id===specialId );
 
         $("profileView").classList.toggle("isBothProfileBadges", !!entry.fav && !!specialId && entry.id===specialId );
-$("profileSub").innerHTML = entry.tz ? trHTML(`<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}`) : (entry.connection ? escapeHTML(entry.connection) : "—");
+$("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">{{ page.t_local_time }}</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}` : (entry.connection ? escapeHTML(entry.connection) : "—");
 
     const imgBlock = entry.imageData
       ? `
@@ -6164,9 +5747,9 @@ $("profileSub").innerHTML = entry.tz ? trHTML(`<span class="pheart">${heartForTi
         const s = yearsMonthsDaysSince(entry.metOn);
         const metTxt = escapeHTML(fmtDate(entry.metOn));
         if(s){
-          return `<div class="profileCard"><div class="k">🎈 Bond</div><div class="v">Met on: ${metTxt}<br>Known for: <b>${s.years}y ${s.months}m ${s.days}d</b></div></div>`;
+          return `<div class="profileCard"><div class="k">🎈 Friendship</div><div class="v">Met on: ${metTxt}<br>Known for: <b>${s.years}y ${s.months}m ${s.days}d</b></div></div>`;
         }
-        return `<div class="profileCard"><div class="k">🎈 Bond</div><div class="v">Met on: ${metTxt}</div></div>`;
+        return `<div class="profileCard"><div class="k">🎈 Friendship</div><div class="v">Met on: ${metTxt}</div></div>`;
       })() : "";
 
     const cards = [
@@ -6182,7 +5765,7 @@ $("profileSub").innerHTML = entry.tz ? trHTML(`<span class="pheart">${heartForTi
       notesCardHTML(entry.notes)
     ].filter(Boolean).join("");
 
-    $("profileBody").innerHTML = trHTML(`
+    $("profileBody").innerHTML = `
       ${imgBlock}
       <div class="profileGrid">
         ${cards || `<div class="profileCard"><div class="k">Info</div><div class="v">No extra details saved.</div></div>`}
@@ -6612,7 +6195,11 @@ $("profileSub").innerHTML = entry.tz ? trHTML(`<span class="pheart">${heartForTi
       }
     }
 
-    el.textContent = tr("statsLine", { people: friends, countries: countries.size, longest: (longest ? formatYMDShort(longest.ymd) : "—") });
+    const statsTpl = {{ page.t_stats_template | jsonify }};
+    el.textContent = statsTpl
+      .replace(/\%\{friends\}/g, String(friends))
+      .replace(/\%\{countries\}/g, String(countries.size))
+      .replace(/\%\{longest\}/g, String(longest ? formatYMDShort(longest.ymd) : "—"));
   }
 
 function renderList(){
@@ -6723,7 +6310,7 @@ function renderList(){
       }else if(activeFilter === "friend"){
         const s = yearsMonthsDaysSince(e.metOn);
         if(s){
-          inlineInfo = `<span class="badge" title="Bond duration">🎈 <b>${s.years}y ${s.months}m ${s.days}d</b></span>`;
+          inlineInfo = `<span class="badge" title="Friendship duration">🎈 <b>${s.years}y ${s.months}m ${s.days}d</b></span>`;
         }
       }
 
@@ -6769,7 +6356,7 @@ function renderList(){
             ${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}
           </div>
 
-          <div class="tiny"><span class="localLabel">Local Time</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
+          <div class="tiny"><span class="localLabel">{{ page.t_local_time }}</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
         </div>
         <div class="actions">
           ${avatar}
@@ -6796,7 +6383,7 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
         e.fav = !e.fav;
                 e.updatedAt = new Date().toISOString();
         save();
-        toast(e.fav ? "Added to favorites ⭐" : "Removed from favorites");
+        toast(e.fav ? {{ page.t_toast_fav_add | jsonify }} : {{ page.t_toast_fav_remove | jsonify }});
       });
 
       // Special (turquoise) - only one person globally
@@ -6834,7 +6421,7 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
     if(e && $("profileView").style.display !== "none"){
       const t = personLocalTime(e.tz) || "—";
       $("profileSub").innerHTML = e.tz
-        ? `<span class="pheart">${heartForTimezone(e.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t)}</span> <span class="pline">(${escapeHTML(e.tz)})</span>${e.connection ? " · " + escapeHTML(e.connection) : ""}`
+        ? `<span class="pheart">${heartForTimezone(e.tz)}</span> <span class="localLabel">{{ page.t_local_time }}</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t)}</span> <span class="pline">(${escapeHTML(e.tz)})</span>${e.connection ? " · " + escapeHTML(e.connection) : ""}`
         : (e.connection ? escapeHTML(e.connection) : "—");
     }
   }
@@ -6855,12 +6442,12 @@ function exportJSON(){
     const blob = new Blob([data], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "social-organizer.v2.json";
+    a.download = "world-friends-map.v2.json";
     a.click();
     URL.revokeObjectURL(a.href);
 
     navigator.clipboard?.writeText(data).catch(()=>{});
-    toast("Export created (file + clipboard)");
+    toast({{ page.t_toast_export | jsonify }});
   }
 
   function sanitizeEntriesArray(data){
@@ -7001,7 +6588,7 @@ function exportJSON(){
   });
 
   function clearAll(){
-    const ok = confirm(tr("confirmDeleteAll"));
+    const ok = confirm("Really delete ALL entries from this browser?");
     if(!ok) return;
     entries = [];
     selectedId = null;
@@ -7067,7 +6654,7 @@ function exportJSON(){
     updateClusterToggleButton();
     _clusterBtn.addEventListener("click", ()=>{
       setClusteringEnabled(!clusteringEnabled);
-      toast(clusteringEnabled ? "Clustering enabled ✅" : "Clustering disabled ✅");
+      toast(clusteringEnabled ? {{ page.t_toast_cluster_enabled | jsonify }} : {{ page.t_toast_cluster_disabled | jsonify }});
     });
   }
 
@@ -7076,25 +6663,25 @@ function exportJSON(){
   if(_myLocBtn){
     _myLocBtn.addEventListener("click", ()=>{
       if(!navigator.geolocation){
-        toast("Geolocation not supported");
+        toast({{ page.t_toast_geo_not_supported | jsonify }});
         return;
       }
-      toast("Getting your location…");
+      toast({{ page.t_toast_geo_getting | jsonify }});
       navigator.geolocation.getCurrentPosition(
         (pos)=>{
           const lat = pos.coords.latitude;
           const lon = pos.coords.longitude;
           setMyLocationMarker(lat, lon);
-          toast("My location marker set ✅");
+          toast({{ page.t_toast_geo_set | jsonify }});
         },
         ()=>{
-          toast("Could not get location (permission?)");
+          toast({{ page.t_toast_geo_failed | jsonify }});
           try{
-            const manual = prompt("Enter a city/address to set My Location manually (English):");
+            const manual = prompt({{ page.t_prompt_geo_manual | jsonify }});
             if(manual && manual.trim()){
               geocodeAddress(manual.trim()).then(r=>{
-                if(r){ setMyLocationMarker(r.lat, r.lon); toast("My location set (manual) ✅"); }
-                else toast("Could not find that place");
+                if(r){ setMyLocationMarker(r.lat, r.lon); toast({{ page.t_toast_geo_set_manual | jsonify }}); }
+                else toast({{ page.t_toast_geo_not_found | jsonify }});
               }).catch(()=>toast("Manual lookup failed"));
             }
           }catch{}
@@ -7215,7 +6802,7 @@ async function reverseGeocodeMidpoint(lat, lon){
   const key = `${lat.toFixed(3)},${lon.toFixed(3)}`;
   if(__midpointCache.has(key)) return __midpointCache.get(key);
 
-  const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=10&addressdetails=1&accept-language=${LANG}`;
+  const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=10&addressdetails=1&accept-language=en`;
   try{
     const res = await fetch(url, { method: "GET" });
     if(!res.ok) throw new Error("bad response");
@@ -7418,7 +7005,7 @@ try{
       try{ ev.originalEvent && ev.originalEvent.stopPropagation && ev.originalEvent.stopPropagation(); }catch{}
       if(distancePoints.length >= 2) distClear();
       const ll = ml.getLatLng ? ml.getLatLng() : null;
-      if(ll) distAddPoint(ll.lat, ll.lng, tr("myLocationLabel"));
+      if(ll) distAddPoint(ll.lat, ll.lng, "My location");
     });
   }
 }catch{}
@@ -7562,4 +7149,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
 <button id="distanceFloatingBtn" title="Distance tool">📏</button>
 
 <div id="distanceHint"></div>
-</section>
+</body>
+
+</html>
+
+
+
