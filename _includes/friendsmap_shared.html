@@ -16,6 +16,21 @@
 
   <style>
 
+  /* ===========================================
+     Site header (Silituz navbar): blue tint on this page
+     (prevents the "too dark band" look)
+  =========================================== */
+  body > header.sticky{
+    background: linear-gradient(90deg,
+      rgba(2,6,23,.72),
+      rgba(30,58,138,.42),
+      rgba(2,6,23,.72)
+    ) !important;
+    border-bottom-color: rgba(122,167,255,.22) !important;
+  }
+
+
+
 
 
 
@@ -44,7 +59,7 @@
                   linear-gradient(180deg, #070a12, #0b0f1a 40%, #070a12);
       color:var(--text);
     }
-    .fmHead{
+    .soHeader{
       padding:18px 18px 10px;
       display:flex;
       gap:12px;
@@ -2720,7 +2735,7 @@ body::before, body::after,
    MOBILE PACK (Handy Optimierung)
    ============================= */
 @media (max-width: 560px){
-  .fmHead{
+  .soHeader{
     padding: 14px 12px 8px;
     flex-wrap: wrap;
     gap: 10px;
@@ -2842,7 +2857,7 @@ body::before, body::after,
    Makes the top edit area cleaner & easier on phones
    ============================= */
 @media (max-width: 560px){
-  .fmHead{ padding: 12px 12px 10px !important; }
+  .soHeader{ padding: 12px 12px 10px !important; }
   .hdrRight{ width:100%; text-align:left; }
   .hdrRight .hdrTitle{ display:none !important; }
   .hdrSub{ font-size:12px !important; opacity:.9; line-height:1.25; }
@@ -2996,7 +3011,7 @@ body::before, body::after,
 
 /* Avoid horizontal scrolling */
 html, body { overflow-x: hidden; }
-.wrap, main, .fmHead, .panel, .list, #profileView { max-width: 100%; }
+.wrap, .panel, .list, #profileView { max-width: 100%; }
 
 /* Ensure all images / cards never exceed container */
 img, video, canvas, svg { max-width: 100%; height: auto; }
@@ -3083,7 +3098,7 @@ body{
 }
 
 /* Safety: nothing in views should exceed viewport */
-#listView, #profileView, #mapView, .wrap, main, .fmHead{
+#listView, #profileView, #mapView, .wrap, .soHeader{
   width: 100%;
   max-width: 100%;
 }
@@ -3199,7 +3214,7 @@ html{ scrollbar-gutter: stable; }
 </head>
 
 <body>
-<header class="fmHead">
+<div class="soHeader">
   <div class="brand">
     <div>
       <h1>World Friends Map</h1>
@@ -3211,7 +3226,7 @@ html{ scrollbar-gutter: stable; }
     <div class="hdrTitle"><span class="stats-title">- Stats -</span></div>
     <div class="hdrSub" id="statsText">Friends: 0 · Countries: 0 · Longest friendship: —</div>
   </div>
-</header>
+</div>
 
 <div class="wrap">
   <div class="card">
@@ -7149,19 +7164,3 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 </html>
 
-
-
-
-<style>
-/* === FIX: Website-Header nicht von FriendsMap-CSS beeinflussen & farblich integrieren === */
-body > header.sticky{
-  /* Light mode: leichtes Glas */
-  background-color: rgba(255,255,255,.88) !important;
-  border-bottom-color: rgba(148,163,184,.45) !important;
-}
-html.dark body > header.sticky{
-  /* Dark mode: blaues Glas (Tailwind slate-900) */
-  background-color: rgba(15,23,42,.90) !important;
-  border-bottom-color: rgba(51,65,85,.75) !important;
-}
-</style>
