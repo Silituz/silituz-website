@@ -1,20 +1,23 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Social Organizer</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
-  <!-- Leaflet (Map) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+/* FriendsMap styles are scoped so they don't overwrite the global site header/body */
+.friendsmap-wrap {
+  color: var(--text);
+  background: radial-gradient(1200px 600px at 15% 10%, rgba(122,167,255,.18), transparent 55%),
+              radial-gradient(900px 500px at 80% 20%, rgba(125,255,178,.12), transparent 55%),
+              linear-gradient(180deg, #070a12, #0b0f1a 40%, #070a12);
+  border-radius: 22px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.25);
+  padding: 18px;
+}
+.friendsmap-wrap *{ box-sizing:border-box; }
 
-  <!-- Leaflet.markercluster (Pin clustering) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
-  <style>
 
 
 
@@ -34,23 +37,10 @@
       --shadow: 0 14px 40px rgba(0,0,0,.35);
       --radius:18px;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: radial-gradient(1200px 600px at 15% 10%, rgba(122,167,255,.18), transparent 55%),
-                  radial-gradient(900px 500px at 80% 20%, rgba(125,255,178,.12), transparent 55%),
-                  linear-gradient(180deg, #070a12, #0b0f1a 40%, #070a12);
-      color:var(--text);
-    }
-    header{
-      padding:18px 18px 10px;
-      display:flex;
-      gap:12px;
-      align-items:center;
-      justify-content:space-between;
-    }
+    
+    
+    
+    
     .brand{display:flex; align-items:center; gap:10px; user-select:none;}
     .dot{
       width:14px;height: var(--special-band-height);border-radius:999px;
@@ -738,7 +728,7 @@ button:active, .iconBtn:active, .fChip:active, .starBtn:active, .starInline:acti
 /* ============================
    Premium UI polish (no new features)
    ============================ */
-html,body{ text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
 :root{
   --card: rgba(255,255,255,.055);
   --card2: rgba(255,255,255,.075);
@@ -1229,10 +1219,7 @@ body::before{ display:none !important; }
 :root{ --stageSolid: #0A0D14; }
 
 /* Make the page itself the single background */
-html, body{
-  background: var(--stageSolid) !important;
-  background-image: none !important;
-}
+html, 
 
 /* Common outer wrappers (safety net) */
 #app, .app, .wrap, .container, .main, .layout, .shell{
@@ -2720,12 +2707,7 @@ body::before, body::after,
    MOBILE PACK (Handy Optimierung)
    ============================= */
 @media (max-width: 560px){
-  header{
-    padding: 14px 12px 8px;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: flex-start;
-  }
+  
   .wrap{
     padding: 0 12px 12px;
     gap: 12px;
@@ -2842,7 +2824,7 @@ body::before, body::after,
    Makes the top edit area cleaner & easier on phones
    ============================= */
 @media (max-width: 560px){
-  header{ padding: 12px 12px 10px !important; }
+  
   .hdrRight{ width:100%; text-align:left; }
   .hdrRight .hdrTitle{ display:none !important; }
   .hdrSub{ font-size:12px !important; opacity:.9; line-height:1.25; }
@@ -3078,15 +3060,10 @@ img, video, canvas, svg { max-width: 100%; height: auto; }
 html{
   scrollbar-gutter: stable both-edges; /* Firefox/Chromium: prevents width jump */
 }
-body{
-  overflow-y: scroll; /* always reserve vertical scrollbar space */
-}
+
 
 /* Safety: nothing in views should exceed viewport */
-#listView, #profileView, #mapView, .wrap, main, header{
-  width: 100%;
-  max-width: 100%;
-}
+#listView, #profileView, #mapView, .wrap, main, 
 
 /* Leaflet popup / dist info must not enforce min-width on mobile */
 @media (max-width: 560px){
@@ -3195,24 +3172,10 @@ html{ scrollbar-gutter: stable; }
   }
 }
 
+
 </style>
-</head>
 
-<body>
-<header>
-  <div class="brand">
-    <div>
-      <h1>{{ page.so_title | default: page.hero_title | default: page.title }}</h1>
-      <div class="sub">{{ page.so_sub | default: page.hero_sub }}</div>
-    </div>
-  </div>
-
-  <div class="hdrRight">
-    <div class="hdrTitle"><span class="stats-title">{{ page.t_stats_title | default: page.stats_title }}</span></div>
-    <div class="hdrSub" id="statsText">{{ page.t_stats_initial | default: page.stats_initial }}</div>
-  </div>
-</header>
-
+<div class="friendsmap-wrap">
 <div class="wrap">
   <div class="card">
     <div class="panel">
@@ -7149,9 +7112,4 @@ document.addEventListener("DOMContentLoaded", ()=>{
 <button id="distanceFloatingBtn" title="Distance tool">📏</button>
 
 <div id="distanceHint"></div>
-</body>
-
-</html>
-
-
-
+</div>
