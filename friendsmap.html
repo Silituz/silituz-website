@@ -1,8 +1,142 @@
 ---
 layout: default
-title: Social Organizer
 lang: de
 permalink: /friendsmap/
+title: Social Organizer
+hero_title: Social Organizer
+hero_sub: von Silituz
+stats_title: '- Statistik -'
+stats_initial: 'Freunde: 0 · Länder: 0 · Längste Freundschaft: —'
+lbl_nickname: Spitzname *
+ph_nickname: z.B. Sun / Polina / ...
+lbl_birthdate: Geburtstag (optional)
+zodiac_initial: 'Sternzeichen: — | Chinesisches Element: — | Chinesisches Tier: —'
+lbl_birthplace: Geburtsort (optional)
+ph_birthplace: z.B. Warschau, Polen
+lbl_meton: Kennengelernt am (Datum, optional)
+lbl_current_address: Aktueller Ort/Adresse (optional)
+ph_current_address: z.B. Los Angeles, CA
+hint_current_address: Wird für Koordinaten genutzt (Auto‑Geocode), wenn keine Koordinaten
+  gesetzt sind.
+lbl_timezone: Zeitzone (IANA) *
+ph_timezone: z.B. America/Los_Angeles
+hint_timezone_examples: 'Beispiele: <span class="kbd">Europe/Berlin</span>, <span
+  class="kbd">America/Los_Angeles</span>, <span class="kbd">Asia/Tokyo</span>'
+lbl_coords: Koordinaten (optional)
+ph_coords: lat, lon (oder auf die Karte klicken)
+hint_coords: Klicke auf die Karte, um den Standort zu setzen.
+lbl_photo: Bild (Upload, optional)
+hint_photo: Vorschau erscheint hier.
+lbl_local_time: Ortszeit
+section_notes: Notizen
+tab_important: 🚨 Wichtig
+tab_work: 💼 Arbeit &amp; 🚀 Projekte
+tab_food: 🍕 Essen &amp; Ideen
+tab_other: 📦 Sonstiges
+tab_cycle: 🩸 Periode
+ph_notes_important: Dinge, die dringend, kritisch oder wichtig sind
+ph_notes_work: Arbeitsbezogene Aufgaben, Projekte und Ideen
+ph_notes_food: Essen &amp; Getränke, Restaurantideen, Orte zum Ausprobieren
+ph_notes_other: Sonstige Notizen
+cycle_lbl_start: 'Letzte Periode: Start'
+cycle_lbl_end: 'Letzte Periode: Ende'
+cycle_lbl_cycle_len: Zykluslänge (Tage)
+cycle_lbl_period_len: Periodenlänge (Tage)
+cycle_btn_add_range: 🩸 Zeitraum hinzufügen
+btn_clear: Leeren
+cycle_hint_storage: Wird lokal pro Person gespeichert. Vorhersagen sind Schätzungen
+  (kein medizinischer Rat).
+cycle_leg_period: 🩸 Periode
+cycle_leg_predicted: 🩸 Prognose
+cycle_leg_fertile: 🌿 Fruchtbar
+cycle_hint_calendar: 'Tipp: Klicke im Kalender auf Tage, um Start/Ende zu setzen.'
+lbl_fav_colors: Lieblingsfarben
+ph_fav_color: 'Farbe hinzufügen (z.B. türkis, gold, #ff8800)'
+btn_add: Hinzufügen
+hint_fav_colors: Bis zu 6 Farben.
+btn_save: Speichern / Marker setzen
+btn_new: Neu
+btn_delete: Löschen
+btn_remove_image: Bild entfernen
+tt_remove_image: Bild vom Eintrag entfernen
+hint_bullets_1: • Aktueller Ort kann per OpenStreetMap (Nominatim) automatisch geocodiert
+  werden.
+hint_bullets_2: • Alles wird in <b>localStorage</b> in diesem Browser gespeichert.
+  Nutze Export/Import, um Daten auf ein anderes Gerät zu übertragen.
+ph_search: Suchen (Name, Notizen, Daten, Zeitzone…)
+filter_all: Alle
+filter_fav: ⭐ Favoriten
+filter_now: 💚 Jetzt
+filter_maybe: 💛 Vielleicht
+filter_sleep: ❤️ Schlafend
+filter_bday: 🎂 Geburtstag
+filter_friend: 🎈 Freundschaft
+btn_export: JSON exportieren
+btn_import: JSON importieren (Datei)
+cluster_on: 'Cluster: An'
+cluster_off: 'Cluster: Aus'
+btn_my_location: Mein Standort
+tt_my_location: Meinen Standort anzeigen
+btn_delete_all: Alles löschen
+lbl_hide_notes: 🔒 Notizen verbergen (für Screenshots)
+badge_special_one: ♾️ Mein Herzensmensch
+badge_favorite: ⭐ Favorit
+btn_map: Karte
+tt_back_to_map: Zur Karte
+btn_edit: Bearbeiten
+tt_edit: In Formular laden
+tt_center_on_map: Auf Karte zentrieren
+img_preview_aria: Bildvorschau
+img_preview_alt: Vorschau
+img_tip_close: 'Tipp: außerhalb klicken oder <span class="kbd">Esc</span> drücken
+  zum Schließen'
+btn_close: Schließen
+export_filename: social-organizer.v2.json
+toast_export_created: Export erstellt (Datei + Zwischenablage)
+toast_select_image: Bitte eine Bilddatei auswählen
+toast_preparing_image: Bild wird vorbereitet…
+toast_image_ready: Bild bereit ✅
+toast_image_fail: Bild konnte nicht verarbeitet werden
+toast_added_fav: Zu Favoriten hinzugefügt ⭐
+toast_removed_fav: Aus Favoriten entfernt
+toast_entry_loaded: Eintrag geladen
+toast_addr_tz_found: Adresse + Zeitzone gefunden ✅
+toast_addr_found_tz_unknown: Adresse gefunden (Zeitzone unbekannt)
+toast_addr_found_tz_failed: Adresse gefunden (Zeitzone konnte nicht ermittelt werden)
+toast_addr_found: Adresse gefunden
+toast_need_nickname: Bitte einen Spitznamen eingeben
+toast_need_timezone: Bitte eine IANA‑Zeitzone eingeben
+toast_finding_address: Adresse wird gesucht…
+toast_need_coords_or_address: Bitte Koordinaten setzen (Kartenklick) oder eine Adresse
+  eingeben
+toast_updated: Aktualisiert
+toast_saved: Gespeichert
+toast_deleted: Gelöscht
+toast_all_deleted: Alles gelöscht
+toast_coords_set_map: Koordinaten gesetzt (Kartenklick)
+toast_coords_set_tz_failed: Koordinaten gesetzt (Zeitzone konnte nicht ermittelt werden)
+toast_place_not_found: Ort nicht gefunden
+toast_geo_permission: Standort konnte nicht abgerufen werden (Berechtigung?)
+toast_import_file_fail: Datei konnte nicht importiert werden
+toast_cycle_cleared: Zyklus gelöscht
+toast_distance_off: Distanz‑Tool deaktiviert
+toast_distance_on: Distanz‑Tool aktiviert
+toast_geo_not_supported: Geolocation wird nicht unterstützt
+toast_getting_location: Standort wird abgerufen…
+toast_image_removed_new: Bild entfernt (neuer Eintrag)
+toast_image_will_remove: Bild wird beim Speichern entfernt
+toast_import_no_entries: 'Import fehlgeschlagen: JSON enthält keine gültigen Einträge'
+toast_import_merged: Importiert (zusammengeführt) ✅
+toast_import_replaced: Importiert (ersetzt) ✅
+toast_manual_lookup_failed: Manuelle Suche fehlgeschlagen
+toast_max_colors: Max. 6 Farben
+toast_myloc_marker_set: Standort‑Marker gesetzt ✅
+toast_myloc_manual_set: Standort gesetzt (manuell) ✅
+toast_period_saved: Periode gespeichert ✅
+toast_pick_valid_start: Bitte ein gültiges Startdatum wählen
+toast_unknown_color: 'Unbekannte Farbe. Nutze einen CSS‑Farbnamen oder Hex wie #ff8800.'
+confirm_overwrite_prefix: Vorhandenen Eintrag überschreiben?
+confirm_overwrite_suffix: Die aktuellen Daten werden ersetzt.
 ---
 
 {% include friendsmap_shared.html %}
