@@ -3202,14 +3202,14 @@ html{ scrollbar-gutter: stable; }
 <header>
   <div class="brand">
     <div>
-      <h1>{{ page.so_title }}</h1>
-      <div class="sub">{{ page.so_sub }}</div>
+      <h1>{{ page.so_title | default: page.hero_title | default: page.title }}</h1>
+      <div class="sub">{{ page.so_sub | default: page.hero_sub }}</div>
     </div>
   </div>
 
   <div class="hdrRight">
-    <div class="hdrTitle"><span class="stats-title">{{ page.t_stats_title }}</span></div>
-    <div class="hdrSub" id="statsText">{{ page.t_stats_initial }}</div>
+    <div class="hdrTitle"><span class="stats-title">{{ page.t_stats_title | default: page.stats_title }}</span></div>
+    <div class="hdrSub" id="statsText">{{ page.t_stats_initial | default: page.stats_initial }}</div>
   </div>
 </header>
 
@@ -3219,16 +3219,16 @@ html{ scrollbar-gutter: stable; }
 
       <div class="row">
         <div>
-          <label>{{ page.t_lbl_nickname }}</label>
-          <input id="nickname" placeholder="{{ page.t_ph_nickname }}" />
+          <label>{{ page.t_lbl_nickname | default: page.lbl_nickname }}</label>
+          <input id="nickname" placeholder="{{ page.t_ph_nickname | default: page.ph_nickname }}" />
         </div>
         <div>
-          <label>{{ page.t_lbl_birthdate }}</label>
+          <label>{{ page.t_lbl_birthdate | default: page.lbl_birthdate }}</label>
           <input id="birthdate" type="date" />
           <div id="bdayCountdown" class="bdayCountdown"></div>
           <div class="zodiacBox">
             <div class="zodiacItem">
-              <span id="zodiacLine">{{ page.t_zodiac_line_initial }}</span>
+              <span id="zodiacLine">{{ page.t_zodiac_line_initial | default: page.zodiac_line_initial }}</span>
             </div>
           </div>
         </div>
@@ -3236,11 +3236,11 @@ html{ scrollbar-gutter: stable; }
 
       <div class="row">
         <div>
-          <label>{{ page.t_lbl_birthplace }}</label>
-          <input id="birthplace" placeholder="{{ page.t_ph_birthplace }}" />
+          <label>{{ page.t_lbl_birthplace | default: page.lbl_birthplace }}</label>
+          <input id="birthplace" placeholder="{{ page.t_ph_birthplace | default: page.ph_birthplace }}" />
         </div>
         <div>
-          <label>{{ page.t_lbl_met_on }}</label>
+          <label>{{ page.t_lbl_met_on | default: page.lbl_met_on }}</label>
 <input id="metOn" type="date" />
           <div id="metKnownForLine" class="bdayCountdown"></div>
 </div>
@@ -3248,34 +3248,34 @@ html{ scrollbar-gutter: stable; }
 
       <div class="row">
         <div>
-          <label>{{ page.t_lbl_current_address }}</label>
-          <input id="currentAddress" placeholder="{{ page.t_ph_current_address }}" />
-          <div class="hint">{{ page.t_hint_autogeocode }}</div>
+          <label>{{ page.t_lbl_current_address | default: page.lbl_current_address }}</label>
+          <input id="currentAddress" placeholder="{{ page.t_ph_current_address | default: page.ph_current_address }}" />
+          <div class="hint">{{ page.t_hint_autogeocode | default: page.hint_autogeocode }}</div>
         </div>
         <div>
-          <label>{{ page.t_lbl_timezone }}</label>
-          <input id="timezone" placeholder="{{ page.t_ph_timezone }}" list="tzlist" />
+          <label>{{ page.t_lbl_timezone | default: page.lbl_timezone }}</label>
+          <input id="timezone" placeholder="{{ page.t_ph_timezone | default: page.ph_timezone }}" list="tzlist" />
           <datalist id="tzlist"></datalist>
-          <div class="hint">{{ page.t_hint_timezone_examples }}</div>
+          <div class="hint">{{ page.t_hint_timezone_examples | default: page.hint_timezone_examples }}</div>
         </div>
       </div>
 
       <div class="row">
         <div>
-          <label>{{ page.t_lbl_native_lang }}</label>
-          <input id="nativeLang" placeholder="{{ page.t_ph_native_lang }}" />
+          <label>{{ page.t_lbl_native_lang | default: page.lbl_native_lang }}</label>
+          <input id="nativeLang" placeholder="{{ page.t_ph_native_lang | default: page.ph_native_lang }}" />
         </div>
         <div>
-          <label>{{ page.t_lbl_other_langs }}</label>
-          <input id="otherLangs" placeholder="{{ page.t_ph_other_langs }}" />
+          <label>{{ page.t_lbl_other_langs | default: page.lbl_other_langs }}</label>
+          <input id="otherLangs" placeholder="{{ page.t_ph_other_langs | default: page.ph_other_langs }}" />
         </div>
       </div>
 
       <div class="row">
         <div>
-          <label>{{ page.t_lbl_image }}</label>
+          <label>{{ page.t_lbl_image | default: page.lbl_image }}</label>
           <input id="imageFile" type="file" accept="image/*" />
-          <div class="hint">{{ page.t_hint_image_storage }}</div>
+          <div class="hint">{{ page.t_hint_image_storage | default: page.hint_image_storage }}</div>
           <div class="preview" id="imgPreview" style="display:none">
             <img id="imgPreviewEl" alt="Preview"/>
             <div class="hint" id="imgPreviewText">—</div>
@@ -3368,44 +3368,44 @@ html{ scrollbar-gutter: stable; }
 
       <div class="row">
         <div>
-          <label>{{ page.t_lbl_fav_colors }}</label>
+          <label>{{ page.t_lbl_fav_colors | default: page.lbl_fav_colors }}</label>
           <div class="colorInputRow">
-            <input id="favColorInput" type="text" placeholder="{{ page.t_ph_add_color }}" />
-            <button id="addFavColorBtn" type="button" class="secondary smallBtn">{{ page.t_btn_add }}</button>
+            <input id="favColorInput" type="text" placeholder="{{ page.t_ph_add_color | default: page.ph_add_color }}" />
+            <button id="addFavColorBtn" type="button" class="secondary smallBtn">{{ page.t_btn_add | default: page.btn_add }}</button>
           </div>
           <div id="favColorsPills" class="favColorsPills"></div>
-          <div class="hint">{{ page.t_hint_colors_limit }}</div>
+          <div class="hint">{{ page.t_hint_colors_limit | default: page.hint_colors_limit }}</div>
         </div>
       </div>
 
       <div class="btns">
-        <button id="saveBtn">{{ page.t_btn_save }}</button>
-        <button id="newBtn" class="secondary">{{ page.t_btn_new }}</button>
-        <button id="deleteBtn" class="danger" disabled>{{ page.t_btn_delete }}</button>
-        <button id="removeImgBtn" class="secondary" title="{{ page.t_tt_remove_image }}">{{ page.t_btn_remove_image }}</button>
+        <button id="saveBtn">{{ page.t_btn_save | default: page.btn_save }}</button>
+        <button id="newBtn" class="secondary">{{ page.t_btn_new | default: page.btn_new }}</button>
+        <button id="deleteBtn" class="danger" disabled>{{ page.t_btn_delete | default: page.btn_delete }}</button>
+        <button id="removeImgBtn" class="secondary" title="{{ page.t_tt_remove_image | default: page.tt_remove_image }}">{{ page.t_btn_remove_image | default: page.btn_remove_image }}</button>
       </div>
 
       <div class="hr"></div>
 
       <div class="hint">
-        • {{ page.t_hint_osm_line1 }}<br>
-        • {{ page.t_hint_localstorage_line2 }}
+        • {{ page.t_hint_osm_line1 | default: page.hint_osm_line1 }}<br>
+        • {{ page.t_hint_localstorage_line2 | default: page.hint_localstorage_line2 }}
       </div>
     </div>
 
       <div class="searchBar">
-    <input id="search" placeholder="{{ page.t_ph_search }}" />
+    <input id="search" placeholder="{{ page.t_ph_search | default: page.ph_search }}" />
   </div>
 
 
   <div class="filterBar" id="filterBar" aria-label="List filters">
-    <button class="fChip active" data-filter="all" type="button">{{ page.t_filter_all }}</button>
-    <button class="fChip" data-filter="fav" type="button">⭐ {{ page.t_filter_fav }}</button>
-    <button class="fChip" data-filter="now" type="button">💚 {{ page.t_filter_now }}</button>
-    <button class="fChip" data-filter="maybe" type="button">💛 {{ page.t_filter_maybe }}</button>
-    <button class="fChip" data-filter="sleep" type="button">❤️ {{ page.t_filter_sleep }}</button>
-    <button class="fChip" data-filter="bday" type="button">🎂 {{ page.t_filter_bday }}</button>
-    <button class="fChip" data-filter="friend" type="button">🎈 {{ page.t_filter_friendship }}</button>
+    <button class="fChip active" data-filter="all" type="button">{{ page.t_filter_all | default: page.filter_all }}</button>
+    <button class="fChip" data-filter="fav" type="button">⭐ {{ page.t_filter_fav | default: page.filter_fav }}</button>
+    <button class="fChip" data-filter="now" type="button">💚 {{ page.t_filter_now | default: page.filter_now }}</button>
+    <button class="fChip" data-filter="maybe" type="button">💛 {{ page.t_filter_maybe | default: page.filter_maybe }}</button>
+    <button class="fChip" data-filter="sleep" type="button">❤️ {{ page.t_filter_sleep | default: page.filter_sleep }}</button>
+    <button class="fChip" data-filter="bday" type="button">🎂 {{ page.t_filter_bday | default: page.filter_bday }}</button>
+    <button class="fChip" data-filter="friend" type="button">🎈 {{ page.t_filter_friendship | default: page.filter_friendship }}</button>
   </div>
 
 <!-- Alphabet helper (A–Z) -->
@@ -3416,25 +3416,25 @@ html{ scrollbar-gutter: stable; }
     <div class="footer-tools">
       <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
         <div class="btns">
-          <button id="exportBtn" class="secondary">{{ page.t_btn_export }}</button>
-          <button id="importBtn" class="secondary">{{ page.t_btn_import }}</button>
-          <button id="clusterToggleBtn" class="secondary">🧷 {{ page.t_btn_cluster_on }}</button>
+          <button id="exportBtn" class="secondary">{{ page.t_btn_export | default: page.btn_export }}</button>
+          <button id="importBtn" class="secondary">{{ page.t_btn_import | default: page.btn_import }}</button>
+          <button id="clusterToggleBtn" class="secondary">🧷 {{ page.t_btn_cluster_on | default: page.btn_cluster_on }}</button>
           
-          <button id="myLocBtn" class="secondary" title="{{ page.t_tt_my_location }}">📍 {{ page.t_btn_my_location }}</button>
-          <button id="clearAllBtn" class="danger">{{ page.t_btn_delete_all }}</button>
+          <button id="myLocBtn" class="secondary" title="{{ page.t_tt_my_location | default: page.tt_my_location }}">📍 {{ page.t_btn_my_location | default: page.btn_my_location }}</button>
+          <button id="clearAllBtn" class="danger">{{ page.t_btn_delete_all | default: page.btn_delete_all }}</button>
         </div>
 
         <div class="toggleRow">
           <input id="mergeImport" type="checkbox" />
           <label for="mergeImport" style="margin:0; cursor:pointer;">
-            {{ page.t_toggle_merge }}
+            {{ page.t_toggle_merge | default: page.toggle_merge }}
           </label>
         </div>
 
         <div class="toggleRow">
           <input id="notesLock" type="checkbox" />
           <label for="notesLock" style="margin:0; cursor:pointer;">
-            🔒 {{ page.t_toggle_hide_notes }}
+            🔒 {{ page.t_toggle_hide_notes | default: page.toggle_hide_notes }}
           </label>
         </div>
 </div>
@@ -3454,14 +3454,14 @@ html{ scrollbar-gutter: stable; }
         <div class="profileTitle">
           <b id="profileName">—</b>
           <div class="badgeRow">
-            <div class="specialOneBadge">♾️ {{ page.t_badge_special }}</div>
-            <div class="favBadge">⭐ {{ page.t_badge_favorite }}</div>
+            <div class="specialOneBadge">♾️ {{ page.t_badge_special | default: page.badge_special }}</div>
+            <div class="favBadge">⭐ {{ page.t_badge_favorite | default: page.badge_favorite }}</div>
           </div>
           <span id="profileSub">—</span>
         </div>
         <div class="btns" style="gap:8px; justify-content:flex-end;">
-          <button id="profileBack" class="secondary" title="{{ page.t_tt_back_to_map }}">🗺️ {{ page.t_btn_map }}</button>
-          <button id="profileEdit" class="secondary" title="{{ page.t_tt_edit }}">✏️ {{ page.t_btn_edit }}</button>
+          <button id="profileBack" class="secondary" title="{{ page.t_tt_back_to_map | default: page.tt_back_to_map }}">🗺️ {{ page.t_btn_map | default: page.btn_map }}</button>
+          <button id="profileEdit" class="secondary" title="{{ page.t_tt_edit | default: page.tt_edit }}">✏️ {{ page.t_btn_edit | default: page.btn_edit }}</button>
           <button id="profilePin" class="secondary" title="Center on map">📍</button>
         </div>
       </div>
@@ -3477,8 +3477,8 @@ html{ scrollbar-gutter: stable; }
   <div class="imgModalInner" role="dialog" aria-modal="true" aria-label="Image preview">
     <img id="imgModalImg" alt="Preview" />
     <div class="imgModalHint">
-      <span>{{ page.t_img_tip_close }}</span>
-      <button id="imgModalClose" class="secondary" style="padding:8px 12px;">{{ page.t_btn_close }}</button>
+      <span>{{ page.t_img_tip_close | default: page.img_tip_close }}</span>
+      <button id="imgModalClose" class="secondary" style="padding:8px 12px;">{{ page.t_btn_close | default: page.btn_close }}</button>
     </div>
   </div>
 </div>
@@ -5695,7 +5695,7 @@ const img = entry.imageData
     $("profileView").classList.toggle("isSpecialProfile", !!specialId && entry.id===specialId );
 
         $("profileView").classList.toggle("isBothProfileBadges", !!entry.fav && !!specialId && entry.id===specialId );
-$("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">{{ page.t_local_time }}</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}` : (entry.connection ? escapeHTML(entry.connection) : "—");
+$("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">{{ page.t_local_time | default: page.local_time }}</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}` : (entry.connection ? escapeHTML(entry.connection) : "—");
 
     const imgBlock = entry.imageData
       ? `
@@ -6356,7 +6356,7 @@ function renderList(){
             ${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}
           </div>
 
-          <div class="tiny"><span class="localLabel">{{ page.t_local_time }}</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
+          <div class="tiny"><span class="localLabel">{{ page.t_local_time | default: page.local_time }}</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
         </div>
         <div class="actions">
           ${avatar}
@@ -6421,7 +6421,7 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
     if(e && $("profileView").style.display !== "none"){
       const t = personLocalTime(e.tz) || "—";
       $("profileSub").innerHTML = e.tz
-        ? `<span class="pheart">${heartForTimezone(e.tz)}</span> <span class="localLabel">{{ page.t_local_time }}</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t)}</span> <span class="pline">(${escapeHTML(e.tz)})</span>${e.connection ? " · " + escapeHTML(e.connection) : ""}`
+        ? `<span class="pheart">${heartForTimezone(e.tz)}</span> <span class="localLabel">{{ page.t_local_time | default: page.local_time }}</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t)}</span> <span class="pline">(${escapeHTML(e.tz)})</span>${e.connection ? " · " + escapeHTML(e.connection) : ""}`
         : (e.connection ? escapeHTML(e.connection) : "—");
     }
   }
