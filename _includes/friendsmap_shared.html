@@ -176,8 +176,7 @@
       background: rgba(0,0,0,.05);
     }
     .item:hover{background: rgba(0,0,0,.12)}
-    .item.selected{background: linear-gradient(135deg, rgba(64,165,255,.20), rgba(87,255,170,.12));outline: 1px solid rgba(122,167,255,.38); outline-offset:-1px;box-shadow: 0 0 0 1px rgba(87,255,170,.18), 0 10px 30px rgba(0,0,0,.35), 0 0 28px rgba(87,255,170,.22);position:relative;}
-.item.selected::after{content:'';position:absolute;inset:-1px;border-radius:14px;pointer-events:none;box-shadow: 0 0 0 1px rgba(56,189,248,.18), 0 0 24px rgba(56,189,248,.22);opacity:.9;}
+    .item.selected{outline: 1px solid rgba(122,167,255,.35); outline-offset:-1px}
 
     .meta{min-width:0}
     .nick{font-weight:700; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
@@ -2023,13 +2022,13 @@ html{ scrollbar-gutter: stable; }
 
       <div class="row">
         <div>
-                    <label>Notes</label>
+                    <label>{{ page.t_notes | default: page.notes | default: 'Notes' }}</label>
           <div class="notesTabs" id="notesTabs">
-            <button type="button" class="tabBtn active" data-notes-tab="important">{{ page.t_tab_important | default: page.tab_important | default: '🚨 Important' }}</button>
-            <button type="button" class="tabBtn" data-notes-tab="work">{{ page.t_tab_work | default: page.tab_work | default: '💼 Work &amp; 🚀 Projects' }}</button>
-            <button type="button" class="tabBtn" data-notes-tab="food">{{ page.t_tab_food | default: page.tab_food | default: '🍕 Food &amp; More' }}</button>
-            <button type="button" class="tabBtn" data-notes-tab="other">{{ page.t_tab_other | default: page.tab_other | default: '📦 Other' }}</button>
-            <button type="button" class="tabBtn" data-notes-tab="cycle">{{ page.t_tab_cycle | default: page.tab_cycle | default: '🩸 Cycle' }}</button>
+            <button type="button" class="tabBtn active" data-notes-tab="important">🚨 Important</button>
+            <button type="button" class="tabBtn" data-notes-tab="work">💼 Work &amp; 🚀 Projects</button>
+            <button type="button" class="tabBtn" data-notes-tab="food">🍕 Food &amp; More</button>
+            <button type="button" class="tabBtn" data-notes-tab="other">📦 Other</button>
+            <button type="button" class="tabBtn" data-notes-tab="cycle">🩸 Cycle</button>
           </div>
 
           <div class="notesPanels">
@@ -2041,38 +2040,38 @@ html{ scrollbar-gutter: stable; }
               <div class="cycleGrid">
                 <div class="cycleRow">
                   <div>
-                    <div class="miniLabel">{{ page.t_last_period_start | default: page.last_period_start | default: 'Last period start' }}</div>
+                    <div class="miniLabel">Last period start</div>
                     <input id="cycleStart" type="date" />
                   </div>
                   <div>
-                    <div class="miniLabel">Last period end</div>
+                    <div class="miniLabel">{{ page.t_last_period_end | default: page.last_period_end | default: 'Last period end' }}</div>
                     <input id="cycleEnd" type="date" />
                   </div>
                 </div>
 
                 <div class="cycleRow">
                   <div>
-                    <div class="miniLabel">{{ page.t_cycle_len | default: page.cycle_len | default: 'Cycle length (days)' }}</div>
+                    <div class="miniLabel">Cycle length (days)</div>
                     <input id="cycleLen" type="number" min="15" max="60" step="1" placeholder="28" />
                   </div>
                   <div>
-                    <div class="miniLabel">{{ page.t_period_len | default: page.period_len | default: 'Period length (days)' }}</div>
+                    <div class="miniLabel">Period length (days)</div>
                     <input id="periodLen" type="number" min="1" max="15" step="1" placeholder="5" />
                   </div>
                 </div>
 
                 <div class="cycleActions">
-                  <button type="button" id="cycleAddBtn" class="btn secondary smallBtn">Add 🩸 range</button>
-                  <button type="button" id="cycleClearBtn" class="btn danger smallBtn">{{ page.t_clear | default: page.clear | default: 'Clear' }}</button>
+                  <button type="button" id="cycleAddBtn" class="btn secondary smallBtn">{{ page.t_add_range | default: page.add_range | default: 'Add 🩸 range' }}</button>
+                  <button type="button" id="cycleClearBtn" class="btn danger smallBtn">Clear</button>
                 </div>
 
                 <div class="cycleHint">
-                  Stored locally per person. Predictions are estimates (not medical advice).
+                  {{ page.t_cycle_hint | default: page.cycle_hint | default: 'Stored locally per person. Predictions are estimates (not medical advice).' }}
                   <span class="cycleLegend">
-                    <span class="leg legPeriod">🩸 period</span>
-                    <span class="leg legPred">🩸 predicted</span>
-                    <span class="leg legFert">🌿 fertile</span>
-                    <span class="leg legOvu">⭐ ovulation</span>
+                    <span class="leg legPeriod">{{ page.t_leg_period | default: page.leg_period | default: '🩸 period' }}</span>
+                    <span class="leg legPred">{{ page.t_leg_predicted | default: page.leg_predicted | default: '🩸 predicted' }}</span>
+                    <span class="leg legFert">{{ page.t_leg_fertile | default: page.leg_fertile | default: '🌿 fertile' }}</span>
+                    <span class="leg legOvu">{{ page.t_leg_ovulation | default: page.leg_ovulation | default: '⭐ ovulation' }}</span>
                   </span>
                 </div>
 
@@ -2571,11 +2570,7 @@ function yearsMonthsDaysSince(startISO){
       return;
     }
     const { years, months, days } = diff;
-    const knownTpl = {{ page.t_known_for_tpl | default: page.known_for_tpl | default: 'Known for %{years} years, %{months} months and %{days} days' | jsonify }};
-    line.textContent = knownTpl
-      .replace(/\%\{years\}/g, String(years))
-      .replace(/\%\{months\}/g, String(months))
-      .replace(/\%\{days\}/g, String(days));
+    line.textContent = `Known for ${years} years, ${months} months and ${days} days`;
   }
 
 function updateBirthdayCountdownUI(){
@@ -2708,60 +2703,166 @@ function updateBirthdayCountdownUI(){
   }
 
   function formatZodiacLineHTML(birthdateStr){
-    const LANG = {{ page.lang | default: 'en' | jsonify }};
-    const initial = {{ page.t_zodiac_line_initial | default: page.zodiac_initial | default: 'Zodiac: — | Chinese Element: — | Chinese Zodiac: —' | jsonify }};
-    const tpl = {{ page.t_zodiac_line_tpl | default: page.zodiac_tpl | default: 'Zodiac: %{z} | Chinese Element: %{e} | Chinese Zodiac: %{c}' | jsonify }};
-
     // birthdateStr: YYYY-MM-DD
-    if(!birthdateStr) return initial;
+    if(!birthdateStr) return `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
     const d = new Date(birthdateStr + "T00:00:00");
-    if(Number.isNaN(d.getTime())) return initial;
+    if(Number.isNaN(d.getTime())) return `Zodiac: — | Chinese Element: — | Chinese Zodiac: —`;
 
-    const signKey = westernZodiac(d.getMonth()+1, d.getDate()); // keep EN key for emoji/url
-    const signEmoji = westernZodiacEmoji(signKey);
-    const signUrl = westernZodiacUrl(signKey);
-
-    const westernDe = {
-      Capricorn:"Steinbock", Aquarius:"Wassermann", Pisces:"Fische", Aries:"Widder",
-      Taurus:"Stier", Gemini:"Zwillinge", Cancer:"Krebs", Leo:"Löwe",
-      Virgo:"Jungfrau", Libra:"Waage", Scorpio:"Skorpion", Sagittarius:"Schütze"
-    };
-    const signLabelText = (LANG==="de" && westernDe[signKey]) ? westernDe[signKey] : signKey;
-    const signLabel = signKey === "—" ? "—" : `${signLabelText} ${signEmoji}`.trim();
+    const sign = westernZodiac(d.getMonth()+1, d.getDate());
+    const signEmoji = westernZodiacEmoji(sign);
+    const signLabel = sign === "—" ? "—" : `${sign} ${signEmoji}`.trim();
+    const signUrl = westernZodiacUrl(sign);
 
     const year = d.getFullYear();
-    const animalKey = chineseZodiac(year);
-    const elementKey = chineseElement(year);
+    const animal = chineseZodiacAnimal(year);
+    const animalEmoji = chineseZodiacEmoji(animal);
+    const animalLabel = animal === "—" ? "—" : `${animal} ${animalEmoji}`.trim();
+    const animalUrl = chineseZodiacUrl(animal);
 
-    const animalsDe = {Rat:"Ratte", Ox:"Büffel", Tiger:"Tiger", Rabbit:"Hase", Dragon:"Drache", Snake:"Schlange", Horse:"Pferd",
-                       Goat:"Ziege", Monkey:"Affe", Rooster:"Hahn", Dog:"Hund", Pig:"Schwein"};
-    const elementsDe = {Wood:"Holz", Fire:"Feuer", Earth:"Erde", Metal:"Metall", Water:"Wasser"};
+    const el = chineseZodiacElement(year);
+    const elEmoji = chineseElementEmoji(el);
+    const elLabel = el ? `${el} ${elEmoji}`.trim() : "—";
 
-    const animalLabel = (LANG==="de" && animalsDe[animalKey]) ? animalsDe[animalKey] : animalKey;
-    const elementLabel = (LANG==="de" && elementsDe[elementKey]) ? elementsDe[elementKey] : elementKey;
+    const signHTML = (signUrl && sign !== "—")
+      ? `<a class="zodiacLink" href="${signUrl}" target="_blank" rel="noopener noreferrer">${escapeHTML(signLabel)}</a>`
+      : `${escapeHTML(signLabel)}`;
 
-    const signHtml = signUrl && signKey !== "—"
-      ? `<a class="zLink" href="${signUrl}" target="_blank" rel="noopener">${escapeHTML(signLabel)}</a>`
-      : escapeHTML(signLabel);
+    const animalHTML = (animalUrl && animal !== "—")
+      ? `<a class="zodiacLink" href="${animalUrl}" target="_blank" rel="noopener noreferrer">${escapeHTML(animalLabel)}</a>`
+      : `${escapeHTML(animalLabel)}`;
 
-    const lineText = tpl
-      .replace(/\%\{z\}/g, signLabelText)
-      .replace(/\%\{e\}/g, elementLabel)
-      .replace(/\%\{c\}/g, animalLabel);
-
-    // keep the nice link on western sign, but rest is text
-    // We rebuild as HTML so the sign can stay clickable
-    // Example: "Zodiac: <a>...</a> | Chinese Element: X | Chinese Zodiac: Y"
-    // We'll split once at "%{z}" position by using a marker.
-    const marker = "__Z__";
-    const htmlTpl = tpl.replace(/\%\{z\}/g, marker);
-    const parts = htmlTpl.split(marker);
-    const left = parts[0] || "";
-    const right = parts[1] || "";
-    return `${escapeHTML(left)}${signHtml}${escapeHTML(right)}`
-      .replace(/\%\{e\}/g, escapeHTML(elementLabel))
-      .replace(/\%\{c\}/g, escapeHTML(animalLabel));
+    return `Zodiac: ${signHTML} | Chinese Element: ${escapeHTML(elLabel)} | Chinese Zodiac: ${animalHTML}`;
   }
+
+  function updateZodiacUI(){
+    $("zodiacLine").innerHTML = formatZodiacLineHTML($("birthdate").value);
+  }
+  $("birthdate").addEventListener("change", ()=>{ updateZodiacUI(); updateBirthdayCountdownUI(); });
+  $("birthdate").addEventListener("input", ()=>{ updateZodiacUI(); updateBirthdayCountdownUI(); });
+  $("birthdate").addEventListener("blur", ()=>{ updateZodiacUI(); updateBirthdayCountdownUI(); });
+
+  $("metOn").addEventListener("change", updateMetCountdownUI);
+  $("metOn").addEventListener("input", updateMetCountdownUI);
+  $("metOn").addEventListener("blur", updateMetCountdownUI);
+
+
+  // ==============================
+  // Timezone suggestions
+  // ==============================
+  (function fillTZ(){
+    const list = $("tzlist");
+    try{
+      const tzs = (Intl.supportedValuesOf ? Intl.supportedValuesOf("timeZone") : []);
+      for(const tz of tzs){
+        const opt = document.createElement("option");
+        opt.value = tz;
+        list.appendChild(opt);
+      }
+    }catch{}
+  })();
+
+  // ==============================
+  // Image upload (compress + base64)
+  // ==============================
+  let pendingImageData = null;
+
+  function showPreview(base64, name){
+    const box = $("imgPreview");
+    const img = $("imgPreviewEl");
+    const txt = $("imgPreviewText");
+    if(!base64){
+      box.style.display = "none";
+      img.src = "";
+      txt.textContent = "";
+      return;
+    }
+    box.style.display = "flex";
+    img.src = base64;
+    txt.textContent = name ? `Selected: ${name}` : "Selected";
+  }
+  function clearPendingImage(alsoInput=true){
+    pendingImageData = null;
+    showPreview(null, null);
+    if(alsoInput) $("imageFile").value = "";
+  }
+
+  async function fileToCompressedBase64(file, opts={}){
+    const maxW = opts.maxWidth ?? 560;
+    const maxH = opts.maxHeight ?? 560;
+    const quality = opts.quality ?? 0.78;
+    const outType = opts.type ?? "image/jpeg";
+
+    const dataUrl = await new Promise((resolve, reject)=>{
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = reject;
+      r.readAsDataURL(file);
+    });
+
+    const img = await new Promise((resolve, reject)=>{
+      const i = new Image();
+      i.onload = () => resolve(i);
+      i.onerror = reject;
+      i.src = dataUrl;
+    });
+
+    let { width, height } = img;
+    const ratio = Math.min(maxW / width, maxH / height, 1);
+    width = Math.round(width * ratio);
+    height = Math.round(height * ratio);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d", { alpha: false });
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(img, 0, 0, width, height);
+
+    return canvas.toDataURL(outType, quality);
+  }
+
+  $("imageFile").addEventListener("change", async (e)=>{
+    const file = e.target.files?.[0];
+    if(!file){ clearPendingImage(false); return; }
+    if(!file.type.startsWith("image/")){
+      toast({{ page.t_toast_select_image | jsonify }});
+      clearPendingImage();
+      return;
+    }
+    try{
+      toast({{ page.t_toast_preparing_image | jsonify }});
+      pendingImageData = await fileToCompressedBase64(file, { maxWidth:560, maxHeight:560, quality:0.78, type:"image/jpeg" });
+      showPreview(pendingImageData, file.name);
+      toast({{ page.t_toast_image_ready | jsonify }});
+    }catch{
+      toast({{ page.t_toast_image_fail | jsonify }});
+      clearPendingImage();
+    }
+  });
+
+  // ==============================
+  // Data model
+  // Entry:
+  // { id, nickname, birthdate, birthplace, currentAddress, metOn, connection, connection,
+  //   nativeLang, otherLangs, tz, imageData, notes, favoriteColors, cycle, lat, lon, createdAt, updatedAt }
+  // ==============================
+  let entries = load();
+  const entryById = new Map();
+  let selectedId = null;
+
+// Special person (only one) stored locally
+const SPECIAL_STORAGE_KEY = "friendsmap_special_id";
+
+let specialId = (()=>{ try{ return localStorage.getItem(SPECIAL_STORAGE_KEY) || ""; }catch{ return ""; } })();
+
+function validateSpecialId(){
+  if(!specialId) return;
+  if(!entries.some(e=>e && e.id === specialId)){
+    specialId = "";
+    try{ localStorage.removeItem(SPECIAL_STORAGE_KEY); }catch{}
+  }
+}
 validateSpecialId();
 
 
