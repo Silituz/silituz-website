@@ -189,7 +189,10 @@
     #soApp .item.selected{outline: 1px solid rgba(122,167,255,.35); outline-offset:-1px}
 
     #soApp .meta{min-width:0}
-    #soApp .nick{font-weight:700; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    #soApp .nick{font-weight:700; font-size:14px; display:flex; gap:8px; align-items:flex-start;}
+    #soApp .nameBlock{min-width:0; display:flex; flex-direction:column; line-height:1.1; flex:1;}
+    #soApp .nameMain{color: var(--emerald) !important; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:.15px;}
+    #soApp .nameSub{color: var(--muted) !important; font-weight:600; font-size:12px; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:.95;}
     #soApp .tiny{font-size:12px; color:var(--muted); margin-top:3px}
 
     #soApp .actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
@@ -366,7 +369,9 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
     #soApp .popup .pnotes{ white-space: pre-line; }
-    #soApp .popup .pname{font-weight:800; font-size:13.5px; margin:0 0 6px}
+    #soApp .popup .pname{font-weight:800; font-size:13.5px; margin:0 0 6px; display:flex; align-items:flex-start; gap:6px}
+    #soApp .popup .pnameBlock{display:flex; flex-direction:column; min-width:0}
+    #soApp .popup .pMain{font-weight:800; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
     #soApp .popup .pline{font-size:12px; margin:3px 0; color: var(--muted)}
     #soApp .popup .ptime{font-weight:700; color: var(--text)}
     #soApp .popup .thumbRow{display:flex; gap:10px; align-items:center; margin-top:8px}
@@ -395,6 +400,61 @@
       font-size:12px;
     }
     #soApp .toggleRow input{width:auto; margin:0}
+
+
+    #soApp .miniToggle{
+      display:flex; align-items:center; gap:10px;
+      color: var(--muted);
+      font-size:12px;
+    }
+    #soApp .miniToggle input{ width:auto; margin:0; }
+
+    #soApp .realNameLine{
+      margin-top:4px;
+      font-size:12px;
+      color: var(--muted);
+      opacity:.95;
+    }
+    #soApp .realNameLine.locked{
+      filter: blur(6px);
+      opacity:.55;
+    }
+    #soApp .profileRealName{
+      margin-top:6px;
+      font-size:13px;
+      color: var(--muted);
+      opacity:.95;
+    }
+    #soApp .profileRealName.locked{
+      filter: blur(7px);
+      opacity:.55;
+    }
+
+    #soApp .connPills{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+    #soApp .connPill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.10);
+      font-size:12px;
+      color: rgba(255,255,255,.92);
+    }
+    #soApp .connPill .open{
+      cursor:pointer;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+    #soApp .connPill .xbtn{
+      border:0;
+      background:transparent;
+      color: rgba(255,255,255,.70);
+      cursor:pointer;
+      font-size:14px;
+      line-height:1;
+      padding:0;
+    }
 
     /* Image modal */
     #soApp .imgModal{
@@ -543,9 +603,10 @@
     }
 
     /* Emerald highlight for name + Local Time */
-    #soApp .ename, #soApp .popup .pnick, #soApp #profileName, #soApp .localLabel, #soApp .localTimeVal{
+    #soApp .nameMain, #soApp .popup .pMain, #soApp #profileName, #soApp .localLabel, #soApp .localTimeVal{
       color: var(--emerald) !important;
     }
+    #soApp .popup .pSub{ color: var(--muted) !important; font-weight:600; font-size:12px; margin-top:2px; opacity:.95; }
     #soApp #profileName{ font-weight:800; }
     #soApp .popup .pname{ margin:0 0 6px; }
     #soApp .popup .pname .pheart{ margin-right:6px; }
@@ -803,7 +864,7 @@
 
 /* typography hierarchy */
 #soApp .nick{ gap:8px; }
-#soApp .ename{
+#soApp .nameMain{
   letter-spacing: .15px;
 }
 #soApp .tiny{
@@ -879,7 +940,7 @@
 }
 
 /* tiny shimmer line (very subtle) */
-#soApp .item.isSelected.isFav .ename{
+#soApp .item.isSelected.isFav .nameMain{
   text-shadow: 0 0 18px rgba(255, 220, 120, .18);
 }
 
@@ -2165,7 +2226,7 @@
 }
 
 /* Name glow: copy Favorite behavior */
-#soApp .item.isSelected.isSpecial .ename, #soApp .item.isSelected.isFav.isSpecial .ename{
+#soApp .item.isSelected.isSpecial .nameMain, #soApp .item.isSelected.isFav.isSpecial .nameMain{
   text-shadow: 0 0 18px rgba(80,240,230,.18) !important;
 }
 
@@ -2656,11 +2717,13 @@
   #soApp .actions{ justify-content: flex-start; }
   #soApp .nick{
     white-space: normal;
-    overflow: hidden;
-    text-overflow: clip;
+    overflow: visible;
+  }
+  #soApp .nameMain, #soApp .nameSub{
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   #soApp .infoBlock{
     white-space: normal;
@@ -3120,8 +3183,15 @@
 
       <div class="row">
         <div>
-          <label>Nickname *</label>
+          <label>Nickname / Display name *</label>
           <input id="nickname" placeholder="e.g. Silituz / Coco / ..." />
+
+          <label style="margin-top:10px;">Real name (optional)</label>
+          <input id="realName" placeholder="e.g. René Wirth" />
+          <div class="miniToggle" style="margin-top:8px;">
+            <input id="showRealName" type="checkbox" checked />
+            <label for="showRealName" style="margin:0; cursor:pointer;">Show real name as main name (nickname below)</label>
+          </div>
         </div>
         <div>
           <label>Birthdate (optional)</label>
@@ -3185,6 +3255,20 @@
             <option value="Unknown">Unknown</option>
           </select>
           <div class="hint">ABO + Rh factor (e.g. O−). Leave empty if unknown.</div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div>
+          <label>Connections (optional)</label>
+          <div class="colorInputRow">
+            <select id="connSelect"></select>
+            <select id="connRelType"></select>
+            <button id="addConnBtn" type="button" class="secondary smallBtn">Add</button>
+          </div>
+          <div id="connPills" class="connPills"></div>
+          <div class="hint">Link friends together (network + quick navigation). You can add/remove anytime.</div>
         </div>
       </div>
 
@@ -3351,7 +3435,15 @@
         <div class="toggleRow">
           <input id="notesLock" type="checkbox" />
           <label for="notesLock" style="margin:0; cursor:pointer;">
-            🔒 Hide notes (safe for screenshots)
+            🔒 Privacy mode (hide notes + private fields)
+          </label>
+        </div>
+
+
+        <div class="toggleRow">
+          <input id="linksToggle" type="checkbox" />
+          <label for="linksToggle" style="margin:0; cursor:pointer;">
+            🕸️ Show connection links on map
           </label>
         </div>
 </div>
@@ -3370,6 +3462,7 @@
       <div class="profileHead">
         <div class="profileTitle">
           <b id="profileName">—</b>
+          <div id="profileRealName" class="profileRealName"></div>
           <div class="badgeRow">
             <div class="specialOneBadge">♾️ My Special One</div>
             <div class="favBadge">⭐ Favorite</div>
@@ -3407,6 +3500,14 @@
   const LS_KEY = "world_friends_map_final_en_with_file_import_v1";
   const NOTES_LOCK_KEY = LS_KEY + "__notes_hidden";
   let notesHidden = (localStorage.getItem(NOTES_LOCK_KEY) === "1");
+
+  const LINKS_TOGGLE_KEY = LS_KEY + "__links_on";
+  let linksOn = (()=>{ 
+    try{
+      const v = localStorage.getItem(LINKS_TOGGLE_KEY);
+      return (v === null) ? true : (v === "1");
+    }catch{ return true; }
+  })();
   const $ = (id) => document.getElementById(id);
 
   function toast(msg){
@@ -3420,6 +3521,81 @@
   function escapeHTML(s){
     return String(s ?? "").replace(/[&<>\"']/g, (c)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
   }
+
+  // ==============================
+  // Display name helper (Nickname + Real name)
+  // - If real name is allowed (checkbox) and privacy mode is OFF:
+  //     Main = real name (emerald), Sub = nickname (muted)
+  // - Otherwise:
+  //     Main = nickname (emerald), Sub = "" (or 🔒 Hidden when real exists but is hidden)
+  // ==============================
+  function displayNames(entry){
+    const nick = (entry?.nickname || "").trim();
+    const rn = (entry?.realName || "").trim();
+    const allowReal = !!entry?.showRealName && !!rn;
+
+    if(allowReal && notesHidden){
+      if(nick) return { main: nick, sub: "🔒 Hidden" };
+      return { main: "🔒 Hidden", sub: "" };
+    }
+    if(allowReal){
+      if(nick) return { main: rn, sub: nick };
+      return { main: rn, sub: "" };
+    }
+    if(nick) return { main: nick, sub: "" };
+    if(rn) return { main: rn, sub: "" };
+    return { main: "—", sub: "" };
+  }
+
+  function normalizeConnectionsArray(raw, selfId){
+    // Supports:
+    // - legacy: ["id1","id2"]
+    // - v3: [{id:"id1", type:"Freunde"}, ...]
+    let arr = Array.isArray(raw) ? raw : [];
+    const out = [];
+    const seen = new Set();
+
+    for(const v of arr){
+      let id = "";
+      let type = "Kennen sich";
+
+      if(typeof v === "string"){
+        id = v;
+      }else if(v && typeof v === "object"){
+        id = String(v.id || v.targetId || v.to || "").trim();
+        if(typeof v.type === "string" && v.type.trim()) type = v.type.trim();
+        else if(typeof v.relType === "string" && v.relType.trim()) type = v.relType.trim();
+        else if(typeof v.relationship === "string" && v.relationship.trim()) type = v.relationship.trim();
+      }
+
+      id = String(id || "").trim().slice(0, 80);
+      type = String(type || "").trim().slice(0, 40) || "Kennen sich";
+
+      if(!id) continue;
+      if(selfId && id === selfId) continue;
+      if(seen.has(id)) continue;
+      seen.add(id);
+      out.push({ id, type });
+      if(out.length >= 16) break;
+    }
+    return out;
+  }
+
+  function connectionsText(connections){
+    if(!Array.isArray(connections)) return "";
+    const parts = [];
+    for(const c of connections){
+      const id = (typeof c === "string") ? String(c||"") : String(c?.id || c?.targetId || "");
+      if(!id) continue;
+      const t = entryById.get(id);
+      if(!t) continue;
+      const nm = displayNames(t).main || (t.nickname||"—");
+      const type = (typeof c === "object" && c && typeof c.type === "string" && c.type.trim()) ? c.type.trim() : "";
+      parts.push(type ? `${nm} (${type})` : nm);
+    }
+    return parts.join(", ");
+  }
+
 
   // ==============================
   // Distance helpers (My Location)
@@ -4029,7 +4205,7 @@ function updateBirthdayCountdownUI(){
   // ==============================
   // Data model
   // Entry:
-  // { id, nickname, birthdate, birthplace, currentAddress, metOn, connection, bloodType,
+  // { id, nickname, realName, showRealName, connections, birthdate, birthplace, currentAddress, metOn, connection, bloodType,
   //   nativeLang, otherLangs, tz, imageData, notes, favoriteColors, cycle, lat, lon, createdAt, updatedAt }
   // ==============================
   let entries = load();
@@ -4102,13 +4278,23 @@ function setSpecial(id){
       // normalize blood type
       e.bloodType = (typeof e.bloodType === "string") ? e.bloodType.trim().slice(0, 12) : "";
 
-      e.fav = !!e.fav;
+      
+
+      // normalize real name + display mode
+      e.realName = (typeof e.realName === "string") ? e.realName.trim().slice(0, 80) : "";
+      if(typeof e.showRealName !== "boolean") e.showRealName = !!e.realName;
+
+      // normalize connections (legacy IDs or typed objects)
+      e.connections = normalizeConnectionsArray(e.connections, e.id);
+e.fav = !!e.fav;
       return e;
     });
   }
   function save(){
     localStorage.setItem(LS_KEY, JSON.stringify(entries));
     rebuildEntryById();
+    refreshConnectionsSelect();
+    renderConnectionPills();
     renderList();
     // Remove temporary pin
     try{ if(tempPin){ tempLayer.removeLayer(tempPin); tempPin = null; } }catch{}
@@ -4126,6 +4312,15 @@ function setSpecial(id){
   function applyNotesLockUI(){
     const cb = $("notesLock");
     if(cb) cb.checked = !!notesHidden;
+  }
+
+  function applyLinksToggleUI(){
+    const cb = $("linksToggle");
+    if(cb) cb.checked = !!linksOn;
+  }
+  function setLinksOn(v){
+    linksOn = !!v;
+    try{ localStorage.setItem(LINKS_TOGGLE_KEY, linksOn ? "1" : "0"); }catch{}
   }
   
   // ==============================
@@ -5002,6 +5197,50 @@ function refreshMarkerPopups(){
   }).addTo(map);
 
 
+  // ==============================
+  // Connection links layer (network)
+  // ==============================
+  map.createPane("connectionsPane");
+  const _cp = map.getPane("connectionsPane");
+  if(_cp){
+    _cp.style.zIndex = 350; // between tiles and markers
+    _cp.style.pointerEvents = "none";
+  }
+  const connectionsLayer = L.layerGroup().addTo(map);
+
+  function renderConnectionLinks(){
+    try{ connectionsLayer.clearLayers(); }catch{}
+    if(!linksOn) return;
+
+    const seen = new Set();
+    for(const a of entries){
+      if(!a || !a.id) continue;
+      if(typeof a.lat !== "number" || typeof a.lon !== "number") continue;
+      const conns = normalizeConnectionsArray(a.connections, a.id);
+      for(const c of conns){
+        const bid = c.id;
+        const b = entryById.get(bid);
+        if(!b || !b.id) continue;
+        if(typeof b.lat !== "number" || typeof b.lon !== "number") continue;
+
+        const k = (a.id < b.id) ? (a.id + "|" + b.id) : (b.id + "|" + a.id);
+        if(seen.has(k)) continue;
+        seen.add(k);
+
+        const line = L.polyline([[a.lat, a.lon], [b.lat, b.lon]], {
+          pane: "connectionsPane",
+          color: "rgba(0,0,0,.45)",
+          weight: 2,
+          opacity: 0.55,
+          dashArray: "6 7",
+          lineCap: "round"
+        });
+        line.addTo(connectionsLayer);
+      }
+    }
+  }
+
+
 // Map legend (bottom-right)
 const mapLegend = L.control({ position: "bottomright" });
 mapLegend.onAdd = function(){
@@ -5019,6 +5258,21 @@ mapLegend.addTo(map);
 function toJulian(date){
   return date.getTime() / 86400000 + 2440587.5;
 }
+
+
+  function connectionsCardHTML(entry){
+    const conns = normalizeConnectionsArray(entry.connections, entry.id);
+    const items = conns.map(c=>{
+      const id = c.id;
+      const t = entryById.get(id);
+      if(!t) return "";
+      const nm = displayNames(t);
+      const label = c.type ? `${nm.main} (${c.type})` : nm.main;
+      return `<span class="connPill" style="margin-right:6px;"><span class="open" onclick="openProfile('${escapeHTML(id)}'); event.stopPropagation();">${escapeHTML(label||"—")}</span></span>`;
+    }).filter(Boolean).join("");
+    if(!items) return "";
+    return `<div class="profileCard"><div class="k">🕸️ Connections</div><div class="v">${items}</div></div>`;
+  }
 function solarPosition(date){
   // Approximate solar position (good for day/night visualization)
   const jd = toJulian(date);
@@ -5220,7 +5474,7 @@ setInterval(updateNightLayer, 30000);
 
   function myLocPopupHTML(lat, lon){
     return `<div class="popup">
-      <div class="pname"><span class="pheart">📍</span><span class="pnick">My location</span></div>
+      <div class="pname"><span class="pheart">📍</span><div class="pnameBlock"><div class="pMain">My location</div></div></div>
       <div class="pline"><span class="localLabel">Local time:</span> <span class="localTimeVal">${myLocalTime()}</span></div>
       <div class="pline">Coordinates: ${Number(lat).toFixed(5)}, ${Number(lon).toFixed(5)}</div>
     </div>`;
@@ -5331,6 +5585,7 @@ async function geocodeAddress(addr){
 
   function markerPopupHTML(entry){
     const timeStr = personLocalTime(entry.tz);
+    const nm = displayNames(entry);
     const timeLine = timeStr
       ? `<div class="pline"><span class="ptime localLabel">Local Time:</span> <span class="js-time localTimeVal" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span></div>`
       : `<div class="pline"><span class="ptime localLabel">Local Time:</span> — (check timezone)</div>`;
@@ -5342,6 +5597,18 @@ async function geocodeAddress(addr){
       : `${Number(entry.lat).toFixed(3)}, ${Number(entry.lon).toFixed(3)}`;
 
     const born = entry.birthplace ? `<div class="pline"><b>Birthplace:</b> ${escapeHTML(entry.birthplace)}</div>` : "";
+    const conns = normalizeConnectionsArray(entry.connections, entry.id);
+    const connLinks = conns.map(c=>{
+      const id = c.id;
+      const t = entryById.get(id);
+      if(!t) return "";
+      const nm2 = displayNames(t);
+      const label = c.type ? `${nm2.main} (${c.type})` : nm2.main;
+      return `<a href="javascript:void(0)" onclick="openProfile('${escapeHTML(id)}'); event.stopPropagation();">${escapeHTML(label||"—")}</a>`;
+    }).filter(Boolean);
+    const connectionsLine = connLinks.length
+      ? `<div class="pline"><b>Connections:</b> ${connLinks.join(", ")}</div>`
+      : "";
 
     // Birthdate + countdown + age (short)
     let bdayLine = "";
@@ -5375,7 +5642,7 @@ async function geocodeAddress(addr){
       entry.otherLangs ? `<div class="pline"><b>Other:</b> ${escapeHTML(entry.otherLangs)}</div>` : ""
     ].join("");
 
-    const blood = entry.bloodType ? `<div class="pline"><b>Blood type:</b> ${escapeHTML(entry.bloodType)}</div>` : "";
+    const blood = entry.bloodType ? `<div class="pline"><b>Blood type:</b> ${notesHidden ? "🔒 Hidden" : escapeHTML(entry.bloodType)}</div>` : "";
 
     const colors = favoriteColorsInlineHTML(entry.favoriteColors);
     const cycleLine = cyclePopupLineHTML(entry.cycle);
@@ -5393,13 +5660,14 @@ const img = entry.imageData
 
     return `
       <div class="popup" data-entryid="${escapeHTML(entry.id)}">
-        <div class="pname"><span class="pheart">${heartForTimezone(entry.tz)}</span><span class="pnick">${escapeHTML(entry.nickname)}</span></div>
+        <div class="pname"><span class="pheart">${heartForTimezone(entry.tz)}</span><div class="pnameBlock"><div class="pMain">${escapeHTML(nm.main)}</div>${nm.sub ? `<div class="pSub">${escapeHTML(nm.sub)}</div>` : ""}</div></div>
         ${timeLine}
         ${bdayLine}
         ${born}
         ${met}
         <div class="pline"><b>Current:</b> ${where}${dist ? `📍${dist}` : ""}</div>
         ${langs}
+        ${connectionsLine}
         ${blood}
         ${colors}
         ${cycleLine}
@@ -5579,6 +5847,9 @@ const img = entry.imageData
       myLocMarker.addTo(markerLayer);
       try{ myLocMarker.setZIndexOffset(1000); }catch{}
     }
+
+    // network links behind markers
+    renderConnectionLinks();
   }
 
   // ==============================
@@ -5612,13 +5883,19 @@ const img = entry.imageData
     if(entry.birthdate){
       zodiacHTML = formatZodiacLineHTML(entry.birthdate);
     }
+    const nm = displayNames(entry);
+    $("profileName").textContent = nm.main || "—";
 
-    $("profileName").textContent = entry.nickname || "—";
-    $("profileView").classList.toggle("isFavProfile", !!entry.fav);
+    const prnEl = $("profileRealName");
+    if(prnEl){
+      prnEl.textContent = nm.sub || "";
+      prnEl.style.display = nm.sub ? "block" : "none";
+    }
+$("profileView").classList.toggle("isFavProfile", !!entry.fav);
     $("profileView").classList.toggle("isSpecialProfile", !!specialId && entry.id===specialId );
 
         $("profileView").classList.toggle("isBothProfileBadges", !!entry.fav && !!specialId && entry.id===specialId );
-$("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}${entry.bloodType ? " · 🩸 " + escapeHTML(entry.bloodType) : ""}` : (entry.connection ? (escapeHTML(entry.connection) + (entry.bloodType ? " · 🩸 " + escapeHTML(entry.bloodType) : "")) : (entry.bloodType ? "🩸 " + escapeHTML(entry.bloodType) : "—"));
+$("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}${(!notesHidden && entry.bloodType) ? " · 🩸 " + escapeHTML(entry.bloodType) : ""}` : (entry.connection ? (escapeHTML(entry.connection) + (entry.bloodType ? " · 🩸 " + escapeHTML(entry.bloodType) : "")) : ((!notesHidden && entry.bloodType) ? "🩸 " + escapeHTML(entry.bloodType) : "—"));
 
     const imgBlock = entry.imageData
       ? `
@@ -5683,8 +5960,10 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
       entry.connection ? `<div class="profileCard"><div class="k">Connection</div><div class="v">${escapeHTML(entry.connection)}</div></div>` : "",
       entry.nativeLang ? `<div class="profileCard"><div class="k">Native language</div><div class="v">${escapeHTML(entry.nativeLang)}</div></div>` : "",
       entry.otherLangs ? `<div class="profileCard"><div class="k">Other languages</div><div class="v">${escapeHTML(entry.otherLangs)}</div></div>` : "",
-      entry.bloodType ? `<div class="profileCard"><div class="k">🩸 Blood type</div><div class="v">${escapeHTML(entry.bloodType)}</div></div>` : "",
-      favoriteColorsCardHTML(entry.favoriteColors),
+      entry.bloodType ? `<div class="profileCard"><div class="k">🩸 Blood type</div><div class="v">${notesHidden ? "🔒 Hidden" : escapeHTML(entry.bloodType)}</div></div>` : "",
+
+      connectionsCardHTML(entry),
+            favoriteColorsCardHTML(entry.favoriteColors),
       cycleCardHTML(entry.cycle),
       notesCardHTML(entry.notes)
     ].filter(Boolean).join("");
@@ -5764,14 +6043,12 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
 
   $("profileBack").addEventListener("click", showMapView);
   $("profileEdit").addEventListener("click", ()=>{
-    const name = $("profileName").textContent;
-    const e = entries.find(x=>x.nickname===name) || entries.find(x=>x.id===selectedId);
+    const e = entries.find(x=>x.id===selectedId);
     if(e) selectEntry(e.id);
     toast("Entry loaded");
   });
   $("profilePin").addEventListener("click", ()=>{
-    const name = $("profileName").textContent;
-    const e = entries.find(x=>x.nickname===name) || entries.find(x=>x.id===selectedId);
+    const e = entries.find(x=>x.id===selectedId);
     if(e) focusEntryOnMap(e.id);
   });
 
@@ -5781,6 +6058,9 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
   function clearForm(){
     selectedId = null;
     $("nickname").value = "";
+    $("realName").value = "";
+    $("showRealName").checked = true;
+    setConnectionsToForm([]);
     $("birthdate").value = "";
     $("birthplace").value = "";
     $("currentAddress").value = "";
@@ -5815,6 +6095,9 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     selectedId = entry.id;
 
     $("nickname").value = entry.nickname ?? "";
+    $("realName").value = entry.realName ?? "";
+    $("showRealName").checked = (typeof entry.showRealName === "boolean") ? entry.showRealName : !!(entry.realName);
+    setConnectionsToForm(entry.connections);
     $("birthdate").value = entry.birthdate ?? "";
     $("birthplace").value = entry.birthplace ?? "";
     $("currentAddress").value = entry.currentAddress ?? "";
@@ -5848,6 +6131,141 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     toast("Entry loaded");
     renderList();
   }
+
+
+
+    // ==============================
+  // Connections (network links) — typed relations
+  // ==============================
+  const REL_TYPES = [
+    "Know each other",
+    "Friends",
+    "Best Friends",
+    "Supporter",
+    "Sister",
+    "Brother",
+    "Mother",
+    "Father",
+    "Son",
+    "Daughter",
+    "Kid",
+    "Grandson",
+    "Granddaughter",
+    "Grandma",
+    "Grandpa",
+    "Partner",
+    "Husband / Wife",
+    "Engaged Partner",
+    "Ex-Partner",
+    "Cousin",
+    "Cousine",
+    "Aunt",
+    "Uncle",
+    "Colleague",
+    "Neighbor",
+    "Mod",
+    "Fan",
+    "Creator",
+    "Team",
+    "Mentor",
+    "Other"
+  ];
+
+  let formConnections = []; // [{id, type}]
+
+  function refreshConnectionsSelect(){
+    const sel = $("connSelect");
+    if(!sel) return;
+    const currentId = selectedId;
+    const opts = entries
+      .filter(e=>e && e.id && e.id !== currentId)
+      .slice()
+      .sort((a,b)=> (a.nickname||"").localeCompare(b.nickname||""));
+    const prev = sel.value || "";
+    sel.innerHTML = `<option value="">— Select a friend —</option>` + opts
+      .map(e=> {
+        const nm = displayNames(e);
+        const label = nm.sub ? `${nm.main} (${nm.sub})` : nm.main;
+        return `<option value="${escapeHTML(e.id)}">${escapeHTML(label || "—")}</option>`;
+      })
+      .join("");
+    if(prev && opts.some(x=>x.id===prev)) sel.value = prev;
+  }
+
+  function refreshConnRelTypeSelect(){
+    const sel = $("connRelType");
+    if(!sel) return;
+    const prev = sel.value || "";
+    sel.innerHTML = REL_TYPES.map(t => `<option value="${escapeHTML(t)}">${escapeHTML(t)}</option>`).join("");
+    if(prev && REL_TYPES.includes(prev)) sel.value = prev;
+  }
+
+  function renderConnectionPills(){
+    const wrap = $("connPills");
+    if(!wrap) return;
+    const conns = Array.isArray(formConnections) ? formConnections : [];
+    const pills = conns.map(c=>{
+      const id = String(c?.id || "").trim();
+      if(!id) return "";
+      const target = entryById.get(id);
+      const nm = target ? displayNames(target).main : "Unknown";
+      const type = String(c?.type || "Kennen sich").trim() || "Kennen sich";
+      const title = target ? "Open profile" : "Entry not found (remove?)";
+      const label = `${nm || "—"} · ${type}`;
+      return `
+        <span class="connPill">
+          <span class="open" title="${escapeHTML(title)}" onclick="${target ? `openProfile('${escapeHTML(id)}'); event.stopPropagation();` : ""}">${escapeHTML(label)}</span>
+          <button class="xbtn" type="button" title="Remove" data-conn-remove="${escapeHTML(id)}">×</button>
+        </span>
+      `.trim();
+    }).filter(Boolean).join("");
+    wrap.innerHTML = pills || `<span style="color:var(--muted); font-size:12px;">No connections linked.</span>`;
+  }
+
+  function setConnectionsToForm(arr){
+    formConnections = normalizeConnectionsArray(arr, selectedId);
+    renderConnectionPills();
+    refreshConnectionsSelect();
+    refreshConnRelTypeSelect();
+  }
+
+  function getConnectionsFromForm(){
+    return Array.isArray(formConnections) ? formConnections.slice() : [];
+  }
+
+  // Button: add selected connection
+  const _addConnBtn = $("addConnBtn");
+  if(_addConnBtn){
+    _addConnBtn.addEventListener("click", ()=>{
+      const sel = $("connSelect");
+      const typSel = $("connRelType");
+      const id = sel ? String(sel.value || "").trim() : "";
+      const type = typSel ? String(typSel.value || "Kennen sich").trim() : "Kennen sich";
+      if(!id) return;
+      if(selectedId && id === selectedId) return;
+
+      const idx = (formConnections||[]).findIndex(x=>x.id === id);
+      if(idx >= 0){
+        formConnections[idx].type = type || "Kennen sich";
+      }else{
+        formConnections.push({ id, type: type || "Kennen sich" });
+        if(formConnections.length > 16) formConnections = formConnections.slice(0,16);
+      }
+      renderConnectionPills();
+      refreshConnectionsSelect();
+    });
+  }
+
+  // Remove pill
+  document.addEventListener("click", (ev)=>{
+    const btn = ev.target.closest && ev.target.closest("[data-conn-remove]");
+    if(!btn) return;
+    const id = String(btn.getAttribute("data-conn-remove") || "").trim();
+    if(!id) return;
+    formConnections = (formConnections||[]).filter(x=>x.id !== id);
+    renderConnectionPills();
+    refreshConnectionsSelect();
+  });
 
   function selectEntry(id, opts={}){
     const e = entries.find(x=>x.id===id);
@@ -5896,6 +6314,9 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
   // ==============================
   async function handleSave(){
     const nickname = $("nickname").value.trim();
+    const realName = $("realName").value.trim();
+    const showRealName = $("showRealName").checked;
+    const connections = getConnectionsFromForm();
     const birthdate = $("birthdate").value;
     const birthplace = $("birthplace").value.trim();
     const currentAddress = $("currentAddress").value.trim();
@@ -5962,7 +6383,8 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
 
         entries[idx] = {
           ...prev,
-          nickname, birthdate, birthplace, currentAddress, metOn,
+          nickname, realName, showRealName, connections,
+          birthdate, birthplace, currentAddress, metOn,
           bloodType,
           nativeLang, otherLangs, tz, notes,
           favoriteColors: favColors,
@@ -5976,7 +6398,8 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     } else {
       entries.unshift({
         id: uuid(),
-        nickname, birthdate, birthplace, currentAddress, metOn,
+        nickname, realName, showRealName, connections,
+        birthdate, birthplace, currentAddress, metOn,
         bloodType,
         nativeLang, otherLangs, tz, notes,
         favoriteColors: favColors,
@@ -6136,8 +6559,9 @@ function renderList(){
     // Search filter
     let filtered = q ? entries.filter(e=>{
       const hay = [
-        e.nickname, e.connection, e.bloodType, e.nativeLang, e.otherLangs, e.tz,
-        e.currentAddress, e.birthplace, e.birthdate, e.metOn, e.notes
+        e.nickname, e.realName, e.connection, e.bloodType, e.nativeLang, e.otherLangs, e.tz,
+        e.currentAddress, e.birthplace, e.birthdate, e.metOn, e.notes,
+        connectionsText(e.connections)
       ].filter(Boolean).join(" | ").toLowerCase();
       return hay.includes(q);
     }) : [...entries];
@@ -6240,6 +6664,9 @@ function renderList(){
         }
       }
 
+
+      const nm = displayNames(e);
+
       const avatar = e.imageData
         ? `<img class="avatar js-open-img" alt="${escapeHTML(e.nickname)}" src="${e.imageData}" />`
         : `<div class="avatarPh" title="No image">—</div>`;
@@ -6248,7 +6675,10 @@ function renderList(){
         <div class="meta">
           <div class="nick">
             <span class="heart js-heart" data-tz="${escapeHTML(e.tz || "")}">${heartForTimezone(e.tz)}</span>
-            <span class="ename">${escapeHTML(e.nickname)}</span>
+            <div class="nameBlock">
+              <div class="nameMain">${escapeHTML(nm.main)}</div>
+              ${nm.sub ? `<div class="nameSub">${escapeHTML(nm.sub)}</div>` : ""}
+            </div>
             <button class="starInline js-star ${e.fav ? "on" : ""}" title="${e.fav ? "Unfavorite" : "Favorite"}" type="button">${e.fav ? "⭐" : "☆"}</button>
             <button class="diamondInline js-special ${ (specialId && e.id===specialId) ? "on specialOn" : "" }" title="${ (specialId && e.id===specialId) ? "Unset special" : "Set as special" }" type="button">${ (specialId && e.id===specialId) ? "∞" : "◈" }</button>
           </div>
@@ -6280,7 +6710,7 @@ function renderList(){
             ${dist ? ` · ${escapeHTML(dist)}` : ""}
             ${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}
             ${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}
-            ${e.bloodType ? ` · 🩸 ${escapeHTML(e.bloodType)}` : ""}
+            ${(!notesHidden && e.bloodType) ? ` · 🩸 ${escapeHTML(e.bloodType)}` : ""}
           </div>
 
           <div class="tiny"><span class="localLabel">Local Time</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
@@ -6343,13 +6773,12 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
       el.textContent = heartForTimezone(tz);
     }
     // Update profile subtitle too
-    const name = $("profileName").textContent;
-    const e = entries.find(x=>x.nickname===name);
+    const e = entries.find(x=>x.id===selectedId);
     if(e && $("profileView").style.display !== "none"){
       const t = personLocalTime(e.tz) || "—";
       $("profileSub").innerHTML = e.tz
-        ? `<span class="pheart">${heartForTimezone(e.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t)}</span> <span class="pline">(${escapeHTML(e.tz)})</span>${e.connection ? " · " + escapeHTML(e.connection) : ""}${e.bloodType ? " · 🩸 " + escapeHTML(e.bloodType) : ""}`
-        : (e.connection ? (escapeHTML(e.connection) + (e.bloodType ? " · 🩸 " + escapeHTML(e.bloodType) : "")) : (e.bloodType ? "🩸 " + escapeHTML(e.bloodType) : "—"));
+        ? `<span class="pheart">${heartForTimezone(e.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t)}</span> <span class="pline">(${escapeHTML(e.tz)})</span>${e.connection ? " · " + escapeHTML(e.connection) : ""}${(!notesHidden && e.bloodType) ? " · 🩸 " + escapeHTML(e.bloodType) : ""}`
+        : (e.connection ? (escapeHTML(e.connection) + (e.bloodType ? " · 🩸 " + escapeHTML(e.bloodType) : "")) : ((!notesHidden && e.bloodType) ? "🩸 " + escapeHTML(e.bloodType) : "—"));
     }
   }
 
@@ -6411,6 +6840,9 @@ function exportJSON(){
         return ({
           id: String(x.id || uuid()),
           nickname: String(x.nickname || ""),
+          realName: x.realName ? String(x.realName) : "",
+          showRealName: (typeof x.showRealName === "boolean") ? x.showRealName : !!(x.realName),
+          connections: normalizeConnectionsArray(x.connections, String(x.id||"")),
           birthdate: x.birthdate ? String(x.birthdate) : "",
           birthplace: x.birthplace ? String(x.birthplace) : "",
           currentAddress: x.currentAddress ? String(x.currentAddress) : "",
@@ -6563,7 +6995,7 @@ function exportJSON(){
     applyNotesLockUI();
     _notesLock.addEventListener("change", ()=>{
       setNotesHidden(_notesLock.checked);
-      toast(notesHidden ? "Notes hidden 🔒" : "Notes visible 🔓");
+      toast(notesHidden ? "Privacy mode ON 🔒" : "Privacy mode OFF 🔓");
       try{ renderList(); }catch{}
       try{
         if(selectedId && $("profileView").style.display !== "none"){
@@ -6577,7 +7009,18 @@ function exportJSON(){
 
 
 
-  // Cluster toggle
+
+  // Connection links toggle
+  const _linksToggle = $("linksToggle");
+  if(_linksToggle){
+    applyLinksToggleUI();
+    _linksToggle.addEventListener("change", ()=>{
+      setLinksOn(_linksToggle.checked);
+      toast(linksOn ? "Connection links ON 🕸️" : "Connection links OFF");
+      try{ renderMarkers(); }catch{}
+    });
+  }
+    // Cluster toggle
   const _clusterBtn = $("clusterToggleBtn");
   if(_clusterBtn){
     updateClusterToggleButton();
@@ -6653,6 +7096,10 @@ function exportJSON(){
   // ==============================
   // Init
   // ==============================
+  refreshConnectionsSelect();
+  refreshConnRelTypeSelect();
+  renderConnectionPills();
+  applyLinksToggleUI();
   renderList();
   renderMarkers();
   updateCount();
