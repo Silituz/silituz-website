@@ -3294,7 +3294,9 @@
                     <label>Notes</label>
           <div class="notesTabs" id="notesTabs">
             <button type="button" class="tabBtn active" data-notes-tab="important">🚨 Important</button>
+            <button type="button" class="tabBtn" data-notes-tab="medical">🩺 Medical</button>
             <button type="button" class="tabBtn" data-notes-tab="work">💼 Work &amp; 🚀 Projects</button>
+            <button type="button" class="tabBtn" data-notes-tab="media">👾 Media</button>
             <button type="button" class="tabBtn" data-notes-tab="food">🍕 Food &amp; More</button>
             <button type="button" class="tabBtn" data-notes-tab="other">📦 Other</button>
             <button type="button" class="tabBtn" data-notes-tab="cycle">🩸 Cycle</button>
@@ -3302,7 +3304,9 @@
 
           <div class="notesPanels">
             <textarea id="notes_important" class="notesPanel" data-notes-panel="important" placeholder="Things that are urgent, critical, or should not be forgotten"></textarea>
+            <textarea id="notes_medical" class="notesPanel hidden" data-notes-panel="medical" placeholder="Medical notes (optional): allergies, meds, important health info"></textarea>
             <textarea id="notes_work" class="notesPanel hidden" data-notes-panel="work" placeholder="Work-related tasks, projects and ideas"></textarea>
+            <textarea id="notes_media" class="notesPanel hidden" data-notes-panel="media" placeholder="Media notes: favorite songs, shows, games, creators, links"></textarea>
             <textarea id="notes_food" class="notesPanel hidden" data-notes-panel="food" placeholder="Food and drinks, restaurant ideas, places worth trying"></textarea>
             <textarea id="notes_other" class="notesPanel hidden" data-notes-panel="other" placeholder="Miscellaneous notes"></textarea>
             <div id="cyclePanel" class="notesPanel hidden cyclePanel" data-notes-panel="cycle">
@@ -4325,10 +4329,12 @@ e.fav = !!e.fav;
   // ==============================
   // Notes Categories + Tabs
   // ==============================
-  const NOTES_CATS = ["important","work","food","other"];
+  const NOTES_CATS = ["important","medical","work","media","food","other"];
   const NOTES_LABEL = {
     important: "🚨 Important",
+    medical: "🩺 Medical",
     work: "💼 Work & 🚀 Projects",
+    media: "👾 Media",
     food: "🍕 Food & More",
     other: "📦 Other"
   };
@@ -4337,7 +4343,7 @@ e.fav = !!e.fav;
     // Backward-compat:
     // - very old saves used a single string
     // - some saves used different keys like "projects", "others", or capitalized labels
-    const empty = { important:"", work:"", food:"", other:"" };
+    const empty = { important:"", medical:"", work:"", media:"", food:"", other:"" };
     if(notes == null) return { ...empty };
     if(typeof notes === "string"){
       return { ...empty, other: notes };
@@ -4360,8 +4366,10 @@ e.fav = !!e.fav;
       const k = String(rawKey||"").trim().toLowerCase();
       if(!k) return null;
       if(k === "important" || k === "imp" || k === "urgent") return "important";
+      if(k === "medical" || k === "health" || k === "med" || k === "meds" || k === "allergy" || k === "allergies") return "medical";
       if(k === "work" || k === "job") return "work";
       if(k === "projects" || k === "project" || k === "proj") return "work"; // merged into Work & Projects
+      if(k === "media" || k === "music" || k === "movies" || k === "movie" || k === "shows" || k === "show" || k === "series" || k === "games" || k === "game") return "media";
       if(k === "food" || k === "foods" || k === "meal" || k === "meals") return "food";
       if(k === "other" || k === "others" || k === "misc" || k === "miscellaneous") return "other";
       return null;
@@ -4397,7 +4405,9 @@ e.fav = !!e.fav;
   function getNotesFromForm(){
     const o = {
       important: ($("notes_important")?.value || "").trim(),
+      medical: ($("notes_medical")?.value || "").trim(),
       work: ($("notes_work")?.value || "").trim(),
+      media: ($("notes_media")?.value || "").trim(),
       food: ($("notes_food")?.value || "").trim(),
       other: ($("notes_other")?.value || "").trim()
     };
@@ -4407,15 +4417,17 @@ e.fav = !!e.fav;
 
   function setNotesToForm(notes){
     const n = normalizeNotes(notes);
-    const a = $("notes_important"); if(a) a.value = n.important;
-    const b = $("notes_work"); if(b) b.value = n.work;
-    const c = $("notes_food"); if(c) c.value = n.food;
-    const d = $("notes_other"); if(d) d.value = n.other;
+    const a = $("notes_important"); if(a) a.value = (n.important ?? "");
+    const m = $("notes_medical"); if(m) m.value = (n.medical ?? "");
+    const b = $("notes_work"); if(b) b.value = (n.work ?? "");
+    const x = $("notes_media"); if(x) x.value = (n.media ?? "");
+    const c = $("notes_food"); if(c) c.value = (n.food ?? "");
+    const d = $("notes_other"); if(d) d.value = (n.other ?? "");
     // keep active tab as-is; if none, default important
   }
 
   function clearNotesForm(){
-    for(const id of ["notes_important","notes_work","notes_food","notes_other"]){
+    for(const id of ["notes_important","notes_medical","notes_work","notes_media","notes_food","notes_other"]){
       const el = $(id); if(el) el.value = "";
     }
   }
@@ -6137,38 +6149,39 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
   // Connections (network links) — typed relations
   // ==============================
   const REL_TYPES = [
-    "Other",
     "Know each other",
-    "Fan",
-    "Supporter",
-    "Team",
-    "Mod",
-    "Creator",
-    "Mentor",
-    "Neighbor",
-    "Colleague",
     "Friends",
     "Best Friends",
+    "Inner Cycle",
+    "Supporter",
+    "Sister",
+    "Brother",
+    "Mother",
+    "Father",
+    "Son",
+    "Daughter",
     "Kid",
+    "Grandson",
+    "Granddaughter",
+    "Grandma",
+    "Grandpa",
+    "Partner",
+    "Husband / Wife",
+    "Engaged Partner",
+    "Ex-Partner",
     "Cousin",
     "Cousine",
     "Aunt",
     "Uncle",
-    "Grandma",
-    "Grandpa",
-    "Grandson",
-    "Granddaughter",
-    "Mother",
-    "Father",
-    "Sister",
-    "Brother",
-    "Son",
-    "Daughter",
-    "Partner",
-    "Engaged Partner",
-    "Married",
-    "Ex-Partner"
-      ];
+    "Colleague",
+    "Neighbor",
+    "Mod",
+    "Fan",
+    "Creator",
+    "Team",
+    "Mentor",
+    "Other"
+  ];
 
   let formConnections = []; // [{id, type}]
 
@@ -7407,7 +7420,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   // "packed" notes where everything ended up in notes.other with headers like:
   //   [🚨 Important], [💼 Work & 🚀 Projects], [🍕 Food & More], [📦 Other]
   function splitNotesPackedIntoOther(otherText){
-    const empty = { important:"", work:"", food:"", other:"" };
+    const empty = { important:"", medical:"", work:"", media:"", food:"", other:"" };
     const text = String(otherText||"").replace(/\r\n/g,"\n").trim();
     if(!text) return { ...empty };
 
@@ -7429,13 +7442,17 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
       // emojis + english
       if(s.includes("important") || s.includes("urgent") || s.includes("🚨")) return "important";
+      if(s.includes("medical") || s.includes("health") || s.includes("🩺")) return "medical";
       if(s.includes("work") || s.includes("project") || s.includes("💼") || s.includes("🚀")) return "work";
+      if(s.includes("media") || s.includes("music") || s.includes("movie") || s.includes("show") || s.includes("series") || s.includes("game") || s.includes("👾")) return "media";
       if(s.includes("food") || s.includes("🍕") || s.includes("drink") || s.includes("restaurant")) return "food";
       if(s.includes("other") || s.includes("misc") || s.includes("📦")) return "other";
 
       // german fallbacks
       if(s.includes("wichtig")) return "important";
+      if(s.includes("medizin") || s.includes("gesund")) return "medical";
       if(s.includes("arbeit") || s.includes("projekte")) return "work";
+      if(s.includes("medien") || s.includes("media") || s.includes("musik") || s.includes("film") || s.includes("spiele")) return "media";
       if(s.includes("essen") || s.includes("trinken")) return "food";
       if(s.includes("sonst") || s.includes("anderes")) return "other";
 
@@ -7468,7 +7485,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   }
 
   function normalizeNotes(notes){
-    const empty = { important:"", work:"", food:"", other:"" };
+    const empty = { important:"", medical:"", work:"", media:"", food:"", other:"" };
 
     const append = (obj, key, txt, prefix=null) => {
       const t = String(txt||"").trim();
@@ -7481,8 +7498,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
       const k = String(rawKey||"").trim().toLowerCase();
       if(!k) return null;
       if(k === "important" || k === "imp" || k === "urgent") return "important";
+      if(k === "medical" || k === "health" || k === "med" || k === "meds" || k === "allergy" || k === "allergies") return "medical";
       if(k === "work" || k === "job") return "work";
       if(k === "projects" || k === "project" || k === "proj") return "work";
+      if(k === "media" || k === "music" || k === "movies" || k === "movie" || k === "shows" || k === "show" || k === "series" || k === "games" || k === "game") return "media";
       if(k === "food" || k === "foods" || k === "meal" || k === "meals") return "food";
       if(k === "other" || k === "others" || k === "misc" || k === "miscellaneous") return "other";
       return null;
@@ -7530,6 +7549,5 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 <div id="distanceHint"></div>
 </section>
-
 
 
