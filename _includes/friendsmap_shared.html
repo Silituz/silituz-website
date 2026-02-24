@@ -7585,6 +7585,22 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
   // Export / Import (FILE UPLOAD)
   // ==============================
   
+
+  // ==============================
+  // Export filename helper
+  // ==============================
+  const EXPORT_PREFIX = "SO"; // Social Organizer
+  function makeExportFilename(prefix = EXPORT_PREFIX){
+    const d = new Date(); // local time (your PC timezone)
+    const pad = (n)=> String(n).padStart(2,"0");
+    const dd = pad(d.getDate());
+    const mm = pad(d.getMonth() + 1);
+    const yy = pad(d.getFullYear() % 100);
+    const hh = pad(d.getHours());
+    const mi = pad(d.getMinutes());
+    return `${prefix} • ${yy}-${mm}-${dd} • ${hh}_${mi}.json`;
+  }
+
 function exportJSON(){
     // v2 export format keeps metadata like "specialId"
     const payload = {
@@ -7597,7 +7613,7 @@ function exportJSON(){
     const blob = new Blob([data], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "world-friends-map.v2.json";
+    a.download = makeExportFilename();
     a.click();
     URL.revokeObjectURL(a.href);
 
