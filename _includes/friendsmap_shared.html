@@ -3161,6 +3161,108 @@
 #soApp{height:auto; min-height:0;}
 #soApp .wrap{height:auto;}
 
+
+/* =========================================================
+   Eye Color (NEW)
+   - Uses the existing glass pills, but draws two tiny "eyes"
+   - Supports mix modes: solid, blend, split, speckle, ring
+   ========================================================= */
+#soApp .eyeColorRow{
+  flex-wrap: wrap;
+}
+#soApp .eyeColorRow input{
+  min-width: 170px;
+  flex: 1 1 210px;
+}
+#soApp .eyeColorRow select{
+    min-width: 130px;
+  flex: 0 0 auto;
+}
+#soApp .eyePreview{
+  margin-top: 10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+
+/* Eye pill = colorPillGlass + eye icon */
+#soApp .colorPillGlass.eyePill{
+  gap: 10px;
+  padding-left: 12px;
+}
+#soApp .colorPillGlass.eyePill.isTiny{
+  padding: 7px 10px;
+  font-size: 11px;
+  letter-spacing: 0.15px;
+}
+#soApp .eyeIcon{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  flex: 0 0 auto;
+}
+#soApp .eyeIcon .eye{
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.28);
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,0.45),
+    0 0 14px rgba(var(--e1,95,140,255),0.22);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.90) 0 3.4px, rgba(255,255,255,0) 5.1px),
+    radial-gradient(circle at 50% 58%, rgba(0,0,0,0.88) 0 3.8px, rgba(0,0,0,0.32) 5.5px, rgba(0,0,0,0) 7.4px),
+    radial-gradient(circle at 50% 52%, rgba(var(--e1,95,140,255), 0.98) 0 11.0px, rgba(var(--e1,95,140,255),0.18) 15.1px, rgba(var(--e1,95,140,255),0) 17.1px);
+}
+#soApp .colorPillGlass.eyePill.isTiny .eyeIcon .eye{
+  width: 18px;
+  height: 18px;
+}
+
+/* Blend */
+#soApp .colorPillGlass.eyePill[data-mode="blend"] .eyeIcon .eye{
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.90) 0 3.4px, rgba(255,255,255,0) 5.1px),
+    radial-gradient(circle at 50% 58%, rgba(0,0,0,0.88) 0 3.8px, rgba(0,0,0,0.32) 5.5px, rgba(0,0,0,0) 7.4px),
+    radial-gradient(circle at 30% 40%, rgba(var(--e1,95,140,255), 0.98) 0 10.6px, rgba(var(--e2,95,140,255),0.92) 11.0px 15.4px, rgba(var(--e1,95,140,255),0) 17.1px);
+
+}
+
+/* Split */
+#soApp .colorPillGlass.eyePill[data-mode="split"] .eyeIcon .eye{
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.90) 0 3.4px, rgba(255,255,255,0) 5.1px),
+    radial-gradient(circle at 50% 58%, rgba(0,0,0,0.88) 0 3.8px, rgba(0,0,0,0.32) 5.5px, rgba(0,0,0,0) 7.4px),
+    radial-gradient(circle at 50% 52%, rgba(0,0,0,0) 0 7.5px, rgba(0,0,0,0) 7.5px),
+    conic-gradient(from 90deg, rgba(var(--e1,95,140,255),0.98) 0 50%, rgba(var(--e2,95,140,255),0.98) 50% 100%);
+
+}
+
+/* Speckled */
+#soApp .colorPillGlass.eyePill[data-mode="speckle"] .eyeIcon .eye{
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.90) 0 3.4px, rgba(255,255,255,0) 5.1px),
+    radial-gradient(circle at 50% 58%, rgba(0,0,0,0.88) 0 3.8px, rgba(0,0,0,0.32) 5.5px, rgba(0,0,0,0) 7.4px),
+    radial-gradient(circle at 50% 52%, rgba(var(--e1,95,140,255), 0.98) 0 11.3px, rgba(var(--e1,95,140,255),0.18) 15.1px, rgba(var(--e1,95,140,255),0) 17.1px),
+    repeating-radial-gradient(circle at 35% 65%, rgba(var(--e2,95,140,255),0.55) 0 2.1px, rgba(var(--e2,95,140,255),0) 2.1px 5.7px);
+
+}
+
+/* Ring */
+#soApp .colorPillGlass.eyePill[data-mode="ring"] .eyeIcon .eye{
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.90) 0 3.4px, rgba(255,255,255,0) 5.1px),
+    radial-gradient(circle at 50% 58%, rgba(0,0,0,0.88) 0 3.8px, rgba(0,0,0,0.32) 5.5px, rgba(0,0,0,0) 7.4px),
+    radial-gradient(circle at 50% 52%,
+      rgba(var(--e1,95,140,255), 0.98) 0 7.9px,
+      rgba(var(--e2,95,140,255), 0.95) 9.3px 12.0px,
+      rgba(var(--e1,95,140,255), 0.15) 14.7px,
+      rgba(var(--e1,95,140,255), 0) 17.1px
+    );
+
+}
+#soApp .eyeTxt{ white-space: nowrap; }
 </style>
 <section id="soApp" class="soApp">
 <header>
@@ -3371,6 +3473,40 @@
         </div>
       </div>
 
+      <div class="row">
+        <div>
+          <label>Eye Color</label>
+          <div class="colorInputRow eyeColorRow">
+            <input id="eyeColorA" type="text" list="eyeColorList" placeholder="Primary (e.g. blue, #3b82f6)" />
+            <select id="eyeMode" title="Mix style">
+              <option value="solid">Solid</option>
+              <option value="blend">Blend</option>
+              <option value="split">Split</option>
+              <option value="speckle">Speckled</option>
+              <option value="ring">Ring</option>
+            </select>
+            <input id="eyeColorB" type="text" list="eyeColorList" placeholder="Secondary (optional)" />
+            <button id="eyeClearBtn" type="button" class="secondary smallBtn">Clear</button>
+          </div>
+          <div id="eyePreview" class="eyePreview"></div>
+          <div class="hint">Enter 1 or 2 colors. If you enter a 2nd color and keep “Solid”, we automatically treat it as “Blend”.</div>
+          <datalist id="eyeColorList">
+            <option value="brown"></option>
+            <option value="blue"></option>
+            <option value="green"></option>
+            <option value="hazel"></option>
+            <option value="gray"></option>
+            <option value="amber"></option>
+            <option value="black"></option>
+            <option value="turquoise"></option>
+            <option value="gold"></option>
+            <option value="#3b82f6"></option>
+            <option value="#10b981"></option>
+            <option value="#fbbf24"></option>
+            <option value="#8b5a2b"></option>
+          </datalist>
+        </div>
+      </div>
       <div class="row">
         <div>
           <label>Favorite Colors</label>
@@ -4209,7 +4345,7 @@ function updateBirthdayCountdownUI(){
   // Data model
   // Entry:
   // { id, nickname, realName, showRealName, connections, birthdate, birthplace, currentAddress, metOn, connection, bloodType,
-  //   nativeLang, otherLangs, tz, imageData, notes, favoriteColors, cycle, lat, lon, createdAt, updatedAt }
+  //   nativeLang, otherLangs, tz, imageData, notes, favoriteColors, eye, cycle, lat, lon, createdAt, updatedAt }
   // ==============================
   let entries = load();
   const entryById = new Map();
@@ -4274,6 +4410,11 @@ function setSpecial(id){
         .map(x=>String(x||"").trim().slice(0,40))
         .filter(Boolean)
         .slice(0,6);
+
+
+      // normalize eye color
+      e.eye = normalizeEye(e.eye);
+
 
       // normalize cycle tracker
       e.cycle = normalizeCycle(e.cycle);
@@ -5091,6 +5232,166 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
   })();
 
   // ==============================
+  // Eye Color (NEW) — glass "eyes" with mix modes
+  // ==============================
+  let formEye = null;
+
+  function eyeModeLabel(mode){
+    switch(String(mode||"").toLowerCase()){
+      case "solid": return "Solid";
+      case "blend": return "Blend";
+      case "split": return "Split";
+      case "speckle": return "Speckled";
+      case "ring": return "Ring";
+      default: return String(mode||"");
+    }
+  }
+
+  function normalizeEye(eye){
+    if(!eye) return null;
+    // legacy: string
+    if(typeof eye === "string"){
+      const a = normalizeColorInput(eye);
+      return a ? { a, b:"", mode:"solid" } : null;
+    }
+    if(typeof eye !== "object") return null;
+
+    const a = normalizeColorInput(eye.a ?? eye.primary ?? eye.base ?? "");
+    const b = normalizeColorInput(eye.b ?? eye.secondary ?? eye.mix ?? "");
+    let mode = String(eye.mode ?? eye.pattern ?? "solid").trim().toLowerCase();
+
+    // allowed modes (kept local so this works during early load())
+    const allowed = { solid:1, blend:1, split:1, speckle:1, ring:1 };
+    if(!allowed[mode]) mode = "solid";
+
+    // If a 2nd color is provided but mode stayed "solid", assume blend.
+    if(b && mode === "solid") mode = "blend";
+
+    if(!a) return null;
+    return { a, b, mode };
+  }
+
+  function eyeLabel(eye){
+    const e = normalizeEye(eye);
+    if(!e) return "";
+    if(!e.b) return e.a;
+    const suffix = (e.mode && e.mode !== "blend") ? ` (${eyeModeLabel(e.mode)})` : "";
+    return `${e.a} + ${e.b}${suffix}`;
+  }
+
+  function eyeShortLabel(eye){
+    const e = normalizeEye(eye);
+    if(!e) return "";
+    if(!e.b) return e.a;
+    const base = `${e.a}/${e.b}`;
+    if(e.mode === "blend") return base;
+    return `${base}·${eyeModeLabel(e.mode)}`;
+  }
+
+  function eyePillHTML(eye, { tiny=false, showText=true }={}){
+    const e = normalizeEye(eye);
+    if(!e) return "";
+    const rgbA = resolveToRGB(e.a) || [95,140,255];
+    const rgbB = resolveToRGB(e.b || e.a) || rgbA;
+
+    const mix = [
+      Math.round((rgbA[0] + rgbB[0]) / 2),
+      Math.round((rgbA[1] + rgbB[1]) / 2),
+      Math.round((rgbA[2] + rgbB[2]) / 2),
+    ];
+    const gv = glassVarsForRGB(mix);
+
+    const label = showText ? (tiny ? eyeShortLabel(e) : eyeLabel(e)) : "";
+    const title = eyeLabel(e) || label || "—";
+
+    return `
+      <span class="colorPillGlass eyePill ${tiny ? "isTiny" : ""}"
+            data-mode="${escapeHTML(e.mode)}"
+            style="--c:${mix[0]},${mix[1]},${mix[2]};--a:${gv.a};--g:${gv.glow};--e1:${rgbA[0]},${rgbA[1]},${rgbA[2]};--e2:${rgbB[0]},${rgbB[1]},${rgbB[2]};"
+            title="Eyes: ${escapeHTML(title)}">
+        <span class="eyeIcon" aria-hidden="true"><span class="eye"></span><span class="eye"></span></span>
+        ${showText ? `<span class="eyeTxt">${escapeHTML(label)}</span>` : ``}
+        <span class="drops"></span>
+      </span>
+    `.trim();
+  }
+
+  function eyePopupLineHTML(eye){
+    const e = normalizeEye(eye);
+    if(!e) return "";
+    return `<div class="pline"><b>Eyes:</b> <div class="favColorsInline" style="display:inline-flex;">${eyePillHTML(e,{tiny:true, showText:true})}</div></div>`;
+  }
+
+  function eyeCardHTML(eye){
+    const e = normalizeEye(eye);
+    if(!e) return "";
+    return `<div class="profileCard"><div class="k">👁️ Eyes</div><div class="v"><div class="favColorsInline">${eyePillHTML(e,{tiny:false, showText:true})}</div></div></div>`;
+  }
+
+  function eyeTinyInlineHTML(eye){
+    const e = normalizeEye(eye);
+    if(!e) return "";
+    return ` · ${eyePillHTML(e,{tiny:true, showText:true})}`;
+  }
+
+  function setEyeToForm(eye){
+    formEye = normalizeEye(eye);
+
+    const aEl = $("eyeColorA");
+    const bEl = $("eyeColorB");
+    const mEl = $("eyeMode");
+
+    if(aEl) aEl.value = formEye?.a || "";
+    if(bEl) bEl.value = formEye?.b || "";
+    if(mEl) mEl.value = formEye?.mode || "solid";
+
+    renderEyePreview();
+  }
+
+  function getEyeFromForm(){
+    return formEye ? { ...formEye } : null;
+  }
+
+  function readEyeFromFormInputs(){
+    const aEl = $("eyeColorA");
+    const bEl = $("eyeColorB");
+    const mEl = $("eyeMode");
+    formEye = normalizeEye({
+      a: aEl ? aEl.value : "",
+      b: bEl ? bEl.value : "",
+      mode: mEl ? mEl.value : "solid",
+    });
+    renderEyePreview();
+  }
+
+  function renderEyePreview(){
+    const el = $("eyePreview");
+    if(!el) return;
+    if(!formEye){
+      el.innerHTML = `<span class="hint">No eye color saved.</span>`;
+      return;
+    }
+    el.innerHTML = eyePillHTML(formEye, { tiny:false, showText:true });
+  }
+
+  (function initEyeUI(){
+    const aEl = $("eyeColorA");
+    const bEl = $("eyeColorB");
+    const mEl = $("eyeMode");
+    const clearBtn = $("eyeClearBtn");
+
+    const onChange = ()=>{ readEyeFromFormInputs(); };
+
+    if(aEl) aEl.addEventListener("input", onChange);
+    if(bEl) bEl.addEventListener("input", onChange);
+    if(mEl) mEl.addEventListener("change", onChange);
+    if(clearBtn) clearBtn.addEventListener("click", ()=> setEyeToForm(null));
+
+    // initial for new entry
+    setEyeToForm(null);
+  })();
+
+  // ==============================
   // Notes widget HTML (profile + popup)
   // ==============================
   function notesHasAny(n){
@@ -5655,6 +5956,8 @@ async function geocodeAddress(addr){
 
     const blood = entry.bloodType ? `<div class="pline"><b>Blood type:</b> ${notesHidden ? "🔒 Hidden" : escapeHTML(entry.bloodType)}</div>` : "";
 
+    const eyes = eyePopupLineHTML(entry.eye);
+
     const colors = favoriteColorsInlineHTML(entry.favoriteColors);
     const cycleLine = cyclePopupLineHTML(entry.cycle);
     const notes = popupNotesHTML(entry.notes, entry.id);
@@ -5680,6 +5983,7 @@ const img = entry.imageData
         ${langs}
         ${connectionsLine}
         ${blood}
+        ${eyes}
         ${colors}
         ${cycleLine}
         ${notes}
@@ -5973,6 +6277,8 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
       entry.otherLangs ? `<div class="profileCard"><div class="k">Other languages</div><div class="v">${escapeHTML(entry.otherLangs)}</div></div>` : "",
       entry.bloodType ? `<div class="profileCard"><div class="k">🩸 Blood type</div><div class="v">${notesHidden ? "🔒 Hidden" : escapeHTML(entry.bloodType)}</div></div>` : "",
 
+      eyeCardHTML(entry.eye),
+
       connectionsCardHTML(entry),
             favoriteColorsCardHTML(entry.favoriteColors),
       cycleCardHTML(entry.cycle),
@@ -6084,6 +6390,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     $("coords").value = "";
     clearNotesForm();
     setFavColorsToForm([]);
+    setEyeToForm(null);
     clearCycleForm();
     $("deleteBtn").disabled = true;
 
@@ -6122,6 +6429,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
       : "";
     setNotesToForm(entry.notes);
     setFavColorsToForm(entry.favoriteColors);
+    setEyeToForm(entry.eye);
     setCycleToForm(entry.cycle);
 
     $("deleteBtn").disabled = false;
@@ -6343,6 +6651,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
     const tz = $("timezone").value.trim();
     const notes = getNotesFromForm();
     const favColors = getFavColorsFromForm();
+    const eye = getEyeFromForm();
     const cycle = getCycleFromForm();
 
     if(!nickname){ toast("Please enter a nickname"); return; }
@@ -6403,6 +6712,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
           bloodType,
           nativeLang, otherLangs, tz, notes,
           favoriteColors: favColors,
+          eye: eye,
           cycle: cycle,
           lat: Number(lat), lon: Number(lon),
           imageData: newImageData,
@@ -6418,6 +6728,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
         bloodType,
         nativeLang, otherLangs, tz, notes,
         favoriteColors: favColors,
+        eye: eye,
         cycle: cycle,
         fav: false,
         lat: Number(lat), lon: Number(lon),
@@ -6574,7 +6885,7 @@ function renderList(){
     // Search filter
     let filtered = q ? entries.filter(e=>{
       const hay = [
-        e.nickname, e.realName, e.connection, e.bloodType, e.nativeLang, e.otherLangs, e.tz,
+        e.nickname, e.realName, e.connection, e.bloodType, eyeLabel(e.eye), e.nativeLang, e.otherLangs, e.tz,
         e.currentAddress, e.birthplace, e.birthdate, e.metOn, e.notes,
         connectionsText(e.connections)
       ].filter(Boolean).join(" | ").toLowerCase();
@@ -6731,6 +7042,7 @@ function renderList(){
             ${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}
             ${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}
             ${(!notesHidden && e.bloodType) ? ` · 🩸 ${escapeHTML(e.bloodType)}` : ""}
+            ${eyeTinyInlineHTML(e.eye)}
           </div>
 
           <div class="tiny"><span class="localLabel">Local Time</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
