@@ -4246,6 +4246,17 @@ function updateBirthdayCountdownUI(){
         }).format(d || new Date());
       }catch{ return null; }
     }
+
+    function personLocalTimeMin(tz, d){
+      if(!tz) return null;
+      try{
+        return _getDtf(`tzm:${tz}`, {
+          hour:"2-digit", minute:"2-digit",
+          weekday:"short", year:"numeric", month:"2-digit", day:"2-digit",
+          timeZone: tz
+        }).format(d || new Date());
+      }catch{ return null; }
+    }
     function myLocalTime(d){
       try{
         return _getDtf("local", {
@@ -4544,18 +4555,24 @@ function setSpecial(id){
     return data.map(e=>{
       if(!e || typeof e!=="object") return e;
 
-      // normalize notes (supports legacy string)
+      // normalize notes (supports legacy string + new tabs)
       const n = e.notes;
+      const _emptyNotes = { important:"", medical:"", work:"", media:"", food:"", other:"" };
       if(typeof n === "string"){
-        e.notes = { important:"", work:"", food:"", other:n };
+        e.notes = { ..._emptyNotes, other:n };
       }else if(!n || typeof n !== "object"){
-        e.notes = { important:"", work:"", food:"", other:"" };
+        e.notes = { ..._emptyNotes };
       }else{
+        // keep known keys; fall back to a few common legacy keys if present
+        const workLegacy = (typeof n.projects==="string") ? n.projects : ((typeof n.project==="string") ? n.project : "");
+        const mediaLegacy = (typeof n.music==="string") ? n.music : "";
         e.notes = {
           important: (typeof n.important==="string") ? n.important : "",
-          work: (typeof n.work==="string") ? n.work : "",
+          medical: (typeof n.medical==="string") ? n.medical : ((typeof n.health==="string") ? n.health : ""),
+          work: (typeof n.work==="string") ? n.work : workLegacy,
+          media: (typeof n.media==="string") ? n.media : mediaLegacy,
           food: (typeof n.food==="string") ? n.food : "",
-          other: (typeof n.other==="string") ? n.other : ""
+          other: (typeof n.other==="string") ? n.other : ((typeof n.misc==="string") ? n.misc : "")
         };
       }
 
@@ -7049,6 +7066,8 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
     const tz = $("timezone").value.trim();
     const notes = getNotesFromForm();
     const favColors = getFavColorsFromForm();
+    // Eye colors: always re-read directly from inputs right before saving (fixes "not saved" cases)
+    try{ readEyeFromFormInputs({ forceNameSwap:true }); }catch{}
     const eye = getEyeFromForm();
     const cycle = getCycleFromForm();
 
@@ -7364,7 +7383,7 @@ function renderList(){
 
       const where = e.currentAddress || `${Number(e.lat).toFixed(2)}, ${Number(e.lon).toFixed(2)}`;
       const dist = distanceLabelTo(e.lat, e.lon);
-      const t = personLocalTime(e.tz);
+      const t = personLocalTimeMin(e.tz);
 
       let z = "";
       if(e.birthdate){
@@ -7442,7 +7461,7 @@ function renderList(){
             ${(!notesHidden && e.bloodType) ? ` · 🩸 ${escapeHTML(e.bloodType)}` : ""}
 </div>
 
-          <div class="tiny"><span class="localLabel">Local Time</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
+          <div class="tiny"><span class="localLabel">Local Time</span>: <span class="js-time localTimeVal" data-gran="m" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
         </div>
         <div class="actions">
           ${avatar}
@@ -7489,10 +7508,19 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
   }
 
   // Live clock nodes (cached) to keep the UI snappy
-  let __liveTimeNodes = [];
+  let __liveTimeNodesSec = [];
+  let __liveTimeNodesMin = [];
   let __liveHeartNodes = [];
   function refreshLiveClockNodes(){
-    __liveTimeNodes = Array.from(document.querySelectorAll(".js-time"));
+    const all = Array.from(document.querySelectorAll(".js-time"));
+    __liveTimeNodesSec = [];
+    __liveTimeNodesMin = [];
+    for(const el of all){
+      if(!el) continue;
+      const gran = String(el.getAttribute("data-gran") || "s").toLowerCase();
+      if(gran === "m") __liveTimeNodesMin.push(el);
+      else __liveTimeNodesSec.push(el);
+    }
     __liveHeartNodes = Array.from(document.querySelectorAll(".js-heart"));
   }
 
@@ -7500,18 +7528,36 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
     now = now || new Date();
 
     // Update all time strings (fast: cached nodes + cached formatters)
-    if(!__liveTimeNodes.length) refreshLiveClockNodes();
-    const nextTimeNodes = [];
-    for(const el of __liveTimeNodes){
+    if(!__liveTimeNodesSec.length && !__liveTimeNodesMin.length) refreshLiveClockNodes();
+
+    // Per-second nodes (profile / popup)
+    const nextSec = [];
+    for(const el of __liveTimeNodesSec){
       if(!el || !el.isConnected) continue;
       const tz = el.getAttribute("data-tz");
       el.textContent = tz ? (personLocalTime(tz, now) || "—") : "—";
-      nextTimeNodes.push(el);
+      nextSec.push(el);
     }
-    __liveTimeNodes = nextTimeNodes;
+    __liveTimeNodesSec = nextSec;
+
+    // Per-minute nodes (list) — update only on the minute
+    const sec = now.getSeconds();
+    if(sec === 0){
+      const nextMin = [];
+      for(const el of __liveTimeNodesMin){
+        if(!el || !el.isConnected) continue;
+        const tz = el.getAttribute("data-tz");
+        el.textContent = tz ? (personLocalTimeMin(tz, now) || "—") : "—";
+        nextMin.push(el);
+      }
+      __liveTimeNodesMin = nextMin;
+    }else{
+      // prune detached nodes without doing expensive formatting
+      __liveTimeNodesMin = __liveTimeNodesMin.filter(el=>el && el.isConnected);
+    }
 
     // Hearts don't need per-second updates (once per minute is enough)
-    if(now.getSeconds() === 0){
+    if(sec === 0){
       if(!__liveHeartNodes.length) refreshLiveClockNodes();
       const nextHeartNodes = [];
       for(const el of __liveHeartNodes){
@@ -7564,20 +7610,25 @@ function exportJSON(){
     return data
       .filter(x=>x && typeof x === "object")
       .map(x=>{
-        // notes: support legacy string or partial object
+        // notes: support legacy string or partial object (incl. new tabs)
         const rawNotes = x.notes;
+        const _emptyNotes = { important:"", medical:"", work:"", media:"", food:"", other:"" };
         let notes;
         if(typeof rawNotes === "string"){
-          notes = { important:"", work:"", food:"", other: rawNotes };
+          notes = { ..._emptyNotes, other: rawNotes };
         }else if(rawNotes && typeof rawNotes === "object"){
+          const workLegacy = (typeof rawNotes.projects==="string") ? rawNotes.projects : ((typeof rawNotes.project==="string") ? rawNotes.project : "");
+          const mediaLegacy = (typeof rawNotes.music==="string") ? rawNotes.music : "";
           notes = {
             important: (typeof rawNotes.important==="string") ? rawNotes.important : "",
-            work: (typeof rawNotes.work==="string") ? rawNotes.work : "",
+            medical: (typeof rawNotes.medical==="string") ? rawNotes.medical : ((typeof rawNotes.health==="string") ? rawNotes.health : ""),
+            work: (typeof rawNotes.work==="string") ? rawNotes.work : workLegacy,
+            media: (typeof rawNotes.media==="string") ? rawNotes.media : mediaLegacy,
             food: (typeof rawNotes.food==="string") ? rawNotes.food : "",
-            other: (typeof rawNotes.other==="string") ? rawNotes.other : ""
+            other: (typeof rawNotes.other==="string") ? rawNotes.other : ((typeof rawNotes.misc==="string") ? rawNotes.misc : "")
           };
         }else{
-          notes = { important:"", work:"", food:"", other:"" };
+          notes = { ..._emptyNotes };
         }
 
         // favorite colors
@@ -7609,6 +7660,7 @@ function exportJSON(){
           imageData: x.imageData ? String(x.imageData) : null,
           notes: notes,
           favoriteColors: favoriteColors,
+          eye: normalizeEye(x.eye),
           cycle: cycle,
           lat: Number(x.lat),
           lon: Number(x.lon),
