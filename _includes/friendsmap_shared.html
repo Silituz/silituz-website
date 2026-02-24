@@ -500,6 +500,262 @@
       gap:12px;
     }
   
+
+    /* Network modal (graph view) */
+    #soApp .netModal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      background: rgba(0,0,0,.58);
+      backdrop-filter: blur(8px);
+      z-index: 9998;
+    }
+    #soApp .netModal.show{display:flex;}
+    #soApp .netModalInner{
+      width:min(1200px, 96vw);
+      max-height: 88vh;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: radial-gradient(900px 420px at 20% 10%, rgba(122,167,255,.14), transparent 60%),
+                  radial-gradient(800px 420px at 80% 0%, rgba(16,185,129,.10), transparent 60%),
+                  rgba(7,10,18,.88);
+      box-shadow: var(--shadow);
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    #soApp .netTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:4px 4px 2px;
+      flex-wrap:wrap;
+    }
+    #soApp .netTitle{
+      font-weight:800;
+      letter-spacing:.2px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    #soApp .netTitle .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      font-size:12px;
+      color: rgba(255,255,255,.86);
+    }
+    #soApp .netControls{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    #soApp .netControls input[type="text"]{
+      width: min(320px, 55vw);
+      padding:9px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline:none;
+    }
+    #soApp .netControls label{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin:0;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      font-size:12px;
+      color: rgba(255,255,255,.84);
+      cursor:pointer;
+      user-select:none;
+      white-space:nowrap;
+    }
+    #soApp .netControls label input{ accent-color: var(--emerald); }
+    #soApp .netCanvasWrap{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      background: rgba(0,0,0,.18);
+      overflow:auto;
+      padding:10px;
+      flex:1;
+      min-height: 260px;
+    }
+    #soApp #netSvg{
+      display:block;
+      width:100%;
+      height:auto;
+      min-width: 980px;
+    }
+    #soApp .netLegend{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      font-size:12px;
+      color: var(--muted);
+      padding:0 6px 2px;
+      flex-wrap:wrap;
+    }
+    #soApp .netLegend .k{opacity:.9}
+    #soApp .netLegend .kbd{
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.86);
+      font-size:11px;
+    }
+
+    /* SVG styling */
+    #soApp .netTierLabel{
+      fill: rgba(255,255,255,.56);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    #soApp .netTierLine{
+      stroke: rgba(255,255,255,.08);
+      stroke-width: 1;
+    }
+    #soApp .netEdge{
+      stroke: rgba(255,255,255,.14);
+      stroke-width: 1.25;
+      fill:none;
+      opacity: .9;
+    }
+    #soApp .netEdge.enemy{ stroke: rgba(255,107,107,.34); }
+    #soApp .netEdge.isDim{ opacity: .10; }
+    #soApp .netEdge.isHot{
+      stroke: rgba(122,167,255,.68);
+      stroke-width: 2.1;
+      opacity: .95;
+    }
+
+
+    /* Edge labels (relationship types) */
+    #soApp .netEdgeLabel{
+      fill: rgba(255,255,255,.74);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .10px;
+      paint-order: stroke;
+      stroke: rgba(0,0,0,.55);
+      stroke-width: 3;
+      opacity: .55;
+      pointer-events: none;
+      user-select: none;
+    }
+    #soApp .netEdgeLabel.enemy{
+      fill: rgba(255,171,171,.82);
+    }
+    #soApp .netEdgeLabel.isDim{ opacity: .06; }
+    #soApp .netEdgeLabel.isHot{ opacity: .96; }
+
+    /* Centered focus node */
+    #soApp .netNode.isCenter circle{
+      fill: rgba(16,185,129,.16);
+      stroke: rgba(16,185,129,.92);
+      stroke-width: 2.8;
+    }
+    #soApp .netNode.isCenter text.nm{
+      fill: rgba(233,238,252,.96);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    #soApp .netNode.isCenter text.ini{
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    /* Solar-system network additions */
+    #soApp .netOrbit{
+      fill:none;
+      stroke: rgba(255,255,255,.08);
+      stroke-width: 1;
+      stroke-dasharray: 6 10;
+      opacity: .9;
+    }
+    #soApp .netOrbit.underground{
+      stroke: rgba(255,107,107,.18);
+      stroke-dasharray: 4 12;
+    }
+    #soApp .netOrbitLabel{
+      fill: rgba(255,255,255,.46);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .18px;
+    }
+
+    #soApp .netYou circle{
+      fill: rgba(16,185,129,.10);
+      stroke: rgba(16,185,129,.55);
+      stroke-width: 2;
+    }
+    #soApp .netYou text{
+      fill: rgba(233,238,252,.95);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .35px;
+      pointer-events:none;
+    }
+
+    #soApp .netNode circle{
+      fill: rgba(255,255,255,.08);
+      stroke: rgba(255,255,255,.22);
+      stroke-width: 1.2;
+    }
+    #soApp .netNode.isUnderground circle{
+      stroke: rgba(255,107,107,.44);
+    }
+    #soApp .netNode text.ini{
+      font-size: 12px;
+      font-weight: 900;
+    }
+    #soApp .netNode text.nm{
+      fill: rgba(255,255,255,.72);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    #soApp .netNode.isFav circle{ stroke: rgba(255, 215, 0, .60); }
+    #soApp .netNode.isSpecial circle{ stroke: rgba(16,185,129,.76); }
+    #soApp .netNode.isHot circle{ stroke: rgba(122,167,255,.88); stroke-width: 2.1; }
+    #soApp .netNode.isFocus circle{ stroke: rgba(255,255,255,.92); stroke-width: 2.4; }
+
+
+    #soApp .netNode{ cursor:pointer; }
+    #soApp .netNode rect{
+      fill: rgba(255,255,255,.07);
+      stroke: rgba(255,255,255,.18);
+      stroke-width: 1;
+    }
+    #soApp .netNode text{
+      fill: rgba(233,238,252,.95);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .15px;
+      pointer-events:none;
+    }
+    #soApp .netNode .sub{
+      fill: rgba(255,255,255,.60);
+      font-size: 10px;
+      font-weight: 700;
+    }
+    #soApp .netNode.isFav rect{ stroke: rgba(255, 215, 0, .60); }
+    #soApp .netNode.isSpecial rect{ stroke: rgba(16,185,129,.72); }
+    #soApp .netNode.isDim{ opacity: .18; }
+    #soApp .netNode.isHot rect{ stroke: rgba(122,167,255,.78); }
+    #soApp .netNode.isFocus rect{ stroke: rgba(255,255,255,.88); stroke-width: 2; }
+
     #soApp .heart{
       font-size: 14px;
       line-height: 1;
@@ -3293,6 +3549,13 @@
 
 }
 #soApp .eyeTxt{ white-space: nowrap; }
+
+/* Tiny pulse highlight when jumping to a card */
+#soApp .pulseOutline{
+  outline: 2px solid rgba(34, 211, 238, .55);
+  box-shadow: 0 0 0 6px rgba(34, 211, 238, .10);
+  transition: outline-color .2s ease, box-shadow .2s ease;
+}
 </style>
 <section id="soApp" class="soApp">
 <header>
@@ -3661,6 +3924,39 @@
     </div>
   </div>
 </div>
+
+
+<!-- Network modal (graph) -->
+<div class="netModal" id="netModal" aria-hidden="true">
+  <div class="netModalInner" role="dialog" aria-modal="true" aria-label="Network graph">
+    <div class="netTop">
+      <div class="netTitle">
+        🕸️ Network
+        <span class="pill" id="netStats">—</span>
+      </div>
+      <div class="netControls">
+        <input id="netSearch" type="text" placeholder="Search names…" />
+        <label title="Hide Dislike/Enemy/Nemesis (below the tree)">
+          <input id="netHideUnderground" type="checkbox" />
+          Hide enemies
+        </label>
+        <button id="netReset" class="secondary" type="button" style="padding:8px 12px;">Reset</button>
+        <button id="netClose" class="secondary" type="button" style="padding:8px 12px;">Close</button>
+      </div>
+    </div>
+
+    <div class="netCanvasWrap" id="netCanvasWrap">
+      <svg id="netSvg" xmlns="http://www.w3.org/2000/svg" aria-label="Connections network"></svg>
+    </div>
+
+    <div class="netLegend">
+      <span><span class="k">Tip:</span> hover a node to highlight connections · click a node to open profile</span>
+      <span><span class="kbd">Esc</span> closes</span>
+    </div>
+  </div>
+</div>
+
+
 
 <script>
   // ==============================
@@ -4279,6 +4575,7 @@ function updateBirthdayCountdownUI(){
     img.src = src;
     m.classList.add("show");
     m.setAttribute("aria-hidden", "false");
+    try{ const w = $("netCanvasWrap"); if(w) delete w.dataset._netCentered; }catch{}
   }
   function closeImageModal(){
     const m = $("imgModal");
@@ -4294,6 +4591,578 @@ function updateBirthdayCountdownUI(){
   document.addEventListener("keydown", (e)=>{
     if(e.key === "Escape") closeImageModal();
   });
+
+
+  // ==============================
+  // Network modal (visual graph)
+  // ==============================
+  const UNDERGROUND_REL = new Set(["Dislike","Enemy","Nemesis"]);
+  let netFocusId = null;
+  let netHoverId = null;
+
+  function openNetworkModal(focusId){
+    netFocusId = focusId || null;
+    netHoverId = null;
+
+    const m = $("netModal");
+    m.classList.add("show");
+    m.setAttribute("aria-hidden", "false");
+
+    // Ensure controls are reset only if empty
+    if($("netSearch").value.trim() === "") $("netSearch").value = "";
+    // Render after a tiny delay so sizes are correct
+    setTimeout(()=> {
+      renderNetworkGraph();
+      // Center / focus node in view
+      const wrapEl = $("netCanvasWrap");
+      if(wrapEl){
+        const fx = wrapEl.dataset.focusX ? Number(wrapEl.dataset.focusX) : NaN;
+        const fy = wrapEl.dataset.focusY ? Number(wrapEl.dataset.focusY) : NaN;
+        const cx = wrapEl.dataset.centerX ? Number(wrapEl.dataset.centerX) : NaN;
+        const cy = wrapEl.dataset.centerY ? Number(wrapEl.dataset.centerY) : NaN;
+
+        if(Number.isFinite(fx) && Number.isFinite(fy)){
+          wrapEl.scrollLeft = Math.max(0, fx - (wrapEl.clientWidth/2));
+          wrapEl.scrollTop  = Math.max(0, fy - (wrapEl.clientHeight/2));
+        }else{
+          // Center on YOU once when opening (does not fight the user after)
+          if(wrapEl.dataset._netCentered !== "1" && Number.isFinite(cx) && Number.isFinite(cy)){
+            wrapEl.scrollLeft = Math.max(0, cx - (wrapEl.clientWidth/2));
+            wrapEl.scrollTop  = Math.max(0, cy - (wrapEl.clientHeight/2));
+            wrapEl.dataset._netCentered = "1";
+          }
+        }
+      }
+    }, 30);
+  }
+
+  function closeNetworkModal(){
+    const m = $("netModal");
+    m.classList.remove("show");
+    m.setAttribute("aria-hidden", "true");
+    netHoverId = null;
+  }
+
+  // Close on backdrop click
+  $("netModal").addEventListener("click", (e)=>{
+    if(e.target && e.target.id === "netModal") closeNetworkModal();
+  });
+  $("netClose").addEventListener("click", closeNetworkModal);
+  $("netReset").addEventListener("click", ()=>{
+    $("netSearch").value = "";
+    $("netHideUnderground").checked = false;
+    netHoverId = null;
+    renderNetworkGraph();
+  });
+  $("netSearch").addEventListener("input", ()=> renderNetworkGraph());
+  $("netHideUnderground").addEventListener("change", ()=> renderNetworkGraph());
+
+  // Esc should also close this modal
+  document.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape") closeNetworkModal();
+  });
+
+  // Re-render on resize (debounced)
+  let _netResizeT = null;
+  window.addEventListener("resize", ()=>{
+    if(!$("netModal").classList.contains("show")) return;
+    clearTimeout(_netResizeT);
+    _netResizeT = setTimeout(renderNetworkGraph, 90);
+  });
+
+  function relRank(val){
+    const v = String(val || "").trim();
+    const idx = REL_TYPES.indexOf(v);
+    return (idx >= 0) ? idx : 0;
+  }
+
+  function nodeLabelForEntry(e){
+    const nm = displayNames(e);
+    return {
+      main: (nm && nm.main) ? nm.main : (e.nickname || e.realName || "—"),
+      sub: (nm && nm.sub) ? nm.sub : ""
+    };
+  }
+
+  function buildNetworkData(){
+    const byId = new Map(entries.map(e=>[e.id, e]));
+    const nodes = entries.map(e=>{
+      const lbl = nodeLabelForEntry(e);
+      return {
+        id: e.id,
+        name: lbl.main,
+        sub: lbl.sub,
+        rel: String(e.connection || "").trim(),
+        rank: relRank(e.connection),
+        fav: !!e.fav,
+        special: !!specialId && e.id === specialId
+      };
+    });
+
+    // Undirected edges, deduped
+    const edges = [];
+    const edgeSeen = new Map(); // key -> {a,b,type,enemy}
+    for(const e of entries){
+      const from = e.id;
+      const arr = Array.isArray(e.connections) ? e.connections : [];
+      for(const c of arr){
+        const to = String(c?.id || "").trim();
+        if(!to || !byId.has(to) || to === from) continue;
+        const a = (from < to) ? from : to;
+        const b = (from < to) ? to : from;
+        const t = String(c?.type || "").trim() || "Know each other";
+        const key = a + "|" + b;
+        if(!edgeSeen.has(key)){
+          edgeSeen.set(key, { a, b, type: t, enemy: UNDERGROUND_REL.has(t) });
+        }else{
+          // if other direction exists with different type, mark as mixed (but keep enemy if any)
+          const ex = edgeSeen.get(key);
+          if(ex.type !== t) ex.type = ex.type; // keep first type as label
+          ex.enemy = ex.enemy || UNDERGROUND_REL.has(t);
+        }
+      }
+    }
+    for(const v of edgeSeen.values()) edges.push(v);
+
+    // adjacency map
+    const adj = new Map();
+    for(const n of nodes) adj.set(n.id, new Set());
+    for(const e of edges){
+      if(!adj.has(e.a) || !adj.has(e.b)) continue;
+      adj.get(e.a).add(e.b);
+      adj.get(e.b).add(e.a);
+    }
+    return { nodes, edges, adj };
+  }
+
+  function renderNetworkGraph(){
+    const svg = $("netSvg");
+    const wrap = $("netCanvasWrap");
+    if(!svg || !wrap) return;
+
+    const hideUnderground = $("netHideUnderground").checked;
+    const q = $("netSearch").value.trim().toLowerCase();
+
+    const { nodes: allNodes, edges: allEdges, adj } = buildNetworkData();
+    const nodeMap = new Map(allNodes.map(n=>[n.id, n]));
+
+    function isUndergroundNode(n){
+      return UNDERGROUND_REL.has(String(n?.rel || "").trim());
+    }
+
+    // Search filter (keep neighbors for context)
+    let baseSet = new Set(allNodes.map(n=>n.id));
+    if(q){
+      const matches = new Set(allNodes.filter(n=>{
+        const hay = (n.name + " " + (n.sub||"")).toLowerCase();
+        return hay.includes(q);
+      }).map(n=>n.id));
+
+      if(matches.size){
+        const expanded = new Set(matches);
+        for(const e of allEdges){
+          if(matches.has(e.a)) expanded.add(e.b);
+          if(matches.has(e.b)) expanded.add(e.a);
+        }
+        baseSet = expanded;
+      }else{
+        baseSet = matches; // empty
+      }
+    }
+
+    // Apply "hide underground"
+    let baseNodes = allNodes.filter(n=> baseSet.has(n.id) && (!hideUnderground || !isUndergroundNode(n)));
+    let baseEdges = allEdges.filter(e=> baseSet.has(e.a) && baseSet.has(e.b));
+    if(hideUnderground){
+      baseEdges = baseEdges.filter(e => !e.enemy);
+    }
+
+    // Focus node (center)
+    let focusId = (netFocusId && baseSet.has(netFocusId)) ? netFocusId : null;
+    if(!focusId){
+      // prefer specialId if available, otherwise first visible node
+      const preferred = (typeof specialId !== "undefined" && specialId && baseSet.has(specialId)) ? specialId : null;
+      focusId = preferred || (baseNodes[0]?.id || null);
+    }
+    if(!focusId){
+      $("netStats").textContent = `0 people • 0 links`;
+      svg.innerHTML = "";
+      svg.setAttribute("viewBox", `0 0 980 680`);
+      return;
+    }
+
+    // Build a focused neighborhood: focus in center, then expand outward by graph distance.
+    // Depth 1 = direct connections; Depth 2 = connections-of-connections, etc.
+    const MAX_DEPTH = 3;
+
+    const include = new Set([focusId]);
+    const dist = new Map([[focusId, 0]]);
+    let frontier = [focusId];
+
+    for(let d=1; d<=MAX_DEPTH; d++){
+      const next = [];
+      for(const id of frontier){
+        const neigh = adj.get(id);
+        if(!neigh) continue;
+        for(const nb of neigh){
+          if(!baseSet.has(nb)) continue;
+          const nn = nodeMap.get(nb);
+          if(!nn) continue;
+          if(hideUnderground && isUndergroundNode(nn)) continue;
+          if(!include.has(nb)){
+            include.add(nb);
+            dist.set(nb, d);
+            next.push(nb);
+          }
+        }
+      }
+      frontier = next;
+      if(!frontier.length) break;
+    }
+
+    // Keep only nodes/edges inside the focused neighborhood.
+    let nodes = baseNodes.filter(n=> include.has(n.id));
+    let edges = baseEdges.filter(e=> include.has(e.a) && include.has(e.b));
+
+    // If search is active, still keep focus even if it didn't match.
+    // (Already included, but guard against edge cases)
+    if(!nodes.some(n=>n.id===focusId)){
+      const fn = nodeMap.get(focusId);
+      if(fn) nodes.push(fn);
+    }
+
+    const focusNode = nodeMap.get(focusId);
+    const focusName = focusNode ? focusNode.name : "Focus";
+    $("netStats").textContent = `${nodes.length} people • ${edges.length} links • centered: ${focusName}`;
+
+    // Split nodes into main + underground (underground shown on bottom arc)
+    const mainNodes = nodes.filter(n=>!isUndergroundNode(n) || n.id===focusId);
+    const underNodes = nodes.filter(n=>isUndergroundNode(n) && n.id!==focusId);
+
+    // Group main nodes by distance layer
+    const layers = new Map(); // d -> nodes[]
+    let maxD = 0;
+    for(const n of mainNodes){
+      const d = dist.get(n.id) ?? 99;
+      if(d === 0) continue; // center node
+      maxD = Math.max(maxD, d);
+      if(!layers.has(d)) layers.set(d, []);
+      layers.get(d).push(n);
+    }
+    if(maxD === 0) maxD = 1; // still draw at least one orbit for aesthetics
+
+    // Layout sizing (radial "solar" around the focused person)
+    const NODE_R = 20;
+    const MIN_ARC = 110;        // minimal arc-length per node (includes label space)
+    const BASE_INNER = 150;     // ring-1 radius
+    const RING_GAP = 150;       // ring spacing
+
+    const rings = []; // [{ d, r, nodes }]
+    let rCursor = BASE_INNER;
+
+    for(let d=1; d<=maxD; d++){
+      const arr = layers.get(d) || [];
+      if(!arr.length) { rCursor += RING_GAP; continue; }
+
+      // Ring needs to be large enough so nodes don't collide.
+      const rNeed = (arr.length * MIN_ARC) / (2*Math.PI);
+      rCursor = Math.max(rCursor, rNeed);
+      rings.push({ d, r: rCursor, nodes: arr });
+      rCursor += RING_GAP;
+    }
+
+    let outerR = rings.length ? rings[rings.length-1].r : BASE_INNER;
+
+    // Place underground nodes on a dedicated bottom arc, beyond outer ring
+    let underR = outerR + 190;
+    if(underNodes.length){
+      const arcAngle = Math.PI * 0.72;
+      const rNeed = (underNodes.length * MIN_ARC) / arcAngle;
+      underR = Math.max(underR, rNeed);
+      outerR = Math.max(outerR, underR);
+    }
+
+    const PAD = 260;
+    const w = Math.max(980, Math.round(outerR*2 + PAD));
+    const h = Math.max(680, Math.round(outerR*2 + PAD));
+
+    // Prepare SVG
+    svg.innerHTML = "";
+    svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    svg.style.width = w + "px";
+    svg.style.height = h + "px";
+
+    const cx = w/2;
+    const cy = h/2;
+
+    // Auto-center on focus
+    wrap.dataset.centerX = String(cx);
+    wrap.dataset.centerY = String(cy);
+    wrap.dataset.focusX  = String(cx);
+    wrap.dataset.focusY  = String(cy);
+
+    const gBg = document.createElementNS("http://www.w3.org/2000/svg","g");
+    const gEdges = document.createElementNS("http://www.w3.org/2000/svg","g");
+    const gNodes = document.createElementNS("http://www.w3.org/2000/svg","g");
+    svg.appendChild(gBg);
+    svg.appendChild(gEdges);
+    svg.appendChild(gNodes);
+
+    // Orbits
+    function addOrbit(radius, cls=""){
+      const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+      c.setAttribute("class", "netOrbit" + (cls ? (" " + cls) : ""));
+      c.setAttribute("cx", String(cx));
+      c.setAttribute("cy", String(cy));
+      c.setAttribute("r", String(radius));
+      gBg.appendChild(c);
+    }
+    for(const ring of rings){
+      addOrbit(ring.r, "main");
+      const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+      t.setAttribute("class","netOrbitLabel");
+      t.setAttribute("x", String(cx));
+      t.setAttribute("y", String(cy - ring.r - 10));
+      t.setAttribute("text-anchor","middle");
+      t.textContent = `Layer ${ring.d}`;
+      gBg.appendChild(t);
+    }
+    if(underNodes.length && !hideUnderground){
+      addOrbit(underR, "underground");
+      const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+      t.setAttribute("class","netOrbitLabel");
+      t.setAttribute("x", String(cx));
+      t.setAttribute("y", String(cy + underR + 26));
+      t.setAttribute("text-anchor","middle");
+      t.textContent = "Underground";
+      gBg.appendChild(t);
+    }
+
+    // Positions
+    const pos = new Map(); // id -> {x,y}
+    const nodeById = new Map(); // id -> <g>
+    const edgeEls = [];         // <line>
+    const edgeLabelEls = [];    // <text>
+
+    function stableOffset(seed){
+      let h = 0;
+      const s = String(seed||"");
+      for(let i=0;i<s.length;i++) h = (h*31 + s.charCodeAt(i)) >>> 0;
+      return (h % 6283) / 1000; // ~0..6.283
+    }
+
+    // Center node
+    pos.set(focusId, {x: cx, y: cy});
+
+    // Place main rings by distance (sorted by rank/degree/name)
+    for(const ring of rings){
+      const arr = [...ring.nodes].sort((a,b)=>{
+        // nearer relationships (rank) first, then degree, then name
+        const ra = relRank(a.rel), rb = relRank(b.rel);
+        if(rb !== ra) return rb - ra;
+        const da = (adj.get(a.id)?.size || 0);
+        const db = (adj.get(b.id)?.size || 0);
+        if(db !== da) return db - da;
+        return (a.name||"").localeCompare(b.name||"", undefined, {sensitivity:"base"});
+      });
+      const n = arr.length;
+      const off = -Math.PI/2 + stableOffset("layer:"+ring.d+":"+focusId);
+      for(let i=0;i<n;i++){
+        const ang = off + (i * (2*Math.PI / n));
+        const x = cx + ring.r * Math.cos(ang);
+        const y = cy + ring.r * Math.sin(ang);
+        pos.set(arr[i].id, {x,y});
+      }
+    }
+
+    // Place underground nodes (bottom arc)
+    if(underNodes.length && !hideUnderground){
+      const arr = [...underNodes].sort((a,b)=>{
+        const da = (adj.get(a.id)?.size || 0);
+        const db = (adj.get(b.id)?.size || 0);
+        if(db !== da) return db - da;
+        return (a.name||"").localeCompare(b.name||"", undefined, {sensitivity:"base"});
+      });
+      const n = arr.length;
+      const startAng = Math.PI * 0.18;
+      const endAng   = Math.PI * 0.82;
+      const span = (endAng - startAng);
+      for(let i=0;i<n;i++){
+        const ang = startAng + (n===1 ? span/2 : (i * (span / (n-1))));
+        const x = cx + underR * Math.cos(ang);
+        const y = cy + underR * Math.sin(ang);
+        pos.set(arr[i].id, {x,y});
+      }
+    }
+
+    // Edges + labels
+    function addEdgeLabel(e, p1, p2){
+      const dx = p2.x - p1.x;
+      const dy = p2.y - p1.y;
+      const len = Math.hypot(dx, dy) || 1;
+      const nx = (-dy / len);
+      const ny = ( dx / len);
+      const mx = (p1.x + p2.x) / 2 + nx * 10;
+      const my = (p1.y + p2.y) / 2 + ny * 10;
+
+      const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+      t.setAttribute("x", String(mx));
+      t.setAttribute("y", String(my));
+      t.setAttribute("text-anchor","middle");
+      t.setAttribute("class", "netEdgeLabel" + (e.enemy ? " enemy" : ""));
+      t.textContent = String(e.type || "Know each other");
+      t.dataset.a = e.a;
+      t.dataset.b = e.b;
+      gEdges.appendChild(t);
+      edgeLabelEls.push(t);
+    }
+
+    for(const e of edges){
+      const p1 = pos.get(e.a), p2 = pos.get(e.b);
+      if(!p1 || !p2) continue;
+
+      const ln = document.createElementNS("http://www.w3.org/2000/svg","line");
+      ln.setAttribute("x1", String(p1.x));
+      ln.setAttribute("y1", String(p1.y));
+      ln.setAttribute("x2", String(p2.x));
+      ln.setAttribute("y2", String(p2.y));
+      ln.setAttribute("class", "netEdge" + (e.enemy ? " enemy" : ""));
+      ln.dataset.a = e.a;
+      ln.dataset.b = e.b;
+      gEdges.appendChild(ln);
+      edgeEls.push(ln);
+
+      addEdgeLabel(e, p1, p2);
+    }
+
+    // Nodes
+    function initial(name){
+      const s = String(name||"").trim();
+      if(!s) return "•";
+      return s[0].toUpperCase();
+    }
+
+    for(const n of nodes){
+      const p = pos.get(n.id);
+      if(!p) continue;
+
+      const isCenter = (n.id === focusId);
+
+      const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+      g.setAttribute("class",
+        "netNode" +
+        (n.fav ? " isFav" : "") +
+        (n.special ? " isSpecial" : "") +
+        (isUndergroundNode(n) ? " isUnderground" : "") +
+        (isCenter ? " isCenter" : "")
+      );
+      g.dataset.id = n.id;
+
+      const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+      c.setAttribute("cx", String(p.x));
+      c.setAttribute("cy", String(p.y));
+      c.setAttribute("r", String(isCenter ? 28 : NODE_R));
+      g.appendChild(c);
+
+      const it = document.createElementNS("http://www.w3.org/2000/svg","text");
+      it.setAttribute("x", String(p.x));
+      it.setAttribute("y", String(p.y + 5));
+      it.setAttribute("text-anchor","middle");
+      it.setAttribute("class","ini");
+      it.textContent = isCenter ? initial(n.name) : initial(n.name);
+      g.appendChild(it);
+
+      const nm = document.createElementNS("http://www.w3.org/2000/svg","text");
+      nm.setAttribute("x", String(p.x));
+      nm.setAttribute("y", String(p.y + (isCenter ? 44 : (NODE_R + 18))));
+      nm.setAttribute("text-anchor","middle");
+      nm.setAttribute("class","nm");
+      nm.textContent = n.name;
+      g.appendChild(nm);
+
+      // Tooltip
+      const title = document.createElementNS("http://www.w3.org/2000/svg","title");
+      title.textContent = `${n.name}${n.sub ? " — " + n.sub : ""} (${n.rel || "Other"})`;
+      g.appendChild(title);
+
+      gNodes.appendChild(g);
+      nodeById.set(n.id, g);
+    }
+
+    // Highlight handling (also affects edge labels)
+    function clearNetHighlight(){
+      for(const g of nodeById.values()){
+        g.classList.remove("isHot","isDim");
+      }
+      for(const ln of edgeEls){
+        ln.classList.remove("isHot","isDim");
+      }
+      for(const t of edgeLabelEls){
+        t.classList.remove("isHot","isDim");
+      }
+      // keep center visually strong
+      if(nodeById.has(focusId)){
+        nodeById.get(focusId).classList.add("isHot");
+      }
+    }
+
+    function highlightNet(id){
+      const neighbors = adj.get(id) || new Set();
+
+      for(const [nid, g] of nodeById.entries()){
+        const isHot = (nid === id) || neighbors.has(nid);
+        g.classList.toggle("isHot", isHot);
+        g.classList.toggle("isDim", !isHot);
+      }
+
+      for(const ln of edgeEls){
+        const a = ln.dataset.a, b = ln.dataset.b;
+        const hot = (a === id && neighbors.has(b)) || (b === id && neighbors.has(a));
+        ln.classList.toggle("isHot", hot);
+        ln.classList.toggle("isDim", !hot);
+      }
+      for(const t of edgeLabelEls){
+        const a = t.dataset.a, b = t.dataset.b;
+        const hot = (a === id && neighbors.has(b)) || (b === id && neighbors.has(a));
+        t.classList.toggle("isHot", hot);
+        t.classList.toggle("isDim", !hot);
+      }
+    }
+
+    clearNetHighlight();
+
+    svg.onmousemove = (ev)=>{
+      const node = ev.target.closest(".netNode");
+      if(!node){
+        if(netHoverId){
+          netHoverId = null;
+          clearNetHighlight();
+        }
+        return;
+      }
+      const id = node.dataset.id;
+      if(!id) return;
+      if(netHoverId !== id){
+        netHoverId = id;
+        highlightNet(id);
+      }
+    };
+
+    svg.onmouseleave = ()=>{
+      netHoverId = null;
+      clearNetHighlight();
+    };
+
+    svg.onclick = (ev)=>{
+      const node = ev.target.closest(".netNode");
+      if(!node) return;
+      const id = node.dataset.id;
+      if(!id) return;
+      closeNetworkModal();
+      openProfile(id);
+    };
+  }
+
   // click-anywhere handler for thumbs (list + popup + profile)
   document.addEventListener("click", (e)=>{
     const img = e.target.closest(".js-open-img");
@@ -7467,6 +8336,7 @@ function renderList(){
           ${avatar}
           <button class="iconBtn js-pin" title="Center on map" type="button">📍</button>
           <button class="iconBtn js-book" title="Open profile" type="button">🪪</button>
+          <button class="iconBtn js-net" title="Connections / Network" type="button">🕸️</button>
           <button class="secondary js-open" type="button">Open</button>
         </div>
       `;
@@ -7483,6 +8353,7 @@ function renderList(){
 li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
       li.querySelector(".js-pin").addEventListener("click", ()=> focusEntryOnMap(e.id));
       li.querySelector(".js-book").addEventListener("click", ()=> openProfile(e.id));
+      li.querySelector(".js-net").addEventListener("click", (ev)=>{ ev.stopPropagation(); openNetworkModal(e.id); });
       li.querySelector(".js-star").addEventListener("click", (ev)=>{
         ev.stopPropagation();
         e.fav = !e.fav;
@@ -7963,6 +8834,27 @@ function distHint(html){
   el.innerHTML = html;
   el.style.display = "block";
 }
+
+  // Jump inside profile to Connections card (best-effort)
+  function jumpToProfileConnections(){
+    try{
+      const pv = document.getElementById("profileView");
+      if(!pv) return;
+      const cards = pv.querySelectorAll(".profileCard");
+      let target = null;
+      cards.forEach(c=>{
+        const k = c.querySelector(".k");
+        const txt = (k?.textContent||"").toLowerCase();
+        if(txt.includes("connections")) target = c;
+      });
+      if(target){
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        target.classList.add("pulseOutline");
+        setTimeout(()=> target.classList.remove("pulseOutline"), 1200);
+      }
+    }catch(e){}
+  }
+
 
 function distClear(){
   distancePoints = [];
