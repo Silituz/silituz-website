@@ -4225,24 +4225,40 @@ function updateBirthdayCountdownUI(){
     const turns = (age === null) ? "" : ` (turns ${age})`;
     el.textContent = `Next birthday in ${months} month${months===1?"":"s"} and ${days} day${days===1?"":"s"}${turns}`;
   }
-  function personLocalTime(tz){
-    if(!tz) return null;
-    try{
-      return new Intl.DateTimeFormat(undefined, {
-        hour:"2-digit", minute:"2-digit", second:"2-digit",
-        weekday:"short", year:"numeric", month:"2-digit", day:"2-digit",
-        timeZone: tz
-      }).format(new Date());
-    }catch{ return null; }
-  }
-  function myLocalTime(){
-    return new Intl.DateTimeFormat(undefined, {
-      hour:"2-digit", minute:"2-digit", second:"2-digit",
-      weekday:"short", year:"numeric", month:"2-digit", day:"2-digit"
-    }).format(new Date());
-  }
+  // Cached Intl.DateTimeFormat instances (performance)
+    const __dtfCache = new Map();
+    function _getDtf(key, options){
+      let fmt = __dtfCache.get(key);
+      if(!fmt){
+        fmt = new Intl.DateTimeFormat(undefined, options);
+        __dtfCache.set(key, fmt);
+      }
+      return fmt;
+    }
 
-  // ==============================
+    function personLocalTime(tz, d){
+      if(!tz) return null;
+      try{
+        return _getDtf(`tz:${tz}`, {
+          hour:"2-digit", minute:"2-digit", second:"2-digit",
+          weekday:"short", year:"numeric", month:"2-digit", day:"2-digit",
+          timeZone: tz
+        }).format(d || new Date());
+      }catch{ return null; }
+    }
+    function myLocalTime(d){
+      try{
+        return _getDtf("local", {
+          hour:"2-digit", minute:"2-digit", second:"2-digit",
+          weekday:"short", year:"numeric", month:"2-digit", day:"2-digit"
+        }).format(d || new Date());
+      }catch{
+        return (d || new Date()).toLocaleString();
+      }
+    }
+
+  
+// ==============================
   // Image modal (for thumbnails)
   // ==============================
   function openImageModal(src){
@@ -6356,7 +6372,7 @@ const img = entry.imageData
 
     return `
       <div class="popup" data-entryid="${escapeHTML(entry.id)}">
-        <div class="pname"><span class="pheart">${heartForTimezone(entry.tz)}</span><div class="pnameBlock"><div class="pMain">${escapeHTML(nm.main)}</div>${nm.sub ? `<div class="pSub">${escapeHTML(nm.sub)}</div>` : ""}</div></div>
+        <div class="pname"><span class="pheart js-heart" data-tz="${escapeHTML(entry.tz)}">${heartForTimezone(entry.tz)}</span><div class="pnameBlock"><div class="pMain">${escapeHTML(nm.main)}</div>${nm.sub ? `<div class="pSub">${escapeHTML(nm.sub)}</div>` : ""}</div></div>
         ${timeLine}
         ${bdayLine}
         ${born}
@@ -6592,7 +6608,7 @@ $("profileView").classList.toggle("isFavProfile", !!entry.fav);
     $("profileView").classList.toggle("isSpecialProfile", !!specialId && entry.id===specialId );
 
         $("profileView").classList.toggle("isBothProfileBadges", !!entry.fav && !!specialId && entry.id===specialId );
-$("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(entry.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}${(!notesHidden && entry.bloodType) ? " · 🩸 " + escapeHTML(entry.bloodType) : ""}` : (entry.connection ? (escapeHTML(entry.connection) + (entry.bloodType ? " · 🩸 " + escapeHTML(entry.bloodType) : "")) : ((!notesHidden && entry.bloodType) ? "🩸 " + escapeHTML(entry.bloodType) : "—"));
+$("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="${escapeHTML(entry.tz)}">${heartForTimezone(entry.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}${(!notesHidden && entry.bloodType) ? " · 🩸 " + escapeHTML(entry.bloodType) : ""}` : (entry.connection ? (escapeHTML(entry.connection) + (entry.bloodType ? " · 🩸 " + escapeHTML(entry.bloodType) : "")) : ((!notesHidden && entry.bloodType) ? "🩸 " + escapeHTML(entry.bloodType) : "—"));
 
     const imgBlock = entry.imageData
       ? `
@@ -7472,28 +7488,52 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
 
   }
 
+  // Live clock nodes (cached) to keep the UI snappy
+  let __liveTimeNodes = [];
+  let __liveHeartNodes = [];
+  function refreshLiveClockNodes(){
+    __liveTimeNodes = Array.from(document.querySelectorAll(".js-time"));
+    __liveHeartNodes = Array.from(document.querySelectorAll(".js-heart"));
+  }
 
+  function updateTimesInUI(now){
+    now = now || new Date();
 
-  function updateTimesInUI(){
-    for(const el of document.querySelectorAll(".js-time")){
+    // Update all time strings (fast: cached nodes + cached formatters)
+    if(!__liveTimeNodes.length) refreshLiveClockNodes();
+    const nextTimeNodes = [];
+    for(const el of __liveTimeNodes){
+      if(!el || !el.isConnected) continue;
       const tz = el.getAttribute("data-tz");
-      if(!tz){ el.textContent = "—"; continue; }
-      el.textContent = personLocalTime(tz) || "—";
+      el.textContent = tz ? (personLocalTime(tz, now) || "—") : "—";
+      nextTimeNodes.push(el);
     }
+    __liveTimeNodes = nextTimeNodes;
 
-    for(const el of document.querySelectorAll(".js-heart")){
-      const tz = el.getAttribute("data-tz");
-      el.textContent = heartForTimezone(tz);
-    }
-    // Update profile subtitle too
-    const e = entries.find(x=>x.id===selectedId);
-    if(e && $("profileView").style.display !== "none"){
-      const t = personLocalTime(e.tz) || "—";
-      $("profileSub").innerHTML = e.tz
-        ? `<span class="pheart">${heartForTimezone(e.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t)}</span> <span class="pline">(${escapeHTML(e.tz)})</span>${e.connection ? " · " + escapeHTML(e.connection) : ""}${(!notesHidden && e.bloodType) ? " · 🩸 " + escapeHTML(e.bloodType) : ""}`
-        : (e.connection ? (escapeHTML(e.connection) + (e.bloodType ? " · 🩸 " + escapeHTML(e.bloodType) : "")) : ((!notesHidden && e.bloodType) ? "🩸 " + escapeHTML(e.bloodType) : "—"));
+    // Hearts don't need per-second updates (once per minute is enough)
+    if(now.getSeconds() === 0){
+      if(!__liveHeartNodes.length) refreshLiveClockNodes();
+      const nextHeartNodes = [];
+      for(const el of __liveHeartNodes){
+        if(!el || !el.isConnected) continue;
+        const tz = el.getAttribute("data-tz");
+        if(tz) el.textContent = heartForTimezone(tz);
+
+        // keep list item glow class in sync (if applicable)
+        const li = el.closest && el.closest(".item");
+        if(li){
+          const h = (el.textContent || "").trim();
+          li.classList.toggle("heartGreen", h === "💚");
+          li.classList.toggle("heartYellow", h === "💛");
+          li.classList.toggle("heartRed", h === "❤️");
+        }
+        nextHeartNodes.push(el);
+      }
+      __liveHeartNodes = nextHeartNodes;
     }
   }
+
+
 
   // ==============================
   // Export / Import (FILE UPLOAD)
@@ -7675,10 +7715,21 @@ function exportJSON(){
   // ==============================
   // Clock tick
   // ==============================
+  
+  let __clockNodeRefreshCounter = 0;
   function tick(){
+    const now = new Date();
+
     const nh = $("nowHere");
-    if(nh) nh.textContent = `Here: ${myLocalTime()}`;
-    updateTimesInUI();
+    if(nh) nh.textContent = `Here: ${myLocalTime(now)}`;
+
+    // Refresh live node cache occasionally (popups / profile can add nodes)
+    __clockNodeRefreshCounter = (__clockNodeRefreshCounter + 1) % 10;
+    if(__clockNodeRefreshCounter === 0){
+      try{ refreshLiveClockNodes(); }catch{}
+    }
+
+    updateTimesInUI(now);
 
     // Update marker colors less often (every 30s) to keep it lightweight
     _markerColorCounter = (_markerColorCounter + 1) % 30;
