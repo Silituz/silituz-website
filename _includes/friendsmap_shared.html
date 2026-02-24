@@ -3220,6 +3220,36 @@
   height: 18px;
 }
 
+
+/* Context sizing tweaks (Eyes)
+   - Not shown in the main list (only in profile + map popup)
+   - Slightly smaller in map popup and in the profile "business card"
+*/
+#soApp .popup .colorPillGlass.eyePill.isTiny{
+  padding: 6px 8px;
+  font-size: 10.5px;
+  letter-spacing: 0.12px;
+  gap: 8px;
+}
+#soApp .popup .colorPillGlass.eyePill.isTiny .eyeIcon{
+  gap: 6px;
+  transform: scale(0.92);
+  transform-origin: left center;
+}
+
+#soApp .profileBody .colorPillGlass.eyePill{
+  padding: 8px 12px;
+  font-size: 11.5px;
+  letter-spacing: 0.20px;
+  gap: 9px;
+  padding-left: 10px;
+}
+#soApp .profileBody .colorPillGlass.eyePill .eyeIcon{
+  gap: 7px;
+  transform: scale(0.95);
+  transform-origin: left center;
+}
+
 /* Blend */
 #soApp .colorPillGlass.eyePill[data-mode="blend"] .eyeIcon .eye{
   background:
@@ -3659,6 +3689,115 @@
   function uuid(){ return (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+"_"+Math.random().toString(16).slice(2))); }
   function escapeHTML(s){
     return String(s ?? "").replace(/[&<>\"']/g, (c)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+  }
+
+
+  // ==============================
+  // Color naming helper (HEX -> human name)
+  // - There is no "official" name for every one of the 16.7M hex colors.
+  // - We do two things:
+  //   1) Fast local fallback naming (used in hexToNiceName)
+  //   2) Optional: load a large public color-name list (thousands of names) and pick the closest match.
+  //      If the list can't be loaded (offline), the fallback naming still works.
+  // ==============================
+  var COLOR_NAME_DB_URL = "https://unpkg.com/color-name-list/dist/colornames.short.min.json";
+  var _colorNameDB = null;         // [{ name, hex, rgb:[r,g,b] }, ...]
+  var _colorNameDBPromise = null;
+
+  // Eye-name aliases (defined early so load() can normalize saved entries safely)
+  var EYE_HEX_NAME_ALIASES = {
+    "#add8e6": "Ice Blue" // example / common "ice blue"
+  };
+
+  var EYE_NAME_HEX_ALIASES = {
+    "iceblue": "#add8e6",
+    "ice blue": "#add8e6",
+    "eisblau": "#add8e6",
+
+    "hazel": "#8e7618",
+    "amber": "#ffbf00",
+    "gray": "#9ca3af",
+    "grey": "#9ca3af",
+    "blue": "#3b82f6",
+    "green": "#10b981",
+    "brown": "#8b5a2b",
+    "black": "#111827",
+    "turquoise": "#14b8a6",
+    "gold": "#fbbf24"
+  };
+
+  function _normalizeColorNameDBShape(data){
+    // Supports multiple shapes.
+    // Expected (color-name-list): array of objects like {name:"...", hex:"#..."}.
+    // But we also support [["Name","#hex"], ...] or { colors:[...] } etc.
+    if(!data) return [];
+    let arr = [];
+    if(Array.isArray(data)){
+      arr = data;
+    }else if(typeof data === "object"){
+      const cand = data.colors || data.colours || data.list || data.items || data.data || data.colorNameList || data.colornames || data.names;
+      if(Array.isArray(cand)) arr = cand;
+    }
+    const out = [];
+    for(const it of arr){
+      if(!it) continue;
+      if(Array.isArray(it) && it.length >= 2){
+        const name = String(it[0]||"").trim();
+        const hex = String(it[1]||"").trim();
+        if(name && hex) out.push({ name, hex });
+        continue;
+      }
+      if(typeof it === "object"){
+        const name = String(it.name || it.n || it.title || "").trim();
+        const hex = String(it.hex || it.h || it.value || it.color || it.colour || "").trim();
+        if(name && hex) out.push({ name, hex });
+      }
+    }
+    return out;
+  }
+
+  function ensureColorNameDB(){
+    if(_colorNameDBPromise) return _colorNameDBPromise;
+    _colorNameDBPromise = (async ()=>{
+      try{
+        const res = await fetch(COLOR_NAME_DB_URL, { cache:"force-cache" });
+        if(!res.ok) throw new Error("db http "+res.status);
+        const data = await res.json();
+        const flat = _normalizeColorNameDBShape(data);
+        const norm = [];
+        for(const row of flat){
+          const hx = normalizeHexColor(row.hex);
+          const rgb = hx ? hexToRGB(hx) : null;
+          if(!hx || !rgb) continue;
+          norm.push({ name: String(row.name||"").trim(), hex: hx, rgb });
+        }
+        _colorNameDB = norm;
+      }catch{
+        _colorNameDB = null;
+      }
+      return _colorNameDB;
+    })();
+    return _colorNameDBPromise;
+  }
+
+  function nearestNameFromDB(hex){
+    const hx = normalizeHexColor(hex);
+    if(!hx || !_colorNameDB || !_colorNameDB.length) return "";
+    const rgb = hexToRGB(hx);
+    if(!rgb) return "";
+    let best = null;
+    let bestD = Infinity;
+    for(const c of _colorNameDB){
+      const dr = rgb[0] - c.rgb[0];
+      const dg = rgb[1] - c.rgb[1];
+      const db = rgb[2] - c.rgb[2];
+      const d = dr*dr + dg*dg + db*db;
+      if(d < bestD){
+        bestD = d;
+        best = c;
+      }
+    }
+    return best ? prettifyColorTokenName(best.name) : "";
   }
 
   // ==============================
@@ -5133,7 +5272,8 @@ e.fav = !!e.fav;
   function colorPillHTML(label){
     const rgb = resolveToRGB(label) || [95,140,255];
     const { a, glow } = glassVarsForRGB(rgb);
-    const safe = escapeHTML(label);
+    const display = prettifyColorTokenName(label) || String(label||"");
+    const safe = escapeHTML(display);
     return `<span class="colorPillGlass" style="--c:${rgb[0]},${rgb[1]},${rgb[2]};--a:${a};--g:${glow};">${safe}<span class="drops"></span></span>`;
   }
 
@@ -5162,7 +5302,7 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
       pill.style.setProperty("--c", `${rgb[0]},${rgb[1]},${rgb[2]}`);
       pill.style.setProperty("--a", String(a));
       pill.style.setProperty("--g", String(glow));
-      pill.textContent = c;
+      pill.textContent = (prettifyColorTokenName(c) || c);
       const drops = document.createElement("span");
       drops.className = "drops";
       pill.appendChild(drops);
@@ -5247,20 +5387,196 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
     }
   }
 
+  function normalizeHexColor(s){
+    const raw = String(s||"").trim().toLowerCase();
+    if(!raw.startsWith("#")) return "";
+    let h = raw.slice(1);
+    if(h.length === 3) h = h.split("").map(ch=>ch+ch).join("");
+    if(!/^[0-9a-f]{6}$/.test(h)) return "";
+    return "#"+h;
+  }
+
+  function rgbToHsl(r,g,b){
+    r/=255; g/=255; b/=255;
+    const max = Math.max(r,g,b), min = Math.min(r,g,b);
+    let h=0, s=0;
+    const l = (max+min)/2;
+    const d = max-min;
+    if(d !== 0){
+      s = d / (1 - Math.abs(2*l - 1));
+      switch(max){
+        case r: h = ((g-b)/d) % 6; break;
+        case g: h = (b-r)/d + 2; break;
+        case b: h = (r-g)/d + 4; break;
+      }
+      h *= 60;
+      if(h < 0) h += 360;
+    }
+    return { h, s, l };
+  }
+
+  function hexToRGB(hex){
+    const h = normalizeHexColor(hex);
+    if(!h) return null;
+    const n = parseInt(h.slice(1), 16);
+    return [(n>>16)&255, (n>>8)&255, n&255];
+  }
+  // Friendly naming aliases are declared near the top of this <script> (EYE_HEX_NAME_ALIASES / EYE_NAME_HEX_ALIASES)
+
+  function prettifyColorTokenName(raw){
+    const s = String(raw||"").trim();
+    if(!s) return "";
+    // If it looks like a hex, name it via hexNaming
+    const hx = normalizeHexColor(s);
+    if(hx) return hexToNiceName(hx);
+    // Turn "lightblue" / "deep-sky-blue" / "LightBlue" into "Light Blue"
+    const spaced = s
+      .replace(/[_-]+/g, " ")
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/\s+/g, " ")
+      .trim();
+    // Title-case words but keep small words readable
+    return spaced.split(" ").map(w=>{
+      const lw = w.toLowerCase();
+      if(!lw) return w;
+      return lw[0].toUpperCase() + lw.slice(1);
+    }).join(" ");
+  }
+
+  function hexToNiceName(hex){
+    const hx = normalizeHexColor(hex);
+    if(!hx) return "";
+    const alias = (typeof EYE_HEX_NAME_ALIASES !== "undefined" && EYE_HEX_NAME_ALIASES) ? (EYE_HEX_NAME_ALIASES[hx] || "") : "";
+    if(alias) return alias;
+
+    // If we have a larger name list loaded, prefer its nearest match.
+    const dbName = nearestNameFromDB(hx);
+    if(dbName) return dbName;
+
+    // Lazy-load the big name list (optional). Fallback naming below still works offline.
+    try{ ensureColorNameDB(); }catch{}
+
+    const rgb = hexToRGB(hx);
+    if(!rgb) return hx;
+    const {h,s,l} = rgbToHsl(rgb[0], rgb[1], rgb[2]);
+
+    // grayscale
+    if(s < 0.10){
+      if(l > 0.94) return "White";
+      if(l < 0.06) return "Black";
+      if(l > 0.78) return "Light Gray";
+      if(l < 0.30) return "Dark Gray";
+      return "Gray";
+    }
+
+    // detect brown-ish (common for eyes)
+    const isBrown = (h >= 10 && h <= 55) && l < 0.55 && s < 0.70;
+    let base;
+    if(isBrown){
+      base = "Brown";
+    }else if(h < 15 || h >= 345) base = "Red";
+    else if(h < 35) base = "Orange";
+    else if(h < 55) base = "Amber";
+    else if(h < 75) base = "Yellow";
+    else if(h < 105) base = "Lime";
+    else if(h < 150) base = "Green";
+    else if(h < 175) base = "Teal";
+    else if(h < 200) base = "Cyan";
+    else if(h < 220) base = "Sky Blue";
+    else if(h < 250) base = "Blue";
+    else if(h < 275) base = "Indigo";
+    else if(h < 295) base = "Violet";
+    else if(h < 320) base = "Purple";
+    else base = "Pink";
+
+    // Lightness prefix
+    let lp = "";
+    if(l < 0.18) lp = "Deep";
+    else if(l < 0.30) lp = "Dark";
+    else if(l > 0.82) lp = "Pale";
+    else if(l > 0.66) lp = "Light";
+
+    // Saturation modifier
+    let sp = "";
+    if(s < 0.28) sp = "Soft";
+    else if(s > 0.78) sp = "Vivid";
+
+    const parts = [];
+    if(sp) parts.push(sp);
+    if(lp) parts.push(lp);
+    parts.push(base);
+
+    // compact a bit (avoid awkward combos)
+    const name = parts.join(" ").replace(/\s+/g," ").trim();
+    return name || base || hx;
+  }
+
+  function parseColorToken(raw, prevHex="", prevName=""){
+    const s = String(raw||"").trim();
+    if(!s) return null;
+
+    // If the user didn't change the visible name, keep the previously stored hex exactly.
+    if(prevHex && prevName && s === prevName) return { value: prevHex, name: prevName, fromPrev:true };
+
+    const hx = normalizeHexColor(s);
+    if(hx){
+      return { value: hx, name: hexToNiceName(hx), fromHex:true };
+    }
+
+    // normalize key for alias lookup (spaces + hyphens ignored)
+    const key = s.toLowerCase().replace(/[_-]+/g," ").replace(/\s+/g," ").trim();
+    const keyCompact = key.replace(/\s+/g,"");
+
+    // explicit eye-name aliases
+    const aliHex = EYE_NAME_HEX_ALIASES[key] || EYE_NAME_HEX_ALIASES[keyCompact];
+    if(aliHex){
+      const h2 = normalizeHexColor(aliHex) || aliHex;
+      return { value: h2, name: (EYE_HEX_NAME_ALIASES[h2] || prettifyColorTokenName(key)), fromName:true };
+    }
+
+    // CSS named / rgb() / hsl() etc: keep as-is for rendering
+    // Also accepts spaced versions like "Light Sky Blue" by trying a compact token.
+    if(document.body){
+      const compact = s.replace(/\s+/g, "");
+      const rgb1 = resolveToRGB(s);
+      const rgb2 = (!rgb1 && compact !== s) ? resolveToRGB(compact) : null;
+      const rgb = rgb1 || rgb2;
+      if(rgb){
+        const value = rgb1 ? s : compact;
+        return { value, name: prettifyColorTokenName(s), fromCSS:true };
+      }
+    }
+
+    // Fallback: store raw (won't colorize if invalid, but keeps data)
+    return { value: s.slice(0,40), name: prettifyColorTokenName(s.slice(0,40)), fromRaw:true };
+  }
+
   function normalizeEye(eye){
     if(!eye) return null;
-    // legacy: string
+
+    // legacy: plain string
     if(typeof eye === "string"){
-      const a = normalizeColorInput(eye);
-      return a ? { a, b:"", mode:"solid" } : null;
+      const tok = parseColorToken(eye);
+      return tok ? { a: tok.value, aName: tok.name, b:"", bName:"", mode:"solid" } : null;
     }
     if(typeof eye !== "object") return null;
 
-    const a = normalizeColorInput(eye.a ?? eye.primary ?? eye.base ?? "");
-    const b = normalizeColorInput(eye.b ?? eye.secondary ?? eye.mix ?? "");
-    let mode = String(eye.mode ?? eye.pattern ?? "solid").trim().toLowerCase();
+    // accept multiple shapes / legacy keys
+    const rawA = (eye.a ?? eye.primary ?? eye.base ?? "");
+    const rawB = (eye.b ?? eye.secondary ?? eye.mix ?? "");
+    const givenAName = String(eye.aName ?? eye.an ?? eye.primaryName ?? "").trim();
+    const givenBName = String(eye.bName ?? eye.bn ?? eye.secondaryName ?? "").trim();
 
-    // allowed modes (kept local so this works during early load())
+    const aTok = parseColorToken(rawA, normalizeHexColor(eye.aHex||""), givenAName) || null;
+    const bTok = parseColorToken(rawB, normalizeHexColor(eye.bHex||""), givenBName) || null;
+
+    const a = normalizeColorInput((aTok && aTok.value) ? aTok.value : rawA);
+    const b = normalizeColorInput((bTok && bTok.value) ? bTok.value : rawB);
+
+    const aName = normalizeColorInput(givenAName || (aTok ? aTok.name : prettifyColorTokenName(a)));
+    const bName = normalizeColorInput(givenBName || (bTok ? bTok.name : prettifyColorTokenName(b)));
+
+    let mode = String(eye.mode ?? eye.pattern ?? "solid").trim().toLowerCase();
     const allowed = { solid:1, blend:1, split:1, speckle:1, ring:1 };
     if(!allowed[mode]) mode = "solid";
 
@@ -5268,27 +5584,30 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
     if(b && mode === "solid") mode = "blend";
 
     if(!a) return null;
-    return { a, b, mode };
+    return { a, aName, b, bName, mode };
   }
 
   function eyeLabel(eye){
     const e = normalizeEye(eye);
     if(!e) return "";
-    if(!e.b) return e.a;
+    const aTxt = e.aName || e.a;
+    if(!e.b) return aTxt;
+    const bTxt = e.bName || e.b;
     const suffix = (e.mode && e.mode !== "blend") ? ` (${eyeModeLabel(e.mode)})` : "";
-    return `${e.a} + ${e.b}${suffix}`;
+    return `${aTxt} + ${bTxt}${suffix}`;
   }
 
   function eyeShortLabel(eye){
     const e = normalizeEye(eye);
     if(!e) return "";
-    if(!e.b) return e.a;
-    const base = `${e.a}/${e.b}`;
+    const aTxt = e.aName || e.a;
+    if(!e.b) return aTxt;
+    const bTxt = e.bName || e.b;
+    const base = `${aTxt}/${bTxt}`;
     if(e.mode === "blend") return base;
     return `${base}·${eyeModeLabel(e.mode)}`;
   }
-
-  function eyePillHTML(eye, { tiny=false, showText=true }={}){
+function eyePillHTML(eye, { tiny=false, showText=true }={}){
     const e = normalizeEye(eye);
     if(!e) return "";
     const rgbA = resolveToRGB(e.a) || [95,140,255];
@@ -5341,8 +5660,20 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
     const bEl = $("eyeColorB");
     const mEl = $("eyeMode");
 
-    if(aEl) aEl.value = formEye?.a || "";
-    if(bEl) bEl.value = formEye?.b || "";
+    if(aEl){
+      const aHex = formEye?.a || "";
+      const aName = formEye?.aName || (aHex ? hexToNiceName(aHex) : "");
+      aEl.value = aName || aHex || "";
+      aEl.dataset.eyeHex = aHex || "";
+      aEl.dataset.eyeName = aName || "";
+    }
+    if(bEl){
+      const bHex = formEye?.b || "";
+      const bName = formEye?.bName || (bHex ? hexToNiceName(bHex) : "");
+      bEl.value = bName || bHex || "";
+      bEl.dataset.eyeHex = bHex || "";
+      bEl.dataset.eyeName = bName || "";
+    }
     if(mEl) mEl.value = formEye?.mode || "solid";
 
     renderEyePreview();
@@ -5352,15 +5683,47 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
     return formEye ? { ...formEye } : null;
   }
 
-  function readEyeFromFormInputs(){
+  function readEyeFromFormInputs(opts={}){
     const aEl = $("eyeColorA");
     const bEl = $("eyeColorB");
     const mEl = $("eyeMode");
+    const forceNameSwap = !!opts.forceNameSwap;
+
+    const aRaw = aEl ? aEl.value : "";
+    const bRaw = bEl ? bEl.value : "";
+
+    const aTok = aEl ? parseColorToken(aRaw, aEl.dataset.eyeHex || "", aEl.dataset.eyeName || "") : null;
+    const bTok = bEl ? parseColorToken(bRaw, bEl.dataset.eyeHex || "", bEl.dataset.eyeName || "") : null;
+
+    if(aEl){
+      if(aTok){
+        aEl.dataset.eyeHex = aTok.value || "";
+        aEl.dataset.eyeName = aTok.name || "";
+        if(forceNameSwap && aTok.fromHex) aEl.value = aTok.name || aEl.value;
+      }else{
+        aEl.dataset.eyeHex = "";
+        aEl.dataset.eyeName = "";
+      }
+    }
+    if(bEl){
+      if(bTok){
+        bEl.dataset.eyeHex = bTok.value || "";
+        bEl.dataset.eyeName = bTok.name || "";
+        if(forceNameSwap && bTok.fromHex) bEl.value = bTok.name || bEl.value;
+      }else{
+        bEl.dataset.eyeHex = "";
+        bEl.dataset.eyeName = "";
+      }
+    }
+
     formEye = normalizeEye({
-      a: aEl ? aEl.value : "",
-      b: bEl ? bEl.value : "",
+      a: aTok ? aTok.value : aRaw,
+      aName: aTok ? aTok.name : "",
+      b: bTok ? bTok.value : bRaw,
+      bName: bTok ? bTok.name : "",
       mode: mEl ? mEl.value : "solid",
     });
+
     renderEyePreview();
   }
 
@@ -5379,12 +5742,31 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
     const bEl = $("eyeColorB");
     const mEl = $("eyeMode");
     const clearBtn = $("eyeClearBtn");
+    const listEl = $("eyeColorList");
 
-    const onChange = ()=>{ readEyeFromFormInputs(); };
+    // Enrich the datalist with a few nice, human-friendly eye colors (keeps existing options too)
+    if(listEl && !listEl.dataset.enhanced){
+      listEl.dataset.enhanced = "1";
+      const presets = ["Brown","Light Brown","Dark Brown","Blue","Ice Blue","Deep Blue","Green","Gray","Light Gray","Hazel","Amber","Gold","Turquoise","Teal","Black"];
+      const existing = new Set(Array.from(listEl.querySelectorAll("option")).map(o=>String(o.value||"").toLowerCase()));
+      for(const v of presets){
+        if(existing.has(v.toLowerCase())) continue;
+        const opt = document.createElement("option");
+        opt.value = v;
+        listEl.appendChild(opt);
+      }
+    }
 
-    if(aEl) aEl.addEventListener("input", onChange);
-    if(bEl) bEl.addEventListener("input", onChange);
-    if(mEl) mEl.addEventListener("change", onChange);
+    const onInput = ()=>{ readEyeFromFormInputs(); };
+    const onBlur = ()=>{ 
+      readEyeFromFormInputs({ forceNameSwap:true });
+      // If the big color-name DB loads, run again so hex codes get an even nicer closest-name.
+      try{ ensureColorNameDB().then(()=>{ try{ readEyeFromFormInputs({ forceNameSwap:true }); }catch{} }); }catch{}
+    };
+
+    if(aEl){ aEl.addEventListener("input", onInput); aEl.addEventListener("blur", onBlur); }
+    if(bEl){ bEl.addEventListener("input", onInput); bEl.addEventListener("blur", onBlur); }
+    if(mEl) mEl.addEventListener("change", onInput);
     if(clearBtn) clearBtn.addEventListener("click", ()=> setEyeToForm(null));
 
     // initial for new entry
@@ -7042,8 +7424,7 @@ function renderList(){
             ${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ""}
             ${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}
             ${(!notesHidden && e.bloodType) ? ` · 🩸 ${escapeHTML(e.bloodType)}` : ""}
-            ${eyeTinyInlineHTML(e.eye)}
-          </div>
+</div>
 
           <div class="tiny"><span class="localLabel">Local Time</span>: <span class="js-time localTimeVal" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
         </div>
