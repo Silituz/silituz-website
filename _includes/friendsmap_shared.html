@@ -6149,38 +6149,41 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart">${heartForTimezone(
   // Connections (network links) — typed relations
   // ==============================
   const REL_TYPES = [
+    "Other",
     "Know each other",
+    "Dislike",
+    "Enemy", 
+    "Nemesis",
+    "Fan",
+    "Team",
+    "Supporter",
+    "Mod",
+    "Mentor",
+    "Creator",
+    "Neighbor",
+    "Colleague",
     "Friends",
     "Best Friends",
     "Inner Cycle",
-    "Supporter",
-    "Sister",
-    "Brother",
-    "Mother",
-    "Father",
-    "Son",
-    "Daughter",
-    "Kid",
-    "Grandson",
-    "Granddaughter",
-    "Grandma",
-    "Grandpa",
-    "Partner",
-    "Husband / Wife",
-    "Engaged Partner",
-    "Ex-Partner",
     "Cousin",
     "Cousine",
     "Aunt",
     "Uncle",
-    "Colleague",
-    "Neighbor",
-    "Mod",
-    "Fan",
-    "Creator",
-    "Team",
-    "Mentor",
-    "Other"
+    "Grandma",
+    "Grandpa",
+    "Grandson",
+    "Granddaughter",
+    "Kid",
+    "Son",
+    "Daughter",
+    "Mother",
+    "Father",
+    "Brother",
+    "Sister",
+    "Ex-Partner",
+    "Partner",
+    "Engaged Partner",
+    "Married"
   ];
 
   let formConnections = []; // [{id, type}]
@@ -7549,5 +7552,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 <div id="distanceHint"></div>
 </section>
+
 
 
