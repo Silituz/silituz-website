@@ -3556,6 +3556,171 @@
   box-shadow: 0 0 0 6px rgba(34, 211, 238, .10);
   transition: outline-color .2s ease, box-shadow .2s ease;
 }
+
+
+/* ==============================
+   QUICK WIDGET (compact, non-intrusive)
+   - Hidden by default (popover)
+   - Shows quick, clickable counters
+   ============================== */
+#soApp .hdrRight{ position: relative; }
+#soApp .hdrTitle{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+}
+#soApp .quickBtn{
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(16,185,129,.28);
+  background: rgba(16,185,129,.10);
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,.24);
+  transition: transform .14s ease, filter .14s ease, background .14s ease, border-color .14s ease;
+}
+#soApp .quickBtn:hover{ transform: translateY(-1px); filter: brightness(1.06); border-color: rgba(16,185,129,.40); }
+#soApp .quickBtn:active{ transform: translateY(0px) scale(.99); }
+
+#soApp .quickPopover{
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: min(360px, 92vw);
+  padding: 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(20,26,44,.92), rgba(12,16,28,.92));
+  box-shadow: var(--shadowLift);
+  display: none;
+  z-index: 60;
+  backdrop-filter: blur(10px);
+}
+#soApp .quickPopover.open{ display:block; }
+#soApp .quickChips{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  align-items:stretch;
+}
+#soApp .quickStack{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:center;
+}
+#soApp .quickStack .qchip{
+  width:100%;
+  justify-content:center;
+  text-align:center;
+}
+#soApp .quickShortcuts{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:center;
+}
+#soApp .qchip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: transform .14s ease, filter .14s ease, background .14s ease, border-color .14s ease;
+}
+#soApp .qchip:hover{ transform: translateY(-1px); filter: brightness(1.06); border-color: rgba(16,185,129,.18); }
+#soApp .qchip:active{ transform: translateY(0px) scale(.99); }
+#soApp .quickEmpty{
+  color: var(--muted);
+  font-size: 12px;
+  padding: 2px 2px 4px;
+}
+
+/* ==============================
+   VISUAL POLISH PACK (Card depth + micro motion + badges)
+   ============================== */
+
+/* Card depth (slightly more premium) */
+#soApp .card{
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: var(--shadowSoft), 0 0 0 1px rgba(80,255,190,.10) inset;
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+@media (hover:hover){
+  #soApp .card:hover{
+    transform: translateY(-1px);
+    border-color: rgba(255,255,255,.16);
+    box-shadow: var(--shadowLift), 0 0 0 1px rgba(80,255,190,.14) inset;
+  }
+}
+
+/* Micro animations for common interactive elements */
+#soApp .btn, 
+#soApp .btn2, 
+#soApp .fChip,
+#soApp .chip,
+#soApp .pill,
+#soApp .starBtn{
+  transition: transform .14s ease, filter .14s ease, background .14s ease, border-color .14s ease, box-shadow .14s ease;
+  will-change: transform;
+}
+@media (hover:hover){
+  #soApp .btn:hover, 
+  #soApp .btn2:hover, 
+  #soApp .fChip:hover,
+  #soApp .chip:hover,
+  #soApp .pill:hover,
+  #soApp .starBtn:hover{
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+  }
+}
+#soApp .btn:active, 
+#soApp .btn2:active, 
+#soApp .fChip:active,
+#soApp .chip:active,
+#soApp .pill:active,
+#soApp .starBtn:active{
+  transform: translateY(0px) scale(.99);
+}
+
+@media (prefers-reduced-motion: reduce){
+  #soApp .btn, #soApp .btn2, #soApp .fChip, #soApp .chip, #soApp .pill, #soApp .starBtn,
+  #soApp .card, #soApp .quickBtn, #soApp .qchip{
+    transition: none !important;
+  }
+}
+
+/* Badge refinement (cleaner + consistent) */
+#soApp .badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  height:24px;
+  padding: 0 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  font-size:12px;
+  color: var(--text);
+  white-space:nowrap;
+  margin-left:8px;
+}
+#soApp .badge b{ color: var(--text); font-weight:800; }
+
 </style>
 <section id="soApp" class="soApp">
 <header>
@@ -3567,8 +3732,14 @@
   </div>
 
   <div class="hdrRight">
-    <div class="hdrTitle"><span class="stats-title">- Stats -</span></div>
+    <div class="hdrTitle">
+      <span class="stats-title">- Stats -</span>
+      <button id="quickBtn" class="quickBtn" type="button" title="Quick insights" aria-label="Quick insights">⚡ Quick</button>
+    </div>
     <div class="hdrSub" id="statsText">Friends: 0 · Countries: 0 · Longest friendship: —</div>
+    <div class="quickPopover" id="quickPopover" aria-hidden="true">
+      <div class="quickChips" id="quickChips"></div>
+    </div>
   </div>
 </header>
 
@@ -7798,7 +7969,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
     if(opts.panMap !== false && typeof entry.lat === "number" && typeof entry.lon === "number"){
       map.setView([entry.lat, entry.lon], Math.max(map.getZoom(), 4));
     }
-    toast("Entry loaded");
+    if(opts.toast !== false) toast("Entry loaded");
     renderList();
   }
 
@@ -8228,7 +8399,275 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
     }
 
     el.textContent = `Friends: ${friends} · Countries: ${countries.size} · Longest friendship: ${longest ? formatYMDShort(longest.ymd) : "—"}`;
+    try{ updateQuickWidgets(); }catch{}
   }
+
+
+
+  // ==============================
+  // Quick widget (popover counters)
+  // - Does NOT change the homepage layout
+  // - One small button in the header opens a compact popover
+  // ==============================
+  function applyFilterFromQuick(filter){
+    const f = filter || "all";
+    const bar = document.getElementById("filterBar");
+    if(bar){
+      const btn = bar.querySelector(`.fChip[data-filter="${f}"]`);
+      if(btn){
+        btn.click();
+        return;
+      }
+    }
+    activeFilter = f;
+    renderList();
+  }
+
+  function openQuickPopover(){
+    const pop = document.getElementById("quickPopover");
+    if(!pop) return;
+    pop.classList.add("open");
+    pop.setAttribute("aria-hidden","false");
+    try{ updateQuickWidgets(); }catch{}
+  }
+  function closeQuickPopover(){
+    const pop = document.getElementById("quickPopover");
+    if(!pop) return;
+    pop.classList.remove("open");
+    pop.setAttribute("aria-hidden","true");
+  }
+
+function updateQuickWidgets(){
+  const chips = document.getElementById("quickChips");
+  if(!chips) return;
+
+  function nameKey(e){
+    const nm = (displayNames(e)?.main || e.nickname || e.realName || "").toString().trim();
+    return nm.toLowerCase();
+  }
+
+  // ---- Birthday next (nearest upcoming birthday, show ALL ties) ----
+  let minBdayDays = null;
+  const bdayList = []; // {e, days}
+  for(const e of entries){
+    const d = daysUntilNextBirthday(e.birthdate);
+    if(d === null) continue;
+    if(minBdayDays === null || d < minBdayDays){
+      minBdayDays = d;
+      bdayList.length = 0;
+      bdayList.push({ e, days: d });
+    }else if(d === minBdayDays){
+      bdayList.push({ e, days: d });
+    }
+  }
+  bdayList.sort((a,b)=> nameKey(a.e).localeCompare(nameKey(b.e), undefined, {sensitivity:"base"}));
+
+  // ---- Helpers for friendship milestones ----
+  function parseISODateStrict(iso){
+    const p = parseDateYMD(iso);
+    if(!p || !p.hasYear) return null;
+    const dt = new Date(p.year, p.month-1, p.day);
+    if(Number.isNaN(dt.getTime())) return null;
+    if(dt.getFullYear() !== p.year || dt.getMonth() !== (p.month-1) || dt.getDate() !== p.day) return null;
+    return dt;
+  }
+
+  function addMonthsClamped(dt, months){
+    const y = dt.getFullYear();
+    const m = dt.getMonth();
+    const d = dt.getDate();
+
+    const total = m + months;
+    const ty = y + Math.floor(total / 12);
+    const tm = ((total % 12) + 12) % 12;
+
+    const last = new Date(ty, tm + 1, 0).getDate();
+    const td = Math.min(d, last);
+    return new Date(ty, tm, td);
+  }
+
+  function fullMonthsSince(start, end){
+    let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+    if(months < 0) return 0;
+    let cand = addMonthsClamped(start, months);
+    if(cand > end) months -= 1;
+    if(months < 0) months = 0;
+    return months;
+  }
+
+  function nextFriendshipMilestone(metISO){
+    const met = parseISODateStrict(metISO);
+    if(!met) return null;
+
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const m0 = new Date(met.getFullYear(), met.getMonth(), met.getDate());
+
+    if(m0 > today) return null; // ignore future dates
+
+    const full = fullMonthsSince(m0, today);
+
+    // If TODAY is exactly a rounded month/year milestone, surface it (days=0),
+    // otherwise show the next upcoming rounded milestone.
+    const fullDate = addMonthsClamped(m0, full);
+    const isExact = (full >= 1) && (fullDate.getTime() === today.getTime());
+
+    const n = isExact ? full : (full + 1);
+    if(n < 1) return null;
+
+    const milestone = addMonthsClamped(m0, n);
+    const days = Math.max(0, daysBetweenDates(today, milestone));
+
+    const isYear = (n % 12 === 0);
+    const years = Math.round(n / 12);
+    const label = isYear
+      ? `${years} year${years===1?"":"s"}`
+      : `${n} month${n===1?"":"s"}`;
+
+    return { days, label, months: n, date: milestone };
+  }
+
+  // ---- Friendship next (rounded month/year milestones)
+// If there are milestones within the next FRIEND_WINDOW_DAYS, show all of them.
+// Otherwise, show the nearest milestone date (and all ties).
+  const FRIEND_WINDOW_DAYS = 7;
+  let minFriendDays = null;
+  const allFriendMilestones = []; // {e, info}
+
+  for(const e of entries){
+    const info = nextFriendshipMilestone(e.metOn);
+    if(!info) continue;
+    allFriendMilestones.push({ e, info });
+    if(minFriendDays === null || info.days < minFriendDays) minFriendDays = info.days;
+  }
+
+  const friendList = [];
+  if(allFriendMilestones.length && minFriendDays !== null){
+    if(minFriendDays <= FRIEND_WINDOW_DAYS){
+      for(const it of allFriendMilestones){
+        if(it.info.days <= FRIEND_WINDOW_DAYS) friendList.push(it);
+      }
+    }else{
+      for(const it of allFriendMilestones){
+        if(it.info.days === minFriendDays) friendList.push(it);
+      }
+    }
+  }
+
+  // Sort: soonest date first, then LONGER milestone first (e.g., 8 months before 3 months),
+  // then alphabetical.
+  friendList.sort((a,b)=>
+    (a.info.days - b.info.days) ||
+    (b.info.months - a.info.months) ||
+    nameKey(a.e).localeCompare(nameKey(b.e), undefined, {sensitivity:"base"})
+  );
+
+  // Existing shortcuts
+  const nowCount = entries.reduce((acc,e)=> acc + ((heartForTimezone(e.tz) === "💚") ? 1 : 0), 0);
+  const maybeCount = entries.reduce((acc,e)=> acc + ((heartForTimezone(e.tz) === "💛") ? 1 : 0), 0);
+  const favCount = entries.reduce((acc,e)=> acc + (e && e.fav ? 1 : 0), 0);
+
+  chips.innerHTML = "";
+
+  const hasAny = (bdayList.length > 0) || (friendList.length > 0) || (nowCount>0) || (maybeCount>0) || (favCount>0);
+  if(!hasAny){
+    const d = document.createElement("div");
+    d.className = "quickEmpty";
+    d.textContent = "No highlights right now";
+    chips.appendChild(d);
+    return;
+  }
+
+  function makeChip(label, key, selectId){
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "qchip";
+    b.dataset.action = key;
+    if(selectId) b.dataset.selectId = selectId;
+    b.textContent = label;
+
+    b.addEventListener("click", (ev)=>{
+      ev.stopPropagation();
+      applyFilterFromQuick(key);
+
+      if(selectId){
+        try{
+          selectEntry(selectId, { panMap:false, toast:false });
+          setTimeout(()=>{
+            const li = document.querySelector(`#list .item[data-id="${CSS.escape(selectId)}"]`);
+            li?.scrollIntoView({behavior:"smooth", block:"center"});
+          }, 0);
+        }catch{}
+      }
+
+      closeQuickPopover();
+      try{ document.getElementById("list")?.scrollIntoView({behavior:"smooth", block:"start"}); }catch{}
+    });
+
+    return b;
+  }
+
+  // Birthdays (stacked, centered)
+  if(bdayList.length > 0){
+    const stack = document.createElement("div");
+    stack.className = "quickStack";
+    for(const it of bdayList){
+      const nm = displayNames(it.e).main || (it.e.nickname || "—");
+      const when = (it.days === 0) ? "today" : `in ${it.days}d`;
+      stack.appendChild(makeChip(`🎂 Birthday next: ${nm} (${when})`, "bday", it.e.id));
+    }
+    chips.appendChild(stack);
+  }
+
+  // Friendships (stacked, centered)
+  if(friendList.length > 0){
+    const stack = document.createElement("div");
+    stack.className = "quickStack";
+    for(const it of friendList){
+      const nm = displayNames(it.e).main || (it.e.nickname || "—");
+      const when = (it.info.days === 0) ? "today" : `in ${it.info.days}d`;
+      stack.appendChild(makeChip(`🤝 Friendship next: ${nm} (${it.info.label} ${when})`, "friend", it.e.id));
+    }
+    chips.appendChild(stack);
+  }
+
+  // Shortcuts (green/yellow + favorites) under the last friendship
+  const shortcuts = [];
+  if(nowCount > 0) shortcuts.push({ key:"now",   label:`💚 ${nowCount} now` });
+  if(maybeCount > 0) shortcuts.push({ key:"maybe", label:`💛 ${maybeCount} maybe` });
+  if(favCount > 0) shortcuts.push({ key:"fav",   label:`⭐ ${favCount} favorite${favCount===1?"":"s"}` });
+
+  if(shortcuts.length > 0){
+    const row = document.createElement("div");
+    row.className = "quickShortcuts";
+    for(const it of shortcuts){
+      row.appendChild(makeChip(it.label, it.key, null));
+    }
+    chips.appendChild(row);
+  }
+}
+
+  (function initQuickPopover(){
+    const btn = document.getElementById("quickBtn");
+    const pop = document.getElementById("quickPopover");
+    if(!btn || !pop) return;
+
+    btn.addEventListener("click", (ev)=>{
+      ev.stopPropagation();
+      if(pop.classList.contains("open")) closeQuickPopover();
+      else openQuickPopover();
+    });
+
+    pop.addEventListener("click", (ev)=> ev.stopPropagation());
+
+    // click outside closes
+    document.addEventListener("click", ()=> closeQuickPopover());
+
+    // ESC closes (PC)
+    document.addEventListener("keydown", (e)=>{
+      if(e.key === "Escape") closeQuickPopover();
+    });
+  })();
 
 function renderList(){
     const ul = $("list");
