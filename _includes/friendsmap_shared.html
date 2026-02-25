@@ -189,10 +189,18 @@
     #soApp .item.selected{outline: 1px solid rgba(122,167,255,.35); outline-offset:-1px}
 
     #soApp .meta{min-width:0}
-    #soApp .nick{font-weight:700; font-size:14px; display:flex; gap:8px; align-items:flex-start;}
+    #soApp .nick{font-weight:700; font-size:14px; display:flex; gap:6px; align-items:flex-start;}
     #soApp .nameBlock{min-width:0; display:flex; flex-direction:column; line-height:1.1; flex:1;}
     #soApp .nameMain{color: var(--emerald) !important; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:.15px;}
     #soApp .nameSub{color: var(--muted) !important; font-weight:600; font-size:12px; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:.95;}
+
+    /* Name line: keep icons right after the name (not pushed to the far right) */
+    #soApp .nameLine{ display:flex; align-items:center; gap:6px; min-width:0; }
+    #soApp .nameText{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    #soApp .nameIcons{ display:inline-flex; align-items:center; gap:6px; flex:0 0 auto; }
+    #soApp .starInline, #soApp .diamondInline{ margin-left:0 !important; }
+    #soApp .profileTitle .pheart{ margin-right:6px; }
+
     #soApp .tiny{font-size:12px; color:var(--muted); margin-top:3px}
 
     #soApp .actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
@@ -788,7 +796,7 @@
     #soApp .heart{
       font-size: 14px;
       line-height: 1;
-      margin-right: 8px;
+      margin-right: 0px;
     }
     #soApp .searchBar{
       padding:12px 12px 0;
@@ -3902,6 +3910,280 @@
 }
 #soApp .badge b{ color: var(--text); font-weight:800; }
 
+
+
+/* ==============================
+   SAVE STATE PILL (Saved ✓ / Unsaved…)
+   ============================== */
+#soApp .saveStateRow{ display:flex; align-items:center; justify-content:flex-end; gap:10px; margin-top:10px; margin-bottom:6px; }
+#soApp .saveStatePill{
+  display:inline-flex;
+  align-items:center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  box-shadow: 0 10px 24px rgba(0,0,0,.22);
+  user-select:none;
+}
+#soApp .saveStatePill.saved{ border-color: rgba(16,185,129,.26); background: rgba(16,185,129,.10); }
+#soApp .saveStatePill.dirty{ border-color: rgba(251,191,36,.30); background: rgba(251,191,36,.10); }
+
+/* ==============================
+   PROFILE: click card titles to jump into Edit
+   ============================== */
+#soApp .jumpK{ cursor:pointer; }
+@media (hover:hover){
+  #soApp .jumpK:hover{ text-decoration: underline; filter: brightness(1.07); }
+}
+#soApp .flashField{ animation: flashField 900ms ease-out 1; }
+@keyframes flashField{
+  0%{ box-shadow: 0 0 0 0 rgba(16,185,129,.0); }
+  30%{ box-shadow: 0 0 0 6px rgba(16,185,129,.18); }
+  100%{ box-shadow: 0 0 0 0 rgba(16,185,129,.0); }
+}
+
+/* ==============================
+   CLUSTER PINS: a bit more "premium"
+   ============================== */
+#soApp .clusterPin{ transition: transform .14s ease, filter .14s ease, box-shadow .14s ease; animation: clusterPop .22s ease-out; }
+@keyframes clusterPop{ 0%{ transform: scale(.86); opacity:.0; } 100%{ transform: scale(1); opacity:1; } }
+@media (hover:hover){
+  #soApp .clusterPin:hover{ transform: translateY(-1px) scale(1.04); filter: brightness(1.06); box-shadow: 0 16px 36px rgba(0,0,0,.42), 0 0 0 8px rgba(122,167,255,.12); }
+}
+
+
+/* --- Field validation messages --- */
+.fieldMsg{
+  margin-top:6px;
+  font-size:12px;
+  line-height:1.2;
+  padding:6px 10px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+}
+.fieldMsg.error{
+  border-color: rgba(239,68,68,0.35);
+  background: rgba(239,68,68,0.10);
+}
+.fieldMsg.warn{
+  border-color: rgba(245,158,11,0.35);
+  background: rgba(245,158,11,0.10);
+}
+
+/* --- Mini icon button --- */
+.miniIconBtn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  min-width:28px;
+  padding:0 8px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.06);
+  cursor:pointer;
+  transition: transform 140ms ease, filter 140ms ease, border-color 140ms ease;
+}
+.miniIconBtn:hover{ transform: translateY(-1px); border-color: rgba(16,185,129,0.25); }
+.miniIconBtn:active{ transform: translateY(0px) scale(0.99); }
+
+/* --- Unsaved guard modal --- */
+.unsavedModal{
+  position:fixed; inset:0;
+  display:none;
+  align-items:center; justify-content:center;
+  background: rgba(0,0,0,0.55);
+  z-index: 9999;
+}
+.unsavedModal.open{ display:flex; }
+.unsavedInner{
+  width:min(520px, calc(100vw - 28px));
+  background: rgba(15,23,42,0.92);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  padding:16px;
+}
+.unsavedTitle{ font-weight:800; font-size:16px; margin-bottom:6px; }
+.unsavedText{ opacity:0.92; margin-bottom:14px; }
+.unsavedBtns{ display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; }
+
+/* --- Time compare modal --- */
+.timeCompareModal{
+  position:fixed; inset:0;
+  display:none;
+  align-items:center; justify-content:center;
+  background: rgba(0,0,0,0.55);
+  z-index: 9998;
+}
+.timeCompareModal.open{ display:flex; }
+.timeCompareInner{
+  width:min(560px, calc(100vw - 28px));
+  background: rgba(15,23,42,0.92);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  padding:14px 14px 16px;
+}
+.timeCompareTop{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.timeCompareTitle{ font-weight:800; font-size:16px; }
+.timeCompareBody{
+  display:flex; flex-direction:column; gap:10px;
+  font-size:14px;
+}
+.timeCompareGrid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+.timeCompareCard{
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:10px 12px;
+}
+.timeCompareK{ opacity:0.8; font-size:12px; margin-bottom:4px; }
+.timeCompareV{ font-weight:700; font-size:16px; }
+.timeCompareSmall{ opacity:0.78; font-size:12px; margin-top:4px; }
+
+/* --- Context menu --- */
+.ctxMenu{
+  position:fixed;
+  display:none;
+  z-index: 10000;
+  min-width: 220px;
+  background: rgba(15,23,42,0.95);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.50);
+  padding:6px;
+}
+.ctxMenu.open{ display:block; }
+.ctxItem{
+  width:100%;
+  text-align:left;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  padding:10px 10px;
+  border-radius: 10px;
+  cursor:pointer;
+}
+.ctxItem:hover{
+  background: rgba(255,255,255,0.06);
+}
+.ctxSep{
+  height:1px;
+  margin:6px 6px;
+  background: rgba(255,255,255,0.10);
+}
+
+/* Make profileSub buttons align nicely */
+#profileSub{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+
+
+/* =========================================================
+   v19 FIXES:
+   - Visit Card: Local Time card compact + left aligned
+   ========================================================= */
+#soApp #profileView .localTimeRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+#soApp #profileView .localTimeStack{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:2px;
+  min-width:0;
+}
+#soApp #profileView .localTimeValLine{min-width:0;}
+#soApp #profileView .localTimeMeta{
+  font-size:12px;
+  color:var(--muted);
+  opacity:.92;
+  line-height:1.2;
+  word-break: break-word;
+}
+
+
+#soApp #profileView .localTimeDateLine{
+  font-size:12px;
+  line-height:1.15;
+  opacity:.92;
+}
+#soApp #profileView .localTimeClockRow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:2px;
+}
+#soApp #profileView .localTimeDate{ font-weight:700; }
+
+
+/* =========================================================
+   Visit Card: Profile top column sizing + Local Time header
+   ========================================================= */
+#soApp #profileView .profileTopCol{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  min-width:0;
+  flex:1;
+  width:min(460px, 100%);
+}
+#soApp #profileView .profileTopCol .profileCard{
+  width:100%;
+}
+#soApp #profileView .localTimeHead{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+
+
+/* ==============================
+   v22: Local Time card alignment
+   - Prevent weird indentation from preserved whitespace
+   - Keep the classic "one-line" look like before
+   ============================== */
+#soApp #profileView .profileCard .v{
+  white-space: normal;
+}
+#soApp #profileView .profileCardLocalTime .v{
+  text-align: left;
+}
+#soApp #profileView .localTz{
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+}
+#soApp #profileView .miniIconBtn-sm{
+  height: 22px;
+  min-width: 22px;
+  padding: 0 6px;
+  font-size: 12px;
+}
+#soApp #profileView .localTimeHead{
+  gap: 8px;
+}
+
 </style>
 <section id="soApp" class="soApp">
 <header>
@@ -3943,6 +4225,7 @@
         <div>
           <label>Birthdate (optional)</label>
           <input id="birthdate" type="date" />
+          <div id="birthdateMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
           <div id="bdayCountdown" class="bdayCountdown"></div>
           <div class="zodiacBox">
             <div class="zodiacItem">
@@ -3960,6 +4243,7 @@
         <div>
           <label>Met on (date, optional)</label>
 <input id="metOn" type="date" />
+          <div id="metOnMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
           <div id="metKnownForLine" class="bdayCountdown"></div>
 </div>
       </div>
@@ -3974,6 +4258,7 @@
           <label>Timezone (IANA) *</label>
           <input id="timezone" placeholder="e.g. America/Los_Angeles" list="tzlist" />
           <datalist id="tzlist"></datalist>
+          <div id="tzMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
           <div class="hint">Examples: <span class="kbd">Europe/Berlin</span>, <span class="kbd">America/Los_Angeles</span>, <span class="kbd">Asia/Tokyo</span></div>
         </div>
       </div>
@@ -4032,6 +4317,7 @@
         <div>
           <label>Coordinates (optional)</label>
           <input id="coords" placeholder="lat, lon (or click on the map)" />
+          <div id="coordsMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
           <div class="hint">Click on the map to set the location.</div>
         </div>
       </div>
@@ -4164,6 +4450,12 @@
         </div>
       </div>
 
+
+
+      <div class="saveStateRow" id="saveStateRow">
+        <span id="saveStatePill" class="saveStatePill saved">Saved ✓</span>
+        <button id="undoEditBtn" type="button" class="secondary smallBtn" hidden>Undo</button>
+      </div>
       <div class="btns">
         <button id="saveBtn">Save / Set marker</button>
         <button id="newBtn" class="secondary">New</button>
@@ -4267,9 +4559,49 @@
 <div class="toast" id="toast" aria-live="polite" aria-atomic="true">
   <span class="toastMsg" id="toastMsg">—</span>
   <button type="button" class="toastAction" id="toastAction" hidden>Undo</button>
+
+</div>
+
+<!-- Unsaved changes guard -->
+<div class="unsavedModal" id="unsavedModal" aria-hidden="true">
+  <div class="unsavedInner" role="dialog" aria-modal="true" aria-label="Unsaved changes">
+    <div class="unsavedTitle">Unsaved changes</div>
+    <div class="unsavedText">You have <b>Unsaved…</b> edits. What would you like to do?</div>
+    <div class="unsavedBtns">
+      <button id="unsavedSave" class="secondary" type="button">Save</button>
+      <button id="unsavedDiscard" class="danger" type="button">Discard</button>
+      <button id="unsavedStay" class="secondary" type="button">Stay</button>
+    </div>
+  </div>
+</div>
+
+<!-- Time compare overlay -->
+<div class="timeCompareModal" id="timeCompareModal" aria-hidden="true">
+  <div class="timeCompareInner" role="dialog" aria-modal="true" aria-label="Time comparison">
+    <div class="timeCompareTop">
+      <div class="timeCompareTitle">🕒 Time comparison</div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button id="timeCompareToggle" class="secondary" type="button" style="padding:6px 10px;" title="Toggle 12h/24h">24h</button>
+        <button id="timeCompareClose" class="secondary" type="button" style="padding:6px 10px;">Close</button>
+      </div>
+    </div>
+    <div class="timeCompareBody" id="timeCompareBody">—</div>
+  </div>
+</div>
+
+<!-- Context menu (right click / long press) -->
+<div class="ctxMenu" id="ctxMenu" aria-hidden="true">
+  <button class="ctxItem" type="button" data-act="open">🪪 Open card</button>
+  <button class="ctxItem" type="button" data-act="edit">✏️ Edit</button>
+  <button class="ctxItem" type="button" data-act="map">📍 Map</button>
+  <button class="ctxItem" type="button" data-act="network">🕸️ Network</button>
+  <div class="ctxSep"></div>
+  <button class="ctxItem" type="button" data-act="fav">⭐ Toggle favorite</button>
+  <button class="ctxItem" type="button" data-act="copy">📋 Copy name</button>
 </div>
 
 <!-- Image modal (click thumbs to open) -->
+
 <div class="imgModal" id="imgModal" aria-hidden="true">
   <div class="imgModalInner" role="dialog" aria-modal="true" aria-label="Image preview">
     <img id="imgModalImg" alt="Preview" />
@@ -4963,6 +5295,29 @@ function updateBirthdayCountdownUI(){
         }).format(d || new Date());
       }catch{ return null; }
     }
+
+
+    // Profile-friendly parts (date line + clock only)
+    function personLocalDateLine(tz, d){
+      if(!tz) return null;
+      try{
+        return _getDtf(`tzd:${tz}`, {
+          weekday:"short", year:"numeric", month:"2-digit", day:"2-digit",
+          timeZone: tz
+        }).format(d || new Date());
+      }catch{ return null; }
+    }
+
+    function personLocalClock(tz, d){
+      if(!tz) return null;
+      try{
+        return _getDtf(`tzk:${tz}`, {
+          hour:"2-digit", minute:"2-digit", second:"2-digit",
+          timeZone: tz
+        }).format(d || new Date());
+      }catch{ return null; }
+    }
+
     function myLocalTime(d){
       try{
         return _getDtf("local", {
@@ -6521,6 +6876,7 @@ e.fav = !!e.fav;
         if(startEl) startEl.value = cyclePick.start || "";
         if(endEl) endEl.value = cyclePick.end || "";
         updateCycleUI();
+        try{ markDirty(); }catch{}
       });
     }
 
@@ -6534,6 +6890,7 @@ e.fav = !!e.fav;
         formCycle.periods = (formCycle.periods||[]).filter(p=>!(p.start===s && p.end===e));
         formCycle = normalizeCycle(formCycle);
         updateCycleUI();
+        try{ markDirty(); }catch{}
       });
     }
 
@@ -6572,6 +6929,7 @@ e.fav = !!e.fav;
         if(endEl) endEl.value = "";
 
         updateCycleUI();
+        try{ markDirty(); }catch{}
         toast("Period saved ✅");
       });
     }
@@ -6582,6 +6940,7 @@ e.fav = !!e.fav;
         const ok = confirm("Clear all cycle data for this person?");
         if(!ok) return;
         clearCycleForm();
+        try{ markDirty(); }catch{}
         toast("Cycle cleared");
       });
     }
@@ -6591,6 +6950,7 @@ e.fav = !!e.fav;
       readCycleNumsIntoState();
       formCycle = normalizeCycle(formCycle);
       updateCycleUI();
+      try{ markDirty(); }catch{}
     };
     if(lenEl) lenEl.addEventListener("change", onNums);
     if(perEl) perEl.addEventListener("change", onNums);
@@ -6695,6 +7055,7 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
           ev.stopPropagation();
           formFavColors.splice(idx, 1);
           renderFavColorsPills(container, formFavColors, { removable:true });
+          try{ markDirty(); }catch{}
         });
         pill.appendChild(x);
       }
@@ -6706,6 +7067,7 @@ function renderFavColorsPills(container, colors, { removable=false }={}){
   function setFavColorsToForm(arr){
     formFavColors = Array.isArray(arr) ? arr.map(normalizeColorInput).filter(Boolean).slice(0,6) : [];
     renderFavColorsPills($("favColorsPills"), formFavColors, { removable:true });
+    try{ markDirty(); }catch{}
   }
   function getFavColorsFromForm(){
     return (formFavColors || []).slice(0,6);
@@ -7868,7 +8230,7 @@ async function geocodeAddress(addr){
           </div>
         </div>
         ${timeLine}
-        <div class="pline"><span class="ptime">Current:</span> ${where}${dist ? ` 📍${dist}` : ""}</div>
+        <div class="pline"><span class="ptime">Current Address:</span> ${where}${dist ? ` 📍${dist}` : ""}</div>
         ${img}
       </div>
     `;
@@ -8024,7 +8386,7 @@ async function geocodeAddress(addr){
           return;
         }
 
-        selectEntry(e.id, { panMap: false });
+        guardedSelectEntry(e.id, { panMap: false, toast:false });
         // Smooth center + keep popup centered in map
         focusEntryOnMap(e.id, { fromMarker: true });
       });
@@ -8066,6 +8428,8 @@ async function geocodeAddress(addr){
   }
 
   function buildProfile(entry){
+    const dateLine = personLocalDateLine(entry.tz) || "";
+    const clockLine = personLocalClock(entry.tz) || "—";
     const timeStr = personLocalTime(entry.tz) || "—";
     const where = entry.currentAddress || `${Number(entry.lat).toFixed(3)}, ${Number(entry.lon).toFixed(3)}`;
     const dist = distanceLabelTo(entry.lat, entry.lon);
@@ -8081,7 +8445,12 @@ async function geocodeAddress(addr){
       zodiacHTML = formatZodiacLineHTML(entry.birthdate);
     }
     const nm = displayNames(entry);
-    $("profileName").textContent = nm.main || "—";
+    // Heart should sit in front of the name (like in the list); Local Time is shown in cards below.
+    if(entry.tz){
+      $("profileName").innerHTML = `<span class="pheart js-heart" data-tz="${escapeHTML(entry.tz)}">${heartForTimezone(entry.tz)}</span>${escapeHTML(nm.main || "—")}`;
+    }else{
+      $("profileName").textContent = nm.main || "—";
+    }
 
     const prnEl = $("profileRealName");
     if(prnEl){
@@ -8092,43 +8461,55 @@ $("profileView").classList.toggle("isFavProfile", !!entry.fav);
     $("profileView").classList.toggle("isSpecialProfile", !!specialId && entry.id===specialId );
 
         $("profileView").classList.toggle("isBothProfileBadges", !!entry.fav && !!specialId && entry.id===specialId );
-$("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="${escapeHTML(entry.tz)}">${heartForTimezone(entry.tz)}</span> <span class="localLabel">Local Time</span>: <span class="localTimeVal js-time" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span>${entry.connection ? " · " + escapeHTML(entry.connection) : ""}${(!notesHidden && entry.bloodType) ? " · 🩸 " + escapeHTML(entry.bloodType) : ""}` : (entry.connection ? (escapeHTML(entry.connection) + (entry.bloodType ? " · 🩸 " + escapeHTML(entry.bloodType) : "")) : ((!notesHidden && entry.bloodType) ? "🩸 " + escapeHTML(entry.bloodType) : "—"));
-
+    const cmpBtn = ""; // compare button is shown inside the Local Time card
+    const subParts = [];
+    if(entry.connection) subParts.push(escapeHTML(entry.connection));
+    if(!notesHidden && entry.bloodType) subParts.push("🩸 " + escapeHTML(entry.bloodType));
+const subLine = subParts.join(" · ");
+    $("profileSub").innerHTML = subLine;
+    $("profileSub").style.display = subLine ? "block" : "none";
+    const timeCard = `
+            <div class="profileCard profileCardLocalTime">
+              <div class="k localLabel localTimeHead">
+                <span>Local Time</span>
+                <button class="miniIconBtn miniIconBtn-sm" type="button" title="Time comparison"
+                  data-compare-time="${escapeHTML(entry.tz)}"
+                  data-compare-id="${escapeHTML(entry.id)}"
+                  data-compare-name="${escapeHTML(nm.main || entry.nickname || "Friend")}">🕒</button>
+              </div>
+              <div class="v">
+                <span class="js-time localTimeVal" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span>${entry.tz ? ` <span class="localTz">(${escapeHTML(entry.tz)})</span>` : ""}
+              </div>
+            </div>
+          `;
+    const whereCard = `
+            <div class="profileCard">
+              <div class="k">Current Address</div>
+              <div class="v">${escapeHTML(where)}</div>
+            </div>
+          `;
     const imgBlock = entry.imageData
       ? `
         <div class="profileTop">
           <img class="profileImg js-open-img" src="${entry.imageData}" alt="${escapeHTML(entry.nickname)}" />
-          <div style="display:flex; flex-direction:column; gap:8px; min-width:0;">
-            <div class="profileCard">
-              <div class="k">Current</div>
-              <div class="v">${escapeHTML(where)}</div>
-            </div>
+          <div class="profileTopCol">
+            ${timeCard}
+            ${whereCard}
             ${distCard}
-            <div class="profileCard">
-              <div class="k localLabel">Local Time</div>
-              <div class="v"><span class="js-time localTimeVal" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span></div>
-            </div>
           </div>
         </div>
       `
       : `
         <div class="profileTop">
           <div class="avatarPh" style="width:110px; height: var(--special-band-height); border-radius:16px; font-size:22px;">👤</div>
-          <div style="display:flex; flex-direction:column; gap:8px; min-width:0;">
-            <div class="profileCard">
-              <div class="k">Current</div>
-              <div class="v">${escapeHTML(where)}</div>
-            </div>
+          <div class="profileTopCol">
+            ${timeCard}
+            ${whereCard}
             ${distCard}
-            <div class="profileCard">
-              <div class="k localLabel">Local Time</div>
-              <div class="v"><span class="js-time localTimeVal" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span></div>
-            </div>
           </div>
         </div>
       `;
-
-    const birthdayCard = entry.birthdate ? (()=>{ 
+const birthdayCard = entry.birthdate ? (()=>{ 
         const d = monthsDaysUntilNextBirthday(entry.birthdate);
         const dateTxt = escapeHTML(fmtDate(entry.birthdate));
         if(d){
@@ -8174,6 +8555,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
       </div>
     `;
     try{ initNotesWidgets($("profileBody")); }catch{}
+    try{ bindProfileJumpLinks(); }catch{}
   }
 
   function profileSkeletonHTML(){
@@ -8215,7 +8597,15 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
 
     const delay = prefersReducedMotion() ? 0 : 110;
     setTimeout(()=>{ 
-      try{ buildProfile(e); }catch{ buildProfile(e); }
+      try{
+        buildProfile(e);
+      }catch(err){
+        console.error("buildProfile failed:", err);
+        const pb2 = $("profileBody");
+        if(pb2){
+          pb2.innerHTML = `<div class="profileCard"><div class="k">⚠️ Profile</div><div class="v">Something went wrong while rendering this card. Please check the console for details.</div></div>`;
+        }
+      }
     }, delay);
   }
 
@@ -8271,11 +8661,16 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
     }
   }
 
-  $("profileEdit").addEventListener("click", ()=>{
+  $("profileEdit").addEventListener("click", async ()=>{
     const e = entries.find(x=>x.id===selectedId);
     if(!e) return;
-    // load into the edit form (left panel)
-    selectEntry(e.id);
+
+    // If the same entry is already loaded and we have unsaved edits, do NOT overwrite them.
+    // Otherwise ensure the entry is loaded into the edit form.
+    if(selectedId !== e.id){
+      const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false });
+      if(!ok) return;
+    }
 
     // jump to the form and focus the first field
     const nick = $("nickname");
@@ -8308,6 +8703,131 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
   // ==============================
   // Form
   // ==============================
+
+  // ==============================
+  // Save state (Saved ✓ / Unsaved…) + Undo edits
+  // ==============================
+  let __formDirty = false;
+  let __formFilling = false;
+
+  function setFormDirty(v){
+    __formDirty = !!v;
+    const pill = $("saveStatePill");
+    const undo = $("undoEditBtn");
+    if(pill){
+      pill.classList.toggle("dirty", __formDirty);
+      pill.classList.toggle("saved", !__formDirty);
+      pill.textContent = __formDirty ? "Unsaved…" : "Saved ✓";
+    }
+    if(undo) undo.hidden = !__formDirty;
+  }
+
+  function markDirty(){
+    if(__formFilling) return;
+    if(!__formDirty) setFormDirty(true);
+  }
+
+  function revertUnsaved(){
+    if(!__formDirty) return;
+    const id = selectedId;
+    __formFilling = true;
+    try{
+      if(id && entries.some(x=>x.id===id)){
+        selectEntry(id, { panMap:false, toast:false });
+      }else{
+        clearForm();
+      }
+    }finally{
+      __formFilling = false;
+      setFormDirty(false);
+    }
+    toast("Reverted");
+  }
+
+  function flashField(el){
+    if(!el || !el.classList) return;
+    el.classList.remove("flashField");
+    void el.offsetWidth;
+    el.classList.add("flashField");
+    setTimeout(()=>{ try{ el.classList.remove("flashField"); }catch{} }, 1100);
+  }
+
+  function openFormNotesTab(tab){
+    const tabs = $("notesTabs");
+    if(!tabs) return;
+    switchNotesTab(tabs.parentElement, tab);
+  }
+
+  function bindDirtyTracking(){
+    const panel = $("saveBtn")?.closest(".panel");
+    if(!panel || panel.__dirtyBound) return;
+    panel.__dirtyBound = true;
+
+    const handler = (ev)=>{
+      const t = ev.target;
+      if(!t || !t.matches) return;
+      if(t.matches("input, textarea, select")) markDirty();
+    };
+    panel.addEventListener("input", handler, true);
+    panel.addEventListener("change", handler, true);
+
+    panel.addEventListener("click", (ev)=>{
+      const t = ev.target;
+      if(!t) return;
+      if(t.closest && (t.closest("#addConnBtn") || t.closest("#cycleAddBtn") || t.closest("#cycleClearBtn") || t.closest("#eyeClearBtn") || t.closest("#addFavColorBtn") || t.closest("#removeImgBtn"))) markDirty();
+      if(t.closest && (t.closest("[data-conn-remove]") || t.closest(".colorPillGlass .x") || t.closest(".cycleList [data-del]"))) markDirty();
+    }, true);
+
+    const undoBtn = $("undoEditBtn");
+    if(undoBtn && !undoBtn.__bound){
+      undoBtn.__bound = true;
+      undoBtn.addEventListener("click", revertUnsaved);
+    }
+  }
+
+  // ==============================
+  // Profile: Smooth jump to edit sections (click card titles)
+  // ==============================
+  function bindProfileJumpLinks(){
+    const pb = $("profileBody");
+    if(!pb) return;
+
+    const rules = [
+      { re: /Birthday/i, field: "birthdate" },
+      { re: /Friendship/i, field: "metOn" },
+      { re: /Connections?/i, field: "connSelect" },
+      { re: /Blood type/i, field: "bloodType" },
+      { re: /Eye/i, field: "eyeColorA" },
+      { re: /Favorite Colors/i, field: "favColorInput" },
+      { re: /Notes/i, field: "notes_important", tab: "important" },
+      { re: /Cycle/i, field: "cycleStart", tab: "cycle" },
+    ];
+
+    pb.querySelectorAll(".profileCard .k").forEach(k=>{
+      const txt = (k.textContent || "").trim();
+      const rule = rules.find(r=>r.re.test(txt));
+      if(!rule) return;
+      if(k.__jumpBound) return;
+      k.__jumpBound = true;
+      k.classList.add("jumpK");
+      k.title = "Edit this section";
+      k.addEventListener("click", ()=>{
+        const e = entries.find(x=>x.id===selectedId);
+        if(!e) return;
+        // Keep current edit state; don't overwrite unsaved edits here.
+        if(rule.tab) openFormNotesTab(rule.tab);
+        const el = $(rule.field);
+        const beh = prefersReducedMotion() ? "auto" : "smooth";
+        if(el && el.scrollIntoView){
+          el.scrollIntoView({ behavior: beh, block: "center" });
+          setTimeout(()=>{ try{ el.focus({ preventScroll:true }); }catch{ try{ el.focus(); }catch{} } }, 130);
+          flashField(el);
+        }
+        toast("Edit section");
+      });
+    });
+  }
+
   function clearForm(){
     selectedId = null;
     $("nickname").value = "";
@@ -8343,6 +8863,8 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
     try{ if(tempPin){ tempLayer.removeLayer(tempPin); tempPin = null; } }catch{}
     renderMarkers();
     renderList();
+    try{ setFormDirty(false); }catch{}
+  try{ validateForm(); }catch{}
   }
 
   function fillForm(entry, opts={}){
@@ -8385,6 +8907,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
     }
     if(opts.toast !== false) toast("Entry loaded");
     renderList();
+  try{ setFormDirty(false); }catch{}
   }
 
 
@@ -8485,6 +9008,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
     formConnections = normalizeConnectionsArray(arr, selectedId);
     renderConnectionPills();
     refreshConnectionsSelect();
+    try{ markDirty(); }catch{}
     refreshConnRelTypeSelect();
   }
 
@@ -8512,6 +9036,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
       }
       renderConnectionPills();
       refreshConnectionsSelect();
+      try{ markDirty(); }catch{}
     });
   }
 
@@ -8594,6 +9119,8 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
 
     if(!nickname){ toast("Please enter a nickname"); return; }
     if(!tz){ toast("Please enter an IANA timezone"); return; }
+    if(!validateForm({ onSave:true })){ toast("Please fix the highlighted fields"); return; }
+
 
 
     // Overwrite confirmation (same nickname)
@@ -8681,6 +9208,7 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
     $("removeImgBtn").dataset.remove = "0";
 
     save();
+    try{ setFormDirty(false); }catch{}
     // If a merge deletes the Special person, keep Special on the surviving entry
     if(deleteAfterOverwriteId && specialId === deleteAfterOverwriteId){
       specialId = selectedId || overwriteTargetId || "";
@@ -9028,20 +9556,22 @@ function updateQuickWidgets(){
     if(selectId) b.dataset.selectId = selectId;
     b.textContent = label;
 
-    b.addEventListener("click", (ev)=>{
+    b.addEventListener("click", async (ev)=>{
       ev.stopPropagation();
       applyFilterFromQuick(key);
 
       if(selectId){
         try{
-          selectEntry(selectId, { panMap:false, toast:false });
-          setTimeout(()=>{
-            const li = document.querySelector(`#list .item[data-id="${CSS.escape(selectId)}"]`);
-            li?.scrollIntoView({behavior:"smooth", block:"center"});
-            if(li){
-              try{ li.classList.remove("flash"); void li.offsetWidth; li.classList.add("flash"); }catch{ li.classList.add("flash"); }
-            }
-          }, 0);
+          const ok = await guardedSelectEntry(selectId, { panMap:false, toast:false });
+          if(ok){
+            setTimeout(()=>{
+              const li = document.querySelector(`#list .item[data-id="${CSS.escape(selectId)}"]`);
+              li?.scrollIntoView({behavior:"smooth", block:"center"});
+              if(li){
+                try{ li.classList.remove("flash"); void li.offsetWidth; li.classList.add("flash"); }catch{ li.classList.add("flash"); }
+              }
+            }, 0);
+          }
         }catch{}
       }
 
@@ -9244,11 +9774,15 @@ function renderList(){
           <div class="nick">
             <span class="heart js-heart" data-tz="${escapeHTML(e.tz || "")}">${heartForTimezone(e.tz)}</span>
             <div class="nameBlock">
-              <div class="nameMain">${escapeHTML(nm.main)}</div>
+              <div class="nameMain nameLine">
+                <span class="nameText">${escapeHTML(nm.main)}</span>
+                <span class="nameIcons">
+                  <button class="starInline js-star ${e.fav ? "on" : ""}" title="${e.fav ? "Unfavorite" : "Favorite"}" type="button">${e.fav ? "⭐" : "☆"}</button>
+                  <button class="diamondInline js-special ${ (specialId && e.id===specialId) ? "on specialOn" : "" }" title="${ (specialId && e.id===specialId) ? "Unset special" : "Set as special" }" type="button">${ (specialId && e.id===specialId) ? "∞" : "◈" }</button>
+                </span>
+              </div>
               ${nm.sub ? `<div class="nameSub">${escapeHTML(nm.sub)}</div>` : ""}
             </div>
-            <button class="starInline js-star ${e.fav ? "on" : ""}" title="${e.fav ? "Unfavorite" : "Favorite"}" type="button">${e.fav ? "⭐" : "☆"}</button>
-            <button class="diamondInline js-special ${ (specialId && e.id===specialId) ? "on specialOn" : "" }" title="${ (specialId && e.id===specialId) ? "Unset special" : "Set as special" }" type="button">${ (specialId && e.id===specialId) ? "∞" : "◈" }</button>
           </div>
 
           ${activeFilter === "bday" && (() => {
@@ -9294,16 +9828,14 @@ function renderList(){
 
       
       // Click anywhere on the card to select (but don't steal clicks from buttons/links)
-      li.addEventListener("click", (ev)=>{
+      li.addEventListener("click", async (ev)=>{
         if(ev.target.closest("button, a, input, textarea, select")) return;
-        selectEntry(e.id, { panMap: false });
-        // Re-render to update selected glow immediately
-        renderList();
+        try{ await guardedSelectEntry(e.id, { panMap: false }); }catch{ guardedSelectEntry(e.id, { panMap:false }); }
       });
 
-li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
+li.querySelector(".js-open").addEventListener("click", async ()=>{ await guardedSelectEntry(e.id); });
       li.querySelector(".js-pin").addEventListener("click", ()=> focusEntryOnMap(e.id));
-      li.querySelector(".js-book").addEventListener("click", ()=> openProfile(e.id));
+      li.querySelector(".js-book").addEventListener("click", async (ev)=>{ ev.stopPropagation(); const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false }); if(ok) openProfile(e.id); });
       li.querySelector(".js-net").addEventListener("click", (ev)=>{ ev.stopPropagation(); openNetworkModal(e.id); });
       li.querySelector(".js-star").addEventListener("click", (ev)=>{
         ev.stopPropagation();
@@ -9319,7 +9851,7 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
         setSpecial(e.id);
       });
 
-      li.addEventListener("dblclick", ()=> selectEntry(e.id));
+      li.addEventListener("dblclick", async ()=>{ await guardedSelectEntry(e.id); });
 
       ul.appendChild(li);
     }
@@ -9357,7 +9889,16 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
     for(const el of __liveTimeNodesSec){
       if(!el || !el.isConnected) continue;
       const tz = el.getAttribute("data-tz");
-      el.textContent = tz ? (personLocalTime(tz, now) || "—") : "—";
+      const mode = String(el.getAttribute("data-mode") || "").toLowerCase();
+      if(!tz){
+        el.textContent = "—";
+      }else if(mode === "clock"){
+        el.textContent = personLocalClock(tz, now) || "—";
+      }else if(mode === "date"){
+        el.textContent = personLocalDateLine(tz, now) || "—";
+      }else{
+        el.textContent = personLocalTime(tz, now) || "—";
+      }
       nextSec.push(el);
     }
     __liveTimeNodesSec = nextSec;
@@ -9369,7 +9910,14 @@ li.querySelector(".js-open").addEventListener("click", ()=> selectEntry(e.id));
       for(const el of __liveTimeNodesMin){
         if(!el || !el.isConnected) continue;
         const tz = el.getAttribute("data-tz");
-        el.textContent = tz ? (personLocalTimeMin(tz, now) || "—") : "—";
+        const mode = String(el.getAttribute("data-mode") || "").toLowerCase();
+        if(!tz){
+          el.textContent = "—";
+        }else if(mode === "date"){
+          el.textContent = personLocalDateLine(tz, now) || "—";
+        }else{
+          el.textContent = personLocalTimeMin(tz, now) || "—";
+        }
         nextMin.push(el);
       }
       __liveTimeNodesMin = nextMin;
@@ -9655,10 +10203,557 @@ function exportJSON(){
   }
 
   // ==============================
+  // Unsaved changes guard (Save / Discard / Stay)
+  // ==============================
+  let __unsavedResolve = null;
+
+  function initUnsavedModal(){
+    const m = $("unsavedModal");
+    const btnSave = $("unsavedSave");
+    const btnDiscard = $("unsavedDiscard");
+    const btnStay = $("unsavedStay");
+    if(!m || !btnSave || btnSave.__bound) return;
+    btnSave.__bound = true;
+
+    btnSave.addEventListener("click", ()=> resolveUnsavedModal("save"));
+    btnDiscard && btnDiscard.addEventListener("click", ()=> resolveUnsavedModal("discard"));
+    btnStay && btnStay.addEventListener("click", ()=> resolveUnsavedModal("stay"));
+
+    // click outside = stay
+    m.addEventListener("click", (ev)=>{ if(ev.target === m) resolveUnsavedModal("stay"); });
+
+    // Esc = stay
+    document.addEventListener("keydown", (ev)=>{
+      if(ev.key === "Escape" && m.classList.contains("open")) resolveUnsavedModal("stay");
+    });
+  }
+
+  function openUnsavedModal(){
+    const m = $("unsavedModal");
+    if(!m) return Promise.resolve("discard");
+    m.classList.add("open");
+    m.setAttribute("aria-hidden","false");
+    setTimeout(()=>{ try{ $("unsavedSave")?.focus(); }catch{} }, 0);
+    return new Promise((resolve)=>{ __unsavedResolve = resolve; });
+  }
+
+  function closeUnsavedModal(){
+    const m = $("unsavedModal");
+    if(!m) return;
+    m.classList.remove("open");
+    m.setAttribute("aria-hidden","true");
+  }
+
+  function resolveUnsavedModal(choice){
+    const r = __unsavedResolve;
+    __unsavedResolve = null;
+    closeUnsavedModal();
+    if(r) r(choice);
+  }
+
+  async function guardUnsaved(){
+    if(!__formDirty) return "ok";
+    const choice = await openUnsavedModal();
+    if(choice === "stay") return "stay";
+    if(choice === "discard"){
+      setFormDirty(false);
+      return "ok";
+    }
+    // save
+    await handleSave();
+    return __formDirty ? "stay" : "ok";
+  }
+
+  async function guardedSelectEntry(id, opts={}){
+    if(!id) return false;
+
+    // same entry: never overwrite unsaved edits
+    if(id === selectedId){
+      if(__formDirty) return false;
+      selectEntry(id, opts);
+      return true;
+    }
+
+    if(__formDirty && !__formFilling){
+      const res = await guardUnsaved();
+      if(res === "stay") return false;
+    }
+    selectEntry(id, opts);
+    return true;
+  }
+
+  async function guardedAction(fn){
+    if(typeof fn !== "function") return false;
+    if(__formDirty && !__formFilling){
+      const res = await guardUnsaved();
+      if(res === "stay") return false;
+    }
+    fn();
+    return true;
+  }
+
+  // Browser/tab close protection
+  window.addEventListener("beforeunload", (e)=>{
+    if(__formDirty){
+      e.preventDefault();
+      e.returnValue = "";
+      return "";
+    }
+  });
+
+  // ==============================
+  // Inline validation (timezone / dates / coords)
+  // ==============================
+  const __touched = { tz:false, birthdate:false, metOn:false, coords:false };
+
+  function setFieldMsg(elId, msg, kind){
+    const el = $(elId);
+    if(!el) return;
+    const t = String(msg||"").trim();
+    if(!t){
+      el.style.display = "none";
+      el.textContent = "";
+      el.classList.remove("error","warn");
+      return;
+    }
+    el.style.display = "block";
+    el.textContent = t;
+    el.classList.toggle("error", kind === "error");
+    el.classList.toggle("warn", kind === "warn");
+  }
+
+  function isValidIanaTimezone(tz){
+    const v = String(tz||"").trim();
+    if(!v) return false;
+    try{
+      Intl.DateTimeFormat("en-US", { timeZone: v }).format(new Date());
+      return true;
+    }catch{
+      return false;
+    }
+  }
+
+  function validateForm({ onSave=false } = {}){
+    let ok = true;
+
+    // Timezone
+    const tzEl = $("timezone");
+    const tz = tzEl ? String(tzEl.value||"").trim() : "";
+    if((onSave || __touched.tz) && !tz){
+      setFieldMsg("tzMsg", "Timezone is required.", "error");
+      ok = false;
+    }else if((onSave || __touched.tz) && tz && !isValidIanaTimezone(tz)){
+      setFieldMsg("tzMsg", "Invalid timezone. Use an IANA name like Europe/Berlin.", "error");
+      ok = false;
+    }else{
+      setFieldMsg("tzMsg", "", "");
+    }
+
+    // Birthdate (warn; blocks on save)
+    const bdEl = $("birthdate");
+    const bd = bdEl ? String(bdEl.value||"").trim() : "";
+    if((onSave || __touched.birthdate) && bd){
+      const d = new Date(bd + "T00:00:00");
+      const now = new Date();
+      now.setHours(0,0,0,0);
+      if(!Number.isNaN(d.getTime()) && d.getTime() > now.getTime()){
+        setFieldMsg("birthdateMsg", "Birthdate is in the future.", "warn");
+        if(onSave) ok = false;
+      }else{
+        setFieldMsg("birthdateMsg", "", "");
+      }
+    }else{
+      setFieldMsg("birthdateMsg", "", "");
+    }
+
+    // Met on (warn; blocks on save)
+    const moEl = $("metOn");
+    const mo = moEl ? String(moEl.value||"").trim() : "";
+    if((onSave || __touched.metOn) && mo){
+      const d = new Date(mo + "T00:00:00");
+      const now = new Date();
+      now.setHours(0,0,0,0);
+      if(!Number.isNaN(d.getTime()) && d.getTime() > now.getTime()){
+        setFieldMsg("metOnMsg", "Met on is in the future.", "warn");
+        if(onSave) ok = false;
+      }else{
+        setFieldMsg("metOnMsg", "", "");
+      }
+    }else{
+      setFieldMsg("metOnMsg", "", "");
+    }
+
+    // Coords
+    const coEl = $("coords");
+    const coords = coEl ? String(coEl.value||"").trim() : "";
+    if((onSave || __touched.coords) && coords){
+      const [lat, lon] = parseCoords(coords);
+      const addr = String($("currentAddress")?.value || "").trim();
+      const valid = Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
+      if(!valid){
+        if(addr){
+          setFieldMsg("coordsMsg", "Coords look invalid — address will be used to locate instead.", "warn");
+        }else{
+          setFieldMsg("coordsMsg", "Invalid coordinates. Use: lat, lon", "error");
+          ok = false;
+        }
+      }else{
+        setFieldMsg("coordsMsg", "", "");
+      }
+    }else{
+      setFieldMsg("coordsMsg", "", "");
+    }
+
+    return ok;
+  }
+
+  function bindValidation(){
+    const tzEl = $("timezone");
+    const bdEl = $("birthdate");
+    const moEl = $("metOn");
+    const coEl = $("coords");
+
+    if(tzEl && !tzEl.__valBound){
+      tzEl.__valBound = true;
+      tzEl.addEventListener("blur", ()=>{ __touched.tz = true; validateForm(); });
+      tzEl.addEventListener("input", ()=>{ if(__touched.tz) validateForm(); });
+    }
+    if(bdEl && !bdEl.__valBound){
+      bdEl.__valBound = true;
+      bdEl.addEventListener("blur", ()=>{ __touched.birthdate = true; validateForm(); });
+      bdEl.addEventListener("change", ()=>{ __touched.birthdate = true; validateForm(); });
+    }
+    if(moEl && !moEl.__valBound){
+      moEl.__valBound = true;
+      moEl.addEventListener("blur", ()=>{ __touched.metOn = true; validateForm(); });
+      moEl.addEventListener("change", ()=>{ __touched.metOn = true; validateForm(); });
+    }
+    if(coEl && !coEl.__valBound){
+      coEl.__valBound = true;
+      coEl.addEventListener("blur", ()=>{ __touched.coords = true; validateForm(); });
+      coEl.addEventListener("input", ()=>{ if(__touched.coords) validateForm(); });
+    }
+  }
+
+  // ==============================
+  // Time compare overlay (You vs Them)
+  // ==============================
+  function tzOffsetMinutes(tz, date=new Date()){
+    try{
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: tz,
+        year:"numeric", month:"2-digit", day:"2-digit",
+        hour:"2-digit", minute:"2-digit", second:"2-digit",
+        hour12:false
+      }).formatToParts(date);
+
+      const m = {};
+      for(const p of parts){
+        if(p.type !== "literal") m[p.type] = p.value;
+      }
+
+      const utcMs = Date.UTC(
+        Number(m.year),
+        Number(m.month) - 1,
+        Number(m.day),
+        Number(m.hour),
+        Number(m.minute),
+        Number(m.second)
+      );
+
+      return (utcMs - date.getTime()) / 60000;
+    }catch{
+      return null;
+    }
+  }
+
+  function formatTimeOnly(tz, date, hour12){
+    try{
+      const fmt = new Intl.DateTimeFormat("en-US", { timeZone: tz, hour:"2-digit", minute:"2-digit", hour12: !!hour12 });
+      return fmt.format(date);
+    }catch{
+      return "—";
+    }
+  }
+
+  const TIME_FMT_KEY = LS_KEY + "__timefmt12";
+  let __timeFmt12 = (localStorage.getItem(TIME_FMT_KEY) === "1");
+  let __tcLast = null;
+
+  function openTimeCompare(tz, name="Friend"){
+    if(!tz) return;
+    const modal = $("timeCompareModal");
+    const body = $("timeCompareBody");
+    if(!modal || !body) return;
+
+    __tcLast = { tz, name };
+
+    const now = new Date();
+    const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Local";
+
+    const youTime = formatTimeOnly(userTz, now, __timeFmt12);
+    const themTime = formatTimeOnly(tz, now, __timeFmt12);
+
+    const oYou = tzOffsetMinutes(userTz, now);
+    const oThem = tzOffsetMinutes(tz, now);
+
+    let delta = "—";
+    if(oYou != null && oThem != null){
+      const dh = (oThem - oYou) / 60;
+      const sign = dh > 0 ? "+" : "";
+      delta = `${sign}${Math.round(dh*10)/10}h`;
+    }
+const fmtLabel = __timeFmt12 ? "12h" : "24h";
+
+    body.innerHTML = `
+      <div class="timeCompareGrid">
+        <div class="timeCompareCard">
+          <div class="timeCompareK">You</div>
+          <div class="timeCompareV">${escapeHTML(youTime)}</div>
+          <div class="timeCompareSmall">${escapeHTML(userTz)} · ${fmtLabel}</div>
+        </div>
+        <div class="timeCompareCard">
+          <div class="timeCompareK">${escapeHTML(name || "Friend")}</div>
+          <div class="timeCompareV">${escapeHTML(themTime)}</div>
+          <div class="timeCompareSmall">${escapeHTML(tz)} · ${fmtLabel}</div>
+        </div>
+      </div>
+      <div class="timeCompareCard">
+        <div class="timeCompareK">Difference</div>
+        <div class="timeCompareV">${escapeHTML(delta)}</div>
+        <div class="timeCompareSmall">Positive = they are ahead</div>
+      </div>
+    `.trim();
+
+    // Update toggle label
+    const tg = $("timeCompareToggle");
+    if(tg) tg.textContent = __timeFmt12 ? "12h" : "24h";
+
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden","false");
+  }
+
+  function closeTimeCompare(){
+    const modal = $("timeCompareModal");
+    if(!modal) return;
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden","true");
+  }
+
+  function initTimeCompare(){
+    const modal = $("timeCompareModal");
+    const closeBtn = $("timeCompareClose");
+    if(closeBtn && !closeBtn.__bound){
+      closeBtn.__bound = true;
+      closeBtn.addEventListener("click", closeTimeCompare);
+    }
+    const toggleBtn = $("timeCompareToggle");
+    if(toggleBtn && !toggleBtn.__bound){
+      toggleBtn.__bound = true;
+      toggleBtn.addEventListener("click", ()=>{
+        __timeFmt12 = !__timeFmt12;
+        localStorage.setItem(TIME_FMT_KEY, __timeFmt12 ? "1" : "0");
+        toggleBtn.textContent = __timeFmt12 ? "12h" : "24h";
+        if(__tcLast && __tcLast.tz) openTimeCompare(__tcLast.tz, __tcLast.name);
+      });
+    }
+    modal && modal.addEventListener("click", (ev)=>{ if(ev.target === modal) closeTimeCompare(); });
+
+    document.addEventListener("keydown", (ev)=>{
+      if(ev.key === "Escape"){
+        if($("timeCompareModal")?.classList.contains("open")) closeTimeCompare();
+      }
+    });
+
+    // Delegated trigger button(s)
+    document.addEventListener("click", (ev)=>{
+      const btn = ev.target.closest && ev.target.closest("[data-compare-time]");
+      if(!btn) return;
+      ev.stopPropagation();
+      const tz = btn.getAttribute("data-compare-time") || "";
+      const nm = btn.getAttribute("data-compare-name") || "Friend";
+      openTimeCompare(tz, nm);
+    });
+  }
+
+  // ==============================
+  // Context menu (Right click / Long press)
+  // ==============================
+  let __ctxOpenForId = "";
+  let __longPressTimer = null;
+  let __longPressFired = false;
+
+  function openCtxMenuFor(id, x, y){
+    const menu = $("ctxMenu");
+    if(!menu || !id) return;
+
+    __ctxOpenForId = id;
+    menu.dataset.id = id;
+
+    // keep inside viewport
+    const w = 240;
+    const h = 260;
+    const left = Math.max(10, Math.min(x, window.innerWidth - w - 10));
+    const top  = Math.max(10, Math.min(y, window.innerHeight - h - 10));
+
+    menu.style.left = left + "px";
+    menu.style.top = top + "px";
+    menu.classList.add("open");
+    menu.setAttribute("aria-hidden","false");
+  }
+
+  function closeCtxMenu(){
+    const menu = $("ctxMenu");
+    if(!menu) return;
+    menu.classList.remove("open");
+    menu.setAttribute("aria-hidden","true");
+    __ctxOpenForId = "";
+  }
+
+  async function ctxAction(act){
+    const id = __ctxOpenForId || $("ctxMenu")?.dataset.id || "";
+    if(!id) return;
+    const e = entries.find(x=>x.id===id);
+
+    if(act === "open"){
+      closeCtxMenu();
+      const ok = await guardedSelectEntry(id, { panMap:false, toast:false });
+      if(ok) openProfile(id);
+      return;
+    }
+
+    if(act === "edit"){
+      closeCtxMenu();
+      const ok = await guardedSelectEntry(id, { panMap:false, toast:false });
+      if(!ok && id !== selectedId) return;
+
+      const nick = $("nickname");
+      const beh = prefersReducedMotion() ? "auto" : "smooth";
+      if(nick && nick.scrollIntoView){
+        nick.scrollIntoView({ behavior: beh, block:"center" });
+        setTimeout(()=>{ try{ nick.focus({ preventScroll:true }); }catch{ try{ nick.focus(); }catch{} } }, 120);
+      }else{
+        try{ window.scrollTo({ top:0, behavior: beh }); }catch{ window.scrollTo(0,0); }
+      }
+      toast("Edit mode");
+      return;
+    }
+
+    if(act === "map"){
+      closeCtxMenu();
+      focusEntryOnMap(id);
+      return;
+    }
+
+    if(act === "network"){
+      closeCtxMenu();
+      openNetworkModal(id);
+      return;
+    }
+
+    if(act === "fav"){
+      closeCtxMenu();
+      if(!e) return;
+      e.fav = !e.fav;
+      e.updatedAt = new Date().toISOString();
+      save();
+      renderList();
+      toast(e.fav ? "Added to favorites ⭐" : "Removed from favorites");
+      // keep profile in sync if open
+      try{
+        if($("profileView")?.style.display !== "none" && selectedId === id){
+          openProfile(id);
+        }
+      }catch{}
+      return;
+    }
+
+    if(act === "copy"){
+      closeCtxMenu();
+      const name = e ? (displayNames(e).main || e.nickname || e.realName || "") : "";
+      if(!name){ toast("Nothing to copy"); return; }
+      try{
+        await navigator.clipboard.writeText(name);
+        toast("Copied ✅");
+      }catch{
+        toast("Copy failed");
+      }
+      return;
+    }
+  }
+
+  function initContextMenu(){
+    const ul = $("list");
+    const menu = $("ctxMenu");
+    if(!ul || !menu || ul.__ctxBound) return;
+    ul.__ctxBound = true;
+
+    ul.addEventListener("contextmenu", (ev)=>{
+      const li = ev.target.closest && ev.target.closest(".item");
+      if(!li) return;
+      ev.preventDefault();
+      openCtxMenuFor(li.dataset.id, ev.clientX, ev.clientY);
+    });
+
+    // Long press (mobile)
+    ul.addEventListener("touchstart", (ev)=>{
+      const li = ev.target.closest && ev.target.closest(".item");
+      if(!li) return;
+      __longPressFired = false;
+      const t = ev.touches && ev.touches[0];
+      if(!t) return;
+      clearTimeout(__longPressTimer);
+      __longPressTimer = setTimeout(()=>{
+        __longPressFired = true;
+        openCtxMenuFor(li.dataset.id, t.clientX, t.clientY);
+      }, 540);
+    }, { passive:true });
+
+    ul.addEventListener("touchmove", ()=>{ clearTimeout(__longPressTimer); }, { passive:true });
+
+    ul.addEventListener("touchend", (ev)=>{
+      clearTimeout(__longPressTimer);
+      if(__longPressFired){
+        // prevent the following "click" select
+        try{ ev.preventDefault(); }catch{}
+      }
+    }, { passive:false });
+
+    // Menu click actions
+    menu.addEventListener("click", (ev)=>{
+      const btn = ev.target.closest && ev.target.closest("[data-act]");
+      if(!btn) return;
+      const act = btn.getAttribute("data-act");
+      ctxAction(act);
+    });
+
+    // close on outside click / scroll / resize
+    document.addEventListener("click", (ev)=>{
+      if(!menu.classList.contains("open")) return;
+      if(menu.contains(ev.target)) return;
+      closeCtxMenu();
+    }, true);
+
+    window.addEventListener("resize", closeCtxMenu);
+    document.addEventListener("scroll", closeCtxMenu, true);
+    document.addEventListener("keydown", (ev)=>{
+      if(ev.key === "Escape" && menu.classList.contains("open")) closeCtxMenu();
+    });
+  }
+
+  // ==============================
   // Wire up
   // ==============================
+  try{ bindDirtyTracking(); }catch{}
+  try{ setFormDirty(false); }catch{}
+
+  try{ initUnsavedModal(); }catch{}
+  try{ bindValidation(); }catch{}
+  try{ initTimeCompare(); }catch{}
+  try{ initContextMenu(); }catch{}
+
   $("saveBtn").addEventListener("click", handleSave);
-  $("newBtn").addEventListener("click", clearForm);
+  $("newBtn").addEventListener("click", ()=>{ guardedAction(clearForm); });
   $("deleteBtn").addEventListener("click", handleDelete);
   $("exportBtn").addEventListener("click", exportJSON);
   $("clearAllBtn").addEventListener("click", clearAll);
