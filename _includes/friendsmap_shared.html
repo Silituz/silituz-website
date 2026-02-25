@@ -4599,11 +4599,13 @@ function updateBirthdayCountdownUI(){
   const UNDERGROUND_REL = new Set(["Dislike","Enemy","Nemesis"]);
   let netFocusId = null;
   let netHoverId = null;
+  let netPinnedId = null;
 
   function openNetworkModal(focusId){
     netFocusId = focusId || null;
     netHoverId = null;
 
+    netPinnedId = null;
     const m = $("netModal");
     m.classList.add("show");
     m.setAttribute("aria-hidden", "false");
@@ -4641,6 +4643,7 @@ function updateBirthdayCountdownUI(){
     m.classList.remove("show");
     m.setAttribute("aria-hidden", "true");
     netHoverId = null;
+    netPinnedId = null;
   }
 
   // Close on backdrop click
@@ -4652,6 +4655,7 @@ function updateBirthdayCountdownUI(){
     $("netSearch").value = "";
     $("netHideUnderground").checked = false;
     netHoverId = null;
+    netPinnedId = null;
     renderNetworkGraph();
   });
   $("netSearch").addEventListener("input", ()=> renderNetworkGraph());
@@ -5131,33 +5135,96 @@ function updateBirthdayCountdownUI(){
 
     clearNetHighlight();
 
-    svg.onmousemove = (ev)=>{
-      const node = ev.target.closest(".netNode");
-      if(!node){
-        if(netHoverId){
+    // ✅ Make the network usable on phones/tablets (no hover):
+    // - Desktop: hover highlights, click opens profile
+    // - Mobile: tap highlights, tap again opens profile (tap empty space clears)
+    const NET_TOUCH = (window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches) || ("ontouchstart" in window);
+
+    // Update the hint text in the legend (best effort)
+    try{
+      const tipSpan = document.querySelector("#netModal .netLegend span");
+      if(tipSpan){
+        tipSpan.innerHTML =
+          '<span class="k">Tip:</span> ' +
+          (NET_TOUCH
+            ? "tap a node to highlight connections · tap again to open profile"
+            : "hover a node to highlight connections · click a node to open profile");
+      }
+    }catch{}
+
+    // Tap-to-preview memory (mobile)
+    let _tapId = null;
+    let _tapTs = 0;
+    const TAP_MS = 900;
+
+    if(!NET_TOUCH){
+      svg.onmousemove = (ev)=>{
+        const node = ev.target.closest(".netNode");
+        if(!node){
+          // Keep pinned selection highlighted when moving over empty space
+          if(netPinnedId){
+            if(netHoverId !== netPinnedId){
+              netHoverId = netPinnedId;
+              highlightNet(netPinnedId);
+            }
+          }else if(netHoverId){
+            netHoverId = null;
+            clearNetHighlight();
+          }
+          return;
+        }
+        const id = node.dataset.id;
+        if(!id) return;
+        if(netHoverId !== id){
+          netHoverId = id;
+          highlightNet(id);
+        }
+      };
+
+      svg.onmouseleave = ()=>{
+        if(netPinnedId){
+          netHoverId = netPinnedId;
+          highlightNet(netPinnedId);
+        }else{
           netHoverId = null;
           clearNetHighlight();
         }
-        return;
-      }
-      const id = node.dataset.id;
-      if(!id) return;
-      if(netHoverId !== id){
-        netHoverId = id;
-        highlightNet(id);
-      }
-    };
-
-    svg.onmouseleave = ()=>{
-      netHoverId = null;
-      clearNetHighlight();
-    };
+      };
+    }else{
+      // On touch devices we don't rely on move/leave.
+      svg.onmousemove = null;
+      svg.onmouseleave = null;
+    }
 
     svg.onclick = (ev)=>{
       const node = ev.target.closest(".netNode");
-      if(!node) return;
+
+      // Tap/click on empty area: clear pinned + highlight
+      if(!node){
+        netPinnedId = null;
+        netHoverId = null;
+        clearNetHighlight();
+        return;
+      }
+
       const id = node.dataset.id;
       if(!id) return;
+
+      const now = Date.now();
+      const same = (_tapId === id) && ((now - _tapTs) < TAP_MS);
+      _tapId = id;
+      _tapTs = now;
+
+      // 1st click/tap: pin + highlight (keep the network view open)
+      if(!same){
+        netPinnedId = id;
+        netHoverId = id;
+        highlightNet(id);
+        if(NET_TOUCH) toast("Tap again to open profile");
+        return;
+      }
+
+      // 2nd click/tap quickly on the same node: open profile
       closeNetworkModal();
       openProfile(id);
     };
