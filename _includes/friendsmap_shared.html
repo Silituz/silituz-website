@@ -315,8 +315,31 @@
       pointer-events:none;
       transition: .18s ease;
       z-index: 50;
+
+      display:flex;
+      align-items:center;
+      gap:10px;
+      max-width: min(92vw, 620px);
     }
-    #soApp .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px)}
+    #soApp .toastMsg{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #soApp .toastAction{
+      border:1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      padding:6px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:12px;
+      line-height:1;
+    }
+    #soApp .toastAction:hover{ filter: brightness(1.08); }
+    #soApp .toastAction:active{ transform: translateY(1px) scale(0.99); }
+
+#soApp .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px)}
 
     #soApp .kbd{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -377,6 +400,12 @@
     #soApp .popup .thumbRow{display:flex; gap:10px; align-items:center; margin-top:8px}
     #soApp .popup img.thumb{width:72px;height: var(--special-band-height);border-radius:12px;object-fit:cover;cursor:pointer;display:block; border:1px solid rgba(255,255,255,.12)}
     #soApp .popup .thumbHint{font-size:12px; color: var(--muted); opacity:.9}
+
+    /* Compact map popup (minimal info) */
+    #soApp .popup-compact .pline{ margin: 4px 0; }
+    #soApp .popup-compact .pSub{ font-size: 12px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #soApp .popup-openCard{ padding: 8px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.12); color: var(--text); cursor: pointer; }
+    #soApp .popup-openCard:hover{ border-color: rgba(16,185,129,.25); box-shadow: 0 0 0 1px rgba(16,185,129,.10), 0 0 14px rgba(16,185,129,.10); }
 
 /* Preview in form */
     #soApp .preview{
@@ -2665,6 +2694,158 @@
   min-height: 92px;
 }
 
+
+/* =============================
+   SMOOTH TABS PACK (v1)
+   - crossfade + mini-slide
+   - animated indicator
+   - height transition
+   - reduced motion support
+============================= */
+#soApp .notesWidget{ --tab-dir: 1; }
+
+#soApp .notesTabs{
+  position:relative;
+  padding-bottom: 6px;
+  scroll-behavior: smooth;
+}
+
+#soApp .notesTabs .tabIndicator{
+  position:absolute;
+  left:0;
+  bottom:0;
+  height:2px;
+  width: var(--ind-width, 24px);
+  border-radius:999px;
+  background: rgba(16,185,129,0.85);
+  box-shadow: 0 0 14px rgba(16,185,129,0.18);
+  transform: translateX(var(--ind-left, 0px));
+  transition: transform 180ms ease, width 180ms ease;
+  pointer-events:none;
+}
+
+#soApp .notesPanels{
+  position:relative;
+  transition: height 190ms ease;
+}
+
+#soApp .notesPanelBox{
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  opacity:0;
+  transform: translateX(calc(var(--tab-dir) * 6px)) translateY(2px);
+  transition: opacity 180ms ease, transform 180ms ease;
+  pointer-events:none;
+}
+
+#soApp .notesPanelBox.isActive{
+  opacity:1;
+  transform: translateX(0px) translateY(0px);
+  pointer-events:auto;
+}
+
+#soApp .notesPanelBox.isWasActive{
+  opacity:1;
+  transform: translateX(0px) translateY(0px);
+  pointer-events:none;
+}
+
+#soApp .notesWidget.isSwitching .notesPanelBox.isWasActive{
+  opacity:0;
+  transform: translateX(calc(var(--tab-dir) * -6px)) translateY(2px);
+}
+
+#soApp .notesPanelBox.prepEnter{
+  opacity:0;
+  transform: translateX(calc(var(--tab-dir) * 6px)) translateY(2px);
+}
+
+#soApp .notesWidget.isSwitching .notesPanels::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:100%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.00), rgba(255,255,255,0.06), rgba(255,255,255,0.00));
+  transform: translateX(-45%);
+  animation: soShimmer 520ms ease-in-out 1;
+  pointer-events:none;
+}
+@keyframes soShimmer{
+  from{ transform:translateX(-45%); }
+  to{ transform:translateX(45%); }
+}
+
+/* Make active tab style match the emerald theme a bit more */
+#soApp .notesTabs .tabBtn.active{
+  background: rgba(16,185,129,0.14) !important;
+  border-color: rgba(16,185,129,0.30) !important;
+  box-shadow: 0 0 0 1px rgba(16,185,129,0.10), 0 0 18px rgba(16,185,129,0.12) !important;
+}
+
+@media (prefers-reduced-motion: reduce){
+  #soApp .notesPanels,
+  #soApp .notesPanelBox,
+  #soApp .notesTabs .tabIndicator{
+    transition:none !important;
+    animation:none !important;
+  }
+}
+
+/* =============================
+   PREMIUM FEEDBACK (v1)
+============================= */
+
+/* Soft highlight after quick jumps */
+#soApp .item.flash{
+  animation: soFlash 900ms ease-out 1;
+}
+@keyframes soFlash{
+  0%{ box-shadow: 0 0 0 0 rgba(16,185,129,0.0); }
+  18%{ box-shadow: 0 0 0 2px rgba(16,185,129,0.26), 0 0 26px rgba(16,185,129,0.18); }
+  100%{ box-shadow: 0 0 0 0 rgba(16,185,129,0.0); }
+}
+
+/* Skeleton loading (used in profile view) */
+#soApp .soSkeleton{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+#soApp .soSkelRow{
+  display:flex;
+  gap:10px;
+}
+#soApp .soSkelBlock{
+  height: 14px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  position: relative;
+  overflow: hidden;
+}
+#soApp .soSkelBlock::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(90deg, rgba(255,255,255,0.00), rgba(255,255,255,0.10), rgba(255,255,255,0.00));
+  transform: translateX(-60%);
+  animation: soSkel 820ms ease-in-out infinite;
+}
+@keyframes soSkel{
+  from{ transform:translateX(-60%); }
+  to{ transform:translateX(60%); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  #soApp .soSkelBlock::after{ animation:none !important; }
+}
+
+
+
 /* Cycle tracker (local-only) */
 #soApp .cyclePanel{
   min-height: 280px;
@@ -4073,9 +4254,9 @@
           <span id="profileSub">—</span>
         </div>
         <div class="btns" style="gap:8px; justify-content:flex-end;">
-          <button id="profileBack" class="secondary" title="Back to map">🗺️ Map</button>
-          <button id="profileEdit" class="secondary" title="Load into form">✏️ Edit</button>
-          <button id="profilePin" class="secondary" title="Center on map">📍</button>
+          <button id="profileEdit" class="secondary" title="Edit this entry">✏️ Edit</button>
+          <button id="profilePin" class="secondary" title="Back to map">📍 Map</button>
+          <button id="profileNetwork" class="secondary" title="Open network">🕸️ Network</button>
         </div>
       </div>
       <div class="profileBody" id="profileBody"></div>
@@ -4083,7 +4264,10 @@
   </div>
 </div>
 
-<div class="toast" id="toast">—</div>
+<div class="toast" id="toast" aria-live="polite" aria-atomic="true">
+  <span class="toastMsg" id="toastMsg">—</span>
+  <button type="button" class="toastAction" id="toastAction" hidden>Undo</button>
+</div>
 
 <!-- Image modal (click thumbs to open) -->
 <div class="imgModal" id="imgModal" aria-hidden="true">
@@ -4146,12 +4330,67 @@
   })();
   const $ = (id) => document.getElementById(id);
 
-  function toast(msg){
+  let __toastTimer = null;
+  let __toastAction = null;
+
+  function toast(msg, opts={}){
     const t = $("toast");
-    t.textContent = msg;
+    if(!t) return;
+    const m = $("toastMsg") || t;
+    const btn = $("toastAction");
+
+    if(__toastTimer) clearTimeout(__toastTimer);
+    __toastAction = null;
+
+    m.textContent = String(msg ?? "");
+
+    if(btn){
+      const actionText = opts && opts.actionText ? String(opts.actionText) : "";
+      const onAction = (opts && typeof opts.onAction === "function") ? opts.onAction : null;
+      if(actionText && onAction){
+        btn.hidden = false;
+        btn.textContent = actionText;
+        __toastAction = onAction;
+      }else{
+        btn.hidden = true;
+      }
+    }
+
     t.classList.add("show");
-    setTimeout(()=> t.classList.remove("show"), 2200);
+    t.setAttribute("aria-hidden","false");
+
+    const duration = Number(opts?.duration ?? 2200);
+    __toastTimer = setTimeout(()=>{
+      t.classList.remove("show");
+      t.setAttribute("aria-hidden","true");
+      if(btn) btn.hidden = true;
+      __toastAction = null;
+    }, Math.max(900, duration));
   }
+
+  function bindToastAction(){
+    const btn = $("toastAction");
+    if(!btn || btn.__bound) return;
+    btn.__bound = true;
+    btn.addEventListener("click", ()=>{
+      const fn = __toastAction;
+      __toastAction = null;
+      btn.hidden = true;
+      try{ fn && fn(); }catch{}
+      const t = $("toast");
+      t?.classList.remove("show");
+      t?.setAttribute("aria-hidden","true");
+      if(__toastTimer) clearTimeout(__toastTimer);
+    });
+  }
+  if(document.readyState === "loading"){
+    window.addEventListener("DOMContentLoaded", bindToastAction);
+  }else{
+    bindToastAction();
+  }
+
+  
+
   function safeParseJSON(str){ try{ return JSON.parse(str); }catch{ return null; } }
   function uuid(){ return (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+"_"+Math.random().toString(16).slice(2))); }
   function escapeHTML(s){
@@ -6927,36 +7166,208 @@ function eyePillHTML(eye, { tiny=false, showText=true }={}){
     // default tab = first non-empty else important
     let def = "important";
     for(const k of NOTES_CATS){ if((n[k]||"").trim()){ def = k; break; } }
-    const tabs = NOTES_CATS.map(k=>`<button type="button" class="tabBtn ${k===def?'active':''}" data-notes-tab="${k}">${NOTES_LABEL[k]}</button>`).join("");
+    const tabs = NOTES_CATS.map((k,i)=>`<button type="button" class="tabBtn interactive ${k===def?'active':''}" data-notes-tab="${k}" data-notes-idx="${i}">${NOTES_LABEL[k]}</button>`).join("");
     const panels = NOTES_CATS.map(k=>{
       const val = (n[k]||"").trim();
-      if(!val) return "";
-      return `<div class="notesPanelBox ${k===def?'':'hidden'}" data-notes-panel="${k}">${escapeHTML(val)}</div>`;
+      const txt = val ? escapeHTML(val) : "—";
+      const isAct = (k===def);
+      return `<div class="notesPanelBox ${isAct?'isActive':''}" data-notes-panel="${k}" aria-hidden="${isAct?'false':'true'}" tabindex="-1">${txt}</div>`;
     }).join("");
     // Use a wrapper so our delegated click can switch tabs inside this widget
     return `
       <div class="profileCard notesWidget" data-notes-widget="${widgetId}">
         <div class="k">Notes</div>
         <div class="v" style="white-space:normal;">
-          <div class="notesTabs">${tabs}</div>
-          <div class="notesPanels">${panels || `<div class="notesPanelBox" data-notes-panel="${def}">—</div>`}</div>
+          <div class="notesTabs">${tabs}<div class="tabIndicator" aria-hidden="true"></div></div>
+          <div class="notesPanels">${panels}</div>
         </div>
       </div>
     `.trim();
   }
 
+  // ==============================
+  // Smooth Notes Tabs (Crossfade + Indicator + Height)
+  // ==============================
+  const __notesScrollMemory = new Map();
+  function prefersReducedMotion(){
+    try{ return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch{ return false; }
+  }
+  function getScrollParent(el){
+    let p = el;
+    while(p && p !== document.body){
+      p = p.parentElement;
+      if(!p) break;
+      try{
+        const st = getComputedStyle(p);
+        const oy = (st.overflowY || "");
+        if((oy === "auto" || oy === "scroll") && p.scrollHeight > p.clientHeight + 4){
+          return p;
+        }
+      }catch{}
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+  function updateNotesIndicator(widget){
+    const tabsEl = widget.querySelector(".notesTabs");
+    if(!tabsEl) return;
+    const activeBtn = tabsEl.querySelector(".tabBtn.active") || tabsEl.querySelector(".tabBtn");
+    if(!activeBtn) return;
+    try{
+      const r = activeBtn.getBoundingClientRect();
+      const pr = tabsEl.getBoundingClientRect();
+      const left = (r.left - pr.left) + (tabsEl.scrollLeft || 0);
+      tabsEl.style.setProperty("--ind-left", `${left}px`);
+      tabsEl.style.setProperty("--ind-width", `${r.width}px`);
+      activeBtn.scrollIntoView?.({behavior: prefersReducedMotion() ? "auto" : "smooth", block:"nearest", inline:"center"});
+    }catch{}
+  }
+  function setNotesPanelsHeight(widget, tabKey, immediate=false){
+    const panels = widget.querySelector(".notesPanels");
+    const panel = widget.querySelector(`.notesPanelBox[data-notes-panel="${CSS.escape(tabKey)}"]`);
+    if(!panels || !panel) return;
+    const h = panel.scrollHeight;
+    if(immediate){
+      const prev = panels.style.transition;
+      panels.style.transition = "none";
+      panels.style.height = `${h}px`;
+      panels.offsetHeight;
+      panels.style.transition = prev || "";
+    }else{
+      panels.style.height = `${h}px`;
+    }
+  }
+  function initNotesWidgets(root=document){
+    try{
+      root.querySelectorAll(".notesWidget").forEach((widget)=>{
+        const tabsEl = widget.querySelector(".notesTabs");
+        if(!tabsEl) return;
+        if(!tabsEl.querySelector(".tabIndicator")){
+          const ind = document.createElement("div");
+          ind.className = "tabIndicator";
+          ind.setAttribute("aria-hidden","true");
+          tabsEl.appendChild(ind);
+        }
+        const activeBtn = tabsEl.querySelector(".tabBtn.active") || tabsEl.querySelector(".tabBtn");
+        if(!activeBtn) return;
+        const tab = activeBtn.getAttribute("data-notes-tab") || "";
+        widget.dataset.notesActive = tab;
+        widget.querySelectorAll(".notesPanelBox").forEach(p=>{
+          const isAct = (p.getAttribute("data-notes-panel") === tab);
+          p.classList.toggle("isActive", isAct);
+          p.classList.remove("isWasActive");
+          p.classList.remove("prepEnter");
+          p.setAttribute("aria-hidden", isAct ? "false" : "true");
+        });
+        requestAnimationFrame(()=>{
+          setNotesPanelsHeight(widget, tab, true);
+          updateNotesIndicator(widget);
+        });
+      });
+    }catch{}
+  }
+
+
+  // Ensure notes widgets inside Leaflet popups get initialized (prevents overlap)
+  try{
+    map.on('popupopen', (ev)=>{
+      try{
+        const el = ev?.popup?.getElement?.();
+        if(el) initNotesWidgets(el);
+      }catch{}
+    });
+  }catch{}
+
   // delegated click for notes widgets (profile + popup)
   document.addEventListener("click", (ev)=>{
-    const btn = ev.target.closest(".notesWidget [data-notes-tab]");
+    const btn = ev.target.closest?.(".notesWidget [data-notes-tab]");
     if(!btn) return;
     const widget = btn.closest(".notesWidget");
     if(!widget) return;
-    const tab = btn.getAttribute("data-notes-tab");
-    // toggle buttons
+
+    const nextTab = btn.getAttribute("data-notes-tab");
+    if(!nextTab) return;
+
+    const prevTab = widget.dataset.notesActive || widget.querySelector(".tabBtn.active")?.getAttribute("data-notes-tab") || "";
+    if(nextTab === prevTab){
+      updateNotesIndicator(widget);
+      return;
+    }
+
+    const scrollParent = getScrollParent(widget);
+    try{
+      __notesScrollMemory.set(`${widget.getAttribute("data-notes-widget")||"widget"}|${prevTab}`, scrollParent.scrollTop || 0);
+    }catch{}
+
+    const prevBtn = widget.querySelector(`.tabBtn[data-notes-tab="${CSS.escape(prevTab)}"]`);
+    const prevIdx = Number(prevBtn?.getAttribute("data-notes-idx") ?? "0");
+    const nextIdx = Number(btn.getAttribute("data-notes-idx") ?? "0");
+    const dir = (nextIdx >= prevIdx) ? 1 : -1;
+    widget.style.setProperty("--tab-dir", String(dir));
+
     widget.querySelectorAll("[data-notes-tab]").forEach(b=>b.classList.toggle("active", b===btn));
-    // toggle panels
-    widget.querySelectorAll("[data-notes-panel]").forEach(p=>p.classList.toggle("hidden", p.getAttribute("data-notes-panel")!==tab));
+
+    const fromPanel = widget.querySelector(`.notesPanelBox[data-notes-panel="${CSS.escape(prevTab)}"]`);
+    const toPanel = widget.querySelector(`.notesPanelBox[data-notes-panel="${CSS.escape(nextTab)}"]`);
+
+    if(!toPanel){
+      widget.dataset.notesActive = nextTab;
+      updateNotesIndicator(widget);
+      return;
+    }
+
+    if(fromPanel){
+      fromPanel.classList.remove("isActive");
+      fromPanel.classList.add("isWasActive");
+      fromPanel.setAttribute("aria-hidden","true");
+    }
+
+    toPanel.classList.add("isActive", "prepEnter");
+    toPanel.setAttribute("aria-hidden","false");
+
+    widget.classList.add("isSwitching");
+    setNotesPanelsHeight(widget, nextTab);
+
+    const saved = __notesScrollMemory.get(`${widget.getAttribute("data-notes-widget")||"widget"}|${nextTab}`);
+    if(saved !== undefined){
+      setTimeout(()=>{ try{ scrollParent.scrollTop = saved; }catch{} }, 0);
+    }
+
+    try{ toPanel.focus({preventScroll:true}); }catch{ try{ toPanel.focus(); }catch{} }
+    updateNotesIndicator(widget);
+
+    const reduced = prefersReducedMotion();
+    if(!reduced){
+      requestAnimationFrame(()=>{ toPanel.classList.remove("prepEnter"); });
+      setTimeout(()=>{
+        widget.classList.remove("isSwitching");
+        if(fromPanel) fromPanel.classList.remove("isWasActive");
+        widget.dataset.notesActive = nextTab;
+        widget.querySelectorAll(".notesPanelBox").forEach(p=>{
+          const isAct = (p === toPanel);
+          p.classList.toggle("isActive", isAct);
+          if(!isAct){
+            p.classList.remove("prepEnter");
+            p.classList.remove("isWasActive");
+            p.setAttribute("aria-hidden","true");
+          }else{
+            p.setAttribute("aria-hidden","false");
+          }
+        });
+      }, 220);
+    }else{
+      toPanel.classList.remove("prepEnter");
+      widget.classList.remove("isSwitching");
+      if(fromPanel) fromPanel.classList.remove("isWasActive");
+      widget.dataset.notesActive = nextTab;
+      setNotesPanelsHeight(widget, nextTab, true);
+    }
   });
+
+  window.addEventListener("resize", ()=>{
+    try{ document.querySelectorAll(".notesWidget").forEach(w=> updateNotesIndicator(w)); }catch{}
+  });
+
+
 
 
   function popupNotesHTML(notes, entryId){
@@ -6965,17 +7376,18 @@ function eyePillHTML(eye, { tiny=false, showText=true }={}){
     const n = normalizeNotes(notes);
     let def = "important";
     for(const k of NOTES_CATS){ if((n[k]||"").trim()){ def = k; break; } }
-    const tabs = NOTES_CATS.map(k=>`<button type="button" class="tabBtn ${k===def?'active':''}" data-notes-tab="${k}">${NOTES_LABEL[k]}</button>`).join("");
+    const tabs = NOTES_CATS.map((k,i)=>`<button type="button" class="tabBtn interactive ${k===def?'active':''}" data-notes-tab="${k}" data-notes-idx="${i}">${NOTES_LABEL[k]}</button>`).join("");
     const panels = NOTES_CATS.map(k=>{
       const val = (n[k]||"").trim();
-      if(!val) return "";
-      return `<div class="notesPanelBox ${k===def?'':'hidden'}" data-notes-panel="${k}">${escapeHTML(val)}</div>`;
+      const txt = val ? escapeHTML(val) : "—";
+      const isAct = (k===def);
+      return `<div class="notesPanelBox ${isAct?'isActive':''}" data-notes-panel="${k}" aria-hidden="${isAct?'false':'true'}" tabindex="-1">${txt}</div>`;
     }).join("");
     return `
       <div class="pline pnotes notesWidget" data-notes-widget="popup-${escapeHTML(entryId||'x')}">
         <b>Notes:</b>
         <div class="notesTabs" style="margin-top:6px;">${tabs}</div>
-        <div class="notesPanels" style="margin-top:6px;">${panels || `<div class="notesPanelBox" data-notes-panel="${def}">—</div>`}</div>
+        <div class="notesPanels" style="margin-top:6px;">${panels}</div>
       </div>
     `.trim();
   }
@@ -7420,6 +7832,7 @@ async function geocodeAddress(addr){
   function markerPopupHTML(entry){
     const timeStr = personLocalTime(entry.tz);
     const nm = displayNames(entry);
+
     const timeLine = timeStr
       ? `<div class="pline"><span class="ptime localLabel">Local Time:</span> <span class="js-time localTimeVal" data-tz="${escapeHTML(entry.tz)}">${escapeHTML(timeStr)}</span> <span class="pline">(${escapeHTML(entry.tz)})</span></div>`
       : `<div class="pline"><span class="ptime localLabel">Local Time:</span> — (check timezone)</div>`;
@@ -7430,61 +7843,7 @@ async function geocodeAddress(addr){
       ? escapeHTML(entry.currentAddress)
       : `${Number(entry.lat).toFixed(3)}, ${Number(entry.lon).toFixed(3)}`;
 
-    const born = entry.birthplace ? `<div class="pline"><b>Birthplace:</b> ${escapeHTML(entry.birthplace)}</div>` : "";
-    const conns = normalizeConnectionsArray(entry.connections, entry.id);
-    const connLinks = conns.map(c=>{
-      const id = c.id;
-      const t = entryById.get(id);
-      if(!t) return "";
-      const nm2 = displayNames(t);
-      const label = c.type ? `${nm2.main} (${c.type})` : nm2.main;
-      return `<a href="javascript:void(0)" onclick="openProfile('${escapeHTML(id)}'); event.stopPropagation();">${escapeHTML(label||"—")}</a>`;
-    }).filter(Boolean);
-    const connectionsLine = connLinks.length
-      ? `<div class="pline"><b>Connections:</b> ${connLinks.join(", ")}</div>`
-      : "";
-
-    // Birthdate + countdown + age (short)
-    let bdayLine = "";
-    if(entry.birthdate){
-      const diff = monthsDaysUntilNextBirthday(entry.birthdate);
-      const dateTxt = escapeHTML(fmtDate(entry.birthdate));
-      if(diff){
-        const { months, days, age } = diff;
-        const ageTxt = (age===null) ? "" : `, +${age}`;
-        bdayLine = `<div class="pline"><b>Birthdate:</b> ${dateTxt} (${months}m ${days}d${ageTxt})</div>`;
-      }else{
-        bdayLine = `<div class="pline"><b>Birthdate:</b> ${dateTxt}</div>`;
-      }
-    }
-
-    // Met on
-    let met = "";
-    if(entry.metOn){
-      const diff = yearsMonthsDaysSince(entry.metOn);
-      const metDate = escapeHTML(fmtDate(entry.metOn));
-      if(diff){
-        const { years, months, days } = diff;
-        const short = `${years}y ${months}m ${days}d`;
-        met = `<div class="pline"><b>Met on:</b> ${metDate} (${short})</div>`;
-      }else{
-        met = `<div class="pline"><b>Met on:</b> ${metDate}</div>`;
-      }
-    }
-    const langs = [
-      entry.nativeLang ? `<div class="pline"><b>Native:</b> ${escapeHTML(entry.nativeLang)}</div>` : "",
-      entry.otherLangs ? `<div class="pline"><b>Other:</b> ${escapeHTML(entry.otherLangs)}</div>` : ""
-    ].join("");
-
-    const blood = entry.bloodType ? `<div class="pline"><b>Blood type:</b> ${notesHidden ? "🔒 Hidden" : escapeHTML(entry.bloodType)}</div>` : "";
-
-    const eyes = eyePopupLineHTML(entry.eye);
-
-    const colors = favoriteColorsInlineHTML(entry.favoriteColors);
-    const cycleLine = cyclePopupLineHTML(entry.cycle);
-    const notes = popupNotesHTML(entry.notes, entry.id);
-
-const img = entry.imageData
+    const img = entry.imageData
       ? `
         <div class="thumbRow popup-image-wrap">
           <img class="thumb js-open-img" alt="${escapeHTML(entry.nickname)}" src="${entry.imageData}" />
@@ -7492,23 +7851,24 @@ const img = entry.imageData
           <div class="thumbHint">Click to enlarge</div>
         </div>
       `
-      : "";
+      : `
+        <div class="thumbRow popup-image-wrap" style="gap:12px;">
+          <div class="avatarPh" style="width:72px;height:var(--special-band-height);border-radius:12px;">👤</div>
+          <button class="popup-openCard secondary" type="button" onclick="openProfile(this.closest('.popup')?.dataset.entryid); event.stopPropagation();">🪪 Open card</button>
+        </div>
+      `;
 
     return `
-      <div class="popup" data-entryid="${escapeHTML(entry.id)}">
-        <div class="pname"><span class="pheart js-heart" data-tz="${escapeHTML(entry.tz)}">${heartForTimezone(entry.tz)}</span><div class="pnameBlock"><div class="pMain">${escapeHTML(nm.main)}</div>${nm.sub ? `<div class="pSub">${escapeHTML(nm.sub)}</div>` : ""}</div></div>
+      <div class="popup popup-compact" data-entryid="${escapeHTML(entry.id)}">
+        <div class="pname">
+          <span class="pheart js-heart" data-tz="${escapeHTML(entry.tz)}">${heartForTimezone(entry.tz)}</span>
+          <div class="pnameBlock">
+            <div class="pMain">${escapeHTML(nm.main)}</div>
+            ${nm.sub ? `<div class="pSub">${escapeHTML(nm.sub)}</div>` : ""}
+          </div>
+        </div>
         ${timeLine}
-        ${bdayLine}
-        ${born}
-        ${met}
-        <div class="pline"><b>Current:</b> ${where}${dist ? `📍${dist}` : ""}</div>
-        ${langs}
-        ${connectionsLine}
-        ${blood}
-        ${eyes}
-        ${colors}
-        ${cycleLine}
-        ${notes}
+        <div class="pline"><span class="ptime">Current:</span> ${where}${dist ? ` 📍${dist}` : ""}</div>
         ${img}
       </div>
     `;
@@ -7813,6 +8173,29 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
         ${cards || `<div class="profileCard"><div class="k">Info</div><div class="v">No extra details saved.</div></div>`}
       </div>
     `;
+    try{ initNotesWidgets($("profileBody")); }catch{}
+  }
+
+  function profileSkeletonHTML(){
+    return `
+      <div class="soSkeleton">
+        <div class="soSkelRow">
+          <div class="soSkelBlock" style="width:55%; height:18px;"></div>
+          <div class="soSkelBlock" style="width:25%; height:18px;"></div>
+        </div>
+        <div class="soSkelBlock" style="width:92%; height:12px;"></div>
+        <div class="soSkelBlock" style="width:78%; height:12px;"></div>
+        <div class="soSkelBlock" style="width:88%; height:12px;"></div>
+        <div class="soSkelRow">
+          <div class="soSkelBlock" style="width:48%; height:96px;"></div>
+          <div class="soSkelBlock" style="width:48%; height:96px;"></div>
+        </div>
+        <div class="soSkelRow">
+          <div class="soSkelBlock" style="width:48%; height:96px;"></div>
+          <div class="soSkelBlock" style="width:48%; height:96px;"></div>
+        </div>
+      </div>
+    `.trim();
   }
 
   function openProfile(id){
@@ -7824,8 +8207,16 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
     const pv = $("profileView");
     pv.classList.toggle("isFavProfile", !!e.fav);
 
-    buildProfile(e);
+    // Skeleton first (avoids "pop-in" and feels more app-like)
+    const pb = $("profileBody");
+    if(pb){ pb.innerHTML = profileSkeletonHTML(); }
+
     showProfileView();
+
+    const delay = prefersReducedMotion() ? 0 : 110;
+    setTimeout(()=>{ 
+      try{ buildProfile(e); }catch{ buildProfile(e); }
+    }, delay);
   }
 
   function focusEntryOnMap(id, opts={}){
@@ -7880,16 +8271,39 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
     }
   }
 
-  $("profileBack").addEventListener("click", showMapView);
   $("profileEdit").addEventListener("click", ()=>{
     const e = entries.find(x=>x.id===selectedId);
-    if(e) selectEntry(e.id);
-    toast("Entry loaded");
+    if(!e) return;
+    // load into the edit form (left panel)
+    selectEntry(e.id);
+
+    // jump to the form and focus the first field
+    const nick = $("nickname");
+    const beh = prefersReducedMotion() ? "auto" : "smooth";
+    if(nick && nick.scrollIntoView){
+      nick.scrollIntoView({ behavior: beh, block: "center" });
+      setTimeout(()=>{
+        try{ nick.focus({ preventScroll:true }); }catch{ try{ nick.focus(); }catch(e2){} }
+      }, 120);
+    }else{
+      try{ window.scrollTo({ top: 0, behavior: beh }); }catch(e3){ window.scrollTo(0,0); }
+    }
+
+    toast("Edit mode");
   });
   $("profilePin").addEventListener("click", ()=>{
     const e = entries.find(x=>x.id===selectedId);
-    if(e) focusEntryOnMap(e.id);
+    if(!e) return;
+    // go back to the map and center/open the popup
+    showMapView();
+    setTimeout(()=> focusEntryOnMap(e.id), 80);
   });
+
+  $("profileNetwork").addEventListener("click", ()=>{
+    const e = entries.find(x=>x.id===selectedId);
+    if(e) openNetworkModal(e.id);
+  });
+
 
   // ==============================
   // Form
@@ -8288,19 +8702,47 @@ $("profileSub").innerHTML = entry.tz ? `<span class="pheart js-heart" data-tz="$
 
   function handleDelete(){
     if(!selectedId) return;
-    const e = entries.find(x=>x.id===selectedId);
+    const delId = selectedId;
+    const idx = entries.findIndex(x=>x.id===delId);
+    const e = (idx>=0 ? entries[idx] : entries.find(x=>x.id===delId));
     const ok = confirm(`Really delete this entry?\n\n${e?.nickname ?? ""}`);
     if(!ok) return;
+
+    const wasSpecial = (specialId === delId);
+    const removed = e ? safeParseJSON(JSON.stringify(e)) : null;
+
     // keep Special consistent
-    if(specialId === selectedId){
+    if(wasSpecial){
       specialId = "";
       try{ localStorage.removeItem(SPECIAL_STORAGE_KEY); }catch{}
     }
-    entries = entries.filter(x=>x.id!==selectedId);
+
+    if(idx>=0) entries.splice(idx, 1);
+    else entries = entries.filter(x=>x.id!==delId);
+
     selectedId = null;
     save();
     clearForm();
-    toast("Deleted");
+
+    toast("Deleted", {
+      actionText: "Undo",
+      duration: 4200,
+      onAction: ()=>{
+        if(!removed) return;
+        const insertAt = Math.min(Math.max(idx, 0), entries.length);
+        entries.splice(insertAt, 0, removed);
+
+        if(wasSpecial){
+          specialId = removed.id;
+          try{ localStorage.setItem(SPECIAL_STORAGE_KEY, specialId); }catch{}
+        }
+
+        selectedId = removed.id;
+        save();
+        try{ selectEntry(removed.id, { panMap:false, toast:false }); }catch{}
+        toast("Restored");
+      }
+    });
   }
 
   $("removeImgBtn").addEventListener("click", ()=>{
@@ -8596,6 +9038,9 @@ function updateQuickWidgets(){
           setTimeout(()=>{
             const li = document.querySelector(`#list .item[data-id="${CSS.escape(selectId)}"]`);
             li?.scrollIntoView({behavior:"smooth", block:"center"});
+            if(li){
+              try{ li.classList.remove("flash"); void li.offsetWidth; li.classList.add("flash"); }catch{ li.classList.add("flash"); }
+            }
           }, 0);
         }catch{}
       }
@@ -9149,12 +9594,33 @@ function exportJSON(){
   function clearAll(){
     const ok = confirm("Really delete ALL entries from this browser?");
     if(!ok) return;
+
+    const prevEntries = safeParseJSON(JSON.stringify(entries || [])) || [];
+    const prevSelected = selectedId;
+    const prevSpecial = specialId;
+
     entries = [];
     selectedId = null;
+    specialId = "";
+    try{ localStorage.removeItem(SPECIAL_STORAGE_KEY); }catch{}
+
     save();
     clearForm();
-    toast("All deleted");
     showMapView();
+
+    toast("All deleted", {
+      actionText: "Undo",
+      duration: 5200,
+      onAction: ()=>{
+        entries = prevEntries;
+        specialId = (prevSpecial && prevEntries.some(x=>x.id===prevSpecial)) ? prevSpecial : "";
+        try{ if(specialId) localStorage.setItem(SPECIAL_STORAGE_KEY, specialId); else localStorage.removeItem(SPECIAL_STORAGE_KEY); }catch{}
+        selectedId = (prevSelected && prevEntries.some(x=>x.id===prevSelected)) ? prevSelected : (prevEntries[0]?.id || null);
+        save();
+        try{ if(selectedId) selectEntry(selectedId, { panMap:false, toast:false }); }catch{}
+        toast("Restored");
+      }
+    });
   }
 
   // ==============================
