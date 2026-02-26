@@ -7966,7 +7966,7 @@ function updateNightLayer(){
 }
 
 updateNightLayer();
-setInterval(updateNightLayer, 30000);
+setInterval(updateNightLayer, 300000); // was 30s; 5min is plenty and lighter
 
 
   // ==============================
@@ -8420,11 +8420,44 @@ async function geocodeAddress(addr){
     pv.style.display = "none";
     $("mapView").style.display = "block";
     // Leaflet needs a size refresh after being hidden
-    setTimeout(()=> map.invalidateSize(), 60);
+    try{ requestAnimationFrame(()=>{ try{ map.invalidateSize(); }catch{} }); }catch{}
+    setTimeout(()=>{ try{ map.invalidateSize(); }catch{} }, 60);
   }
   function showProfileView(){
     $("mapView").style.display = "none";
     $("profileView").style.display = "block";
+  }
+
+  // Mobile helper: in stacked layout, bring the right card (map/profile) into view
+  function scrollRightCardIntoView(){
+    try{
+      if(window.matchMedia && window.matchMedia("(max-width: 980px)").matches){
+        const rv = document.querySelector("#soApp .rightView");
+        if(rv && rv.scrollIntoView){
+          const beh = prefersReducedMotion() ? "auto" : "smooth";
+          rv.scrollIntoView({ behavior: beh, block: "start" });
+        }
+      }
+    }catch{}
+  }
+
+  // Helper: bring the editor (left card / form area) into view
+  function scrollEditorIntoView(opts={}){
+    try{
+      const beh = prefersReducedMotion() ? "auto" : "smooth";
+      // Top of the left card editor
+      const top = document.querySelector("#soApp .wrap > .card .panel") || $("nickname");
+      if(top && top.scrollIntoView){
+        top.scrollIntoView({ behavior: beh, block: "start" });
+      }
+      const doFocus = (opts.focus === undefined) ? true : !!opts.focus;
+      if(doFocus){
+        setTimeout(()=>{
+          try{ $("nickname")?.focus?.({ preventScroll:true }); }
+          catch{ try{ $("nickname")?.focus?.(); }catch{} }
+        }, 220);
+      }
+    }catch{}
   }
 
   function buildProfile(entry){
@@ -8594,6 +8627,8 @@ const birthdayCard = entry.birthdate ? (()=>{
     if(pb){ pb.innerHTML = profileSkeletonHTML(); }
 
     showProfileView();
+    // Always start at the top of the profile (the profile area is scrollable)
+    try{ $("profileView").scrollTop = 0; }catch{}
 
     const delay = prefersReducedMotion() ? 0 : 110;
     setTimeout(()=>{ 
@@ -8612,6 +8647,9 @@ const birthdayCard = entry.birthdate ? (()=>{
   function focusEntryOnMap(id, opts={}){
     const e = entries.find(x=>x.id===id);
     if(!e) return;
+    const wasHidden = (()=>{
+      try{ return getComputedStyle($("mapView")).display === "none"; }catch{ return $("mapView").style.display === "none"; }
+    })();
     showMapView();
 
     if(!(typeof e.lat === "number" && typeof e.lon === "number")) return;
@@ -8651,14 +8689,21 @@ const birthdayCard = entry.birthdate ? (()=>{
     }
 
     // If marker is in cluster, reveal it first (this also may zoom in).
-    if(m && clusteringEnabled && map.hasLayer(clusterLayer) && clusterLayer.zoomToShowLayer){
-      clusterLayer.zoomToShowLayer(m, ()=>{
-        // After it's visible, do a smooth fly to our preferred zoom (won't zoom out)
+    const run = ()=>{
+      // If marker is in cluster, reveal it first (this also may zoom in).
+      if(m && clusteringEnabled && map.hasLayer(clusterLayer) && clusterLayer.zoomToShowLayer){
+        clusterLayer.zoomToShowLayer(m, ()=>{
+          // After it's visible, do a smooth fly to our preferred zoom (won't zoom out)
+          flyAndOpen();
+        });
+      }else{
         flyAndOpen();
-      });
-    }else{
-      flyAndOpen();
-    }
+      }
+    };
+
+    // If we just switched from Profile->Map, give Leaflet a tick to settle sizes
+    if(wasHidden) setTimeout(run, 90);
+    else run();
   }
 
   $("profileEdit").addEventListener("click", async ()=>{
@@ -9833,9 +9878,35 @@ function renderList(){
         try{ await guardedSelectEntry(e.id, { panMap: false }); }catch{ guardedSelectEntry(e.id, { panMap:false }); }
       });
 
-li.querySelector(".js-open").addEventListener("click", async ()=>{ await guardedSelectEntry(e.id); });
-      li.querySelector(".js-pin").addEventListener("click", ()=> focusEntryOnMap(e.id));
-      li.querySelector(".js-book").addEventListener("click", async (ev)=>{ ev.stopPropagation(); const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false }); if(ok) openProfile(e.id); });
+      li.querySelector(".js-open").addEventListener("click", async (ev)=>{
+        ev.stopPropagation();
+        const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false });
+        if(ok){
+          // "Open" in the list should jump to the editor (not the visit card)
+          scrollEditorIntoView();
+        }
+      });
+
+      li.querySelector(".js-pin").addEventListener("click", (ev)=>{
+        ev.stopPropagation();
+        // On mobile layout the map is below the list, so bring it into view first
+        const isMobile = (window.matchMedia && window.matchMedia("(max-width: 980px)").matches);
+        if(isMobile){
+          scrollRightCardIntoView();
+          setTimeout(()=> focusEntryOnMap(e.id), 70);
+        }else{
+          focusEntryOnMap(e.id);
+        }
+      });
+
+      li.querySelector(".js-book").addEventListener("click", async (ev)=>{
+        ev.stopPropagation();
+        const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false });
+        if(ok){
+          openProfile(e.id);
+          scrollRightCardIntoView();
+        }
+      });
       li.querySelector(".js-net").addEventListener("click", (ev)=>{ ev.stopPropagation(); openNetworkModal(e.id); });
       li.querySelector(".js-star").addEventListener("click", (ev)=>{
         ev.stopPropagation();
@@ -10190,8 +10261,8 @@ function exportJSON(){
 
     updateTimesInUI(now);
 
-    // Update marker colors less often (every 30s) to keep it lightweight
-    _markerColorCounter = (_markerColorCounter + 1) % 30;
+    // Update marker colors less often (every 60s) to keep it lightweight
+    _markerColorCounter = (_markerColorCounter + 1) % 60;
     if(_markerColorCounter === 0){
       updateMarkerColors();
     }
@@ -10618,7 +10689,10 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
     if(act === "open"){
       closeCtxMenu();
       const ok = await guardedSelectEntry(id, { panMap:false, toast:false });
-      if(ok) openProfile(id);
+      if(ok){
+        openProfile(id);
+        scrollRightCardIntoView();
+      }
       return;
     }
 
@@ -10641,7 +10715,13 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
 
     if(act === "map"){
       closeCtxMenu();
-      focusEntryOnMap(id);
+      const isMobile = (window.matchMedia && window.matchMedia("(max-width: 980px)").matches);
+      if(isMobile){
+        scrollRightCardIntoView();
+        setTimeout(()=> focusEntryOnMap(id), 70);
+      }else{
+        focusEntryOnMap(id);
+      }
       return;
     }
 
@@ -10835,9 +10915,12 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
 
   // Search
   const _searchEl = $("search");
+  let __searchDebounceT = null;
   if(_searchEl) _searchEl.addEventListener("input", ()=>{
     searchQuery = _searchEl.value;
-    renderList();
+    // Debounce list re-render while typing (keeps UI snappy with many entries)
+    clearTimeout(__searchDebounceT);
+    __searchDebounceT = setTimeout(()=>{ renderList(); }, 120);
   });
 
   // Filters
