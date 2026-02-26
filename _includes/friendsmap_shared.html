@@ -4256,6 +4256,112 @@
   opacity:.92;
 }
 
+/* ==============================
+   Weather forecast (7-day) + Unit toggle
+   ============================== */
+#soApp #profileView .weatherHeadLeft{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+#soApp #profileView .weatherHeadRight{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:0 0 auto;
+}
+#soApp #profileView .weatherUnitToggle{
+  display:inline-flex;
+  align-items:center;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  border-radius:999px;
+  overflow:hidden;
+}
+#soApp #profileView .weatherUnitToggle .wUnitBtn{
+  appearance:none;
+  border:0;
+  margin:0;
+  padding:4px 8px;
+  font-size:12px;
+  line-height:1;
+  background: transparent;
+  color: var(--muted);
+  cursor:pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+#soApp #profileView .weatherUnitToggle .wUnitBtn:hover{
+  background: rgba(255,255,255,.08);
+  color: var(--text);
+}
+#soApp #profileView .weatherUnitToggle .wUnitBtn.active{
+  background: rgba(16,185,129,.18);
+  color: var(--text);
+}
+#soApp #profileView .weatherForecast{
+  margin-top:8px;
+  padding-top:8px;
+  border-top:1px solid rgba(255,255,255,.10);
+}
+#soApp #profileView .weatherForecastList{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+#soApp #profileView .weatherDayRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:6px 8px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.05);
+}
+#soApp #profileView .wdLeft{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+#soApp #profileView .wdEmoji{ font-size:16px; flex:0 0 auto; }
+#soApp #profileView .wdText{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  line-height:1.15;
+}
+#soApp #profileView .wdDay{
+  font-weight:800;
+  font-size:12px;
+  color: var(--text);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#soApp #profileView .wdDesc{
+  font-size:12px;
+  color: var(--muted);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#soApp #profileView .wdRight{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:0 0 auto;
+  white-space:nowrap;
+  font-size:12px;
+  color: var(--muted);
+  font-weight:700;
+}
+#soApp #profileView .wdTemp{
+  color: var(--text);
+  font-weight:800;
+}
+
 </style>
 <section id="soApp" class="soApp">
 <header>
@@ -4817,203 +4923,431 @@
   }
 
   // ==============================
-  // Weather (Open‑Meteo) — on-demand + cached
-  // ==============================
-  const WEATHER_CACHE_KEY = LS_KEY + "__weather_cache_v1";
-  const WEATHER_TTL_MS = 10 * 60 * 1000; // 10 minutes
-  let __weatherSaveTimer = null;
-  let __weatherReqToken = 0;
+// Weather (Open‑Meteo) — on-demand + cached + 7-day forecast
+// ==============================
+const WEATHER_UNIT_KEY = LS_KEY + "__weather_unit"; // "C" or "F"
+let weatherUnit = (()=>{ 
+  try{ return (localStorage.getItem(WEATHER_UNIT_KEY) === "F") ? "F" : "C"; }
+  catch{ return "C"; }
+})();
 
-  function _loadWeatherCache(){
-    try{
-      const raw = localStorage.getItem(WEATHER_CACHE_KEY);
-      const obj = safeParseJSON(raw);
-      return (obj && typeof obj === "object") ? obj : {};
-    }catch{ return {}; }
-  }
-  let __weatherCache = _loadWeatherCache(); // { "<lat,lon>": {ts:number, data:{...}} }
+function applyWeatherUnitUI(){
+  const card = $("profileWeatherCard");
+  if(!card) return;
+  card.querySelectorAll(".wUnitBtn").forEach(btn=>{
+    const u = btn.getAttribute("data-unit") || "C";
+    const on = (u === weatherUnit);
+    btn.classList.toggle("active", on);
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+}
 
-  function _weatherKey(lat, lon){
-    const la = Number(lat), lo = Number(lon);
-    if(!isFinite(la) || !isFinite(lo)) return "";
-    return la.toFixed(3) + "," + lo.toFixed(3);
-  }
-  function _getWeatherCache(lat, lon){
-    const k = _weatherKey(lat, lon);
-    if(!k) return null;
-    const it = __weatherCache[k];
-    if(!it || !it.ts) return null;
-    if((Date.now() - Number(it.ts)) > WEATHER_TTL_MS) return null;
-    return it.data || null;
-  }
-  function _scheduleWeatherSave(){
-    if(__weatherSaveTimer) return;
-    __weatherSaveTimer = setTimeout(()=>{
-      __weatherSaveTimer = null;
-      try{ localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify(__weatherCache)); }catch{}
-    }, 700);
-  }
-  function _setWeatherCache(lat, lon, data){
-    const k = _weatherKey(lat, lon);
-    if(!k) return;
-    __weatherCache[k] = { ts: Date.now(), data };
-    _scheduleWeatherSave();
-  }
+function setWeatherUnit(u){
+  const next = (u === "F") ? "F" : "C";
+  weatherUnit = next;
+  try{ localStorage.setItem(WEATHER_UNIT_KEY, next); }catch{}
+  applyWeatherUnitUI();
 
-  function describeWeatherCode(code, isDay){
-    const c = Number(code);
-    const day = (Number(isDay) === 1);
-    // WMO weather codes used by Open‑Meteo
-    if(c === 0) return { emoji: day ? "☀️" : "🌙", text:"Clear" };
-    if(c === 1) return { emoji: day ? "🌤️" : "🌙☁️", text:"Mostly clear" };
-    if(c === 2) return { emoji:"⛅", text:"Partly cloudy" };
-    if(c === 3) return { emoji:"☁️", text:"Overcast" };
-    if(c === 45 || c === 48) return { emoji:"🌫️", text:"Fog" };
-    if(c >= 51 && c <= 57) return { emoji:"🌦️", text:"Drizzle" };
-    if((c >= 61 && c <= 67) || (c >= 80 && c <= 82)) return { emoji:"🌧️", text:"Rain" };
-    if(c >= 71 && c <= 77) return { emoji:"🌨️", text:"Snow" };
-    if(c === 85 || c === 86) return { emoji:"🌨️", text:"Snow showers" };
-    if(c === 95) return { emoji:"⛈️", text:"Thunderstorm" };
-    if(c === 96 || c === 99) return { emoji:"⛈️🧊", text:"Thunderstorm (hail)" };
-    return { emoji:"🌦️", text:"Weather" };
-  }
-
-  async function fetchWeatherOpenMeteo(lat, lon, tz){
-    // Open‑Meteo: no API key needed
-    const url =
-      `https://api.open-meteo.com/v1/forecast` +
-      `?latitude=${encodeURIComponent(lat)}` +
-      `&longitude=${encodeURIComponent(lon)}` +
-      `&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,is_day` +
-      `&timezone=${encodeURIComponent(tz || "auto")}`;
-    const res = await fetch(url, { method:"GET" });
-    if(!res.ok) throw new Error("Weather fetch failed");
-    const data = await res.json();
-    const cur = data && data.current ? data.current : null;
-    const units = data && data.current_units ? data.current_units : {};
-    if(!cur) throw new Error("No weather data");
-    return {
-      time: cur.time || "",
-      code: cur.weather_code,
-      is_day: cur.is_day,
-      t: cur.temperature_2m,
-      t_unit: units.temperature_2m || "°C",
-      feels: cur.apparent_temperature,
-      feels_unit: units.apparent_temperature || units.temperature_2m || "°C",
-      precip: cur.precipitation,
-      precip_unit: units.precipitation || "mm",
-      wind: cur.wind_speed_10m,
-      wind_unit: units.wind_speed_10m || "km/h"
-    };
-  }
-
-  function _setWeatherUI(html){
-    const body = $("profileWeatherBody");
-    if(body) body.innerHTML = html;
-  }
-
-  async function renderProfileWeather(entry){
-    const card = $("profileWeatherCard");
-    const body = $("profileWeatherBody");
-    if(!card || !body) return;
-
-    const meta = card.querySelector(".weatherMeta");
-
-    // Privacy mode: treat weather as private (uses coordinates)
-    if(notesHidden){
-      if(meta) meta.textContent = "🔒 Hidden";
-      _setWeatherUI('<span class="weatherMuted">Hidden in Privacy mode.</span>');
-      return;
+  // Re-render weather for current profile (use cache if possible)
+  try{
+    if(selectedId && $("profileView").style.display !== "none"){
+      const e = entries.find(x=>x.id===selectedId);
+      if(e){
+        renderProfileWeather(e);
+        if(isWeatherForecastOpen()){
+          renderProfileWeatherForecast(e);
+        }
+      }
     }
+  }catch{}
+}
 
-    if(!weatherOn){
-      if(meta) meta.textContent = "Off";
-      _setWeatherUI('<span class="weatherMuted">Weather is disabled. Enable it in the footer tools.</span>');
-      return;
-    }else{
-      if(meta) meta.textContent = "";
-    }
+function isWeatherForecastOpen(){
+  const fc = $("profileWeatherForecast");
+  return !!(fc && !fc.hidden);
+}
+function hideWeatherForecast(forceClose=false){
+  const fc = $("profileWeatherForecast");
+  const btn = document.querySelector("#profileWeatherCard .js-weather-forecast");
+  if(fc){
+    fc.hidden = true;
+  }
+  if(btn){
+    btn.setAttribute("aria-expanded","false");
+    // keep icon; no need to change text
+  }
+  if(forceClose){
+    const list = $("profileWeatherForecastList");
+    if(list) list.innerHTML = "";
+  }
+}
+function toggleWeatherForecast(entry){
+  const fc = $("profileWeatherForecast");
+  const list = $("profileWeatherForecastList");
+  const btn = document.querySelector("#profileWeatherCard .js-weather-forecast");
+  if(!fc || !list) return;
 
-    const lat = entry?.lat, lon = entry?.lon;
-    if(!(typeof lat === "number" && isFinite(lat) && typeof lon === "number" && isFinite(lon))){
-      _setWeatherUI('<span class="weatherMuted">No coordinates saved. Add coordinates to see weather.</span>');
-      return;
-    }
+  const willOpen = !!fc.hidden;
+  fc.hidden = !willOpen;
+  if(btn) btn.setAttribute("aria-expanded", willOpen ? "true" : "false");
 
-    // Cache first
-    const cached = _getWeatherCache(lat, lon);
-    if(cached){
-      const d = cached;
-      const desc = describeWeatherCode(d.code, d.is_day);
-      const badges = [];
-      const c = Number(d.code);
-      const wind = Number(d.wind);
-      const pr = Number(d.precip);
+  if(!willOpen) return;
 
-      if(c >= 95) badges.push("⚠️ Thunderstorm");
-      if(isFinite(wind) && wind >= 45) badges.push("⚠️ Strong wind");
-      if(isFinite(pr) && pr >= 5) badges.push("⚠️ Heavy precipitation");
+  list.innerHTML = '<span class="weatherLoading">Loading 7-day forecast…</span>';
+  renderProfileWeatherForecast(entry);
+}
 
-      const feelsPart = (isFinite(Number(d.feels)) && isFinite(Number(d.t)) && Math.abs(Number(d.feels) - Number(d.t)) >= 1)
-        ? (' · feels ' + Math.round(Number(d.feels)) + escapeHTML(d.feels_unit||d.t_unit||""))
-        : "";
+function _cToF(c){ return (Number(c) * 9/5) + 32; }
+function _fmtTemp(valC){
+  const n = Number(valC);
+  if(!isFinite(n)) return "—";
+  return String(Math.round(weatherUnit === "F" ? _cToF(n) : n));
+}
+function _tempUnit(){ return (weatherUnit === "F") ? "°F" : "°C"; }
 
-      _setWeatherUI(
-        '<div class="weatherTopLine">' +
-          '<span class="weatherEmoji">' + desc.emoji + '</span>' +
-          '<span class="weatherDesc">' + escapeHTML(desc.text) + '</span>' +
-          '<span class="weatherNums">' + Math.round(Number(d.t)) + escapeHTML(d.t_unit||"") + feelsPart + '</span>' +
+function _dayLabel(dateStr){
+  // dateStr is usually "YYYY-MM-DD" (local date). Use UTC to avoid timezone shifts.
+  const s = String(dateStr || "");
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if(!m) return s || "—";
+  const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
+  const dt = new Date(Date.UTC(y, mo-1, d));
+  try{
+    return dt.toLocaleDateString("en-US", { weekday:"short", month:"short", day:"numeric", timeZone:"UTC" });
+  }catch{
+    return s;
+  }
+}
+
+const WEATHER_CACHE_KEY = LS_KEY + "__weather_cache_v2";
+const WEATHER_CUR_TTL_MS = 10 * 60 * 1000;  // 10 minutes
+const WEATHER_DAILY_TTL_MS = 60 * 60 * 1000; // 60 minutes
+let __weatherSaveTimer = null;
+let __weatherReqToken = 0;
+let __weatherDailyReqToken = 0;
+
+function _loadWeatherCache(){
+  try{
+    const raw = localStorage.getItem(WEATHER_CACHE_KEY);
+    const obj = safeParseJSON(raw);
+    return (obj && typeof obj === "object") ? obj : {};
+  }catch{ return {}; }
+}
+let __weatherCache = _loadWeatherCache(); // { "<lat,lon>": {cur:{ts,data}, daily:{ts,data}} }
+
+function _weatherKey(lat, lon){
+  const la = Number(lat), lo = Number(lon);
+  if(!isFinite(la) || !isFinite(lo)) return "";
+  return la.toFixed(3) + "," + lo.toFixed(3);
+}
+function _scheduleWeatherSave(){
+  if(__weatherSaveTimer) return;
+  __weatherSaveTimer = setTimeout(()=>{
+    __weatherSaveTimer = null;
+    try{ localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify(__weatherCache)); }catch{}
+  }, 700);
+}
+
+function _getWeatherCurCache(lat, lon){
+  const k = _weatherKey(lat, lon);
+  if(!k) return null;
+  const it = __weatherCache[k];
+  const cur = it && it.cur ? it.cur : null;
+  if(!cur || !cur.ts) return null;
+  if((Date.now() - Number(cur.ts)) > WEATHER_CUR_TTL_MS) return null;
+  return cur.data || null;
+}
+function _setWeatherCurCache(lat, lon, data){
+  const k = _weatherKey(lat, lon);
+  if(!k) return;
+  __weatherCache[k] = __weatherCache[k] || {};
+  __weatherCache[k].cur = { ts: Date.now(), data };
+  _scheduleWeatherSave();
+}
+
+function _getWeatherDailyCache(lat, lon){
+  const k = _weatherKey(lat, lon);
+  if(!k) return null;
+  const it = __weatherCache[k];
+  const daily = it && it.daily ? it.daily : null;
+  if(!daily || !daily.ts) return null;
+  if((Date.now() - Number(daily.ts)) > WEATHER_DAILY_TTL_MS) return null;
+  return daily.data || null;
+}
+function _setWeatherDailyCache(lat, lon, data){
+  const k = _weatherKey(lat, lon);
+  if(!k) return;
+  __weatherCache[k] = __weatherCache[k] || {};
+  __weatherCache[k].daily = { ts: Date.now(), data };
+  _scheduleWeatherSave();
+}
+
+function describeWeatherCode(code, isDay){
+  const c = Number(code);
+  const day = (Number(isDay) === 1);
+  // WMO weather codes used by Open‑Meteo
+  if(c === 0) return { emoji: day ? "☀️" : "🌙", text:"Clear" };
+  if(c === 1) return { emoji: day ? "🌤️" : "🌙☁️", text:"Mostly clear" };
+  if(c === 2) return { emoji:"⛅", text:"Partly cloudy" };
+  if(c === 3) return { emoji:"☁️", text:"Overcast" };
+  if(c === 45 || c === 48) return { emoji:"🌫️", text:"Fog" };
+  if(c >= 51 && c <= 57) return { emoji:"🌦️", text:"Drizzle" };
+  if((c >= 61 && c <= 67) || (c >= 80 && c <= 82)) return { emoji:"🌧️", text:"Rain" };
+  if(c >= 71 && c <= 77) return { emoji:"🌨️", text:"Snow" };
+  if(c === 85 || c === 86) return { emoji:"🌨️", text:"Snow showers" };
+  if(c === 95) return { emoji:"⛈️", text:"Thunderstorm" };
+  if(c === 96 || c === 99) return { emoji:"⛈️🧊", text:"Thunderstorm (hail)" };
+  return { emoji:"🌦️", text:"Weather" };
+}
+
+async function fetchWeatherOpenMeteo(lat, lon, tz){
+  // Open‑Meteo: no API key needed
+  const url =
+    `https://api.open-meteo.com/v1/forecast` +
+    `?latitude=${encodeURIComponent(lat)}` +
+    `&longitude=${encodeURIComponent(lon)}` +
+    `&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,is_day` +
+    `&timezone=${encodeURIComponent(tz || "auto")}`;
+  const res = await fetch(url, { method:"GET" });
+  if(!res.ok) throw new Error("Weather fetch failed");
+  const data = await res.json();
+  const cur = data && data.current ? data.current : null;
+  if(!cur) throw new Error("No weather data");
+  return {
+    time: cur.time || "",
+    code: cur.weather_code,
+    is_day: cur.is_day,
+    t_c: cur.temperature_2m,
+    feels_c: cur.apparent_temperature,
+    precip_mm: cur.precipitation,
+    wind_kmh: cur.wind_speed_10m
+  };
+}
+
+async function fetchWeatherForecastOpenMeteo(lat, lon, tz){
+  const url =
+    `https://api.open-meteo.com/v1/forecast` +
+    `?latitude=${encodeURIComponent(lat)}` +
+    `&longitude=${encodeURIComponent(lon)}` +
+    `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max` +
+    `&forecast_days=7` +
+    `&timezone=${encodeURIComponent(tz || "auto")}`;
+  const res = await fetch(url, { method:"GET" });
+  if(!res.ok) throw new Error("Forecast fetch failed");
+  const data = await res.json();
+  const d = data && data.daily ? data.daily : null;
+  if(!d) throw new Error("No forecast data");
+  return {
+    time: d.time || [],
+    code: d.weather_code || [],
+    tmax_c: d.temperature_2m_max || [],
+    tmin_c: d.temperature_2m_min || [],
+    precip_mm: d.precipitation_sum || [],
+    wind_kmh: d.wind_speed_10m_max || []
+  };
+}
+
+function _setWeatherCurrentUI(html){
+  const cur = $("profileWeatherCurrent");
+  if(cur) cur.innerHTML = html;
+}
+
+function _renderCurrentWeatherHTML(d){
+  const desc = describeWeatherCode(d.code, d.is_day);
+  const badges = [];
+  const c = Number(d.code);
+  const wind = Number(d.wind_kmh);
+  const pr = Number(d.precip_mm);
+
+  if(c >= 95) badges.push("⚠️ Thunderstorm");
+  if(isFinite(wind) && wind >= 45) badges.push("⚠️ Strong wind");
+  if(isFinite(pr) && pr >= 5) badges.push("⚠️ Heavy precipitation");
+
+  const tDisp = Number(d.t_c);
+  const fDisp = Number(d.feels_c);
+  const tShown = (weatherUnit === "F") ? _cToF(tDisp) : tDisp;
+  const fShown = (weatherUnit === "F") ? _cToF(fDisp) : fDisp;
+
+  const feelsPart = (isFinite(fShown) && isFinite(tShown) && Math.abs(fShown - tShown) >= 1)
+    ? (' · feels ' + Math.round(fShown) + _tempUnit())
+    : "";
+
+  return (
+    '<div class="weatherTopLine">' +
+      '<span class="weatherEmoji">' + desc.emoji + '</span>' +
+      '<span class="weatherDesc">' + escapeHTML(desc.text) + '</span>' +
+      '<span class="weatherNums">' + _fmtTemp(d.t_c) + _tempUnit() + feelsPart + '</span>' +
+    '</div>' +
+    '<div class="weatherNums">💨 ' + Math.round(Number(d.wind_kmh)) + 'km/h · ☔ ' + Number(d.precip_mm).toFixed(1) + 'mm</div>' +
+    (badges.length ? ('<div class="weatherBadges">' + badges.map(b=>'<span class="weatherBadge">' + escapeHTML(b) + '</span>').join("") + '</div>') : "")
+  );
+}
+
+async function renderProfileWeather(entry){
+  const card = $("profileWeatherCard");
+  const curEl = $("profileWeatherCurrent");
+  if(!card || !curEl) return;
+
+  const meta = card.querySelector(".weatherMeta");
+  applyWeatherUnitUI();
+
+  // Privacy mode: treat weather as private (uses coordinates)
+  if(notesHidden){
+    hideWeatherForecast(true);
+    if(meta) meta.textContent = "🔒 Hidden";
+    _setWeatherCurrentUI('<span class="weatherMuted">Hidden in Privacy mode.</span>');
+    return;
+  }
+
+  if(!weatherOn){
+    hideWeatherForecast(true);
+    if(meta) meta.textContent = "Off";
+    _setWeatherCurrentUI('<span class="weatherMuted">Weather is disabled. Enable it in the footer tools.</span>');
+    return;
+  }else{
+    if(meta) meta.textContent = "";
+  }
+
+  const lat = entry?.lat, lon = entry?.lon;
+  if(!(typeof lat === "number" && isFinite(lat) && typeof lon === "number" && isFinite(lon))){
+    hideWeatherForecast(true);
+    _setWeatherCurrentUI('<span class="weatherMuted">No coordinates saved. Add coordinates to see weather.</span>');
+    return;
+  }
+
+  // Cache first
+  const cached = _getWeatherCurCache(lat, lon);
+  if(cached){
+    _setWeatherCurrentUI(_renderCurrentWeatherHTML(cached));
+    return;
+  }
+
+  // Load
+  const token = ++__weatherReqToken;
+  card.dataset.entryid = String(entry.id || "");
+  _setWeatherCurrentUI('<span class="weatherLoading">Loading weather…</span>');
+
+  try{
+    const d = await fetchWeatherOpenMeteo(lat, lon, entry.tz || "auto");
+    if(token !== __weatherReqToken) return;
+    if(card.dataset.entryid !== String(entry.id || "")) return;
+
+    _setWeatherCurCache(lat, lon, d);
+    _setWeatherCurrentUI(_renderCurrentWeatherHTML(d));
+  }catch(err){
+    console.warn("Weather failed:", err);
+    _setWeatherCurrentUI('<span class="weatherMuted">Could not load weather right now.</span>');
+  }
+}
+
+function _renderForecastHTML(fd){
+  const times = Array.isArray(fd.time) ? fd.time : [];
+  const codes = Array.isArray(fd.code) ? fd.code : [];
+  const tmax = Array.isArray(fd.tmax_c) ? fd.tmax_c : [];
+  const tmin = Array.isArray(fd.tmin_c) ? fd.tmin_c : [];
+  const pr = Array.isArray(fd.precip_mm) ? fd.precip_mm : [];
+  const wind = Array.isArray(fd.wind_kmh) ? fd.wind_kmh : [];
+
+  const n = Math.min(7, times.length, codes.length, tmax.length, tmin.length);
+  if(!n) return '<span class="weatherMuted">No forecast data available.</span>';
+
+  let out = "";
+  for(let i=0;i<n;i++){
+    const desc = describeWeatherCode(codes[i], 1);
+    const day = _dayLabel(times[i]);
+    const hi = _fmtTemp(tmax[i]);
+    const lo = _fmtTemp(tmin[i]);
+    const prMm = (isFinite(Number(pr[i])) ? Number(pr[i]).toFixed(1) : "—");
+    const wK = (isFinite(Number(wind[i])) ? Math.round(Number(wind[i])) : "—");
+    out += (
+      '<div class="weatherDayRow">' +
+        '<div class="wdLeft">' +
+          '<span class="wdEmoji">' + desc.emoji + '</span>' +
+          '<div class="wdText">' +
+            '<div class="wdDay">' + escapeHTML(day) + '</div>' +
+            '<div class="wdDesc">' + escapeHTML(desc.text) + '</div>' +
+          '</div>' +
         '</div>' +
-        '<div class="weatherNums">💨 ' + Math.round(Number(d.wind)) + escapeHTML(d.wind_unit||"") + ' · ☔ ' + Number(d.precip).toFixed(1) + escapeHTML(d.precip_unit||"") + '</div>' +
-        (badges.length ? ('<div class="weatherBadges">' + badges.map(b=>'<span class="weatherBadge">' + escapeHTML(b) + '</span>').join("") + '</div>') : "")
-      );
-      return;
-    }
-
-    // Load
-    const token = ++__weatherReqToken;
-    card.dataset.entryid = String(entry.id || "");
-    _setWeatherUI('<span class="weatherLoading">Loading weather…</span>');
-
-    try{
-      const d = await fetchWeatherOpenMeteo(lat, lon, entry.tz || "auto");
-      if(token !== __weatherReqToken) return;
-      if(card.dataset.entryid !== String(entry.id || "")) return;
-
-      _setWeatherCache(lat, lon, d);
-
-      const desc = describeWeatherCode(d.code, d.is_day);
-      const badges = [];
-      const c = Number(d.code);
-      const wind = Number(d.wind);
-      const pr = Number(d.precip);
-
-      if(c >= 95) badges.push("⚠️ Thunderstorm");
-      if(isFinite(wind) && wind >= 45) badges.push("⚠️ Strong wind");
-      if(isFinite(pr) && pr >= 5) badges.push("⚠️ Heavy precipitation");
-
-      const feelsPart = (isFinite(Number(d.feels)) && isFinite(Number(d.t)) && Math.abs(Number(d.feels) - Number(d.t)) >= 1)
-        ? (' · feels ' + Math.round(Number(d.feels)) + escapeHTML(d.feels_unit||d.t_unit||""))
-        : "";
-
-      _setWeatherUI(
-        '<div class="weatherTopLine">' +
-          '<span class="weatherEmoji">' + desc.emoji + '</span>' +
-          '<span class="weatherDesc">' + escapeHTML(desc.text) + '</span>' +
-          '<span class="weatherNums">' + Math.round(Number(d.t)) + escapeHTML(d.t_unit||"") + feelsPart + '</span>' +
+        '<div class="wdRight">' +
+          '<span class="wdTemp">' + hi + _tempUnit() + ' / ' + lo + _tempUnit() + '</span>' +
+          '<span>☔ ' + prMm + 'mm</span>' +
+          '<span>💨 ' + wK + 'km/h</span>' +
         '</div>' +
-        '<div class="weatherNums">💨 ' + Math.round(Number(d.wind)) + escapeHTML(d.wind_unit||"") + ' · ☔ ' + Number(d.precip).toFixed(1) + escapeHTML(d.precip_unit||"") + '</div>' +
-        (badges.length ? ('<div class="weatherBadges">' + badges.map(b=>'<span class="weatherBadge">' + escapeHTML(b) + '</span>').join("") + '</div>') : "")
-      );
-    }catch(err){
-      console.warn("Weather failed:", err);
-      _setWeatherUI('<span class="weatherMuted">Could not load weather right now.</span>');
-    }
+      '</div>'
+    );
+  }
+  return out;
+}
+
+async function renderProfileWeatherForecast(entry){
+  const fc = $("profileWeatherForecast");
+  const list = $("profileWeatherForecastList");
+  const card = $("profileWeatherCard");
+  if(!fc || !list || !card) return;
+
+  applyWeatherUnitUI();
+
+  // Privacy / toggle checks
+  if(notesHidden){
+    list.innerHTML = '<span class="weatherMuted">Hidden in Privacy mode.</span>';
+    return;
+  }
+  if(!weatherOn){
+    list.innerHTML = '<span class="weatherMuted">Weather is disabled.</span>';
+    return;
   }
 
+  const lat = entry?.lat, lon = entry?.lon;
+  if(!(typeof lat === "number" && isFinite(lat) && typeof lon === "number" && isFinite(lon))){
+    list.innerHTML = '<span class="weatherMuted">No coordinates saved.</span>';
+    return;
+  }
 
+  const cached = _getWeatherDailyCache(lat, lon);
+  if(cached){
+    list.innerHTML = _renderForecastHTML(cached);
+    return;
+  }
 
-  // ==============================
+  const token = ++__weatherDailyReqToken;
+  card.dataset.entryid = String(entry.id || "");
+  list.innerHTML = '<span class="weatherLoading">Loading 7-day forecast…</span>';
+
+  try{
+    const d = await fetchWeatherForecastOpenMeteo(lat, lon, entry.tz || "auto");
+    if(token !== __weatherDailyReqToken) return;
+    if(card.dataset.entryid !== String(entry.id || "")) return;
+
+    _setWeatherDailyCache(lat, lon, d);
+    list.innerHTML = _renderForecastHTML(d);
+  }catch(err){
+    console.warn("Forecast failed:", err);
+    list.innerHTML = '<span class="weatherMuted">Could not load forecast right now.</span>';
+  }
+}
+
+// Weather card controls (forecast button + unit toggle)
+(function bindWeatherCardEvents(){
+  document.addEventListener("click", (ev)=>{
+    const unitBtn = ev.target.closest("#profileWeatherCard .wUnitBtn");
+    if(unitBtn){
+      setWeatherUnit(unitBtn.getAttribute("data-unit") || "C");
+      return;
+    }
+    const fcBtn = ev.target.closest("#profileWeatherCard .js-weather-forecast");
+    if(fcBtn){
+      try{
+        if(!selectedId) return;
+        const e = entries.find(x=>x.id===selectedId);
+        if(!e) return;
+        toggleWeatherForecast(e);
+      }catch{}
+      return;
+    }
+  });
+})();
+
+// ==============================
   // Color naming helper (HEX -> human name)
   // - There is no "official" name for every one of the 16.7M hex colors.
   // - We do two things:
@@ -8258,7 +8592,7 @@ function updateNightLayer(){
 }
 
 updateNightLayer();
-setInterval(updateNightLayer, 30000);
+setInterval(updateNightLayer, 300000); // was 30s; 5min is plenty and lighter
 
 
   // ==============================
@@ -8712,11 +9046,44 @@ async function geocodeAddress(addr){
     pv.style.display = "none";
     $("mapView").style.display = "block";
     // Leaflet needs a size refresh after being hidden
-    setTimeout(()=> map.invalidateSize(), 60);
+    try{ requestAnimationFrame(()=>{ try{ map.invalidateSize(); }catch{} }); }catch{}
+    setTimeout(()=>{ try{ map.invalidateSize(); }catch{} }, 60);
   }
   function showProfileView(){
     $("mapView").style.display = "none";
     $("profileView").style.display = "block";
+  }
+
+  // Mobile helper: in stacked layout, bring the right card (map/profile) into view
+  function scrollRightCardIntoView(){
+    try{
+      if(window.matchMedia && window.matchMedia("(max-width: 980px)").matches){
+        const rv = document.querySelector("#soApp .rightView");
+        if(rv && rv.scrollIntoView){
+          const beh = prefersReducedMotion() ? "auto" : "smooth";
+          rv.scrollIntoView({ behavior: beh, block: "start" });
+        }
+      }
+    }catch{}
+  }
+
+  // Helper: bring the editor (left card / form area) into view
+  function scrollEditorIntoView(opts={}){
+    try{
+      const beh = prefersReducedMotion() ? "auto" : "smooth";
+      // Top of the left card editor
+      const top = document.querySelector("#soApp .wrap > .card .panel") || $("nickname");
+      if(top && top.scrollIntoView){
+        top.scrollIntoView({ behavior: beh, block: "start" });
+      }
+      const doFocus = (opts.focus === undefined) ? true : !!opts.focus;
+      if(doFocus){
+        setTimeout(()=>{
+          try{ $("nickname")?.focus?.({ preventScroll:true }); }
+          catch{ try{ $("nickname")?.focus?.(); }catch{} }
+        }, 220);
+      }
+    }catch{}
   }
 
   function buildProfile(entry){
@@ -8785,14 +9152,28 @@ const subLine = subParts.join(" · ");
           : '<span class="weatherLoading">Loading weather…</span>'));
 
     const weatherCard = `
-            <div class="profileCard profileCardWeather" id="profileWeatherCard" data-entryid="${escapeHTML(entry.id)}">
-              <div class="k">
-                <span>Weather</span>
-                <span class="weatherMeta"></span>
-              </div>
-              <div class="v" id="profileWeatherBody">${weatherBody}</div>
+        <div class="profileCard profileCardWeather" id="profileWeatherCard" data-entryid="${escapeHTML(entry.id)}">
+          <div class="k weatherHeadRow">
+            <div class="weatherHeadLeft">
+              <span>Weather</span>
+              <button class="miniIconBtn miniIconBtn-sm js-weather-forecast" type="button" title="7-day forecast" aria-expanded="false">📅</button>
+              <span class="weatherMeta"></span>
             </div>
-          `;
+            <div class="weatherHeadRight">
+              <div class="weatherUnitToggle" role="group" aria-label="Temperature unit">
+                <button class="wUnitBtn" type="button" data-unit="C" aria-pressed="true">°C</button>
+                <button class="wUnitBtn" type="button" data-unit="F" aria-pressed="false">°F</button>
+              </div>
+            </div>
+          </div>
+          <div class="v" id="profileWeatherBody">
+            <div id="profileWeatherCurrent">${weatherBody}</div>
+            <div class="weatherForecast" id="profileWeatherForecast" hidden>
+              <div class="weatherForecastList" id="profileWeatherForecastList"></div>
+            </div>
+          </div>
+        </div>
+      `;
     const whereCard = `
             <div class="profileCard">
               <div class="k">Current Address</div>
@@ -8869,6 +9250,7 @@ const birthdayCard = entry.birthdate ? (()=>{
     `;
     try{ initNotesWidgets($("profileBody")); }catch{}
     try{ bindProfileJumpLinks(); }catch{}
+    try{ applyWeatherUnitUI(); hideWeatherForecast(true); }catch{}
     try{ renderProfileWeather(entry); }catch{}
   }
 
@@ -8908,6 +9290,8 @@ const birthdayCard = entry.birthdate ? (()=>{
     if(pb){ pb.innerHTML = profileSkeletonHTML(); }
 
     showProfileView();
+    // Always start at the top of the profile (the profile area is scrollable)
+    try{ $("profileView").scrollTop = 0; }catch{}
 
     const delay = prefersReducedMotion() ? 0 : 110;
     setTimeout(()=>{ 
@@ -8926,6 +9310,9 @@ const birthdayCard = entry.birthdate ? (()=>{
   function focusEntryOnMap(id, opts={}){
     const e = entries.find(x=>x.id===id);
     if(!e) return;
+    const wasHidden = (()=>{
+      try{ return getComputedStyle($("mapView")).display === "none"; }catch{ return $("mapView").style.display === "none"; }
+    })();
     showMapView();
 
     if(!(typeof e.lat === "number" && typeof e.lon === "number")) return;
@@ -8965,14 +9352,21 @@ const birthdayCard = entry.birthdate ? (()=>{
     }
 
     // If marker is in cluster, reveal it first (this also may zoom in).
-    if(m && clusteringEnabled && map.hasLayer(clusterLayer) && clusterLayer.zoomToShowLayer){
-      clusterLayer.zoomToShowLayer(m, ()=>{
-        // After it's visible, do a smooth fly to our preferred zoom (won't zoom out)
+    const run = ()=>{
+      // If marker is in cluster, reveal it first (this also may zoom in).
+      if(m && clusteringEnabled && map.hasLayer(clusterLayer) && clusterLayer.zoomToShowLayer){
+        clusterLayer.zoomToShowLayer(m, ()=>{
+          // After it's visible, do a smooth fly to our preferred zoom (won't zoom out)
+          flyAndOpen();
+        });
+      }else{
         flyAndOpen();
-      });
-    }else{
-      flyAndOpen();
-    }
+      }
+    };
+
+    // If we just switched from Profile->Map, give Leaflet a tick to settle sizes
+    if(wasHidden) setTimeout(run, 90);
+    else run();
   }
 
   $("profileEdit").addEventListener("click", async ()=>{
@@ -10147,9 +10541,35 @@ function renderList(){
         try{ await guardedSelectEntry(e.id, { panMap: false }); }catch{ guardedSelectEntry(e.id, { panMap:false }); }
       });
 
-li.querySelector(".js-open").addEventListener("click", async ()=>{ await guardedSelectEntry(e.id); });
-      li.querySelector(".js-pin").addEventListener("click", ()=> focusEntryOnMap(e.id));
-      li.querySelector(".js-book").addEventListener("click", async (ev)=>{ ev.stopPropagation(); const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false }); if(ok) openProfile(e.id); });
+      li.querySelector(".js-open").addEventListener("click", async (ev)=>{
+        ev.stopPropagation();
+        const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false });
+        if(ok){
+          // "Open" in the list should jump to the editor (not the visit card)
+          scrollEditorIntoView();
+        }
+      });
+
+      li.querySelector(".js-pin").addEventListener("click", (ev)=>{
+        ev.stopPropagation();
+        // On mobile layout the map is below the list, so bring it into view first
+        const isMobile = (window.matchMedia && window.matchMedia("(max-width: 980px)").matches);
+        if(isMobile){
+          scrollRightCardIntoView();
+          setTimeout(()=> focusEntryOnMap(e.id), 70);
+        }else{
+          focusEntryOnMap(e.id);
+        }
+      });
+
+      li.querySelector(".js-book").addEventListener("click", async (ev)=>{
+        ev.stopPropagation();
+        const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false });
+        if(ok){
+          openProfile(e.id);
+          scrollRightCardIntoView();
+        }
+      });
       li.querySelector(".js-net").addEventListener("click", (ev)=>{ ev.stopPropagation(); openNetworkModal(e.id); });
       li.querySelector(".js-star").addEventListener("click", (ev)=>{
         ev.stopPropagation();
@@ -10504,8 +10924,8 @@ function exportJSON(){
 
     updateTimesInUI(now);
 
-    // Update marker colors less often (every 30s) to keep it lightweight
-    _markerColorCounter = (_markerColorCounter + 1) % 30;
+    // Update marker colors less often (every 60s) to keep it lightweight
+    _markerColorCounter = (_markerColorCounter + 1) % 60;
     if(_markerColorCounter === 0){
       updateMarkerColors();
     }
@@ -10932,7 +11352,10 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
     if(act === "open"){
       closeCtxMenu();
       const ok = await guardedSelectEntry(id, { panMap:false, toast:false });
-      if(ok) openProfile(id);
+      if(ok){
+        openProfile(id);
+        scrollRightCardIntoView();
+      }
       return;
     }
 
@@ -10955,7 +11378,13 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
 
     if(act === "map"){
       closeCtxMenu();
-      focusEntryOnMap(id);
+      const isMobile = (window.matchMedia && window.matchMedia("(max-width: 980px)").matches);
+      if(isMobile){
+        scrollRightCardIntoView();
+        setTimeout(()=> focusEntryOnMap(id), 70);
+      }else{
+        focusEntryOnMap(id);
+      }
       return;
     }
 
@@ -11166,9 +11595,12 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
 
   // Search
   const _searchEl = $("search");
+  let __searchDebounceT = null;
   if(_searchEl) _searchEl.addEventListener("input", ()=>{
     searchQuery = _searchEl.value;
-    renderList();
+    // Debounce list re-render while typing (keeps UI snappy with many entries)
+    clearTimeout(__searchDebounceT);
+    __searchDebounceT = setTimeout(()=>{ renderList(); }, 120);
   });
 
   // Filters
