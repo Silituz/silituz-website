@@ -283,6 +283,13 @@
       background: rgba(0,0,0,.14);
     }
     #soApp .profileCard .k{font-size:12px; color:var(--muted); margin-bottom:4px}
+
+/* Visit Card: green section headers */
+#soApp #profileView .profileCard > .k{
+  color: var(--emerald) !important;
+  font-weight: 800;
+}
+
     #soApp .profileCard .v{font-size:13px; color:var(--text); white-space:pre-wrap; word-break:break-word}
 
     #soApp .profileImg{
@@ -4184,6 +4191,71 @@
   gap: 8px;
 }
 
+
+/* ==============================
+   Weather card (Open-Meteo)
+   ============================== */
+#soApp #profileView .profileCardWeather .k{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+#soApp #profileView .profileCardWeather .weatherMeta{
+  font-size:12px;
+  color:var(--muted);
+  opacity:.95;
+  white-space:nowrap;
+}
+#soApp #profileView .profileCardWeather .v{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+#soApp #profileView .weatherTopLine{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  line-height:1.15;
+}
+#soApp #profileView .weatherEmoji{ font-size:18px; margin-right:2px; }
+#soApp #profileView .weatherDesc{ font-weight:800; }
+#soApp #profileView .weatherNums{
+  color:var(--muted);
+  font-weight:700;
+  font-size:12px;
+  opacity:.95;
+}
+#soApp #profileView .weatherBadges{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:2px;
+}
+#soApp #profileView .weatherBadge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 8px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  font-size:12px;
+  color:var(--text);
+  opacity:.95;
+}
+#soApp #profileView .weatherMuted{
+  color:var(--muted);
+  font-size:12px;
+  opacity:.95;
+}
+#soApp #profileView .weatherLoading{
+  color:var(--muted);
+  font-size:12px;
+  opacity:.92;
+}
+
 </style>
 <section id="soApp" class="soApp">
 <header>
@@ -4522,6 +4594,13 @@
             🕸️ Show connection links on map
           </label>
         </div>
+
+        <div class="toggleRow">
+          <input id="weatherToggle" type="checkbox" />
+          <label for="weatherToggle" style="margin:0; cursor:pointer;">
+            ☁️ Show weather in cards (Open‑Meteo)
+          </label>
+        </div>
 </div>
 
       <!-- Hidden file input for JSON import -->
@@ -4660,6 +4739,14 @@
       return (v === null) ? true : (v === "1");
     }catch{ return true; }
   })();
+  const WEATHER_TOGGLE_KEY = LS_KEY + "__weather_on";
+  let weatherOn = (()=>{ 
+    try{
+      const v = localStorage.getItem(WEATHER_TOGGLE_KEY);
+      return (v === null) ? true : (v === "1");
+    }catch{ return true; }
+  })();
+
   const $ = (id) => document.getElementById(id);
 
   let __toastTimer = null;
@@ -4728,6 +4815,202 @@
   function escapeHTML(s){
     return String(s ?? "").replace(/[&<>\"']/g, (c)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
   }
+
+  // ==============================
+  // Weather (Open‑Meteo) — on-demand + cached
+  // ==============================
+  const WEATHER_CACHE_KEY = LS_KEY + "__weather_cache_v1";
+  const WEATHER_TTL_MS = 10 * 60 * 1000; // 10 minutes
+  let __weatherSaveTimer = null;
+  let __weatherReqToken = 0;
+
+  function _loadWeatherCache(){
+    try{
+      const raw = localStorage.getItem(WEATHER_CACHE_KEY);
+      const obj = safeParseJSON(raw);
+      return (obj && typeof obj === "object") ? obj : {};
+    }catch{ return {}; }
+  }
+  let __weatherCache = _loadWeatherCache(); // { "<lat,lon>": {ts:number, data:{...}} }
+
+  function _weatherKey(lat, lon){
+    const la = Number(lat), lo = Number(lon);
+    if(!isFinite(la) || !isFinite(lo)) return "";
+    return la.toFixed(3) + "," + lo.toFixed(3);
+  }
+  function _getWeatherCache(lat, lon){
+    const k = _weatherKey(lat, lon);
+    if(!k) return null;
+    const it = __weatherCache[k];
+    if(!it || !it.ts) return null;
+    if((Date.now() - Number(it.ts)) > WEATHER_TTL_MS) return null;
+    return it.data || null;
+  }
+  function _scheduleWeatherSave(){
+    if(__weatherSaveTimer) return;
+    __weatherSaveTimer = setTimeout(()=>{
+      __weatherSaveTimer = null;
+      try{ localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify(__weatherCache)); }catch{}
+    }, 700);
+  }
+  function _setWeatherCache(lat, lon, data){
+    const k = _weatherKey(lat, lon);
+    if(!k) return;
+    __weatherCache[k] = { ts: Date.now(), data };
+    _scheduleWeatherSave();
+  }
+
+  function describeWeatherCode(code, isDay){
+    const c = Number(code);
+    const day = (Number(isDay) === 1);
+    // WMO weather codes used by Open‑Meteo
+    if(c === 0) return { emoji: day ? "☀️" : "🌙", text:"Clear" };
+    if(c === 1) return { emoji: day ? "🌤️" : "🌙☁️", text:"Mostly clear" };
+    if(c === 2) return { emoji:"⛅", text:"Partly cloudy" };
+    if(c === 3) return { emoji:"☁️", text:"Overcast" };
+    if(c === 45 || c === 48) return { emoji:"🌫️", text:"Fog" };
+    if(c >= 51 && c <= 57) return { emoji:"🌦️", text:"Drizzle" };
+    if((c >= 61 && c <= 67) || (c >= 80 && c <= 82)) return { emoji:"🌧️", text:"Rain" };
+    if(c >= 71 && c <= 77) return { emoji:"🌨️", text:"Snow" };
+    if(c === 85 || c === 86) return { emoji:"🌨️", text:"Snow showers" };
+    if(c === 95) return { emoji:"⛈️", text:"Thunderstorm" };
+    if(c === 96 || c === 99) return { emoji:"⛈️🧊", text:"Thunderstorm (hail)" };
+    return { emoji:"🌦️", text:"Weather" };
+  }
+
+  async function fetchWeatherOpenMeteo(lat, lon, tz){
+    // Open‑Meteo: no API key needed
+    const url =
+      `https://api.open-meteo.com/v1/forecast` +
+      `?latitude=${encodeURIComponent(lat)}` +
+      `&longitude=${encodeURIComponent(lon)}` +
+      `&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,is_day` +
+      `&timezone=${encodeURIComponent(tz || "auto")}`;
+    const res = await fetch(url, { method:"GET" });
+    if(!res.ok) throw new Error("Weather fetch failed");
+    const data = await res.json();
+    const cur = data && data.current ? data.current : null;
+    const units = data && data.current_units ? data.current_units : {};
+    if(!cur) throw new Error("No weather data");
+    return {
+      time: cur.time || "",
+      code: cur.weather_code,
+      is_day: cur.is_day,
+      t: cur.temperature_2m,
+      t_unit: units.temperature_2m || "°C",
+      feels: cur.apparent_temperature,
+      feels_unit: units.apparent_temperature || units.temperature_2m || "°C",
+      precip: cur.precipitation,
+      precip_unit: units.precipitation || "mm",
+      wind: cur.wind_speed_10m,
+      wind_unit: units.wind_speed_10m || "km/h"
+    };
+  }
+
+  function _setWeatherUI(html){
+    const body = $("profileWeatherBody");
+    if(body) body.innerHTML = html;
+  }
+
+  async function renderProfileWeather(entry){
+    const card = $("profileWeatherCard");
+    const body = $("profileWeatherBody");
+    if(!card || !body) return;
+
+    const meta = card.querySelector(".weatherMeta");
+
+    // Privacy mode: treat weather as private (uses coordinates)
+    if(notesHidden){
+      if(meta) meta.textContent = "🔒 Hidden";
+      _setWeatherUI('<span class="weatherMuted">Hidden in Privacy mode.</span>');
+      return;
+    }
+
+    if(!weatherOn){
+      if(meta) meta.textContent = "Off";
+      _setWeatherUI('<span class="weatherMuted">Weather is disabled. Enable it in the footer tools.</span>');
+      return;
+    }else{
+      if(meta) meta.textContent = "";
+    }
+
+    const lat = entry?.lat, lon = entry?.lon;
+    if(!(typeof lat === "number" && isFinite(lat) && typeof lon === "number" && isFinite(lon))){
+      _setWeatherUI('<span class="weatherMuted">No coordinates saved. Add coordinates to see weather.</span>');
+      return;
+    }
+
+    // Cache first
+    const cached = _getWeatherCache(lat, lon);
+    if(cached){
+      const d = cached;
+      const desc = describeWeatherCode(d.code, d.is_day);
+      const badges = [];
+      const c = Number(d.code);
+      const wind = Number(d.wind);
+      const pr = Number(d.precip);
+
+      if(c >= 95) badges.push("⚠️ Thunderstorm");
+      if(isFinite(wind) && wind >= 45) badges.push("⚠️ Strong wind");
+      if(isFinite(pr) && pr >= 5) badges.push("⚠️ Heavy precipitation");
+
+      const feelsPart = (isFinite(Number(d.feels)) && isFinite(Number(d.t)) && Math.abs(Number(d.feels) - Number(d.t)) >= 1)
+        ? (' · feels ' + Math.round(Number(d.feels)) + escapeHTML(d.feels_unit||d.t_unit||""))
+        : "";
+
+      _setWeatherUI(
+        '<div class="weatherTopLine">' +
+          '<span class="weatherEmoji">' + desc.emoji + '</span>' +
+          '<span class="weatherDesc">' + escapeHTML(desc.text) + '</span>' +
+          '<span class="weatherNums">' + Math.round(Number(d.t)) + escapeHTML(d.t_unit||"") + feelsPart + '</span>' +
+        '</div>' +
+        '<div class="weatherNums">💨 ' + Math.round(Number(d.wind)) + escapeHTML(d.wind_unit||"") + ' · ☔ ' + Number(d.precip).toFixed(1) + escapeHTML(d.precip_unit||"") + '</div>' +
+        (badges.length ? ('<div class="weatherBadges">' + badges.map(b=>'<span class="weatherBadge">' + escapeHTML(b) + '</span>').join("") + '</div>') : "")
+      );
+      return;
+    }
+
+    // Load
+    const token = ++__weatherReqToken;
+    card.dataset.entryid = String(entry.id || "");
+    _setWeatherUI('<span class="weatherLoading">Loading weather…</span>');
+
+    try{
+      const d = await fetchWeatherOpenMeteo(lat, lon, entry.tz || "auto");
+      if(token !== __weatherReqToken) return;
+      if(card.dataset.entryid !== String(entry.id || "")) return;
+
+      _setWeatherCache(lat, lon, d);
+
+      const desc = describeWeatherCode(d.code, d.is_day);
+      const badges = [];
+      const c = Number(d.code);
+      const wind = Number(d.wind);
+      const pr = Number(d.precip);
+
+      if(c >= 95) badges.push("⚠️ Thunderstorm");
+      if(isFinite(wind) && wind >= 45) badges.push("⚠️ Strong wind");
+      if(isFinite(pr) && pr >= 5) badges.push("⚠️ Heavy precipitation");
+
+      const feelsPart = (isFinite(Number(d.feels)) && isFinite(Number(d.t)) && Math.abs(Number(d.feels) - Number(d.t)) >= 1)
+        ? (' · feels ' + Math.round(Number(d.feels)) + escapeHTML(d.feels_unit||d.t_unit||""))
+        : "";
+
+      _setWeatherUI(
+        '<div class="weatherTopLine">' +
+          '<span class="weatherEmoji">' + desc.emoji + '</span>' +
+          '<span class="weatherDesc">' + escapeHTML(desc.text) + '</span>' +
+          '<span class="weatherNums">' + Math.round(Number(d.t)) + escapeHTML(d.t_unit||"") + feelsPart + '</span>' +
+        '</div>' +
+        '<div class="weatherNums">💨 ' + Math.round(Number(d.wind)) + escapeHTML(d.wind_unit||"") + ' · ☔ ' + Number(d.precip).toFixed(1) + escapeHTML(d.precip_unit||"") + '</div>' +
+        (badges.length ? ('<div class="weatherBadges">' + badges.map(b=>'<span class="weatherBadge">' + escapeHTML(b) + '</span>').join("") + '</div>') : "")
+      );
+    }catch(err){
+      console.warn("Weather failed:", err);
+      _setWeatherUI('<span class="weatherMuted">Could not load weather right now.</span>');
+    }
+  }
+
 
 
   // ==============================
@@ -6329,6 +6612,15 @@ e.fav = !!e.fav;
   function applyNotesLockUI(){
     const cb = $("notesLock");
     if(cb) cb.checked = !!notesHidden;
+  }
+
+  function applyWeatherToggleUI(){
+    const cb = $("weatherToggle");
+    if(cb) cb.checked = !!weatherOn;
+  }
+  function setWeatherOn(v){
+    weatherOn = !!v;
+    try{ localStorage.setItem(WEATHER_TOGGLE_KEY, weatherOn ? "1" : "0"); }catch{}
   }
 
   function applyLinksToggleUI(){
@@ -7966,7 +8258,7 @@ function updateNightLayer(){
 }
 
 updateNightLayer();
-setInterval(updateNightLayer, 300000); // was 30s; 5min is plenty and lighter
+setInterval(updateNightLayer, 30000);
 
 
   // ==============================
@@ -8420,44 +8712,11 @@ async function geocodeAddress(addr){
     pv.style.display = "none";
     $("mapView").style.display = "block";
     // Leaflet needs a size refresh after being hidden
-    try{ requestAnimationFrame(()=>{ try{ map.invalidateSize(); }catch{} }); }catch{}
-    setTimeout(()=>{ try{ map.invalidateSize(); }catch{} }, 60);
+    setTimeout(()=> map.invalidateSize(), 60);
   }
   function showProfileView(){
     $("mapView").style.display = "none";
     $("profileView").style.display = "block";
-  }
-
-  // Mobile helper: in stacked layout, bring the right card (map/profile) into view
-  function scrollRightCardIntoView(){
-    try{
-      if(window.matchMedia && window.matchMedia("(max-width: 980px)").matches){
-        const rv = document.querySelector("#soApp .rightView");
-        if(rv && rv.scrollIntoView){
-          const beh = prefersReducedMotion() ? "auto" : "smooth";
-          rv.scrollIntoView({ behavior: beh, block: "start" });
-        }
-      }
-    }catch{}
-  }
-
-  // Helper: bring the editor (left card / form area) into view
-  function scrollEditorIntoView(opts={}){
-    try{
-      const beh = prefersReducedMotion() ? "auto" : "smooth";
-      // Top of the left card editor
-      const top = document.querySelector("#soApp .wrap > .card .panel") || $("nickname");
-      if(top && top.scrollIntoView){
-        top.scrollIntoView({ behavior: beh, block: "start" });
-      }
-      const doFocus = (opts.focus === undefined) ? true : !!opts.focus;
-      if(doFocus){
-        setTimeout(()=>{
-          try{ $("nickname")?.focus?.({ preventScroll:true }); }
-          catch{ try{ $("nickname")?.focus?.(); }catch{} }
-        }, 220);
-      }
-    }catch{}
   }
 
   function buildProfile(entry){
@@ -8515,6 +8774,25 @@ const subLine = subParts.join(" · ");
               </div>
             </div>
           `;
+
+    const hasCoords = (typeof entry.lat === "number" && isFinite(entry.lat) && typeof entry.lon === "number" && isFinite(entry.lon));
+    const weatherBody = notesHidden
+      ? '<span class="weatherMuted">Hidden in Privacy mode.</span>'
+      : (!weatherOn
+        ? '<span class="weatherMuted">Weather is disabled.</span>'
+        : (!hasCoords
+          ? '<span class="weatherMuted">No coordinates saved.</span>'
+          : '<span class="weatherLoading">Loading weather…</span>'));
+
+    const weatherCard = `
+            <div class="profileCard profileCardWeather" id="profileWeatherCard" data-entryid="${escapeHTML(entry.id)}">
+              <div class="k">
+                <span>Weather</span>
+                <span class="weatherMeta"></span>
+              </div>
+              <div class="v" id="profileWeatherBody">${weatherBody}</div>
+            </div>
+          `;
     const whereCard = `
             <div class="profileCard">
               <div class="k">Current Address</div>
@@ -8527,6 +8805,7 @@ const subLine = subParts.join(" · ");
           <img class="profileImg js-open-img" src="${entry.imageData}" alt="${escapeHTML(entry.nickname)}" />
           <div class="profileTopCol">
             ${timeCard}
+            ${weatherCard}
             ${whereCard}
             ${distCard}
           </div>
@@ -8537,6 +8816,7 @@ const subLine = subParts.join(" · ");
           <div class="avatarPh" style="width:110px; height: var(--special-band-height); border-radius:16px; font-size:22px;">👤</div>
           <div class="profileTopCol">
             ${timeCard}
+            ${weatherCard}
             ${whereCard}
             ${distCard}
           </div>
@@ -8589,6 +8869,7 @@ const birthdayCard = entry.birthdate ? (()=>{
     `;
     try{ initNotesWidgets($("profileBody")); }catch{}
     try{ bindProfileJumpLinks(); }catch{}
+    try{ renderProfileWeather(entry); }catch{}
   }
 
   function profileSkeletonHTML(){
@@ -8627,8 +8908,6 @@ const birthdayCard = entry.birthdate ? (()=>{
     if(pb){ pb.innerHTML = profileSkeletonHTML(); }
 
     showProfileView();
-    // Always start at the top of the profile (the profile area is scrollable)
-    try{ $("profileView").scrollTop = 0; }catch{}
 
     const delay = prefersReducedMotion() ? 0 : 110;
     setTimeout(()=>{ 
@@ -8647,9 +8926,6 @@ const birthdayCard = entry.birthdate ? (()=>{
   function focusEntryOnMap(id, opts={}){
     const e = entries.find(x=>x.id===id);
     if(!e) return;
-    const wasHidden = (()=>{
-      try{ return getComputedStyle($("mapView")).display === "none"; }catch{ return $("mapView").style.display === "none"; }
-    })();
     showMapView();
 
     if(!(typeof e.lat === "number" && typeof e.lon === "number")) return;
@@ -8689,21 +8965,14 @@ const birthdayCard = entry.birthdate ? (()=>{
     }
 
     // If marker is in cluster, reveal it first (this also may zoom in).
-    const run = ()=>{
-      // If marker is in cluster, reveal it first (this also may zoom in).
-      if(m && clusteringEnabled && map.hasLayer(clusterLayer) && clusterLayer.zoomToShowLayer){
-        clusterLayer.zoomToShowLayer(m, ()=>{
-          // After it's visible, do a smooth fly to our preferred zoom (won't zoom out)
-          flyAndOpen();
-        });
-      }else{
+    if(m && clusteringEnabled && map.hasLayer(clusterLayer) && clusterLayer.zoomToShowLayer){
+      clusterLayer.zoomToShowLayer(m, ()=>{
+        // After it's visible, do a smooth fly to our preferred zoom (won't zoom out)
         flyAndOpen();
-      }
-    };
-
-    // If we just switched from Profile->Map, give Leaflet a tick to settle sizes
-    if(wasHidden) setTimeout(run, 90);
-    else run();
+      });
+    }else{
+      flyAndOpen();
+    }
   }
 
   $("profileEdit").addEventListener("click", async ()=>{
@@ -9878,35 +10147,9 @@ function renderList(){
         try{ await guardedSelectEntry(e.id, { panMap: false }); }catch{ guardedSelectEntry(e.id, { panMap:false }); }
       });
 
-      li.querySelector(".js-open").addEventListener("click", async (ev)=>{
-        ev.stopPropagation();
-        const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false });
-        if(ok){
-          // "Open" in the list should jump to the editor (not the visit card)
-          scrollEditorIntoView();
-        }
-      });
-
-      li.querySelector(".js-pin").addEventListener("click", (ev)=>{
-        ev.stopPropagation();
-        // On mobile layout the map is below the list, so bring it into view first
-        const isMobile = (window.matchMedia && window.matchMedia("(max-width: 980px)").matches);
-        if(isMobile){
-          scrollRightCardIntoView();
-          setTimeout(()=> focusEntryOnMap(e.id), 70);
-        }else{
-          focusEntryOnMap(e.id);
-        }
-      });
-
-      li.querySelector(".js-book").addEventListener("click", async (ev)=>{
-        ev.stopPropagation();
-        const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false });
-        if(ok){
-          openProfile(e.id);
-          scrollRightCardIntoView();
-        }
-      });
+li.querySelector(".js-open").addEventListener("click", async ()=>{ await guardedSelectEntry(e.id); });
+      li.querySelector(".js-pin").addEventListener("click", ()=> focusEntryOnMap(e.id));
+      li.querySelector(".js-book").addEventListener("click", async (ev)=>{ ev.stopPropagation(); const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false }); if(ok) openProfile(e.id); });
       li.querySelector(".js-net").addEventListener("click", (ev)=>{ ev.stopPropagation(); openNetworkModal(e.id); });
       li.querySelector(".js-star").addEventListener("click", (ev)=>{
         ev.stopPropagation();
@@ -10261,8 +10504,8 @@ function exportJSON(){
 
     updateTimesInUI(now);
 
-    // Update marker colors less often (every 60s) to keep it lightweight
-    _markerColorCounter = (_markerColorCounter + 1) % 60;
+    // Update marker colors less often (every 30s) to keep it lightweight
+    _markerColorCounter = (_markerColorCounter + 1) % 30;
     if(_markerColorCounter === 0){
       updateMarkerColors();
     }
@@ -10689,10 +10932,7 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
     if(act === "open"){
       closeCtxMenu();
       const ok = await guardedSelectEntry(id, { panMap:false, toast:false });
-      if(ok){
-        openProfile(id);
-        scrollRightCardIntoView();
-      }
+      if(ok) openProfile(id);
       return;
     }
 
@@ -10715,13 +10955,7 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
 
     if(act === "map"){
       closeCtxMenu();
-      const isMobile = (window.matchMedia && window.matchMedia("(max-width: 980px)").matches);
-      if(isMobile){
-        scrollRightCardIntoView();
-        setTimeout(()=> focusEntryOnMap(id), 70);
-      }else{
-        focusEntryOnMap(id);
-      }
+      focusEntryOnMap(id);
       return;
     }
 
@@ -10870,6 +11104,23 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
       try{ renderMarkers(); }catch{}
     });
   }
+
+  // Weather toggle (Open‑Meteo)
+  const _weatherToggle = $("weatherToggle");
+  if(_weatherToggle){
+    applyWeatherToggleUI();
+    _weatherToggle.addEventListener("change", ()=>{
+      setWeatherOn(_weatherToggle.checked);
+      toast(weatherOn ? "Weather in cards ON ☁️" : "Weather in cards OFF");
+      try{
+        if(selectedId && $("profileView").style.display !== "none"){
+          const e = entries.find(x=>x.id===selectedId);
+          if(e) renderProfileWeather(e);
+        }
+      }catch{}
+    });
+  }
+
     // Cluster toggle
   const _clusterBtn = $("clusterToggleBtn");
   if(_clusterBtn){
@@ -10915,12 +11166,9 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
 
   // Search
   const _searchEl = $("search");
-  let __searchDebounceT = null;
   if(_searchEl) _searchEl.addEventListener("input", ()=>{
     searchQuery = _searchEl.value;
-    // Debounce list re-render while typing (keeps UI snappy with many entries)
-    clearTimeout(__searchDebounceT);
-    __searchDebounceT = setTimeout(()=>{ renderList(); }, 120);
+    renderList();
   });
 
   // Filters
