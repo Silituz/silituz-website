@@ -4745,6 +4745,79 @@
   background: rgba(0,0,0,.16);
 }
 
+
+
+/* ==============================
+   Editor Accordion (collapsed sections)
+   Keeps first-time users from being overwhelmed.
+============================== */
+#soApp .editorAccordion{ display:flex; flex-direction:column; gap:10px; margin-top:2px; }
+#soApp .editorAccordion details{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  background: rgba(255,255,255,.03);
+  overflow:hidden;
+}
+#soApp .editorAccordion details[open]{
+  box-shadow: 0 0 0 1px rgba(57,255,180,.22), 0 10px 36px rgba(0,0,0,.35);
+}
+#soApp .editorAccordion summary{
+  list-style:none;
+  cursor:pointer;
+  user-select:none;
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:800;
+  letter-spacing:.2px;
+  color: #39ffb4; /* mint-green headings */
+  background: rgba(255,255,255,.02);
+}
+#soApp .editorAccordion summary::-webkit-details-marker{ display:none; }
+#soApp .editorAccordion summary::after{
+  content:"▸";
+  margin-left:auto;
+  color: rgba(255,255,255,.55);
+  transform: translateY(-1px);
+  transition: transform .16s ease, opacity .16s ease;
+  opacity:.9;
+}
+#soApp .editorAccordion details[open] summary{
+  background: rgba(57,255,180,.06);
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+#soApp .editorAccordion details[open] summary::after{
+  transform: rotate(90deg) translateX(1px);
+  opacity:1;
+}
+#soApp .editorAccordion .accBadge{
+  margin-left:8px;
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+  color: rgba(255,255,255,.9);
+  background: rgba(255,120,120,.20);
+  border: 1px solid rgba(255,120,120,.28);
+}
+#soApp .editorAccordion .accSub{
+  font-weight:700;
+  font-size:12px;
+  color: rgba(255,255,255,.62);
+}
+#soApp .editorAccordion .accBody{
+  padding: 12px 14px 16px;
+}
+#soApp .editorAccordion .accBody .row{ margin-top:0; }
+#soApp .editorAccordion .accBody .row + .row{ margin-top:12px; }
+
+/* Make accordion summaries feel tappable on mobile */
+@media (max-width: 720px){
+  #soApp .editorAccordion summary{ padding: 12px 12px; }
+  #soApp .editorAccordion .accBody{ padding: 12px; }
+}
+
 </style>
 <section id="soApp" class="soApp">
 <header>
@@ -4771,267 +4844,324 @@
   <div class="card">
     <div class="panel">
 
-      <div class="row">
-        <div>
-          <label>Nickname / Display name *</label>
-          <input id="nickname" placeholder="e.g. Silituz / Coco / ..." />
+      <div class="editorAccordion" id="editorAccordion" aria-label="Editor sections">
 
-          <label style="margin-top:10px;">Real name (optional)</label>
-          <input id="realName" placeholder="e.g. René Wirth" />
-          <div class="miniToggle" style="margin-top:8px;">
-            <input id="showRealName" type="checkbox" checked />
-            <label for="showRealName" style="margin:0; cursor:pointer;">Show real name as main name (nickname below)</label>
-          </div>
-        </div>
-        <div>
-          <label>Birthdate (optional)</label>
-          <input id="birthdate" type="date" />
-          <div id="birthdateMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
-          <div id="bdayCountdown" class="bdayCountdown"></div>
-          <div class="zodiacBox">
-            <div class="zodiacItem">
-              <span id="zodiacLine">Zodiac: — | Chinese Element: — | Chinese Zodiac: —</span>
+        <details class="accSec" open>
+          <summary>
+            <span>🪪 Basics &amp; Dates</span>
+            <span class="accSub">Name, birthday, met-on, blood type, languages</span>
+            <span class="accBadge">Required</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+                    <div>
+                      <label>Nickname / Display name *</label>
+                      <input id="nickname" placeholder="e.g. Silituz / Coco / ..." />
+
+                      <label style="margin-top:10px;">Real name (optional)</label>
+                      <input id="realName" placeholder="e.g. René Wirth" />
+                      <div class="miniToggle" style="margin-top:8px;">
+                        <input id="showRealName" type="checkbox" checked />
+                        <label for="showRealName" style="margin:0; cursor:pointer;">Show real name as main name (nickname below)</label>
+                      </div>
+                    </div>
+                    <div>
+                      <label>Birthdate (optional)</label>
+                      <input id="birthdate" type="date" />
+                      <div id="birthdateMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
+                      <div id="bdayCountdown" class="bdayCountdown"></div>
+                      <div class="zodiacBox">
+                        <div class="zodiacItem">
+                          <span id="zodiacLine">Zodiac: — | Chinese Element: — | Chinese Zodiac: —</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div>
+                      <label>Birthplace (optional)</label>
+                      <input id="birthplace" placeholder="e.g. Warsaw, Poland" />
+                    </div>
+                    <div>
+                      <label>Met on (date, optional)</label>
+            <input id="metOn" type="date" />
+                      <div id="metOnMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
+                      <div id="metKnownForLine" class="bdayCountdown"></div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>Birthplace (optional)</label>
-          <input id="birthplace" placeholder="e.g. Warsaw, Poland" />
-        </div>
-        <div>
-          <label>Met on (date, optional)</label>
-<input id="metOn" type="date" />
-          <div id="metOnMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
-          <div id="metKnownForLine" class="bdayCountdown"></div>
-</div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>Current address (optional)</label>
-          <input id="currentAddress" placeholder="e.g. Los Angeles, CA" />
-          <div class="hint">Used for coordinates (auto-geocode) if coordinates are empty.</div>
-        </div>
-        <div>
-          <label>Timezone (IANA) *</label>
-          <input id="timezone" placeholder="e.g. America/Los_Angeles" list="tzlist" />
-          <datalist id="tzlist"></datalist>
-          <div id="tzMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
-          <div class="hint">Examples: <span class="kbd">Europe/Berlin</span>, <span class="kbd">America/Los_Angeles</span>, <span class="kbd">Asia/Tokyo</span></div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>Native language (optional)</label>
-          <input id="nativeLang" placeholder="e.g. Spanish" />
-        </div>
-        <div>
-          <label>Other languages (optional)</label>
-          <input id="otherLangs" placeholder="e.g. English, Russian" />
-        </div>
-        <div>
-          <label>Blood type (optional)</label>
-          <select id="bloodType">
-            <option value="">—</option>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-            <option value="Unknown">Unknown</option>
-          </select>
-          <div class="hint">ABO + Rh factor (e.g. O−). Leave empty if unknown.</div>
-        </div>
-      </div>
-
-
-      
-      <div class="row">
-        <div>
-          <label>Tags (optional)</label>
-          <input id="tags" placeholder="e.g. Juju, Work, Family (comma separated)" />
-          <div class="hint">Used for smart filtering + quick search.</div>
-        </div>
-        <div>
-          <label>Last contact (optional)</label>
-          <input id="lastContact" type="date" />
-        </div>
-        <div>
-          <label>Remind every (days, optional)</label>
-          <input id="remindEvery" type="number" min="0" step="1" placeholder="e.g. 14" />
-          <div class="hint">Shows overdue check‑ins in the dashboard.</div>
-        </div>
-      </div>
-
-<div class="row">
-        <div>
-          <label>Connections (optional)</label>
-          <div class="colorInputRow">
-            <select id="connSelect"></select>
-            <select id="connRelType"></select>
-            <button id="addConnBtn" type="button" class="secondary smallBtn">Add</button>
-          </div>
-          <div id="connPills" class="connPills"></div>
-          <div class="hint">Link friends together (network + quick navigation). You can add/remove anytime.</div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>Image (upload, optional)</label>
-          <input id="imageFile" type="file" accept="image/*" />
-          <div class="hint">Stored locally (compressed). No external hosting needed.</div>
-          <div class="preview" id="imgPreview" style="display:none">
-            <img id="imgPreviewEl" alt="Preview"/>
-            <div class="hint" id="imgPreviewText">—</div>
-          </div>
-        </div>
-        <div>
-          <label>Coordinates (optional)</label>
-          <input id="coords" placeholder="lat, lon (or click on the map)" />
-          <div id="coordsMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
-          <div class="hint">Click on the map to set the location.</div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-                    <label>Notes</label>
-          <div class="notesTabs" id="notesTabs">
-            <button type="button" class="tabBtn active" data-notes-tab="important">🚨 Important</button>
-            <button type="button" class="tabBtn" data-notes-tab="medical">🩺 Medical</button>
-            <button type="button" class="tabBtn" data-notes-tab="work">💼 Work &amp; 🚀 Projects</button>
-            <button type="button" class="tabBtn" data-notes-tab="media">👾 Media</button>
-            <button type="button" class="tabBtn" data-notes-tab="food">🍕 Food &amp; More</button>
-            <button type="button" class="tabBtn" data-notes-tab="other">📦 Other</button>
-            <button type="button" class="tabBtn" data-notes-tab="cycle">🩸 Cycle</button>
-          </div>
-
-          <div class="notesPanels">
-            <textarea id="notes_important" class="notesPanel" data-notes-panel="important" placeholder="Things that are urgent, critical, or should not be forgotten"></textarea>
-            <textarea id="notes_medical" class="notesPanel hidden" data-notes-panel="medical" placeholder="Medical notes (optional): allergies, meds, important health info"></textarea>
-            <textarea id="notes_work" class="notesPanel hidden" data-notes-panel="work" placeholder="Work-related tasks, projects and ideas"></textarea>
-            <textarea id="notes_media" class="notesPanel hidden" data-notes-panel="media" placeholder="Media notes: favorite songs, shows, games, creators, links"></textarea>
-            <textarea id="notes_food" class="notesPanel hidden" data-notes-panel="food" placeholder="Food and drinks, restaurant ideas, places worth trying"></textarea>
-            <textarea id="notes_other" class="notesPanel hidden" data-notes-panel="other" placeholder="Miscellaneous notes"></textarea>
-            <div id="cyclePanel" class="notesPanel hidden cyclePanel" data-notes-panel="cycle">
-              <div class="cycleGrid">
-                <div class="cycleRow">
-                  <div>
-                    <div class="miniLabel">Last period start</div>
-                    <input id="cycleStart" type="date" />
                   </div>
-                  <div>
-                    <div class="miniLabel">Last period end</div>
-                    <input id="cycleEnd" type="date" />
+
+                  <div class="row">
+                    <div>
+                      <label>Native language (optional)</label>
+                      <input id="nativeLang" placeholder="e.g. Spanish" />
+                    </div>
+                    <div>
+                      <label>Other languages (optional)</label>
+                      <input id="otherLangs" placeholder="e.g. English, Russian" />
+                    </div>
+                    <div>
+                      <label>Blood type (optional)</label>
+                      <select id="bloodType">
+                        <option value="">—</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                        <option value="Unknown">Unknown</option>
+                      </select>
+                      <div class="hint">ABO + Rh factor (e.g. O−). Leave empty if unknown.</div>
+                    </div>
                   </div>
-                </div>
-
-                <div class="cycleRow">
-                  <div>
-                    <div class="miniLabel">Cycle length (days)</div>
-                    <input id="cycleLen" type="number" min="15" max="60" step="1" placeholder="28" />
-                  </div>
-                  <div>
-                    <div class="miniLabel">Period length (days)</div>
-                    <input id="periodLen" type="number" min="1" max="15" step="1" placeholder="5" />
-                  </div>
-                </div>
-
-                <div class="cycleActions">
-                  <button type="button" id="cycleAddBtn" class="btn secondary smallBtn">Add 🩸 range</button>
-                  <button type="button" id="cycleClearBtn" class="btn danger smallBtn">Clear</button>
-                </div>
-
-                <div class="cycleHint">
-                  Stored locally per person. Predictions are estimates (not medical advice).
-                  <span class="cycleLegend">
-                    <span class="leg legPeriod">🩸 period</span>
-                    <span class="leg legPred">🩸 predicted</span>
-                    <span class="leg legFert">🌿 fertile</span>
-                    <span class="leg legOvu">⭐ ovulation</span>
-                  </span>
-                </div>
-
-                <div class="cycleSummary" id="cycleSummary"></div>
-                <div class="cycleList" id="cycleList"></div>
-
-                <div class="cycleCalWrap">
-                  <div class="cycleCalHdr">
-                    <button type="button" class="btn secondary smallBtn" id="cyclePrev" title="Previous month">‹</button>
-                    <div id="cycleMonthLabel" class="cycleMonthLabel">—</div>
-                    <button type="button" class="btn secondary smallBtn" id="cycleNext" title="Next month">›</button>
-                  </div>
-                  <div class="cycleWeekdays">
-                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-                  </div>
-                  <div class="cycleCal" id="cycleCal"></div>
-                </div>
-
-                <div class="hint">Tip: click days in the calendar to pick start/end.</div>
-              </div>
-            </div>
 
           </div>
-        </div>
-      </div>
+        </details>
 
-      <div class="row">
-        <div>
-          <label>Eye Color</label>
-          <div class="colorInputRow eyeColorRow">
-            <input id="eyeColorA" type="text" list="eyeColorList" placeholder="Primary (e.g. blue, #3b82f6)" />
-            <select id="eyeMode" title="Mix style">
-              <option value="solid">Solid</option>
-              <option value="blend">Blend</option>
-              <option value="split">Split</option>
-              <option value="speckle">Speckled</option>
-              <option value="ring">Ring</option>
-            </select>
-            <input id="eyeColorB" type="text" list="eyeColorList" placeholder="Secondary (optional)" />
-            <button id="eyeClearBtn" type="button" class="secondary smallBtn">Clear</button>
+        <details class="accSec">
+          <summary>
+            <span>📍 Location &amp; Timezone</span>
+            <span class="accSub">Address, timezone, coordinates</span>
+            <span class="accBadge">Required</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+                    <div>
+                      <label>Current address (optional)</label>
+                      <input id="currentAddress" placeholder="e.g. Los Angeles, CA" />
+                      <div class="hint">Used for coordinates (auto-geocode) if coordinates are empty.</div>
+                    </div>
+                    <div>
+                      <label>Timezone (IANA) *</label>
+                      <input id="timezone" placeholder="e.g. America/Los_Angeles" list="tzlist" />
+                      <datalist id="tzlist"></datalist>
+                      <div id="tzMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
+                      <div class="hint">Examples: <span class="kbd">Europe/Berlin</span>, <span class="kbd">America/Los_Angeles</span>, <span class="kbd">Asia/Tokyo</span></div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+<div>
+                      <label>Coordinates (optional)</label>
+                      <input id="coords" placeholder="lat, lon (or click on the map)" />
+                      <div id="coordsMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
+                      <div class="hint">Click on the map to set the location.</div>
+                    </div>
+                  </div>
+
           </div>
-          <div id="eyePreview" class="eyePreview"></div>
-          <div class="hint">Enter 1 or 2 colors. If you enter a 2nd color and keep “Solid”, we automatically treat it as “Blend”.</div>
-          <datalist id="eyeColorList">
-            <option value="brown"></option>
-            <option value="blue"></option>
-            <option value="green"></option>
-            <option value="hazel"></option>
-            <option value="gray"></option>
-            <option value="amber"></option>
-            <option value="black"></option>
-            <option value="turquoise"></option>
-            <option value="gold"></option>
-            <option value="#3b82f6"></option>
-            <option value="#10b981"></option>
-            <option value="#fbbf24"></option>
-            <option value="#8b5a2b"></option>
-          </datalist>
-        </div>
-      </div>
-      <div class="row">
-        <div>
-          <label>Favorite Colors</label>
-          <div class="colorInputRow">
-            <input id="favColorInput" type="text" placeholder="Add a color (e.g. turquoise, gold, #ff8800)" />
-            <button id="addFavColorBtn" type="button" class="secondary smallBtn">Add</button>
+        </details>
+
+        <details class="accSec">
+          <summary>
+            <span>🖼️ Picture</span>
+            <span class="accSub">Photo</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+                    <div>
+                      <label>Image (upload, optional)</label>
+                      <input id="imageFile" type="file" accept="image/*" />
+                      <div class="hint">Stored locally (compressed). No external hosting needed.</div>
+                      <div class="preview" id="imgPreview" style="display:none">
+                        <img id="imgPreviewEl" alt="Preview"/>
+                        <div class="hint" id="imgPreviewText">—</div>
+                      </div>
+                    </div>
+                    
+                  </div>
           </div>
-          <div id="favColorsPills" class="favColorsPills"></div>
-          <div class="hint">Up to 6 colors.</div>
-        </div>
+        </details>
+
+        <details class="accSec">
+          <summary>
+            <span>🔗 Connections &amp; Tags</span>
+            <span class="accSub">Connections, tags, reminders</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+                    <div>
+                      <label>Connections (optional)</label>
+                      <div class="colorInputRow">
+                        <select id="connSelect"></select>
+                        <select id="connRelType"></select>
+                        <button id="addConnBtn" type="button" class="secondary smallBtn">Add</button>
+                      </div>
+                      <div id="connPills" class="connPills"></div>
+                      <div class="hint">Connections, tags, reminders (network + quick navigation). You can add/remove anytime.</div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div>
+                      <label>Tags (optional)</label>
+                      <input id="tags" placeholder="e.g. Juju, Work, Family (comma separated)" />
+                      <div class="hint">Used for smart filtering + quick search.</div>
+                    </div>
+                    <div>
+                      <label>Last contact (optional)</label>
+                      <input id="lastContact" type="date" />
+                    </div>
+                    <div>
+                      <label>Remind every (days, optional)</label>
+                      <input id="remindEvery" type="number" min="0" step="1" placeholder="e.g. 14" />
+                      <div class="hint">Shows overdue check‑ins in the dashboard.</div>
+                    </div>
+                  </div>
+
+          </div>
+        </details>
+
+        <details class="accSec">
+          <summary>
+            <span>🎨 Visuell</span>
+            <span class="accSub">Eye color, favorite colors</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+                    <div>
+                      <label>Eye Color</label>
+                      <div class="colorInputRow eyeColorRow">
+                        <input id="eyeColorA" type="text" list="eyeColorList" placeholder="Primary (e.g. blue, #3b82f6)" />
+                        <select id="eyeMode" title="Mix style">
+                          <option value="solid">Solid</option>
+                          <option value="blend">Blend</option>
+                          <option value="split">Split</option>
+                          <option value="speckle">Speckled</option>
+                          <option value="ring">Ring</option>
+                        </select>
+                        <input id="eyeColorB" type="text" list="eyeColorList" placeholder="Secondary (optional)" />
+                        <button id="eyeClearBtn" type="button" class="secondary smallBtn">Clear</button>
+                      </div>
+                      <div id="eyePreview" class="eyePreview"></div>
+                      <div class="hint">Enter 1 or 2 colors. If you enter a 2nd color and keep “Solid”, we automatically treat it as “Blend”.</div>
+                      <datalist id="eyeColorList">
+                        <option value="brown"></option>
+                        <option value="blue"></option>
+                        <option value="green"></option>
+                        <option value="hazel"></option>
+                        <option value="gray"></option>
+                        <option value="amber"></option>
+                        <option value="black"></option>
+                        <option value="turquoise"></option>
+                        <option value="gold"></option>
+                        <option value="#3b82f6"></option>
+                        <option value="#10b981"></option>
+                        <option value="#fbbf24"></option>
+                        <option value="#8b5a2b"></option>
+                      </datalist>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div>
+                      <label>Favorite Colors</label>
+                      <div class="colorInputRow">
+                        <input id="favColorInput" type="text" placeholder="Add a color (e.g. turquoise, gold, #ff8800)" />
+                        <button id="addFavColorBtn" type="button" class="secondary smallBtn">Add</button>
+                      </div>
+                      <div id="favColorsPills" class="favColorsPills"></div>
+                      <div class="hint">Up to 6 colors.</div>
+                    </div>
+                  </div>
+          </div>
+        </details>
+
+        <details class="accSec">
+          <summary>
+            <span>📝 Notes</span>
+            <span class="accSub">Important, medical, media…</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+                    <div>
+                                <label>Notes</label>
+                      <div class="notesTabs" id="notesTabs">
+                        <button type="button" class="tabBtn active" data-notes-tab="important">🚨 Important</button>
+                        <button type="button" class="tabBtn" data-notes-tab="medical">🩺 Medical</button>
+                        <button type="button" class="tabBtn" data-notes-tab="work">💼 Work &amp; 🚀 Projects</button>
+                        <button type="button" class="tabBtn" data-notes-tab="media">👾 Media</button>
+                        <button type="button" class="tabBtn" data-notes-tab="food">🍕 Food &amp; More</button>
+                        <button type="button" class="tabBtn" data-notes-tab="other">📦 Other</button>
+                        <button type="button" class="tabBtn" data-notes-tab="cycle">🩸 Cycle</button>
+                      </div>
+
+                      <div class="notesPanels">
+                        <textarea id="notes_important" class="notesPanel" data-notes-panel="important" placeholder="Things that are urgent, critical, or should not be forgotten"></textarea>
+                        <textarea id="notes_medical" class="notesPanel hidden" data-notes-panel="medical" placeholder="Medical notes (optional): allergies, meds, important health info"></textarea>
+                        <textarea id="notes_work" class="notesPanel hidden" data-notes-panel="work" placeholder="Work-related tasks, projects and ideas"></textarea>
+                        <textarea id="notes_media" class="notesPanel hidden" data-notes-panel="media" placeholder="Media notes: favorite songs, shows, games, creators, links"></textarea>
+                        <textarea id="notes_food" class="notesPanel hidden" data-notes-panel="food" placeholder="Food and drinks, restaurant ideas, places worth trying"></textarea>
+                        <textarea id="notes_other" class="notesPanel hidden" data-notes-panel="other" placeholder="Miscellaneous notes"></textarea>
+                        <div id="cyclePanel" class="notesPanel hidden cyclePanel" data-notes-panel="cycle">
+                          <div class="cycleGrid">
+                            <div class="cycleRow">
+                              <div>
+                                <div class="miniLabel">Last period start</div>
+                                <input id="cycleStart" type="date" />
+                              </div>
+                              <div>
+                                <div class="miniLabel">Last period end</div>
+                                <input id="cycleEnd" type="date" />
+                              </div>
+                            </div>
+
+                            <div class="cycleRow">
+                              <div>
+                                <div class="miniLabel">Cycle length (days)</div>
+                                <input id="cycleLen" type="number" min="15" max="60" step="1" placeholder="28" />
+                              </div>
+                              <div>
+                                <div class="miniLabel">Period length (days)</div>
+                                <input id="periodLen" type="number" min="1" max="15" step="1" placeholder="5" />
+                              </div>
+                            </div>
+
+                            <div class="cycleActions">
+                              <button type="button" id="cycleAddBtn" class="btn secondary smallBtn">Add 🩸 range</button>
+                              <button type="button" id="cycleClearBtn" class="btn danger smallBtn">Clear</button>
+                            </div>
+
+                            <div class="cycleHint">
+                              Stored locally per person. Predictions are estimates (not medical advice).
+                              <span class="cycleLegend">
+                                <span class="leg legPeriod">🩸 period</span>
+                                <span class="leg legPred">🩸 predicted</span>
+                                <span class="leg legFert">🌿 fertile</span>
+                                <span class="leg legOvu">⭐ ovulation</span>
+                              </span>
+                            </div>
+
+                            <div class="cycleSummary" id="cycleSummary"></div>
+                            <div class="cycleList" id="cycleList"></div>
+
+                            <div class="cycleCalWrap">
+                              <div class="cycleCalHdr">
+                                <button type="button" class="btn secondary smallBtn" id="cyclePrev" title="Previous month">‹</button>
+                                <div id="cycleMonthLabel" class="cycleMonthLabel">—</div>
+                                <button type="button" class="btn secondary smallBtn" id="cycleNext" title="Next month">›</button>
+                              </div>
+                              <div class="cycleWeekdays">
+                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                              </div>
+                              <div class="cycleCal" id="cycleCal"></div>
+                            </div>
+
+                            <div class="hint">Tip: click days in the calendar to pick start/end.</div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+          </div>
+        </details>
+
       </div>
 
-
-
-      <div class="saveStateRow" id="saveStateRow">
+<div class="saveStateRow" id="saveStateRow">
         <span id="saveStatePill" class="saveStatePill saved">Saved ✓</span>
         <button id="undoEditBtn" type="button" class="secondary smallBtn" hidden>Undo</button>
       </div>
@@ -10417,7 +10547,29 @@ const birthdayCard = entry.birthdate ? (()=>{
     }
   }
 
-  // ==============================
+  
+
+  function initEditorAccordion(){
+    const acc = $("editorAccordion");
+    if(!acc || acc.__bound) return;
+    acc.__bound = true;
+
+    const sections = Array.from(acc.querySelectorAll("details"));
+    if(!sections.length) return;
+
+    sections.forEach((d)=>{
+      d.addEventListener("toggle", ()=>{
+        if(!d.open) return;
+        // Accordion behavior: only one open at a time
+        sections.forEach((o)=>{ if(o !== d) o.open = false; });
+
+        // Keep the opened header in view (nice on mobile)
+        try{ d.scrollIntoView({ block:"nearest", behavior:"smooth" }); }catch{}
+      });
+    });
+  }
+
+// ==============================
   // Profile: Smooth jump to edit sections (click card titles)
   // ==============================
   function bindProfileJumpLinks(){
@@ -12470,6 +12622,8 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
   // Wire up
   // ==============================
   try{ bindDirtyTracking(); }catch{}
+  try{ initEditorAccordion(); }catch{}
+
   try{ setFormDirty(false); }catch{}
 
   try{ initUnsavedModal(); }catch{}
