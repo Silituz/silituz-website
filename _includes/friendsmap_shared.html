@@ -120,7 +120,7 @@
     #soApp .zodiacItem b{color:var(--text)}
 
     #soApp .btns{display:flex; gap:10px; flex-wrap:wrap}
-    #soApp button{
+    #soApp button, #soApp .btnLike{
       border:none;
       border-radius: 999px;
       padding:10px 14px;
@@ -130,10 +130,27 @@
       transition: .15s ease;
       border:1px solid rgba(122,167,255,.28);
     }
-    #soApp button:hover{transform: translateY(-1px); background: rgba(122,167,255,.24)}
-    #soApp button.secondary{background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10)}
-    #soApp button.danger{background: rgba(255,107,107,.16); border-color: rgba(255,107,107,.28)}
+    #soApp .btnLike{
+      user-select:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    #soApp button:hover, #soApp .btnLike:hover{transform: translateY(-1px); background: rgba(122,167,255,.24)}
+    #soApp button.secondary, #soApp .btnLike.secondary{background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10)}
+    #soApp button.danger, #soApp .btnLike.danger{background: rgba(255,107,107,.16); border-color: rgba(255,107,107,.28)}
     #soApp button:disabled{opacity:.5; cursor:not-allowed; transform:none}
+
+    /* Hidden file input (keep in DOM; Safari/embedded pages can block click when display:none) */
+    #soApp .soHiddenFile{
+      position: fixed;
+      left: -9999px;
+      top: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
 
     #soApp .pill{
       padding:6px 10px;
@@ -198,6 +215,18 @@
     #soApp .nameLine{ display:flex; align-items:center; gap:6px; min-width:0; }
     #soApp .nameText{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     #soApp .nameIcons{ display:inline-flex; align-items:center; gap:6px; flex:0 0 auto; }
+
+    #soApp .listHeart{
+      display:inline-flex;
+      width: 18px;
+      justify-content:center;
+      margin-right: 0;
+      font-size: 14px;
+      line-height: 1;
+      transform: translateY(1px);
+      filter: drop-shadow(0 0 1px rgba(0,0,0,.35));
+      flex: 0 0 auto;
+    }
     #soApp .starInline, #soApp .diamondInline{ margin-left:0 !important; }
     #soApp .profileTitle .pheart{ margin-right:6px; }
 
@@ -919,9 +948,36 @@
       background: rgba(5,10,25,.85);
       font-size:12px;
       letter-spacing:.1px;
-      color: var(--emerald); /* emerald for readability */
+      color: var(--text);
       user-select:none;
+      display:inline-block;
+      line-height:1.25;
     }
+    #soApp .mapLegend .legDot{
+      display:inline-block;
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      margin-right:6px;
+      vertical-align:-1px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.35), 0 0 10px rgba(0,0,0,.25);
+    }
+
+    #soApp .mapLegend .legHeart{
+      display:inline-flex;
+      width: 16px;
+      justify-content:center;
+      margin-right:6px;
+      font-size: 14px;
+      line-height: 1;
+      vertical-align: -1px;
+      filter: drop-shadow(0 0 1px rgba(0,0,0,.35)) drop-shadow(0 0 8px rgba(0,0,0,.25));
+    }
+    #soApp .mapLegend .lg{ background:#10b981; }
+    #soApp .mapLegend .ly{ background:#fbbf24; }
+    #soApp .mapLegend .lr{ background:#ff6b6b; }
+    #soApp .mapLegend .sep{ margin:0 8px; opacity:.78; }
+    #soApp .mapLegend .legMoon{ margin-left:2px; }
 
 
     /* =============================
@@ -4362,6 +4418,333 @@
   font-weight:800;
 }
 
+
+/* =========================================================
+   UI UPGRADE (2026-03-02)
+   - Dashboard row
+   - Right view tabs (Map | Card)
+   - Advanced filters popover
+   - Tags + check-in reminders
+   - Command menu (Ctrl/Cmd + K)
+   ========================================================= */
+
+#soApp .dash{
+  padding:10px 12px 6px;
+  border-top:1px solid rgba(255,255,255,.06);
+  background: rgba(0,0,0,.08);
+}
+#soApp .dashRow{
+  display:flex;
+  gap:10px;
+  overflow:auto;
+  padding-bottom:6px;
+  scrollbar-width: thin;
+}
+#soApp .dashCard{
+  flex:0 0 auto;
+  min-width: 210px;
+  max-width: 260px;
+  padding:10px 10px;
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(10,14,24,.58);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  cursor:pointer;
+  user-select:none;
+  transition: transform .12s ease, border-color .12s ease, background .12s ease;
+}
+#soApp .dashCard:hover{ transform: translateY(-1px); border-color: rgba(64,224,208,.35); background: rgba(12,18,30,.68); }
+#soApp .dashK{
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color: var(--muted);
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+#soApp .dashV{
+  margin-top:6px;
+  font-size:13px;
+  color: var(--text);
+  font-weight:800;
+  line-height:1.25;
+}
+#soApp .dashSub{
+  margin-top:4px;
+  font-size:12px;
+  color: var(--muted);
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#soApp .dashBadge{
+  font-size:12px;
+  font-weight:900;
+  padding:2px 8px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
+  color: var(--text);
+}
+
+#soApp .filterWrap{
+  position: relative;
+}
+#soApp .filterPopover{
+  position:absolute;
+  top: calc(100% + 8px);
+  right: 12px;
+  width: min(520px, calc(100vw - 24px));
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(8,12,20,.92);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 60px rgba(0,0,0,.55);
+  padding: 12px;
+  z-index: 20;
+  display:none;
+}
+#soApp .filterPopover.open{ display:block; }
+#soApp .fpGrid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 700px){
+  #soApp .fpGrid{ grid-template-columns: 1fr; }
+}
+#soApp .fpTitle{
+  font-weight:900;
+  color: var(--text);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+#soApp .fpGroup{
+  padding:10px;
+  border-radius: 12px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.18);
+}
+#soApp .fpGroup label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin: 8px 0;
+  cursor:pointer;
+  font-size: 13px;
+  color: var(--text);
+}
+
+#soApp .fpChecks{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 4px 10px;
+}
+#soApp .fpChecks label{ margin: 4px 0; }
+@media (min-width: 560px){
+  #soApp .fpChecks{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+#soApp .fpActions{
+  display:flex;
+  justify-content:flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+#soApp .fpGroup input[type="text"]{
+  width:100%;
+  margin-top:6px;
+  padding: 10px 10px;
+  border-radius: 12px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.22);
+  color: var(--text);
+  outline:none;
+}
+#soApp .fpTags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top: 10px;
+}
+#soApp .tagPill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
+  color: var(--text);
+  font-weight:800;
+  font-size:12px;
+  cursor:pointer;
+  user-select:none;
+}
+#soApp .tagPill.on{
+  border-color: rgba(64,224,208,.45);
+  box-shadow: 0 0 0 3px rgba(64,224,208,.12);
+}
+#soApp .tagPill .x{ opacity:.75; font-weight:900; }
+
+#soApp .tagRow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top: 6px;
+}
+#soApp .tagMini{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.14);
+  color: var(--muted);
+  font-weight:800;
+  font-size: 11px;
+  white-space:nowrap;
+  cursor:pointer;
+}
+
+#soApp .card.rightView{
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+#soApp #mapView, #soApp #profileView{
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+#soApp .rightTabs{
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display:flex;
+  gap:8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  background: rgba(8,12,20,.80);
+  backdrop-filter: blur(12px);
+}
+#soApp .rtTab{
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor:pointer;
+  font-weight:900;
+  font-size: 13px;
+}
+#soApp .rtTab.active{
+  border-color: rgba(64,224,208,.45);
+  box-shadow: 0 0 0 3px rgba(64,224,208,.12);
+}
+
+#soApp .cmdk{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display:none;
+}
+#soApp .cmdk.open{ display:block; }
+#soApp .cmdkOverlay{
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,.55);
+}
+#soApp .cmdkPanel{
+  position:absolute;
+  left: 50%;
+  top: 12%;
+  transform: translateX(-50%);
+  width: min(720px, calc(100vw - 28px));
+  border-radius: 16px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(8,12,20,.92);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 90px rgba(0,0,0,.65);
+  overflow:hidden;
+}
+#soApp .cmdkHeader{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+#soApp .cmdkHeader input{
+  flex: 1 1 auto;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.22);
+  color: var(--text);
+  outline:none;
+  font-weight:800;
+}
+#soApp .cmdkHint{
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight:800;
+}
+#soApp .cmdkList{
+  max-height: 56vh;
+  overflow:auto;
+  padding: 8px;
+}
+#soApp .cmdkItem{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 10px 10px;
+  border-radius: 12px;
+  cursor:pointer;
+  border:1px solid transparent;
+}
+#soApp .cmdkItem:hover{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.08);
+}
+#soApp .cmdkLeft{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+#soApp .cmdkTitle{
+  font-weight:900;
+  color: var(--text);
+  font-size: 13px;
+}
+#soApp .cmdkSub{
+  font-weight:800;
+  color: var(--muted);
+  font-size: 12px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#soApp .cmdkKbd{
+  font-size: 12px;
+  font-weight:900;
+  color: var(--text);
+  padding: 4px 8px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+}
+
 </style>
 <section id="soApp" class="soApp">
 <header>
@@ -4469,7 +4852,25 @@
       </div>
 
 
+      
       <div class="row">
+        <div>
+          <label>Tags (optional)</label>
+          <input id="tags" placeholder="e.g. Juju, Work, Family (comma separated)" />
+          <div class="hint">Used for smart filtering + quick search.</div>
+        </div>
+        <div>
+          <label>Last contact (optional)</label>
+          <input id="lastContact" type="date" />
+        </div>
+        <div>
+          <label>Remind every (days, optional)</label>
+          <input id="remindEvery" type="number" min="0" step="1" placeholder="e.g. 14" />
+          <div class="hint">Shows overdue check‑ins in the dashboard.</div>
+        </div>
+      </div>
+
+<div class="row">
         <div>
           <label>Connections (optional)</label>
           <div class="colorInputRow">
@@ -4654,14 +5055,45 @@
   </div>
 
 
+  <div class="filterWrap">
   <div class="filterBar" id="filterBar" aria-label="List filters">
     <button class="fChip active" data-filter="all" type="button">All</button>
     <button class="fChip" data-filter="fav" type="button">⭐ Favorites</button>
-    <button class="fChip" data-filter="now" type="button">💚 Now</button>
-    <button class="fChip" data-filter="maybe" type="button">💛 Maybe</button>
-    <button class="fChip" data-filter="bday" type="button">🎂 Birthday</button>
+<button class="fChip" data-filter="bday" type="button">🎂 Birthday</button>
     <button class="fChip" data-filter="friend" type="button">🎈 Friendship</button>
+    <button id="moreFiltersBtn" class="fChip" type="button" title="More filters">⋯ More</button>
   </div>
+
+  <div class="filterPopover" id="filterPopover" aria-hidden="true">
+    <div class="fpGrid">
+      <div class="fpGroup">
+        <div class="fpTitle">Smart Filters</div>
+        <div class="fpChecks">
+          <label><input id="afHasNotes" type="checkbox" /> Has notes</label>
+          <label><input id="afHasImage" type="checkbox" /> Has image</label>
+          <label><input id="afHasAddress" type="checkbox" /> Has address</label>
+          <label><input id="afMissingTZ" type="checkbox" /> Missing timezone</label>
+        </div>
+        <div class="fpActions">
+          <button id="afClearBtn" type="button" class="secondary smallBtn">Clear</button>
+        </div>
+      </div>
+
+      <div class="fpGroup">
+        <div class="fpTitle">Tags</div>
+        <input id="afTagSearch" type="text" placeholder="Type to find a tag…" />
+        <div class="fpTags" id="afTags"></div>
+        <div class="hint" style="margin-top:10px;">Tip: click a tag in the list to filter instantly.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="dash" id="dash" aria-label="Dashboard">
+  <div class="dashRow" id="dashRow"></div>
+</div>
+
 
 <!-- Alphabet helper (A–Z) -->
     <div class="alphaBar" id="alpha"></div>
@@ -4671,12 +5103,12 @@
     <div class="footer-tools">
       <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
         <div class="btns">
-          <button id="exportBtn" class="secondary">Export JSON</button>
-          <button id="importBtn" class="secondary">Import JSON (file)</button>
-          <button id="clusterToggleBtn" class="secondary">🧷 Cluster: On</button>
+          <button id="exportBtn" type="button" class="secondary">Export JSON</button>
+          <label id="importBtn" class="btnLike secondary" for="importFile" role="button" tabindex="0">Import JSON (file)</label>
+          <button id="clusterToggleBtn" type="button" class="secondary">🧷 Cluster: On</button>
           
-          <button id="myLocBtn" class="secondary" title="Show my current location marker">📍 My location</button>
-          <button id="clearAllBtn" class="danger">Delete all</button>
+          <button id="myLocBtn" type="button" class="secondary" title="Show my current location marker">📍 My location</button>
+          <button id="clearAllBtn" type="button" class="danger">Delete all</button>
         </div>
 
         <div class="toggleRow">
@@ -4691,6 +5123,7 @@
           <label for="notesLock" style="margin:0; cursor:pointer;">
             🔒 Privacy mode (hide notes + private fields)
           </label>
+          <button id="setPinBtn" type="button" class="secondary smallBtn" title="Set / change PIN (optional)">Set PIN</button>
         </div>
 
 
@@ -4710,11 +5143,16 @@
 </div>
 
       <!-- Hidden file input for JSON import -->
-      <input id="importFile" type="file" accept="application/json" style="display:none" />
+      <input id="importFile" class="soHiddenFile" type="file" accept="application/json,.json" />
     </div>
   </div>
 
   <div class="card rightView">
+  <div class="rightTabs" role="tablist" aria-label="Right view tabs">
+    <button id="tabMap" class="rtTab active" type="button" role="tab" aria-selected="true">🗺️ Map</button>
+    <button id="tabCard" class="rtTab" type="button" role="tab" aria-selected="false">🪪 Card</button>
+  </div>
+
     <div id="mapView">
       <div id="map"></div>
     </div>
@@ -5613,68 +6051,6 @@ function fmtDate(iso){
     const d = new Date(p.year, p.month-1, p.day);
     if(Number.isNaN(d.getTime())) return String(iso);
     return d.toLocaleDateString(undefined, {year:"numeric", month:"2-digit", day:"2-digit"});
-  }
-
-  // ==============================
-  // Local time hearts (based on IANA timezone)
-  // Rules:
-  // 02:00-05:59 -> ❤️ (red)
-  // 06:00-22:59 -> 💛 (yellow)
-  // 07:00-21:59 -> 💚 (green)
-  // otherwise -> ❤️
-  // ==============================
-  function getLocalHour(tz){
-    if(!tz) return null;
-    try{
-      const dtf = new Intl.DateTimeFormat("en-US", { timeZone: tz, hour: "2-digit", hour12: false });
-      const parts = dtf.formatToParts(new Date());
-      const h = parts.find(p=>p.type==="hour")?.value;
-      const hour = Number(h);
-      return Number.isFinite(hour) ? hour : null;
-    }catch{
-      return null;
-    }
-  }
-
-  function getLocalSeconds(tz){
-    if(!tz) return null;
-    try{
-      const dtf = new Intl.DateTimeFormat("en-US", {
-        timeZone: tz,
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false
-      });
-      const parts = dtf.formatToParts(new Date());
-      const h0 = Number(parts.find(p=>p.type==="hour")?.value);
-      const m = Number(parts.find(p=>p.type==="minute")?.value);
-      const s = Number(parts.find(p=>p.type==="second")?.value);
-      const h = (h0 === 24 ? 0 : h0);
-      if(!Number.isFinite(h) || !Number.isFinite(m) || !Number.isFinite(s)) return null;
-      return h*3600 + m*60 + s;
-    }catch{
-      return null;
-    }
-  }
-
-    function heartForTimezone(tz){
-    const sec = getLocalSeconds(tz);
-    if(sec === null) return "🤍";
-
-    // ❤️ 02:00:00 – 05:59:59
-    if(sec >= 2*3600 && sec <= 5*3600 + 59*60 + 59) return "❤️";
-
-    // 💛 06:00:00 – 08:59:59
-    if(sec >= 6*3600 && sec <= 8*3600 + 59*60 + 59) return "💛";
-
-    // 💚 09:00:00 – 21:59:59
-    if(sec >= 9*3600 && sec <= 21*3600 + 59*60 + 59) return "💚";
-
-    // 💛 22:00:00 – 01:59:59 (wraps over midnight)
-    if(sec >= 22*3600 || sec <= 1*3600 + 59*60 + 59) return "💛";
-
-    return "🤍";
   }
 
   // ==============================
@@ -6864,6 +7240,7 @@ function setSpecial(id){
 }
   let searchQuery = "";
   let activeFilter = "all"; // all | fav | now | maybe | bday | friend
+  let advFilters = { hasNotes:false, hasImage:false, hasAddress:false, missingTZ:false, tags:[] };
   let _markerColorCounter = 0;
 
   function load(){
@@ -6901,6 +7278,21 @@ function setSpecial(id){
         .filter(Boolean)
         .slice(0,6);
 
+      // normalize tags
+      if(!Array.isArray(e.tags)){
+        if(typeof e.tags === "string"){
+          e.tags = normalizeTagsInput(e.tags);
+        }else{
+          e.tags = [];
+        }
+      }else{
+        e.tags = e.tags.map(t=>String(t||"").trim()).filter(Boolean).slice(0,12);
+      }
+
+      // normalize check-in fields
+      e.lastContact = e.lastContact ? String(e.lastContact).trim() : "";
+      const re = Number(e.remindEveryDays);
+      e.remindEveryDays = Number.isFinite(re) ? Math.max(0, Math.floor(re)) : 0;
 
       // normalize eye color
       e.eye = normalizeEye(e.eye);
@@ -6939,6 +7331,63 @@ e.fav = !!e.fav;
   // ==============================
   // Notes Lock (hide/show notes in UI)
   // ==============================
+  const PRIVACY_PIN_KEY = "friendsmap_privacy_pin_hash_v1";
+
+  async function sha256Hex(str){
+    try{
+      const enc = new TextEncoder();
+      const buf = await crypto.subtle.digest("SHA-256", enc.encode(String(str||"")));
+      const arr = Array.from(new Uint8Array(buf));
+      return arr.map(b=>b.toString(16).padStart(2,"0")).join("");
+    }catch{
+      // Fallback (not cryptographically strong) – better than plain text
+      let h = 0;
+      const s = String(str||"");
+      for(let i=0;i<s.length;i++){ h = ((h<<5)-h) + s.charCodeAt(i); h |= 0; }
+      return "x"+String(h);
+    }
+  }
+
+  function getPrivacyPinHash(){
+    try{
+      const v = localStorage.getItem(PRIVACY_PIN_KEY);
+      return v ? String(v) : "";
+    }catch{ return ""; }
+  }
+  function setPrivacyPinHash(hash){
+    try{
+      if(hash) localStorage.setItem(PRIVACY_PIN_KEY, String(hash));
+      else localStorage.removeItem(PRIVACY_PIN_KEY);
+    }catch{}
+  }
+
+  async function promptSetPrivacyPin(){
+    const pin = prompt("Set a privacy PIN (4–10 digits).\n\nThis PIN will be required when turning Privacy mode OFF.", "") || "";
+    const clean = pin.trim();
+    if(!/^[0-9]{4,10}$/.test(clean)){
+      toast("PIN must be 4–10 digits");
+      return;
+    }
+    const confirmPin = prompt("Confirm PIN:", "") || "";
+    if(confirmPin.trim() !== clean){
+      toast("PIN did not match");
+      return;
+    }
+    const hash = await sha256Hex(clean);
+    setPrivacyPinHash(hash);
+    toast("Privacy PIN saved ✅");
+  }
+
+  async function verifyPrivacyPin(){
+    const hash = getPrivacyPinHash();
+    if(!hash) return true;
+    const pin = prompt("Enter privacy PIN to show notes:", "") || "";
+    const h = await sha256Hex(pin.trim());
+    const ok = (h === hash);
+    if(!ok) toast("Wrong PIN ❌");
+    return ok;
+  }
+
   function setNotesHidden(v){
     notesHidden = !!v;
     localStorage.setItem(NOTES_LOCK_KEY, notesHidden ? "1" : "0");
@@ -7611,6 +8060,27 @@ e.fav = !!e.fav;
     return String(s||"").trim().slice(0, 40);
   }
 
+  function normalizeTagsInput(raw){
+    const s = String(raw||"").trim();
+    if(!s) return [];
+    // split by comma, semicolon, or newline
+    const parts = s.split(/[,;\n]/g).map(t=>String(t||"").trim()).filter(Boolean);
+    // keep order, dedupe (case-insensitive)
+    const seen = new Set();
+    const out = [];
+    for(const p of parts){
+      const clean = p.replace(/^#/, "").trim().slice(0, 24);
+      if(!clean) continue;
+      const key = clean.toLowerCase();
+      if(seen.has(key)) continue;
+      seen.add(key);
+      out.push(clean);
+      if(out.length >= 12) break;
+    }
+    return out;
+  }
+
+
   function resolveToRGB(colorStr){
     // returns [r,g,b] or null
     const test = document.createElement("span");
@@ -7654,6 +8124,24 @@ e.fav = !!e.fav;
     if(arr.length === 0) return "";
     const pills = arr.map(colorPillHTML).join(" ");
     return `<div class="profileCard"><div class="k">Favorite Colors</div><div class="v"><div class="favColorsInline">${pills}</div></div></div>`;
+  }
+
+  function tagsCardHTML(tags){
+    const arr = Array.isArray(tags) ? tags.map(t=>String(t||"").trim()).filter(Boolean).slice(0,12) : [];
+    if(arr.length === 0) return "";
+    const pills = arr.map(t=>`<span class="tagPill on" data-tag="${escapeHTML(t)}">#${escapeHTML(t)}</span>`).join(" ");
+    return `<div class="profileCard"><div class="k">Tags</div><div class="v"><div class="fpTags">${pills}</div></div></div>`;
+  }
+
+  function checkinCardHTML(lastContactISO, remindEveryDays){
+    const lc = String(lastContactISO||"").trim();
+    const r = Number(remindEveryDays||0);
+    if(!lc && !r) return "";
+    const last = lc ? fmtDate(lc) : "—";
+    const every = r ? `Every ${r} day${r===1?"":"s"}` : "";
+    const od = (lc && r) ? calcOverdueDays(lc, r) : 0;
+    const extra = (od > 0) ? ` · overdue by ${od}d` : "";
+    return `<div class="profileCard"><div class="k">Check‑in</div><div class="v">${escapeHTML(last)}${escapeHTML(extra)}</div>${every ? `<div class="wdDesc">${escapeHTML(every)}</div>` : ""}</div>`;
   }
 
 function renderFavColorsPills(container, colors, { removable=false }={}){
@@ -8479,8 +8967,15 @@ function refreshMarkerPopups(){
 const mapLegend = L.control({ position: "bottomright" });
 mapLegend.onAdd = function(){
   const div = L.DomUtil.create("div", "mapLegend");
-  div.innerHTML = `💚 good time · 💛 maybe · ❤️ sleeping · 🌘 = night`;
-  return div;
+  div.innerHTML = `
+    <span class="legHeart" title="Good time">💚</span> Good time
+    <span class="sep">•</span>
+    <span class="legHeart" title="Maybe">💛</span> Maybe
+    <span class="sep">•</span>
+    <span class="legHeart" title="Sleeping">❤️</span> Sleeping
+    <span class="sep">•</span>
+    <span class="legMoon">🌘</span> Night
+  `;  return div;
 };
 mapLegend.addTo(map);
 
@@ -8607,7 +9102,7 @@ setInterval(updateNightLayer, 300000); // was 30s; 5min is plenty and lighter
     maxClusterRadius: 55,
     chunkedLoading: true,
     iconCreateFunction: function(cluster){
-      // Color logic:
+      // Color logic (timezone-based):
       // - single color if only one status
       // - 2-color or 3-color split if mixed
       const kids = cluster.getAllChildMarkers();
@@ -8848,9 +9343,7 @@ async function geocodeAddress(addr){
 
     return `
       <div class="popup popup-compact" data-entryid="${escapeHTML(entry.id)}">
-        <div class="pname">
-          <span class="pheart js-heart" data-tz="${escapeHTML(entry.tz)}">${heartForTimezone(entry.tz)}</span>
-          <div class="pnameBlock">
+        <div class="pname"><div class="pnameBlock">
             <div class="pMain">${escapeHTML(nm.main)}</div>
             ${nm.sub ? `<div class="pSub">${escapeHTML(nm.sub)}</div>` : ""}
           </div>
@@ -8862,12 +9355,66 @@ async function geocodeAddress(addr){
     `;
   }
 
+  
+  // ==============================
+  // Local time colors for map pins (based on IANA timezone)
+  // 💚 Good time   09:00–21:59
+  // 💛 Maybe       22:00–01:59 and 06:00–08:59
+  // ❤️ Sleeping    02:00–05:59
+  // ==============================
+  function getLocalSeconds(tz){
+    if(!tz) return null;
+    try{
+      const dtf = new Intl.DateTimeFormat("en-US", {
+        timeZone: tz,
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      });
+      const parts = dtf.formatToParts(new Date());
+      const h0 = Number(parts.find(p=>p.type==="hour")?.value);
+      const m = Number(parts.find(p=>p.type==="minute")?.value);
+      const s = Number(parts.find(p=>p.type==="second")?.value);
+      const h = (h0 === 24 ? 0 : h0);
+      if(!Number.isFinite(h) || !Number.isFinite(m) || !Number.isFinite(s)) return null;
+      return h*3600 + m*60 + s;
+    }catch{
+      return null;
+    }
+  }
+
+  function heartForTimezone(tz){
+    const sec = getLocalSeconds(tz);
+    if(sec === null) return "🤍";
+
+    // ❤️ 02:00:00 – 05:59:59
+    if(sec >= 2*3600 && sec <= 5*3600 + 59*60 + 59) return "❤️";
+
+    // 💛 06:00:00 – 08:59:59
+    if(sec >= 6*3600 && sec <= 8*3600 + 59*60 + 59) return "💛";
+
+    // 💚 09:00:00 – 21:59:59
+    if(sec >= 9*3600 && sec <= 21*3600 + 59*60 + 59) return "💚";
+
+    // 💛 22:00:00 – 01:59:59 (wraps over midnight)
+    if(sec >= 22*3600 || sec <= 1*3600 + 59*60 + 59) return "💛";
+
+    return "🤍";
+  }
+
   function colorForHeart(h){
     if(h === "💚") return { stroke:"#10b981", fill:"#10b981" };
     if(h === "💛") return { stroke:"#fbbf24", fill:"#fbbf24" };
     if(h === "❤️") return { stroke:"#ff6b6b", fill:"#ff6b6b" };
     return { stroke:"#7aa7ff", fill:"#7aa7ff" };
   }
+
+  function colorForEntry(e){
+    const h = heartForTimezone(e && e.tz);
+    return colorForHeart(h);
+  }
+
 
 
   // ==============================
@@ -8876,11 +9423,11 @@ async function geocodeAddress(addr){
   const _pinIconCache = new Map(); // key: fill hex => L.Icon
 
   function pinSVG(fill){
-    // Simple pin with white inner dot
+    // Simple pin with white heart
     return `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="48" viewBox="0 0 24 36">
       <path d="M12 0C7.58 0 4 3.58 4 8c0 6.18 8 18 8 18s8-11.82 8-18c0-4.42-3.58-8-8-8z"
         fill="${fill}" stroke="rgba(0,0,0,.35)" stroke-width="1.2"/>
-      <circle cx="12" cy="8.6" r="3.2" fill="rgba(255,255,255,.92)"/>
+      <text x="12" y="11.2" text-anchor="middle" font-size="9.2" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial" fill="rgba(255,255,255,.94)">♥</text>
     </svg>`;
   }
 
@@ -8948,15 +9495,13 @@ async function geocodeAddress(addr){
 
 
   function pinIconForEntry(e){
-    const h = heartForTimezone(e.tz);
-    const c = colorForHeart(h);
+    const c = colorForEntry(e);
     return pinIcon(c.fill);
   }
 
 
   function markerStyleForEntry(e){
-    const h = heartForTimezone(e.tz);
-    const c = colorForHeart(h);
+    const c = colorForEntry(e);
     return {
       radius: 7,
       color: c.stroke,
@@ -9040,11 +9585,23 @@ async function geocodeAddress(addr){
   // ==============================
   // Right panel view switch (Map <-> Profile)
   // ==============================
+  function setRightTab(which){
+    const tMap = document.getElementById("tabMap");
+    const tCard = document.getElementById("tabCard");
+    if(!tMap || !tCard) return;
+    const isMap = which === "map";
+    tMap.classList.toggle("active", isMap);
+    tCard.classList.toggle("active", !isMap);
+    tMap.setAttribute("aria-selected", isMap ? "true" : "false");
+    tCard.setAttribute("aria-selected", !isMap ? "true" : "false");
+  }
+
   function showMapView(){
     const pv = $("profileView");
     pv.classList.remove("isFavProfile");
     pv.style.display = "none";
     $("mapView").style.display = "block";
+    setRightTab("map");
     // Leaflet needs a size refresh after being hidden
     try{ requestAnimationFrame(()=>{ try{ map.invalidateSize(); }catch{} }); }catch{}
     setTimeout(()=>{ try{ map.invalidateSize(); }catch{} }, 60);
@@ -9052,6 +9609,371 @@ async function geocodeAddress(addr){
   function showProfileView(){
     $("mapView").style.display = "none";
     $("profileView").style.display = "block";
+    setRightTab("card");
+  }
+
+  // ==============================
+  // Advanced Filters (popover)
+  // ==============================
+  function syncFilterChipsToAll(){
+    const bar = document.getElementById("filterBar");
+    if(!bar) return;
+    activeFilter = "all";
+    bar.querySelectorAll(".fChip").forEach(b=>{
+      const f = b.getAttribute("data-filter") || "";
+      b.classList.toggle("active", f === "all");
+    });
+  }
+
+  function setTagFilter(tags){
+    const arr = Array.isArray(tags) ? tags : [];
+    advFilters.tags = arr.map(t=>String(t||"").trim()).filter(Boolean).slice(0, 4);
+    renderAdvancedFiltersUI();
+  }
+
+  function clearAdvancedFilters(){
+    advFilters.hasNotes = false;
+    advFilters.hasImage = false;
+    advFilters.hasAddress = false;
+    advFilters.missingTZ = false;
+    advFilters.tags = [];
+    renderAdvancedFiltersUI();
+  }
+
+  function openAdvancedFilters(forceOpen=false){
+    const pop = document.getElementById("filterPopover");
+    if(!pop) return;
+    const isOpen = pop.classList.contains("open");
+    const next = forceOpen ? true : !isOpen;
+    pop.classList.toggle("open", next);
+    pop.setAttribute("aria-hidden", next ? "false" : "true");
+    if(next){
+      renderAdvancedFiltersUI();
+    }
+  }
+
+  function closeAdvancedFilters(){
+    const pop = document.getElementById("filterPopover");
+    if(!pop) return;
+    pop.classList.remove("open");
+    pop.setAttribute("aria-hidden", "true");
+  }
+
+  function collectAllTags(){
+    const set = new Map(); // lower -> original
+    for(const e of entries){
+      if(!Array.isArray(e.tags)) continue;
+      for(const t of e.tags){
+        const s = String(t||"").trim();
+        if(!s) continue;
+        const k = s.toLowerCase();
+        if(!set.has(k)) set.set(k, s);
+      }
+    }
+    return Array.from(set.values()).sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(), undefined, {sensitivity:"base"}));
+  }
+
+  function renderAdvancedFiltersUI(){
+    const pop = document.getElementById("filterPopover");
+    if(!pop) return;
+
+    const cbNotes = document.getElementById("afHasNotes");
+    const cbImg = document.getElementById("afHasImage");
+    const cbAddr = document.getElementById("afHasAddress");
+    const cbTz = document.getElementById("afMissingTZ");
+    if(cbNotes) cbNotes.checked = !!advFilters.hasNotes;
+    if(cbImg) cbImg.checked = !!advFilters.hasImage;
+    if(cbAddr) cbAddr.checked = !!advFilters.hasAddress;
+    if(cbTz) cbTz.checked = !!advFilters.missingTZ;
+
+    const allTags = collectAllTags();
+    const q = (document.getElementById("afTagSearch")?.value || "").trim().toLowerCase();
+    const tags = q ? allTags.filter(t=>t.toLowerCase().includes(q)) : allTags;
+
+    const wrap = document.getElementById("afTags");
+    if(wrap){
+      wrap.innerHTML = tags.length ? tags.map(t=>{
+        const on = Array.isArray(advFilters.tags) && advFilters.tags.map(x=>String(x||"").toLowerCase()).includes(String(t).toLowerCase());
+        return `<span class="tagPill ${on ? "on" : ""}" data-tag="${escapeHTML(t)}">#${escapeHTML(t)} ${on?'<span class="x">×</span>':""}</span>`;
+      }).join("") : `<div class="hint">No tags yet. Add some tags to entries.</div>`;
+    }
+  }
+
+  // ==============================
+  // Dashboard
+  // ==============================
+  function calcOverdueDays(lastContactISO, remindEveryDays){
+    const r = Number(remindEveryDays || 0);
+    if(!r || r <= 0) return 0;
+    const p = parseDateYMD(lastContactISO);
+    if(!p || !p.hasYear) return 0;
+    const d = new Date(p.year, p.month-1, p.day);
+    if(Number.isNaN(d.getTime())) return 0;
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const diff = Math.floor((today.getTime() - d.getTime()) / 86400000);
+    return Math.max(0, diff - r);
+  }
+
+  function renderDashboard(){
+    const row = document.getElementById("dashRow");
+    if(!row) return;
+
+    function nameKey(e){
+      const nm = (displayNames(e)?.main || e.nickname || e.realName || "").toString().trim();
+      return nm.toLowerCase();
+    }
+    const bdays = entries
+      .map(e=>({ e, d: daysUntilNextBirthday(e.birthdate) }))
+      .filter(x=>x.d !== null)
+      .sort((a,b)=> (a.d - b.d) || nameKey(a.e).localeCompare(nameKey(b.e), undefined, {sensitivity:"base"}))
+      .slice(0, 3);
+
+    const fr = entries
+      .map(e=>({ e, m: nextFriendshipMilestone(e.metOn) }))
+      .filter(x=>x.m)
+      .sort((a,b)=> (a.m.days - b.m.days) || nameKey(a.e).localeCompare(nameKey(b.e), undefined, {sensitivity:"base"}))
+      .slice(0, 3);
+
+    const overdue = entries
+      .map(e=>({ e, od: calcOverdueDays(e.lastContact, e.remindEveryDays) }))
+      .filter(x=>x.od > 0)
+      .sort((a,b)=> (b.od - a.od) || nameKey(a.e).localeCompare(nameKey(b.e), undefined, {sensitivity:"base"}))
+      .slice(0, 3);
+
+    const cards = [];
+    // Summary: Active tag filter
+    if(Array.isArray(advFilters.tags) && advFilters.tags.length){
+      cards.push({
+        action: "clear-tags",
+        k: "🏷️ Tag filter",
+        badge: advFilters.tags.length > 1 ? String(advFilters.tags.length) : "#",
+        v: advFilters.tags.map(t=>`#${t}`).join(" "),
+        sub: "Click to clear tag filter"
+      });
+    }
+
+    for(const x of bdays){
+      const nm = displayNames(x.e)?.main || x.e.nickname || x.e.realName || "—";
+      const when = x.d === 0 ? "today" : `in ${x.d} day${x.d===1?"":"s"}`;
+      cards.push({
+        id: x.e.id,
+        k: "🎂 Birthday",
+        badge: when,
+        v: nm,
+        sub: x.e.birthdate ? fmtDate(x.e.birthdate) : ""
+      });
+    }
+
+    for(const x of fr){
+      const nm = displayNames(x.e)?.main || x.e.nickname || x.e.realName || "—";
+      const when = x.m.days === 0 ? "today" : `in ${x.m.days} day${x.m.days===1?"":"s"}`;
+      cards.push({
+        id: x.e.id,
+        k: "🎈 Friendship",
+        badge: when,
+        v: nm,
+        sub: `Next: ${x.m.label}`
+      });
+    }
+
+    for(const x of overdue){
+      const nm = displayNames(x.e)?.main || x.e.nickname || x.e.realName || "—";
+      cards.push({
+        id: x.e.id,
+        k: "⏰ Check‑in",
+        badge: `+${x.od}d`,
+        v: nm,
+        sub: `Every ${Number(x.e.remindEveryDays)||0}d · last ${x.e.lastContact ? fmtDate(x.e.lastContact) : "—"}`
+      });
+    }
+
+    row.innerHTML = cards.map(c=>`
+      <div class="dashCard" ${c.id?`data-id="${escapeHTML(c.id)}"`:""} ${c.action?`data-action="${escapeHTML(c.action)}"`:""}>
+        <div class="dashK">
+          <span>${escapeHTML(c.k)}</span>
+          ${c.badge?`<span class="dashBadge">${escapeHTML(String(c.badge))}</span>`:""}
+        </div>
+        <div class="dashV">${escapeHTML(String(c.v||"—"))}</div>
+        ${c.sub?`<div class="dashSub">${escapeHTML(String(c.sub))}</div>`:""}
+      </div>
+    `).join("");
+
+    if(!row.__dashBound){
+      row.__dashBound = true;
+      row.addEventListener("click", async (ev)=>{
+        const card = ev.target.closest(".dashCard");
+        if(!card) return;
+        const act = card.getAttribute("data-action");
+        const id = card.getAttribute("data-id");
+        if(act === "clear-tags"){
+          advFilters.tags = [];
+          renderAdvancedFiltersUI();
+          renderList();
+          renderDashboard();
+          return;
+        }
+        if(id){
+          try{
+            const ok = await guardedSelectEntry(id, { panMap:false, toast:false });
+            if(ok){
+              openProfile(id);
+              scrollRightCardIntoView();
+            }
+          }catch{
+            try{ openProfile(id); scrollRightCardIntoView(); }catch{}
+          }
+        }
+      });
+    }
+  }
+
+  // ==============================
+  // Command menu (Ctrl/Cmd + K)
+  // ==============================
+  function openCmdk(){
+    const root = document.getElementById("cmdk");
+    if(!root) return;
+    root.classList.add("open");
+    root.setAttribute("aria-hidden", "false");
+    const input = document.getElementById("cmdkInput");
+    if(input){
+      input.value = "";
+      setTimeout(()=>{ try{ input.focus(); }catch{} }, 0);
+    }
+    renderCmdk("");
+  }
+  function closeCmdk(){
+    const root = document.getElementById("cmdk");
+    if(!root) return;
+    root.classList.remove("open");
+    root.setAttribute("aria-hidden", "true");
+  }
+  function isCmdkOpen(){
+    const root = document.getElementById("cmdk");
+    return !!root && root.classList.contains("open");
+  }
+
+  function renderCmdk(query){
+    const list = document.getElementById("cmdkList");
+    if(!list) return;
+
+    const q = String(query||"").trim().toLowerCase();
+
+    const cmds = [
+      { key:"map", title:"🗺️ Show Map", sub:"Switch right panel to Map", run: ()=>{ showMapView(); scrollRightCardIntoView(); } },
+      { key:"card", title:"🪪 Show Card", sub:"Switch right panel to Card (selected person)", run: ()=>{ if(selectedId){ openProfile(selectedId); scrollRightCardIntoView(); } else { toast("Select a person first"); } } },
+      { key:"privacy", title:"🔒 Toggle Privacy mode", sub:"Hide / show notes + private fields", run: async ()=>{ const nl = $("notesLock"); if(nl){ nl.checked = !nl.checked; nl.dispatchEvent(new Event("change")); } } },
+      { key:"filters", title:"⋯ Open Advanced Filters", sub:"Smart filters + tags", run: ()=>{ openAdvancedFilters(true); } },
+      { key:"clear", title:"🧹 Clear filters", sub:"Reset chips + advanced filters", run: ()=>{ syncFilterChipsToAll(); clearAdvancedFilters(); renderList(); renderDashboard(); } },
+      { key:"export", title:"Export JSON", sub:"Download your data", run: ()=>{ exportJSON(); } },
+      { key:"import", title:"Import JSON", sub:"Load data from a file", run: ()=>{ try{ openImportPicker(); }catch{ $("importFile")?.click(); } } },
+      { key:"new", title:"New entry", sub:"Clear editor for a new person", run: ()=>{ guardedAction(clearForm); } },
+    ];
+
+    // Special parsing: "tag xxx"
+    if(q.startsWith("tag ")){
+      const t = q.slice(4).trim();
+      const all = collectAllTags();
+      const hit = all.find(x=>x.toLowerCase() === t) || all.find(x=>x.toLowerCase().includes(t));
+      if(hit){
+        setTagFilter([hit]);
+        syncFilterChipsToAll();
+        renderList();
+        renderDashboard();
+        closeCmdk();
+        toast(`Tag filter: #${hit}`);
+        return;
+      }
+    }
+
+    const shownCmds = q ? cmds.filter(c=> (c.key.includes(q) || c.title.toLowerCase().includes(q) || c.sub.toLowerCase().includes(q))).slice(0,6) : cmds.slice(0,6);
+
+    // People results
+    const people = entries
+      .map(e=>{
+        const nm = displayNames(e)?.main || e.nickname || e.realName || "";
+        const hay = [
+          nm, e.nickname, e.realName,
+          (Array.isArray(e.tags)? e.tags.join(" "):""),
+          e.currentAddress, e.tz
+        ].filter(Boolean).join(" ").toLowerCase();
+        const ok = q ? hay.includes(q) : false;
+        return { e, nm, ok };
+      })
+      .filter(x=> q ? x.ok : false)
+      .sort((a,b)=> a.nm.toLowerCase().localeCompare(b.nm.toLowerCase(), undefined, {sensitivity:"base"}))
+      .slice(0, 12);
+
+    const htmlParts = [];
+
+    if(shownCmds.length){
+      htmlParts.push(`<div class="cmdkItem" style="cursor:default; opacity:.75"><div class="cmdkLeft"><div class="cmdkTitle">Commands</div><div class="cmdkSub">Type to search people or commands</div></div><div class="cmdkKbd">↵</div></div>`);
+      for(const c of shownCmds){
+        htmlParts.push(`
+          <div class="cmdkItem" data-cmd="${escapeHTML(c.key)}">
+            <div class="cmdkLeft">
+              <div class="cmdkTitle">${escapeHTML(c.title)}</div>
+              <div class="cmdkSub">${escapeHTML(c.sub)}</div>
+            </div>
+            <div class="cmdkKbd">Enter</div>
+          </div>
+        `);
+      }
+    }
+
+    if(people.length){
+      htmlParts.push(`<div class="cmdkItem" style="cursor:default; opacity:.75; margin-top:6px;"><div class="cmdkLeft"><div class="cmdkTitle">People</div><div class="cmdkSub">${escapeHTML(String(people.length))} match(es)</div></div><div class="cmdkKbd">↵</div></div>`);
+      for(const p of people){
+        const sub = (p.e.currentAddress || "").toString().trim();
+        htmlParts.push(`
+          <div class="cmdkItem" data-id="${escapeHTML(p.e.id)}">
+            <div class="cmdkLeft">
+              <div class="cmdkTitle">${escapeHTML(p.nm || "—")}</div>
+              <div class="cmdkSub">${escapeHTML(sub || (p.e.tz||""))}</div>
+            </div>
+            <div class="cmdkKbd">Open</div>
+          </div>
+        `);
+      }
+    }
+
+    if(!htmlParts.length){
+      htmlParts.push(`<div class="cmdkItem" style="cursor:default; opacity:.75"><div class="cmdkLeft"><div class="cmdkTitle">No results</div><div class="cmdkSub">Try: export · privacy · tag juju</div></div><div class="cmdkKbd">Esc</div></div>`);
+    }
+
+    list.innerHTML = htmlParts.join("");
+
+    // Bind click handler once via delegation
+    if(!list.__cmdkBound){
+      list.__cmdkBound = true;
+      list.addEventListener("click", async (ev)=>{
+        const it = ev.target.closest(".cmdkItem");
+        if(!it) return;
+        const cmd = it.getAttribute("data-cmd");
+        const id = it.getAttribute("data-id");
+        if(cmd){
+          const c = cmds.find(x=>x.key === cmd);
+          if(c){
+            try{ await c.run(); }catch{ try{ c.run(); }catch{} }
+            closeCmdk();
+          }
+          return;
+        }
+        if(id){
+          try{
+            const ok = await guardedSelectEntry(id, { panMap:false, toast:false });
+            if(ok){
+              openProfile(id);
+              scrollRightCardIntoView();
+            }
+          }catch{
+            try{ openProfile(id); scrollRightCardIntoView(); }catch{}
+          }
+          closeCmdk();
+        }
+      });
+    }
   }
 
   // Mobile helper: in stacked layout, bring the right card (map/profile) into view
@@ -9106,7 +10028,7 @@ async function geocodeAddress(addr){
     const nm = displayNames(entry);
     // Heart should sit in front of the name (like in the list); Local Time is shown in cards below.
     if(entry.tz){
-      $("profileName").innerHTML = `<span class="pheart js-heart" data-tz="${escapeHTML(entry.tz)}">${heartForTimezone(entry.tz)}</span>${escapeHTML(nm.main || "—")}`;
+      $("profileName").innerHTML = `${escapeHTML(nm.main || "—")}`;
     }else{
       $("profileName").textContent = nm.main || "—";
     }
@@ -9237,7 +10159,9 @@ const birthdayCard = entry.birthdate ? (()=>{
       eyeCardHTML(entry.eye),
 
       connectionsCardHTML(entry),
-            favoriteColorsCardHTML(entry.favoriteColors),
+      favoriteColorsCardHTML(entry.favoriteColors),
+      tagsCardHTML(entry.tags),
+      checkinCardHTML(entry.lastContact, entry.remindEveryDays),
       cycleCardHTML(entry.cycle),
       notesCardHTML(entry.notes)
     ].filter(Boolean).join("");
@@ -9549,6 +10473,9 @@ const birthdayCard = entry.birthdate ? (()=>{
     $("nativeLang").value = "";
     const _connEl = $("connection"); if(_connEl) _connEl.value = "";
     $("otherLangs").value = "";
+    const _tagsEl = $("tags"); if(_tagsEl) _tagsEl.value = "";
+    const _lcEl = $("lastContact"); if(_lcEl) _lcEl.value = "";
+    const _reEl = $("remindEvery"); if(_reEl) _reEl.value = "";
     const _btEl = $("bloodType"); if(_btEl) _btEl.value = "";
     $("timezone").value = "";
     $("coords").value = "";
@@ -9588,6 +10515,9 @@ const birthdayCard = entry.birthdate ? (()=>{
     $("metOn").value = entry.metOn ?? "";
     $("nativeLang").value = entry.nativeLang ?? "";
     $("otherLangs").value = entry.otherLangs ?? "";
+    const _tagsEl = $("tags"); if(_tagsEl) _tagsEl.value = Array.isArray(entry.tags) ? entry.tags.join(", ") : (entry.tags ? String(entry.tags) : "");
+    const _lcEl = $("lastContact"); if(_lcEl) _lcEl.value = entry.lastContact ?? "";
+    const _reEl = $("remindEvery"); if(_reEl) _reEl.value = (entry.remindEveryDays != null && entry.remindEveryDays !== 0) ? String(entry.remindEveryDays) : "";
     const _btEl = $("bloodType"); if(_btEl) _btEl.value = entry.bloodType ?? "";
     $("timezone").value = entry.tz ?? "";
     $("coords").value = (typeof entry.lat === "number" && typeof entry.lon === "number")
@@ -9815,6 +10745,10 @@ const birthdayCard = entry.birthdate ? (()=>{
     const metOn = $("metOn").value;
     const nativeLang = $("nativeLang").value.trim();
     const otherLangs = $("otherLangs").value.trim();
+    const tags = normalizeTagsInput($("tags")?.value || "");
+    const lastContact = ($("lastContact")?.value || "").trim();
+    const _reRaw = ($("remindEvery")?.value || "").trim();
+    const remindEveryDays = Math.max(0, parseInt(_reRaw || "0", 10) || 0);
     const _btEl = $("bloodType");
     const bloodType = _btEl ? String(_btEl.value || "").trim() : "";
     const tz = $("timezone").value.trim();
@@ -9883,7 +10817,7 @@ const birthdayCard = entry.birthdate ? (()=>{
           nickname, realName, showRealName, connections,
           birthdate, birthplace, currentAddress, metOn,
           bloodType,
-          nativeLang, otherLangs, tz, notes,
+          nativeLang, otherLangs, tz, tags, lastContact, remindEveryDays, notes,
           favoriteColors: favColors,
           eye: eye,
           cycle: cycle,
@@ -9899,7 +10833,7 @@ const birthdayCard = entry.birthdate ? (()=>{
         nickname, realName, showRealName, connections,
         birthdate, birthplace, currentAddress, metOn,
         bloodType,
-        nativeLang, otherLangs, tz, notes,
+        nativeLang, otherLangs, tz, tags, lastContact, remindEveryDays, notes,
         favoriteColors: favColors,
         eye: eye,
         cycle: cycle,
@@ -10241,13 +11175,11 @@ function updateQuickWidgets(){
   );
 
   // Existing shortcuts
-  const nowCount = entries.reduce((acc,e)=> acc + ((heartForTimezone(e.tz) === "💚") ? 1 : 0), 0);
-  const maybeCount = entries.reduce((acc,e)=> acc + ((heartForTimezone(e.tz) === "💛") ? 1 : 0), 0);
-  const favCount = entries.reduce((acc,e)=> acc + (e && e.fav ? 1 : 0), 0);
+const favCount = entries.reduce((acc,e)=> acc + (e && e.fav ? 1 : 0), 0);
 
   chips.innerHTML = "";
 
-  const hasAny = (bdayList.length > 0) || (friendList.length > 0) || (nowCount>0) || (maybeCount>0) || (favCount>0);
+  const hasAny = (bdayList.length > 0) || (friendList.length > 0) || (favCount>0);
   if(!hasAny){
     const d = document.createElement("div");
     d.className = "quickEmpty";
@@ -10316,9 +11248,7 @@ function updateQuickWidgets(){
 
   // Shortcuts (green/yellow + favorites) under the last friendship
   const shortcuts = [];
-  if(nowCount > 0) shortcuts.push({ key:"now",   label:`💚 ${nowCount} now` });
-  if(maybeCount > 0) shortcuts.push({ key:"maybe", label:`💛 ${maybeCount} maybe` });
-  if(favCount > 0) shortcuts.push({ key:"fav",   label:`⭐ ${favCount} favorite${favCount===1?"":"s"}` });
+if(favCount > 0) shortcuts.push({ key:"fav",   label:`⭐ ${favCount} favorite${favCount===1?"":"s"}` });
 
   if(shortcuts.length > 0){
     const row = document.createElement("div");
@@ -10362,7 +11292,9 @@ function renderList(){
       const hay = [
         e.nickname, e.realName, e.connection, e.bloodType, eyeLabel(e.eye), e.nativeLang, e.otherLangs, e.tz,
         e.currentAddress, e.birthplace, e.birthdate, e.metOn, e.notes,
-        connectionsText(e.connections)
+        connectionsText(e.connections),
+        (Array.isArray(e.tags) ? e.tags.join(", ") : ""),
+        e.lastContact, (e.remindEveryDays!=null ? String(e.remindEveryDays) : "")
       ].filter(Boolean).join(" | ").toLowerCase();
       return hay.includes(q);
     }) : [...entries];
@@ -10370,11 +11302,39 @@ function renderList(){
     // Filters (only those that truly filter)
     if(activeFilter === "fav"){
       filtered = filtered.filter(e => !!e.fav);
-    }else if(activeFilter === "now"){
-      filtered = filtered.filter(e => heartForTimezone(e.tz) === "💚");
-    }else if(activeFilter === "maybe"){
-      filtered = filtered.filter(e => heartForTimezone(e.tz) === "💛");
     }// NOTE: bday/friend are *sort modes* (no filtering)
+
+    // Advanced filters (popover)
+    try{
+      if(advFilters){
+        if(advFilters.hasNotes){
+          filtered = filtered.filter(e=>{
+            const n = e.notes;
+            if(typeof n === "string") return n.trim().length>0;
+            if(n && typeof n === "object"){
+              return Object.values(n).some(v=> String(v||"").trim().length>0);
+            }
+            return false;
+          });
+        }
+        if(advFilters.hasImage){
+          filtered = filtered.filter(e=> !!e.imageData);
+        }
+        if(advFilters.hasAddress){
+          filtered = filtered.filter(e=> !!String(e.currentAddress||"").trim());
+        }
+        if(advFilters.missingTZ){
+          filtered = filtered.filter(e=> !String(e.tz||"").trim());
+        }
+        if(Array.isArray(advFilters.tags) && advFilters.tags.length){
+          const want = advFilters.tags.map(x=>String(x||"").trim().toLowerCase()).filter(Boolean);
+          filtered = filtered.filter(e=>{
+            const t = Array.isArray(e.tags) ? e.tags.map(x=>String(x||"").trim().toLowerCase()) : [];
+            return want.every(w=> t.includes(w));
+          });
+        }
+      }
+    }catch{}
 
     // Sorting
     const sorted = [...filtered].sort((a,b)=>{
@@ -10479,10 +11439,9 @@ function renderList(){
 
       li.innerHTML = `
         <div class="meta">
-          <div class="nick">
-            <span class="heart js-heart" data-tz="${escapeHTML(e.tz || "")}">${heartForTimezone(e.tz)}</span>
-            <div class="nameBlock">
+          <div class="nick"><div class="nameBlock">
               <div class="nameMain nameLine">
+                <span class="listHeart" title="Best time to contact">${heartForTimezone(e.tz)}</span>
                 <span class="nameText">${escapeHTML(nm.main)}</span>
                 <span class="nameIcons">
                   <button class="starInline js-star ${e.fav ? "on" : ""}" title="${e.fav ? "Unfavorite" : "Favorite"}" type="button">${e.fav ? "⭐" : "☆"}</button>
@@ -10497,15 +11456,6 @@ function renderList(){
               const diff = monthsDaysUntilNextBirthday(e.birthdate);
               if(!diff) return "";
               const ageTxt = (diff.age === null) ? "" : ` · turns ${diff.age}`;
-
-    // Visual-only: add a subtle glow class based on the heart emoji
-    const hEl = li.querySelector(".js-heart");
-    if(hEl){
-      const h = (hEl.textContent || "").trim();
-      li.classList.toggle("heartGreen", h === "💚");
-      li.classList.toggle("heartYellow", h === "💛");
-      li.classList.toggle("heartRed", h === "❤️");
-    }
               return `<div class="infoBlock">🎂 <b>${fmtMoDays(diff.months, diff.days)}</b>${ageTxt}</div>`;
             })() || ""}
 
@@ -10522,6 +11472,13 @@ function renderList(){
             ${e.connection ? ` · ${escapeHTML(e.connection)}` : ""}
             ${(!notesHidden && e.bloodType) ? ` · 🩸 ${escapeHTML(e.bloodType)}` : ""}
 </div>
+
+          ${Array.isArray(e.tags) && e.tags.length ? `
+            <div class="tagRow">
+              ${e.tags.slice(0,3).map(t=>`<span class="tagMini js-tag" data-tag="${escapeHTML(t)}">#${escapeHTML(t)}</span>`).join("")}
+              ${e.tags.length>3 ? `<span class="tagMini js-tagMore" title="More tags…">+${e.tags.length-3}</span>` : ``}
+            </div>
+          ` : ``}
 
           <div class="tiny"><span class="localLabel">Local Time</span>: <span class="js-time localTimeVal" data-gran="m" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || "—")}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ""}</div>
         </div>
@@ -10571,6 +11528,27 @@ function renderList(){
         }
       });
       li.querySelector(".js-net").addEventListener("click", (ev)=>{ ev.stopPropagation(); openNetworkModal(e.id); });
+      // Tag quick filter (click on a tag in the list)
+      li.querySelectorAll(".js-tag").forEach(tg=>{
+        tg.addEventListener("click", (ev)=>{
+          ev.stopPropagation();
+          const tag = tg.getAttribute("data-tag") || "";
+          if(!tag) return;
+          try{ setTagFilter([tag]); }catch{}
+          try{ syncFilterChipsToAll(); }catch{}
+          renderList();
+          try{ renderDashboard(); }catch{}
+          toast(`Tag filter: #${tag}`);
+        });
+      });
+      const _more = li.querySelector(".js-tagMore");
+      if(_more){
+        _more.addEventListener("click", (ev)=>{
+          ev.stopPropagation();
+          try{ openAdvancedFilters(true); }catch{}
+          try{ $("afTagSearch")?.focus(); }catch{}
+        });
+      }
       li.querySelector(".js-star").addEventListener("click", (ev)=>{
         ev.stopPropagation();
         e.fav = !e.fav;
@@ -10592,13 +11570,13 @@ function renderList(){
 
     ul.scrollTop = prevScroll;
     try{ updateStats(); }catch{}
+    try{ renderDashboard(); }catch{}
 
   }
 
   // Live clock nodes (cached) to keep the UI snappy
   let __liveTimeNodesSec = [];
   let __liveTimeNodesMin = [];
-  let __liveHeartNodes = [];
   function refreshLiveClockNodes(){
     const all = Array.from(document.querySelectorAll(".js-time"));
     __liveTimeNodesSec = [];
@@ -10609,7 +11587,6 @@ function renderList(){
       if(gran === "m") __liveTimeNodesMin.push(el);
       else __liveTimeNodesSec.push(el);
     }
-    __liveHeartNodes = Array.from(document.querySelectorAll(".js-heart"));
   }
 
   function updateTimesInUI(now){
@@ -10658,28 +11635,6 @@ function renderList(){
     }else{
       // prune detached nodes without doing expensive formatting
       __liveTimeNodesMin = __liveTimeNodesMin.filter(el=>el && el.isConnected);
-    }
-
-    // Hearts don't need per-second updates (once per minute is enough)
-    if(sec === 0){
-      if(!__liveHeartNodes.length) refreshLiveClockNodes();
-      const nextHeartNodes = [];
-      for(const el of __liveHeartNodes){
-        if(!el || !el.isConnected) continue;
-        const tz = el.getAttribute("data-tz");
-        if(tz) el.textContent = heartForTimezone(tz);
-
-        // keep list item glow class in sync (if applicable)
-        const li = el.closest && el.closest(".item");
-        if(li){
-          const h = (el.textContent || "").trim();
-          li.classList.toggle("heartGreen", h === "💚");
-          li.classList.toggle("heartYellow", h === "💛");
-          li.classList.toggle("heartRed", h === "❤️");
-        }
-        nextHeartNodes.push(el);
-      }
-      __liveHeartNodes = nextHeartNodes;
     }
   }
 
@@ -10776,6 +11731,9 @@ function exportJSON(){
           nativeLang: x.nativeLang ? String(x.nativeLang) : "",
           otherLangs: x.otherLangs ? String(x.otherLangs) : "",
           tz: x.tz ? String(x.tz) : "",
+          tags: (Array.isArray(x.tags) ? x.tags : (typeof x.tags==="string" ? normalizeTagsInput(x.tags) : [])).map(t=>String(t||"").trim()).filter(Boolean).slice(0,12),
+          lastContact: x.lastContact ? String(x.lastContact) : "",
+          remindEveryDays: (Number.isFinite(Number(x.remindEveryDays)) ? Math.max(0, Math.floor(Number(x.remindEveryDays))) : 0),
           fav: !!x.fav,
           imageData: x.imageData ? String(x.imageData) : null,
           notes: notes,
@@ -10825,9 +11783,33 @@ function exportJSON(){
     return Array.from(mapById.values()).sort((a,b)=> String(b.updatedAt).localeCompare(String(a.updatedAt)));
   }
 
-  $("importBtn").addEventListener("click", ()=>{
-    $("importFile").click();
+    // Open file picker reliably (works even when embedded / some browsers block programmatic click)
+  function openImportPicker(){
+    const f = $("importFile");
+    if(!f) return;
+    try{ f.value = ""; }catch{} // allow re-selecting same file
+    // Newer browsers (Chromium) support showPicker()
+    if(typeof f.showPicker === "function"){
+      try{ f.showPicker(); return; }catch{}
+    }
+    try{ f.click(); }catch{}
+  }
+
+  $("importBtn")?.addEventListener("click", (e)=>{
+    // If importBtn is a <label for="importFile">, its default behavior opens the picker.
+    // Only call the fallback when it is NOT a label.
+    const el = e?.currentTarget;
+    if(el && el.tagName === "LABEL" && el.getAttribute("for") === "importFile") return;
+    openImportPicker();
   });
+
+  $("importBtn")?.addEventListener("keydown", (e)=>{
+    if(e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      openImportPicker();
+    }
+  });
+
 
   $("importFile").addEventListener("change", async (e)=>{
     const file = e.target.files?.[0];
@@ -11498,15 +12480,33 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
   $("saveBtn").addEventListener("click", handleSave);
   $("newBtn").addEventListener("click", ()=>{ guardedAction(clearForm); });
   $("deleteBtn").addEventListener("click", handleDelete);
-  $("exportBtn").addEventListener("click", exportJSON);
+  $("exportBtn")?.addEventListener("click", (e)=>{ try{ e.preventDefault(); }catch{} exportJSON(); });
   $("clearAllBtn").addEventListener("click", clearAll);
 
 
   // Notes lock
   const _notesLock = $("notesLock");
+  const _setPinBtn = $("setPinBtn");
   if(_notesLock){
     applyNotesLockUI();
-    _notesLock.addEventListener("change", ()=>{
+    if(_setPinBtn){
+      _setPinBtn.addEventListener("click", async (ev)=>{
+        ev.preventDefault();
+        ev.stopPropagation();
+        await promptSetPrivacyPin();
+      });
+    }
+    _notesLock.addEventListener("change", async ()=>{
+      // If a PIN is set, require it when turning Privacy mode OFF
+      if(!_notesLock.checked){
+        const ok = await verifyPrivacyPin();
+        if(!ok){
+          _notesLock.checked = true;
+          setNotesHidden(true);
+          return;
+        }
+      }
+
       setNotesHidden(_notesLock.checked);
       toast(notesHidden ? "Privacy mode ON 🔒" : "Privacy mode OFF 🔓");
       try{ renderList(); }catch{}
@@ -11610,9 +12610,26 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
     bar.addEventListener("click", (e)=>{
       const btn = e.target.closest(".fChip");
       if(!btn) return;
+
+      // "More" opens the advanced filters popover without changing the active chip
+      if(btn.id === "moreFiltersBtn"){
+        e.preventDefault();
+        e.stopPropagation();
+        try{ openAdvancedFilters(); }catch{}
+        return;
+      }
+
       const f = btn.getAttribute("data-filter") || "all";
       activeFilter = f;
-      bar.querySelectorAll(".fChip").forEach(b=> b.classList.toggle("active", b === btn));
+
+      // Close advanced popover when switching main chips
+      try{ closeAdvancedFilters(); }catch{}
+
+      bar.querySelectorAll(".fChip").forEach(b=> {
+        const bf = b.getAttribute("data-filter");
+        if(!bf) return; // ignore non-filter buttons
+        b.classList.toggle("active", b === btn);
+      });
       renderList();
     });
   })();
@@ -11633,6 +12650,127 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
   refreshConnRelTypeSelect();
   renderConnectionPills();
   applyLinksToggleUI();
+
+  // Right panel tabs
+  const _tabMap = $("tabMap");
+  const _tabCard = $("tabCard");
+  if(_tabMap) _tabMap.addEventListener("click", ()=>{
+    showMapView();
+    scrollRightCardIntoView();
+  });
+  if(_tabCard) _tabCard.addEventListener("click", ()=>{
+    if(selectedId){
+      openProfile(selectedId);
+      scrollRightCardIntoView();
+    }else{
+      toast("Select a person first");
+    }
+  });
+
+  // Advanced filters (popover)
+  const _pop = document.getElementById("filterPopover");
+  if(_pop){
+    _pop.addEventListener("click", (ev)=> ev.stopPropagation());
+  }
+  document.addEventListener("click", ()=>{ try{ closeAdvancedFilters(); }catch{} });
+
+  const _cbNotes = $("afHasNotes");
+  const _cbImg = $("afHasImage");
+  const _cbAddr = $("afHasAddress");
+  const _cbTz = $("afMissingTZ");
+  const _tagSearch = $("afTagSearch");
+  const _tagWrap = $("afTags");
+  const _clearBtn = $("afClearBtn");
+
+  const _applyAdv = ()=>{
+    try{
+      advFilters.hasNotes = !!_cbNotes?.checked;
+      advFilters.hasImage = !!_cbImg?.checked;
+      advFilters.hasAddress = !!_cbAddr?.checked;
+      advFilters.missingTZ = !!_cbTz?.checked;
+    }catch{}
+    renderList();
+    renderDashboard();
+  };
+
+  if(_cbNotes) _cbNotes.addEventListener("change", _applyAdv);
+  if(_cbImg) _cbImg.addEventListener("change", _applyAdv);
+  if(_cbAddr) _cbAddr.addEventListener("change", _applyAdv);
+  if(_cbTz) _cbTz.addEventListener("change", _applyAdv);
+
+  if(_tagSearch) _tagSearch.addEventListener("input", ()=>{ renderAdvancedFiltersUI(); });
+
+  if(_clearBtn) _clearBtn.addEventListener("click", ()=>{
+    clearAdvancedFilters();
+    renderList();
+    renderDashboard();
+  });
+
+  if(_tagWrap && !_tagWrap.__bound){
+    _tagWrap.__bound = true;
+    _tagWrap.addEventListener("click", (ev)=>{
+      const pill = ev.target.closest(".tagPill");
+      if(!pill) return;
+      const tag = pill.getAttribute("data-tag") || "";
+      if(!tag) return;
+      const lower = tag.toLowerCase();
+      const cur = Array.isArray(advFilters.tags) ? advFilters.tags : [];
+      const has = cur.map(x=>String(x||"").toLowerCase()).includes(lower);
+      if(has){
+        advFilters.tags = cur.filter(x=>String(x||"").toLowerCase() !== lower);
+      }else{
+        advFilters.tags = [...cur, tag].slice(0,4);
+      }
+      renderAdvancedFiltersUI();
+      syncFilterChipsToAll();
+      renderList();
+      renderDashboard();
+    });
+  }
+
+  // Profile tags: click to filter
+  const _profileView = document.getElementById("profileView");
+  if(_profileView && !_profileView.__tagBound){
+    _profileView.__tagBound = true;
+    _profileView.addEventListener("click", (ev)=>{
+      const pill = ev.target.closest(".tagPill");
+      if(!pill) return;
+      const tag = pill.getAttribute("data-tag") || "";
+      if(!tag) return;
+      setTagFilter([tag]);
+      syncFilterChipsToAll();
+      renderList();
+      renderDashboard();
+      toast(`Tag filter: #${tag}`);
+    });
+  }
+
+  // Command menu (Ctrl/Cmd + K)
+  const _cmdkOverlay = document.getElementById("cmdkOverlay");
+  const _cmdkInput = document.getElementById("cmdkInput");
+  if(_cmdkOverlay) _cmdkOverlay.addEventListener("click", closeCmdk);
+  document.addEventListener("keydown", (e)=>{
+    if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k"){
+      e.preventDefault();
+      if(isCmdkOpen()) closeCmdk(); else openCmdk();
+      return;
+    }
+    if(e.key === "Escape" && isCmdkOpen()){
+      e.preventDefault();
+      closeCmdk();
+    }
+  });
+  if(_cmdkInput){
+    _cmdkInput.addEventListener("input", ()=>{ renderCmdk(_cmdkInput.value); });
+    _cmdkInput.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter"){
+        // Activate first actionable item
+        const first = document.querySelector("#cmdkList .cmdkItem[data-cmd], #cmdkList .cmdkItem[data-id]");
+        if(first){ first.click(); e.preventDefault(); }
+      }
+    });
+  }
+
   renderList();
   renderMarkers();
   updateCount();
@@ -12085,6 +13223,19 @@ document.addEventListener("DOMContentLoaded", ()=>{
 <button id="distanceFloatingBtn" title="Distance tool">📏</button>
 
 <div id="distanceHint"></div>
+
+<!-- Command Menu (Ctrl/Cmd + K) -->
+<div class="cmdk" id="cmdk" aria-hidden="true">
+  <div class="cmdkOverlay" id="cmdkOverlay"></div>
+  <div class="cmdkPanel" role="dialog" aria-modal="true" aria-label="Command menu">
+    <div class="cmdkHeader">
+      <input id="cmdkInput" type="text" placeholder="Search or type a command… (e.g. export, privacy, tag juju)" autocomplete="off" />
+      <div class="cmdkHint">Ctrl+K · Esc</div>
+    </div>
+    <div class="cmdkList" id="cmdkList"></div>
+  </div>
+</div>
+
 </section>
 
 
