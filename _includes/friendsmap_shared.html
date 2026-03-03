@@ -10173,7 +10173,10 @@ async function geocodeAddress(addr){
   function loadHolidaySettings(){
     try{
       const raw = localStorage.getItem(LS_HOL_COUNTRIES);
-      const cc = raw ? JSON.parse(raw) : [];
+      const ccRaw = raw ? JSON.parse(raw) : [];
+      const cc = Array.isArray(ccRaw)
+        ? Array.from(new Set(ccRaw.map(x=>String(x||"").toUpperCase()).filter(Boolean)))
+        : [];
       const rawT = localStorage.getItem(LS_HOL_TYPES);
       const types = rawT ? JSON.parse(rawT) : null;
 
@@ -10233,6 +10236,49 @@ async function geocodeAddress(addr){
     const data = await fetchJSON(`${HOLIDAY_API}/PublicHolidays/${year}/${cc}`);
     __holidayCache[key] = Array.isArray(data) ? data : [];
     return __holidayCache[key];
+  }
+
+  // Extra observances (non-public) that Nager.Date does not include for some countries.
+  // Keep this list small + explicit to avoid wrong duplicates.
+  const EXTRA_OBSERVANCES_BY_CC = {
+    // United States: International Women's Day is widely observed, but not a federal/public holiday.
+    // We surface it as an "Observance" so it can be filtered via the Types checkboxes.
+    "US": [
+      { mmdd: "03-08", localName: "International Women's Day", name: "International Women's Day", types:["Observance"], global:true, fixed:true }
+    ]
+  };
+
+  function addExtraObservances(allList, years, selectedCountries){
+    const out = Array.isArray(allList) ? allList : [];
+    const yrs = Array.isArray(years) ? years.map(n=>Number(n)).filter(n=>Number.isFinite(n)) : [];
+    const sels = Array.isArray(selectedCountries) ? selectedCountries.map(c=>String(c||"").toUpperCase()).filter(Boolean) : [];
+
+    for(const cc of sels){
+      const extras = EXTRA_OBSERVANCES_BY_CC[cc];
+      if(!Array.isArray(extras) || !extras.length) continue;
+
+      for(const y of yrs){
+        for(const ex of extras){
+          const date = `${y}-${ex.mmdd}`;
+          // Avoid duplicates if something with the same (date + name) already exists for this country.
+          const exists = out.some(h=> (String(h.__cc||"").toUpperCase()===cc) && (h.date===date) && (
+            String(h.name||"")===String(ex.name||"") || String(h.localName||"")===String(ex.localName||"")
+          ));
+          if(exists) continue;
+
+          out.push(Object.assign({
+            date,
+            localName: ex.localName,
+            name: ex.name,
+            types: ex.types || ["Observance"],
+            global: !!ex.global,
+            fixed: !!ex.fixed,
+            __cc: cc
+          }, ex));
+        }
+      }
+    }
+    return out;
   }
 
   function pillHTML(text, title){
@@ -10720,6 +10766,9 @@ async function geocodeAddress(addr){
         const b = await getPublicHolidays(year+1, cc);
         b.forEach(h=> all.push(Object.assign({}, h, { __cc: cc })));
       }
+
+      // Add explicit non-public observances for selected countries (e.g., US International Women's Day)
+      all = addExtraObservances(all, [year, year+1], selected);
     }catch(err){
       nextBox.innerHTML = '<span class="hint">Could not load holidays. Please try refresh.</span>';
       listBox.innerHTML = '<span class="hint">—</span>';
