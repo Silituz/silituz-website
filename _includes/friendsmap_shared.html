@@ -319,6 +319,12 @@
   font-weight: 800;
 }
 
+/* Calendar: green section headers */
+#soApp #calendarView .profileCard > .k{
+  color: var(--emerald) !important;
+  font-weight: 800;
+}
+
     #soApp .profileCard .v{font-size:13px; color:var(--text); white-space:pre-wrap; word-break:break-word}
 
     #soApp .profileImg{
@@ -4619,7 +4625,7 @@
   flex-direction:column;
   overflow:hidden;
 }
-#soApp #mapView, #soApp #profileView{
+#soApp #mapView, #soApp #profileView, #soApp #calendarView{
   flex: 1 1 auto;
   min-height: 0;
 }
@@ -4649,6 +4655,210 @@
   border-color: rgba(64,224,208,.45);
   box-shadow: 0 0 0 3px rgba(64,224,208,.12);
 }
+
+/* Calendar (Holidays) */
+#soApp #calTypeFilters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:center;
+}
+#soApp #calTypeFilters label{ white-space:nowrap; }
+#soApp .calChk{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+#soApp .calHolidayLine{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+#soApp .calHolidayDate{ min-width:160px; }
+
+#soApp .calHolidayDate .pill{
+  font-weight: 900;
+}
+#soApp .calHolidayDate .pill .calWd{
+  color: var(--emerald);
+  font-weight: 900;
+}
+#soApp .calEntryTitle{
+  color: var(--emerald);
+  font-weight: 900;
+  font-size: 14px;
+}
+#soApp .calEntryTitle .hint{
+  color: var(--text);
+  opacity: .78;
+  font-weight: 800;
+}
+#soApp .calEntryMeta{
+  width:100%;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:6px;
+}
+#soApp .calEntry .calEntryBody{
+  padding-top:8px;
+}
+
+
+#soApp .calGroup{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  background: rgba(0,0,0,.10);
+  padding:10px 12px;
+  margin:8px 0;
+}
+#soApp .calGroup summary{
+  list-style:none;
+  cursor:pointer;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+}
+#soApp .calGroup summary::-webkit-details-marker{ display:none; }
+#soApp .calGroupTitle{
+  flex:1 1 240px;
+  min-width: 240px;
+}
+#soApp .calGroupMeta{
+  width:100%;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:4px;
+}
+#soApp .calGroupItems{
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+#soApp .calItemRow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:flex-start;
+}
+#soApp .calItemRow .calItemLeft{
+  min-width:160px;
+}
+#soApp .calBadge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  background: rgba(16,185,129,.10);
+  border:1px solid rgba(16,185,129,.20);
+  color: var(--text);
+  font-size:12px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+/* ===== Calendar compact day grouping ===== */
+#soApp .calDayGroup{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  background: rgba(0,0,0,.10);
+  padding:10px 12px;
+  margin:8px 0;
+}
+#soApp .calDayHead{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:10px;
+  margin-bottom:8px;
+}
+#soApp .calDayHead .pill{
+  font-weight: 900;
+}
+#soApp .calDayItems{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+#soApp details.calHolidayRow{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  background: rgba(255,255,255,.03);
+  padding:7px 10px;
+}
+#soApp details.calHolidayRow summary{
+  list-style:none;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+#soApp details.calHolidayRow summary::-webkit-details-marker{ display:none; }
+#soApp .calHolidayLine{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+#soApp .calHolidayFlag{
+  font-size: 16px;
+  line-height: 1;
+}
+#soApp .calHolidayCode{
+  display:inline-flex;
+  align-items:center;
+  padding:3px 8px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.10);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.2px;
+  opacity:.95;
+}
+#soApp .calHolidayLocal{
+  color: var(--emerald);
+  font-weight: 900;
+  font-size: 15px;
+}
+#soApp .calHolidayDash{
+  opacity:.65;
+  font-weight:900;
+}
+#soApp .calHolidayEn{
+  color: var(--text);
+  opacity:.78;
+  font-weight: 800;
+  font-size: 13px;
+}
+#soApp .calHolidayMetaLine{
+  margin-top:6px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+#soApp .calHolidayBody{
+  padding-top:8px;
+}
+/* Make weekday in date pill very visible */
+#soApp .pill .calWd{
+  color: var(--emerald);
+  font-weight: 900;
+}
+
+
 
 #soApp .cmdk{
   position: fixed;
@@ -5281,6 +5491,7 @@
   <div class="rightTabs" role="tablist" aria-label="Right view tabs">
     <button id="tabMap" class="rtTab active" type="button" role="tab" aria-selected="true">🗺️ Map</button>
     <button id="tabCard" class="rtTab" type="button" role="tab" aria-selected="false">🪪 Card</button>
+    <button id="tabCal" class="rtTab" type="button" role="tab" aria-selected="false">📅 Calendar</button>
   </div>
 
     <div id="mapView">
@@ -5305,6 +5516,62 @@
         </div>
       </div>
       <div class="profileBody" id="profileBody"></div>
+    </div>
+
+    <div id="calendarView" style="display:none;">
+      <div class="profileHead">
+        <div class="profileTitle">
+          <b>📅 Holidays</b>
+          <span>Pick countries and see upcoming holidays</span>
+        </div>
+        <div class="btns" style="gap:8px; justify-content:flex-end;">
+          <button id="calRefreshBtn" class="secondary" title="Reload holidays">↻ Refresh</button>
+          <button id="calBackToMapBtn" class="secondary" title="Back to map">📍 Map</button>
+        </div>
+      </div>
+
+      <div class="profileBody" style="padding:14px; display:flex; flex-direction:column; gap:12px;">
+        <div class="profileCard">
+          <div class="k">Countries</div>
+          <div class="v">
+            <div class="hint" style="margin-top:2px;">Type to search, then click a suggestion. Multiple countries supported.</div>
+            <input id="calCountrySearch" type="text" placeholder="Search country (e.g. Germany, United States, Japan)..." style="width:100%; margin-top:8px;" />
+            <div id="calSuggestions" class="hint" style="margin-top:10px;"></div>
+            <div id="calSelectedCountries" class="tagRow" style="margin-top:10px;"></div>
+          </div>
+        </div>
+
+        <div class="profileCard">
+          <div class="k">States / Regions</div>
+          <div class="v">
+            <div class="hint" style="margin-top:2px;">Optional: filter holidays that apply to specific states/regions (e.g. DE-BY, US-CA). Start typing to search available regions from the selected countries.</div>
+            <input id="calRegionSearch" type="text" placeholder="Search state/region (e.g. Bavaria, California, DE-BY)..." style="width:100%; margin-top:8px;" />
+            <div id="calRegionSuggestions" class="hint" style="margin-top:10px;"></div>
+            <div id="calSelectedRegions" class="tagRow" style="margin-top:10px;"></div>
+            <label class="calChk" style="margin-top:10px;">
+              <input type="checkbox" id="calIncludeNationwide" checked />
+              <span>Include nationwide holidays</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="profileCard">
+          <div class="k">Importance</div>
+          <div class="v" id="calTypeFilters">—</div>
+        </div>
+
+        <div class="profileCard">
+          <div class="k">Next holiday (global)</div>
+          <div class="v" id="calNextHoliday">—</div>
+        </div>
+
+        <div class="profileCard">
+          <div class="k">Upcoming</div>
+          <div class="v" id="calHolidayList">—</div>
+        </div>
+
+        <button id="calLoadMoreBtn" class="secondary" type="button">Load more</button>
+      </div>
     </div>
   </div>
 </div>
@@ -5485,6 +5752,21 @@
   
 
   function safeParseJSON(str){ try{ return JSON.parse(str); }catch{ return null; } }
+
+  function parseJSONLoose(text){
+    // Accepts slightly non-strict JSON: BOM, trailing commas, line comments.
+    if(typeof text !== "string") return null;
+    let t = text;
+    // Strip UTF-8 BOM
+    t = t.replace(/^\uFEFF/, "");
+    // Remove // comments (only when they start a line)
+    t = t.replace(/^\s*\/\/.*$/mg, "");
+    // Remove /* ... */ comments
+    t = t.replace(/\/\*[\s\S]*?\*\//g, "");
+    // Remove trailing commas
+    t = t.replace(/,\s*([}\]])/g, "$1");
+    return safeParseJSON(t);
+  }
   function uuid(){ return (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+"_"+Math.random().toString(16).slice(2))); }
   function escapeHTML(s){
     return String(s ?? "").replace(/[&<>\"']/g, (c)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
@@ -9718,18 +10000,28 @@ async function geocodeAddress(addr){
   function setRightTab(which){
     const tMap = document.getElementById("tabMap");
     const tCard = document.getElementById("tabCard");
+    const tCal = document.getElementById("tabCal");
     if(!tMap || !tCard) return;
+
     const isMap = which === "map";
+    const isCard = which === "card";
+    const isCal = which === "cal";
+
     tMap.classList.toggle("active", isMap);
-    tCard.classList.toggle("active", !isMap);
+    tCard.classList.toggle("active", isCard);
+    if(tCal) tCal.classList.toggle("active", isCal);
+
     tMap.setAttribute("aria-selected", isMap ? "true" : "false");
-    tCard.setAttribute("aria-selected", !isMap ? "true" : "false");
+    tCard.setAttribute("aria-selected", isCard ? "true" : "false");
+    if(tCal) tCal.setAttribute("aria-selected", isCal ? "true" : "false");
   }
 
   function showMapView(){
     const pv = $("profileView");
     pv.classList.remove("isFavProfile");
     pv.style.display = "none";
+    const cv = $("calendarView");
+    if(cv) cv.style.display = "none";
     $("mapView").style.display = "block";
     setRightTab("map");
     // Leaflet needs a size refresh after being hidden
@@ -9738,8 +10030,839 @@ async function geocodeAddress(addr){
   }
   function showProfileView(){
     $("mapView").style.display = "none";
+    const cv = $("calendarView");
+    if(cv) cv.style.display = "none";
     $("profileView").style.display = "block";
     setRightTab("card");
+  }
+
+
+  // ==============================
+  // Calendar view: holidays (Nager.Date)
+  // ==============================
+  const HOLIDAY_API = "https://date.nager.at/api/v3";
+  const LS_HOL_COUNTRIES = "soHolidayCountries";
+  const LS_HOL_TYPES = "soHolidayTypes";
+  const LS_HOL_REGIONS = "soHolidayRegions";
+  const LS_HOL_INC_NATIONWIDE = "soHolidayIncludeNationwide";
+  const LS_HOL_SHOW = "soHolidayShowCount";
+
+  let __holidayUIInit = false;
+  let __availableCountries = null; // [{countryCode, name}]
+  let __holidayCache = {}; // key: YEAR|CC => holidays array
+  let __holidayShowCount = 20;
+
+  let __holidayRegionPool = []; // [{code,label}]
+
+  // Basic ISO-3166-2 label maps (expand anytime)
+  const REGION_LABELS = {
+    // Germany (Bundesländer)
+    "DE-BW":"Baden-Württemberg",
+    "DE-BY":"Bayern",
+    "DE-BE":"Berlin",
+    "DE-BB":"Brandenburg",
+    "DE-HB":"Bremen",
+    "DE-HH":"Hamburg",
+    "DE-HE":"Hessen",
+    "DE-MV":"Mecklenburg-Vorpommern",
+    "DE-NI":"Niedersachsen",
+    "DE-NW":"Nordrhein-Westfalen",
+    "DE-RP":"Rheinland-Pfalz",
+    "DE-SL":"Saarland",
+    "DE-SN":"Sachsen",
+    "DE-ST":"Sachsen-Anhalt",
+    "DE-SH":"Schleswig-Holstein",
+    "DE-TH":"Thüringen",
+
+    // United States
+    "US-AL":"Alabama","US-AK":"Alaska","US-AZ":"Arizona","US-AR":"Arkansas","US-CA":"California","US-CO":"Colorado","US-CT":"Connecticut",
+    "US-DE":"Delaware","US-FL":"Florida","US-GA":"Georgia","US-HI":"Hawaii","US-ID":"Idaho","US-IL":"Illinois","US-IN":"Indiana",
+    "US-IA":"Iowa","US-KS":"Kansas","US-KY":"Kentucky","US-LA":"Louisiana","US-ME":"Maine","US-MD":"Maryland","US-MA":"Massachusetts",
+    "US-MI":"Michigan","US-MN":"Minnesota","US-MS":"Mississippi","US-MO":"Missouri","US-MT":"Montana","US-NE":"Nebraska","US-NV":"Nevada",
+    "US-NH":"New Hampshire","US-NJ":"New Jersey","US-NM":"New Mexico","US-NY":"New York","US-NC":"North Carolina","US-ND":"North Dakota",
+    "US-OH":"Ohio","US-OK":"Oklahoma","US-OR":"Oregon","US-PA":"Pennsylvania","US-RI":"Rhode Island","US-SC":"South Carolina",
+    "US-SD":"South Dakota","US-TN":"Tennessee","US-TX":"Texas","US-UT":"Utah","US-VT":"Vermont","US-VA":"Virginia","US-WA":"Washington",
+    "US-WV":"West Virginia","US-WI":"Wisconsin","US-WY":"Wyoming",
+    "US-DC":"District of Columbia","US-PR":"Puerto Rico","US-GU":"Guam","US-VI":"U.S. Virgin Islands","US-AS":"American Samoa","US-MP":"Northern Mariana Islands",
+
+    // Canada (provinces/territories)
+    "CA-AB":"Alberta","CA-BC":"British Columbia","CA-MB":"Manitoba","CA-NB":"New Brunswick","CA-NL":"Newfoundland and Labrador",
+    "CA-NS":"Nova Scotia","CA-NT":"Northwest Territories","CA-NU":"Nunavut","CA-ON":"Ontario","CA-PE":"Prince Edward Island",
+    "CA-QC":"Quebec","CA-SK":"Saskatchewan","CA-YT":"Yukon"
+  };
+
+  function regionLabel(code){
+    const c = String(code||"").toUpperCase();
+    return REGION_LABELS[c] || c;
+  }
+
+  function joinShort(list, max=3){
+    const a = Array.isArray(list) ? list.filter(Boolean) : [];
+    if(a.length <= max) return a.join(", ");
+    return a.slice(0,max).join(", ") + ` +${a.length-max}`;
+  }
+
+  function weekdayShort(iso){
+    try{
+      const d = parseISODateLocal(iso);
+      return d.toLocaleDateString("de-DE", { weekday:"short" });
+    }catch{
+      return "";
+    }
+  }
+
+  function dateLabelWithWeekday(iso){
+    const wd = weekdayShort(iso);
+    return wd ? `${iso} (${wd})` : iso;
+  }
+  function datePillHTML(iso){
+    const safeIso = escapeHTML(iso || "—");
+    const wd = weekdayShort(iso);
+    if(!wd) return `<span class="pill">${safeIso}</span>`;
+    return `<span class="pill">${safeIso} <span class="calWd">(${escapeHTML(wd)})</span></span>`;
+  }
+
+
+  function holidayNameBlockHTML(h){
+    const local = (h.localName || h.name || "—").trim();
+    const en = (h.name || "").trim();
+    const showEn = en && local && en !== local;
+    return { main: local || en || "—", en: showEn ? en : "" };
+  }
+
+  function holidayRegionsInfo(h){
+    const arr = Array.isArray(h.counties) ? h.counties : [];
+    if(!arr.length) return { text: "Nationwide", full: "" };
+    const labels = arr.map(regionLabel);
+    return { text: joinShort(labels, 3), full: labels.join(", ") };
+  }
+
+  function matchesRegionFilter(h, selectedRegions, includeNationwide){
+    const regs = Array.isArray(selectedRegions) ? selectedRegions : [];
+    if(!regs.length) return true;
+    const arr = Array.isArray(h.counties) ? h.counties : [];
+    if(!arr.length) return includeNationwide !== false;
+    return arr.some(c=> regs.includes(String(c).toUpperCase()));
+  }
+
+
+  function showCalendarView(){
+    $("mapView").style.display = "none";
+    $("profileView").style.display = "none";
+    const cv = $("calendarView");
+    if(cv) cv.style.display = "block";
+    setRightTab("cal");
+    initHolidayUIOnce();
+    refreshHolidays(true);
+  }
+
+  function todayISO(){
+    const d = new Date();
+    // build local YYYY-MM-DD
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    const da = String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${da}`;
+  }
+
+  function parseISODateLocal(iso){
+    // iso = YYYY-MM-DD -> local date at midnight
+    return new Date(iso + "T00:00:00");
+  }
+
+  function loadHolidaySettings(){
+    try{
+      const raw = localStorage.getItem(LS_HOL_COUNTRIES);
+      const cc = raw ? JSON.parse(raw) : [];
+      const rawT = localStorage.getItem(LS_HOL_TYPES);
+      const types = rawT ? JSON.parse(rawT) : null;
+
+      const rawR = localStorage.getItem(LS_HOL_REGIONS);
+      const regions = rawR ? JSON.parse(rawR) : [];
+
+      const rawN = localStorage.getItem(LS_HOL_INC_NATIONWIDE);
+      const includeNationwide = (rawN === null) ? true : (String(rawN) === "true");
+
+      const rawS = localStorage.getItem(LS_HOL_SHOW);
+      const showCount = rawS ? parseInt(rawS,10) : NaN;
+      if(Number.isFinite(showCount) && showCount>0) __holidayShowCount = showCount;
+
+      return {
+        countries: Array.isArray(cc) ? cc : [],
+        types: (types && typeof types==="object") ? types : null,
+        regions: Array.isArray(regions) ? regions : [],
+        includeNationwide
+      };
+    }catch{
+      return { countries: [], types: null, regions: [], includeNationwide: true };
+    }
+  }
+  function saveHolidaySettings(countries, types, regions, includeNationwide){
+    try{
+      localStorage.setItem(LS_HOL_COUNTRIES, JSON.stringify(countries||[]));
+      if(types) localStorage.setItem(LS_HOL_TYPES, JSON.stringify(types));
+      localStorage.setItem(LS_HOL_REGIONS, JSON.stringify(regions||[]));
+      localStorage.setItem(LS_HOL_INC_NATIONWIDE, String(includeNationwide !== false));
+      localStorage.setItem(LS_HOL_SHOW, String(__holidayShowCount));
+    }catch{}
+  }
+
+  async function fetchJSON(url){
+    const res = await fetch(url, { method:"GET" });
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  }
+
+  async function getAvailableCountries(){
+    if(__availableCountries) return __availableCountries;
+    const data = await fetchJSON(`${HOLIDAY_API}/AvailableCountries`);
+    // normalize
+    __availableCountries = (Array.isArray(data) ? data : []).map(x=>({
+      countryCode: (x.countryCode||"").toUpperCase(),
+      name: x.name || x.countryCode || "—"
+    })).filter(x=>x.countryCode);
+    // sort
+    __availableCountries.sort((a,b)=>a.name.localeCompare(b.name));
+    return __availableCountries;
+  }
+
+  async function getPublicHolidays(year, countryCode){
+    const cc = (countryCode||"").toUpperCase();
+    const key = `${year}|${cc}`;
+    if(__holidayCache[key]) return __holidayCache[key];
+    const data = await fetchJSON(`${HOLIDAY_API}/PublicHolidays/${year}/${cc}`);
+    __holidayCache[key] = Array.isArray(data) ? data : [];
+    return __holidayCache[key];
+  }
+
+  function pillHTML(text, title){
+    const t = (title ? ` title="${escapeHTML(title)}"` : "");
+    return `<span class="tagMini"${t}>${escapeHTML(text)}</span>`;
+  }
+
+  function renderSelectedCountries(){
+    const box = $("calSelectedCountries");
+    if(!box) return;
+    const settings = loadHolidaySettings();
+    const selected = settings.countries || [];
+    if(!selected.length){
+      box.innerHTML = '<span class="hint">No countries selected yet.</span>';
+      return;
+    }
+    box.innerHTML = selected.map(cc=>{
+      return `<button type="button" class="tagMini" style="cursor:pointer;" data-cc="${escapeHTML(cc)}" title="Remove ${escapeHTML(cc)}">✕ ${escapeHTML(cc)}</button>`;
+    }).join(" ");
+    // bind remove
+    box.querySelectorAll("button[data-cc]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const cc = btn.getAttribute("data-cc");
+        const s = loadHolidaySettings();
+        const next = (s.countries||[]).filter(x=>x!==cc);
+        saveHolidaySettings(next, s.types || null, s.regions||[], s.includeNationwide);
+        renderSelectedCountries();
+    renderSelectedRegions();
+        refreshHolidays(true);
+      });
+    });
+  }
+  function renderSelectedRegions(){
+    const box = $("calSelectedRegions");
+    const sug = $("calRegionSuggestions");
+    const cb = $("calIncludeNationwide");
+    const settings = loadHolidaySettings();
+    const regs = (settings.regions || []).map(x=>String(x||"").toUpperCase()).filter(Boolean);
+
+    if(cb) cb.checked = settings.includeNationwide !== false;
+
+    if(!box) return;
+    if(!regs.length){
+      box.innerHTML = '<span class="hint">No region filter selected.</span>';
+    }else{
+      box.innerHTML = regs.map(code=>{
+        const label = regionLabel(code);
+        const txt = (label === code) ? code : `${code} · ${label}`;
+        return `<button type="button" class="tagMini" style="cursor:pointer;" data-reg="${escapeHTML(code)}" title="Remove ${escapeHTML(code)}">✕ ${escapeHTML(txt)}</button>`;
+      }).join(" ");
+      box.querySelectorAll("button[data-reg]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const code = String(btn.getAttribute("data-reg")||"").toUpperCase();
+          const s = loadHolidaySettings();
+          const next = (s.regions||[]).map(x=>String(x||"").toUpperCase()).filter(x=>x!==code);
+          saveHolidaySettings(s.countries||[], s.types||null, next, s.includeNationwide);
+          renderSelectedRegions();
+          refreshHolidays(false);
+        });
+      });
+    }
+
+    if(sug && (!__holidayRegionPool || !__holidayRegionPool.length)){
+      sug.innerHTML = '<span class="hint">Select countries to load regions.</span>';
+    }
+  }
+
+  function buildRegionSuggestions(query){
+    const box = $("calRegionSuggestions");
+    if(!box) return;
+
+    const q = (query||"").trim().toLowerCase();
+    if(!__holidayRegionPool || !__holidayRegionPool.length){
+      box.innerHTML = '<span class="hint">Select countries to load regions.</span>';
+      return;
+    }
+    if(q.length < 1){
+      box.innerHTML = '<span class="hint">Start typing to search regions/states.</span>';
+      return;
+    }
+
+    const list = __holidayRegionPool.filter(r=>{
+      return r.code.toLowerCase().includes(q) || (r.label||"").toLowerCase().includes(q);
+    }).slice(0, 12);
+
+    if(!list.length){
+      box.innerHTML = '<span class="hint">No matches.</span>';
+      return;
+    }
+
+    box.innerHTML = list.map(r=>{
+      return `<button type="button" class="secondary" style="padding:6px 10px; margin:4px 6px 0 0;" data-reg="${escapeHTML(r.code)}" title="Add ${escapeHTML(r.label)}">${escapeHTML(r.label)} <span class="hint">(${escapeHTML(r.code)})</span></button>`;
+    }).join("");
+
+    box.querySelectorAll("button[data-reg]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const code = String(btn.getAttribute("data-reg")||"").toUpperCase();
+        const s = loadHolidaySettings();
+        const cur = (s.regions||[]).map(x=>String(x||"").toUpperCase()).filter(Boolean);
+        if(!cur.includes(code)){
+          const next = cur.concat([code]);
+          saveHolidaySettings(s.countries||[], s.types||null, next, s.includeNationwide);
+          renderSelectedRegions();
+          refreshHolidays(false);
+        }
+        const inp = $("calRegionSearch");
+        if(inp){ inp.value = ""; inp.focus(); }
+        buildRegionSuggestions("");
+      });
+    });
+  }
+
+
+
+  function renderTypeFilters(knownTypes, currentTypes){
+    const box = $("calTypeFilters");
+    if(!box) return;
+    if(!knownTypes || !knownTypes.length){
+      box.innerHTML = '<span class="hint">Select a country to load holiday types.</span>';
+      return;
+    }
+    const state = currentTypes || {};
+    const html = knownTypes.map(t=>{
+      const on = state[t] !== false; // default ON
+      return `<label style="display:inline-flex; align-items:center; gap:8px; margin-right:12px; cursor:pointer;">
+        <input type="checkbox" data-htype="${escapeHTML(t)}" ${on ? "checked":""} />
+        <span>${escapeHTML(t)}</span>
+      </label>`;
+    }).join("");
+    box.innerHTML = html;
+    box.querySelectorAll('input[type="checkbox"][data-htype]').forEach(cb=>{
+      cb.addEventListener("change", ()=>{
+        const s = loadHolidaySettings();
+        const types = s.types || {};
+        const t = cb.getAttribute("data-htype");
+        types[t] = cb.checked;
+        saveHolidaySettings(s.countries||[], types, s.regions||[], s.includeNationwide);
+        refreshHolidays(false);
+      });
+    });
+  }
+
+  function matchesTypeFilter(holiday, typesState){
+    if(!typesState) return true;
+    const types = Array.isArray(holiday.types) ? holiday.types : [];
+    // if a holiday has no types, show it
+    if(!types.length) return true;
+    // show if any type is enabled
+    return types.some(t => typesState[t] !== false);
+  }
+
+  function holidayTitleInlineHTML(h, preferEnglish){
+    const nm = holidayNameBlockHTML(h);
+    if(preferEnglish){
+      const en = (h.name || nm.en || nm.main || "—").trim();
+      return escapeHTML(en || nm.main || "—");
+    }
+    if(nm.en){
+      return `${escapeHTML(nm.main)} <span class="hint" style="font-weight:700;">— ${escapeHTML(nm.en)}</span>`;
+    }
+    return escapeHTML(nm.main || "—");
+  }
+
+
+  // Build a lookup so we can mark holidays that occur in multiple selected countries
+  function buildHolidayShareMap(list){
+    const m = new Map(); // groupKey -> Set(countryCodes)
+    for(const h of (Array.isArray(list)?list:[])){
+      const k = groupKey(h);
+      if(!m.has(k)) m.set(k, new Set());
+      const cc = String(h.__cc || "").toUpperCase();
+      if(cc) m.get(k).add(cc);
+    }
+    return m;
+  }
+
+  function flagEmojiFromCountryCode(cc){
+    const c = String(cc||"").toUpperCase();
+    if(c.length !== 2) return "🏳️";
+    const a = c.charCodeAt(0);
+    const b = c.charCodeAt(1);
+    // Regional Indicator Symbols start at 0x1F1E6 ("A")
+    return String.fromCodePoint(0x1F1E6 + (a - 65), 0x1F1E6 + (b - 65));
+  }
+
+  function holidayTitleParts(h){
+    const local = String((h.localName || h.name || "—")).trim();
+    const en = String((h.name || "")).trim();
+    const showEn = en && local && en !== local;
+    return { local: local || en || "—", en: showEn ? en : "" };
+  }
+
+  function renderHolidayItemHTML(h, open=false, shareCountries=null){
+    if(!h) return "";
+    const cc = String(h.__cc || "").toUpperCase();
+    const scope = String(h.__scope || h.__cc || "").toUpperCase();
+    const flag = flagEmojiFromCountryCode(cc);
+    const tp = holidayTitleParts(h);
+
+    const types = (Array.isArray(h.types) && h.types.length) ? h.types.join(", ") : "—";
+    const r = holidayRegionsInfo(h);
+    const regionText = r.text || "—";
+    const regionFull = r.full || r.text || "";
+
+    const me = String(h.__cc || "").toUpperCase();
+    const others = Array.isArray(shareCountries) ? shareCountries.filter(x=>x && String(x).toUpperCase() !== me) : [];
+
+    const flags = [];
+    if(h.fixed) flags.push("Fixed date");
+    if(h.global) flags.push("Global");
+    if(Number.isFinite(Number(h.launchYear)) && Number(h.launchYear) > 0) flags.push(`Since ${escapeHTML(String(h.launchYear))}`);
+
+    const counties = Array.isArray(h.counties) ? h.counties : [];
+    const countiesFull = counties.length
+      ? counties.map(c=>{
+          const code = String(c||"").toUpperCase();
+          const lbl = regionLabel(code);
+          return (lbl && lbl !== code) ? `${escapeHTML(code)} · ${escapeHTML(lbl)}` : `${escapeHTML(code)}`;
+        }).join(", ")
+      : "Nationwide";
+
+    const detailsHTML = `
+      <div class="calHolidayBody">
+        <div class="calHolidayMetaLine">
+          <span class="tagMini">${escapeHTML(scope || cc || "—")}</span>
+          <span class="tagMini">${escapeHTML(types)}</span>
+          <span class="tagMini" title="${escapeHTML(regionFull || regionText)}">${escapeHTML(regionText)}</span>
+          ${others.length ? `<span class="calBadge" title="Also occurs in: ${escapeHTML(others.join(", "))}">Shared</span>` : ``}
+        </div>
+        <div class="hint" style="margin-top:6px;">
+          <b>Regions:</b> ${countiesFull}
+        </div>
+        ${flags.length ? `<div class="hint" style="margin-top:4px;"><b>Info:</b> ${escapeHTML(flags.join(" · "))}</div>` : ``}
+      </div>
+    `;
+
+    return `<details class="calHolidayRow" ${open ? "open":""}>
+      <summary>
+        <div class="calHolidayLine">
+          <span class="calHolidayFlag">${escapeHTML(flag)}</span>
+          <span class="calHolidayCode">${escapeHTML(scope || cc || "—")}</span>
+          <span class="calHolidayLocal">${escapeHTML(tp.local)}</span>
+          ${tp.en ? `<span class="calHolidayDash">-</span><span class="calHolidayEn">${escapeHTML(tp.en)}</span>` : ``}
+        </div>
+      </summary>
+      ${detailsHTML}
+    </details>`;
+  }
+
+  function renderDateGroupHTML(dateISO, items, shareMap=null, openFirst=false){
+    const dateHTML = (dateISO && dateISO !== "—") ? datePillHTML(dateISO) : `<span class="pill">—</span>`;
+    const list = Array.isArray(items) ? items : [];
+    const out = list.map((h, idx)=>{
+      const sharedCountries = shareMap ? Array.from(shareMap.get(groupKey(h))||[]).sort() : null;
+      return renderHolidayItemHTML(h, openFirst && idx===0, sharedCountries);
+    }).join("");
+    return `<div class="calDayGroup">
+      <div class="calDayHead">${dateHTML}</div>
+      <div class="calDayItems">${out || '<span class="hint">—</span>'}</div>
+    </div>`;
+  }
+
+  // Expand holidays so each selected region (e.g. US-CA, DE-NI) becomes its own row.
+  function expandHolidaysForDisplay(list, selectedRegions, includeNationwide){
+    const regs = Array.isArray(selectedRegions) ? selectedRegions.map(x=>String(x||"").toUpperCase()).filter(Boolean) : [];
+    const incNation = includeNationwide !== false;
+    const out = [];
+    const seen = new Set();
+
+    for(const h of (Array.isArray(list)?list:[])){
+      if(!h || !h.date) continue;
+      const cc = String(h.__cc || "").toUpperCase();
+      const selFor = regs.filter(r=> r.startsWith(cc + "-"));
+      const counties = Array.isArray(h.counties) ? h.counties.map(c=>String(c||"").toUpperCase()) : [];
+
+      let scopes = [];
+      if(selFor.length){
+        if(counties.length){
+          scopes = selFor.filter(r=> counties.includes(r));
+        }else{
+          if(incNation) scopes = selFor.slice();
+        }
+      }else{
+        scopes = [cc];
+      }
+
+      if(!scopes.length) continue;
+
+      for(const sc of scopes){
+        const key = `${h.date}|${cc}|${sc}|${String(h.localName||"")}|${String(h.name||"")}|${Array.isArray(h.types)?h.types.join(","):""}`;
+        if(seen.has(key)) continue;
+        seen.add(key);
+        out.push(Object.assign({}, h, { __scope: sc }));
+      }
+    }
+
+    out.sort((a,b)=>{
+      if(a.date !== b.date) return String(a.date).localeCompare(String(b.date));
+      const na = String(a.localName || a.name || "").toLowerCase();
+      const nb = String(b.localName || b.name || "").toLowerCase();
+      if(na !== nb) return na.localeCompare(nb);
+      return String(a.__scope || a.__cc || "").localeCompare(String(b.__scope || b.__cc || ""));
+    });
+
+    return out;
+  }
+
+  function groupKey(h){
+
+    const base = String((h.name || h.localName || "—")).trim().toLowerCase();
+    return `${h.date || "—"}|${base}`;
+  }
+
+  function buildHolidayGroups(list){
+    const map = new Map();
+    for(const h of (Array.isArray(list)?list:[])){
+      const key = groupKey(h);
+      if(!map.has(key)){
+        map.set(key, {
+          key,
+          date: h.date || "—",
+          // prefer English/common name for grouping display
+          name: (h.name || h.localName || "—"),
+          items: []
+        });
+      }
+      map.get(key).items.push(h);
+    }
+    const groups = Array.from(map.values());
+    groups.forEach(g=> g.items.sort((a,b)=>(a.__cc||"").localeCompare(b.__cc||"")));
+    groups.sort((a,b)=>{
+      if(a.date !== b.date) return String(a.date).localeCompare(String(b.date));
+      return String(a.name||"").localeCompare(String(b.name||""));
+    });
+    return groups;
+  }
+
+  function groupBadgesHTML(g){
+    const items = g.items || [];
+    if(items.length <= 1) return "";
+    const countries = Array.from(new Set(items.map(x=>x.__cc).filter(Boolean)));
+    const cTxt = joinShort(countries, 6);
+    const mixed = (items.some(x=>Array.isArray(x.counties)&&x.counties.length) && items.some(x=>!(Array.isArray(x.counties)&&x.counties.length)));
+    const shared = `<span class="calBadge" title="Shared holiday across multiple selections">Shared · ${escapeHTML(String(items.length))}</span>`;
+    const mixedB = mixed ? `<span class="tagMini" title="Some selections are nationwide, others regional">Mixed coverage</span>` : "";
+    const cPill = countries.length ? `<span class="tagMini" title="${escapeHTML(countries.join(", "))}">Countries: ${escapeHTML(cTxt)}</span>` : "";
+    return `${shared} ${mixedB} ${cPill}`;
+  }
+
+  function renderGroupHTML(g, open=false){
+    const items = g.items || [];
+    const first = items[0] || {};
+    const dateISO = g.date || first.date || "—";
+    const dateLbl = (dateISO && dateISO!=="—") ? dateLabelWithWeekday(dateISO) : "—";
+
+    const title = (items.length > 1)
+      ? holidayTitleInlineHTML(first, true)
+      : holidayTitleInlineHTML(first, false);
+
+    // summary meta line
+    const summaryMeta = (items.length === 1)
+      ? (() => {
+          const h = first;
+          const types = (Array.isArray(h.types) && h.types.length) ? h.types.join(", ") : "—";
+          const r = holidayRegionsInfo(h);
+          const regionChunk = r.text ? ` · <span title="${escapeHTML(r.full || r.text)}">${escapeHTML(r.text)}</span>` : "";
+          return `<div class="hint" style="margin-top:4px;">${escapeHTML(h.__cc||"")} · ${escapeHTML(types)}${regionChunk}</div>`;
+        })()
+      : `<div class="hint" style="margin-top:4px;">Click to see details per country/region.</div>`;
+
+    const badges = groupBadgesHTML(g);
+    const itemsHTML = items.map(h=>{
+      const types = (Array.isArray(h.types) && h.types.length) ? h.types.join(", ") : "—";
+      const r = holidayRegionsInfo(h);
+      const regionChunk = r.text ? ` · <span title="${escapeHTML(r.full || r.text)}">${escapeHTML(r.text)}</span>` : "";
+      return `<div class="calItemRow">
+        <div class="calItemLeft"><span class="pill">${escapeHTML(h.__cc||"")}</span></div>
+        <div style="flex:1 1 220px;">
+          <b>${holidayTitleInlineHTML(h, false)}</b>
+          <div class="hint" style="margin-top:2px;">${escapeHTML(types)}${regionChunk}</div>
+        </div>
+      </div>`;
+    }).join("");
+
+    return `<details class="calGroup" ${open ? "open":""}>
+      <summary>
+        <div class="calHolidayDate"><span class="pill">${escapeHTML(dateLbl)}</span></div>
+        <div class="calGroupTitle">
+          <b>${title}</b>
+          ${summaryMeta}
+          <div class="calGroupMeta">${badges}</div>
+        </div>
+      </summary>
+      ${items.length > 1 ? `<div class="calGroupItems">${itemsHTML}</div>` : ``}
+    </details>`;
+  }
+
+  async function buildSuggestions(query){
+    const box = $("calSuggestions");
+    if(!box) return;
+    const q = (query||"").trim().toLowerCase();
+    if(q.length < 1){
+      box.innerHTML = '<span class="hint">Start typing to search countries.</span>';
+      return;
+    }
+    let list = [];
+    try{
+      const all = await getAvailableCountries();
+      list = all.filter(c=>{
+        return c.name.toLowerCase().includes(q) || c.countryCode.toLowerCase().includes(q);
+      }).slice(0, 10);
+    }catch(err){
+      box.innerHTML = '<span class="hint">Could not load countries. Check your connection.</span>';
+      return;
+    }
+
+    if(!list.length){
+      box.innerHTML = '<span class="hint">No matches.</span>';
+      return;
+    }
+    box.innerHTML = list.map(c=>{
+      return `<button type="button" class="secondary" style="padding:6px 10px; margin:4px 6px 0 0;" data-cc="${escapeHTML(c.countryCode)}" title="Add ${escapeHTML(c.name)}">${escapeHTML(c.name)} <span class="hint">(${escapeHTML(c.countryCode)})</span></button>`;
+    }).join("");
+
+    box.querySelectorAll("button[data-cc]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const cc = btn.getAttribute("data-cc");
+        const s = loadHolidaySettings();
+        const cur = s.countries || [];
+        if(!cur.includes(cc)){
+          const next = cur.concat([cc]);
+          saveHolidaySettings(next, s.types || null, s.regions||[], s.includeNationwide);
+          renderSelectedCountries();
+          refreshHolidays(true);
+        }
+        const inp = $("calCountrySearch");
+        if(inp){ inp.value = ""; inp.focus(); }
+        buildSuggestions("");
+    buildRegionSuggestions("");
+    renderSelectedRegions();
+      });
+    });
+  }
+
+  async function refreshHolidays(resetShow){
+    const nextBox = $("calNextHoliday");
+    const listBox = $("calHolidayList");
+    if(!nextBox || !listBox) return;
+
+    if(resetShow){
+      __holidayShowCount = 20;
+      try{ localStorage.setItem(LS_HOL_SHOW, String(__holidayShowCount)); }catch{}
+    }
+
+    const settings = loadHolidaySettings();
+    const selected = settings.countries || [];
+    const typesState = settings.types || null;
+    const selectedRegions = (settings.regions || []).map(x=>String(x||"").toUpperCase()).filter(Boolean);
+    const includeNationwide = settings.includeNationwide !== false;
+
+    renderSelectedCountries();
+
+    if(!selected.length){
+      nextBox.innerHTML = '<span class="hint">Select at least one country.</span>';
+      listBox.innerHTML = '<span class="hint">No countries selected.</span>';
+      __holidayRegionPool = [];
+      renderTypeFilters([], typesState);
+      renderSelectedRegions();
+      buildRegionSuggestions("");
+      return;
+    }
+
+    const today = parseISODateLocal(todayISO());
+    const year = today.getFullYear();
+
+    // load this year (and next year if needed)
+    let all = [];
+    try{
+      for(const cc of selected){
+        const a = await getPublicHolidays(year, cc);
+        a.forEach(h=> all.push(Object.assign({}, h, { __cc: cc })));
+      }
+      // also prefetch next year so "Load more" can extend smoothly near year end
+      for(const cc of selected){
+        const b = await getPublicHolidays(year+1, cc);
+        b.forEach(h=> all.push(Object.assign({}, h, { __cc: cc })));
+      }
+    }catch(err){
+      nextBox.innerHTML = '<span class="hint">Could not load holidays. Please try refresh.</span>';
+      listBox.innerHTML = '<span class="hint">—</span>';
+      return;
+    }
+
+    // gather known types
+    const typeSet = new Set();
+    all.forEach(h=>{
+      (Array.isArray(h.types) ? h.types : []).forEach(t=> typeSet.add(t));
+    });
+    const knownTypes = Array.from(typeSet).sort((a,b)=>a.localeCompare(b));
+    // gather known regions (ISO 3166-2 codes) from counties
+    const regSet = new Set();
+    all.forEach(h=>{
+      (Array.isArray(h.counties) ? h.counties : []).forEach(c=>{
+        const code = String(c||"").toUpperCase();
+        if(code) regSet.add(code);
+      });
+    });
+    __holidayRegionPool = Array.from(regSet).sort((a,b)=>a.localeCompare(b)).map(code=>({ code, label: `${code} · ${regionLabel(code)}` }));
+    renderSelectedRegions();
+    buildRegionSuggestions(($("calRegionSearch")?.value || ""));
+    // set default type state if none stored: enable all by default
+    let effTypes = typesState;
+    if(!effTypes){
+      effTypes = {};
+      knownTypes.forEach(t=> effTypes[t] = true);
+      saveHolidaySettings(selected, effTypes, settings.regions||[], settings.includeNationwide);
+    }
+    renderTypeFilters(knownTypes, effTypes);
+
+    // filter and sort
+    const filtered = all.filter(h=>{
+      if(!h || !h.date) return false;
+      const d = parseISODateLocal(h.date);
+      if(d < today) return false;
+      if(!matchesTypeFilter(h, effTypes)) return false;
+      if(!matchesRegionFilter(h, selectedRegions, includeNationwide)) return false;
+      return true;
+    }).sort((a,b)=>{
+      if(a.date !== b.date) return a.date.localeCompare(b.date);
+      const na = String(a.name || a.localName || "").toLowerCase();
+      const nb = String(b.name || b.localName || "").toLowerCase();
+      if(na !== nb) return na.localeCompare(nb);
+      return (a.__cc||"").localeCompare(b.__cc||"");
+    });
+
+    if(!filtered.length){
+      nextBox.innerHTML = '<span class="hint">No upcoming holidays for current filters.</span>';
+      listBox.innerHTML = '<span class="hint">—</span>';
+      return;
+    }
+
+    const shareMap = buildHolidayShareMap(filtered);
+
+    // Expand list so each selected region becomes its own row
+    const expanded = expandHolidaysForDisplay(filtered, selectedRegions, includeNationwide);
+
+    // Next holiday (global): earliest date, show ALL holidays on that date (not merged)
+    const nextDate = expanded[0]?.date || "";
+    const nextItems = nextDate ? expanded.filter(h=>h.date === nextDate) : [];
+    nextBox.innerHTML = nextItems.length
+      ? renderDateGroupHTML(nextDate, nextItems, shareMap, false)
+      : '<span class="hint">No upcoming holidays for current filters.</span>';
+
+    // Upcoming: everything AFTER the next date (keeps overview clean)
+    const rest = nextDate ? expanded.filter(h=>h.date !== nextDate) : expanded.slice();
+    const shown = rest.slice(0, __holidayShowCount);
+
+    // Group shown items by date
+    const byDate = new Map();
+    for(const h of shown){
+      const d = h.date || "—";
+      if(!byDate.has(d)) byDate.set(d, []);
+      byDate.get(d).push(h);
+    }
+    const dates = Array.from(byDate.keys()).sort((a,b)=> String(a).localeCompare(String(b)));
+
+    listBox.innerHTML = dates.length
+      ? dates.map(d=> renderDateGroupHTML(d, byDate.get(d) || [], shareMap, false)).join("")
+      : '<span class="hint">—</span>';
+
+    const moreBtn = $("calLoadMoreBtn");
+    if(moreBtn){
+      moreBtn.disabled = rest.length <= __holidayShowCount;
+      const left = Math.max(0, rest.length - __holidayShowCount);
+      moreBtn.textContent = moreBtn.disabled ? "No more" : `Load more (${left} left)`;
+    }
+  }
+
+  function initHolidayUIOnce(){
+    if(__holidayUIInit) return;
+    __holidayUIInit = true;
+
+    renderSelectedCountries();
+    buildSuggestions("");
+
+    const inp = $("calCountrySearch");
+    if(inp){
+      inp.addEventListener("input", ()=> buildSuggestions(inp.value));
+      inp.addEventListener("keydown", (ev)=>{
+        if(ev.key === "Escape"){
+          inp.value = "";
+          buildSuggestions("");
+          inp.blur();
+        }
+      });
+    }
+
+    const rinp = $("calRegionSearch");
+    if(rinp){
+      rinp.addEventListener("input", ()=> buildRegionSuggestions(rinp.value));
+      rinp.addEventListener("keydown", (ev)=>{
+        if(ev.key === "Escape"){
+          rinp.value = "";
+          buildRegionSuggestions("");
+          rinp.blur();
+        }
+      });
+    }
+
+    const cbN = $("calIncludeNationwide");
+    if(cbN){
+      cbN.addEventListener("change", ()=>{
+        const s = loadHolidaySettings();
+        saveHolidaySettings(s.countries||[], s.types||null, s.regions||[], cbN.checked);
+        renderSelectedRegions();
+        refreshHolidays(false);
+      });
+    }
+
+    $("calRefreshBtn")?.addEventListener("click", ()=> refreshHolidays(true));
+    $("calBackToMapBtn")?.addEventListener("click", ()=> showMapView());
+
+    const moreBtn = $("calLoadMoreBtn");
+    if(moreBtn){
+      moreBtn.addEventListener("click", ()=>{
+        __holidayShowCount += 20;
+        try{ localStorage.setItem(LS_HOL_SHOW, String(__holidayShowCount)); }catch{}
+        refreshHolidays(false);
+      });
+    }
   }
 
   // ==============================
@@ -11870,7 +12993,7 @@ function exportJSON(){
 
         return ({
           id: String(x.id || uuid()),
-          nickname: String(x.nickname || ""),
+          nickname: String(x.nickname || x.name || x.fullname || x.displayName || ""),
           realName: x.realName ? String(x.realName) : "",
           showRealName: (typeof x.showRealName === "boolean") ? x.showRealName : !!(x.realName),
           connections: normalizeConnectionsArray(x.connections, String(x.id||"")),
@@ -11898,7 +13021,7 @@ function exportJSON(){
           updatedAt: new Date().toISOString()
         });
       })
-      .filter(x=>x.nickname && x.tz && Number.isFinite(x.lat) && Number.isFinite(x.lon));
+      .filter(x=>(x.nickname || x.realName));
   }
 
   function parseImportPayload(parsed){
@@ -11969,7 +13092,8 @@ function exportJSON(){
 
     try{
       const text = await file.text();
-      const parsed = JSON.parse(text);
+      const parsed = parseJSONLoose(text);
+      if(!parsed){ toast("Could not import file"); return; }
       const { cleaned, incomingSpecialId } = parseImportPayload(parsed);
 
       if(cleaned.length === 0){
@@ -12808,7 +13932,8 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
   // Right panel tabs
   const _tabMap = $("tabMap");
   const _tabCard = $("tabCard");
-  if(_tabMap) _tabMap.addEventListener("click", ()=>{
+    const _tabCal = $("tabCal");
+if(_tabMap) _tabMap.addEventListener("click", ()=>{
     showMapView();
     scrollRightCardIntoView();
   });
@@ -12821,6 +13946,10 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
     }
   });
 
+  if(_tabCal) _tabCal.addEventListener("click", ()=>{
+    showCalendarView();
+    scrollRightCardIntoView();
+  });
   // Advanced filters (popover)
   const _pop = document.getElementById("filterPopover");
   if(_pop){
