@@ -403,11 +403,13 @@
 
     /* Leaflet popup (match dark theme) */
     #soApp .leaflet-popup-content-wrapper{
-      background: rgba(12,18,34,.96);
+      background: rgba(0,0,0,.52);
       color: var(--text);
       border: 1px solid rgba(255,255,255,.12);
       border-radius: 16px;
-      box-shadow: var(--shadow);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       /* wider but visually smaller */
       max-width: min(680px, 94vw);
     }
@@ -422,9 +424,11 @@
       #soApp .leaflet-popup-content{ min-width: 0; margin: 10px 10px; }
     }
     #soApp .leaflet-popup-tip{
-      background: rgba(12,18,34,.96);
+      background: rgba(0,0,0,.52);
       border: 1px solid rgba(255,255,255,.12);
-      box-shadow: var(--shadow);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
     #soApp .leaflet-container a.leaflet-popup-close-button{
       color: var(--muted);
@@ -950,8 +954,11 @@
     #soApp .mapLegend{
       padding:8px 10px;
       border-radius: 12px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(5,10,25,.85);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.52);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       font-size:12px;
       letter-spacing:.1px;
       color: var(--text);
@@ -1717,6 +1724,32 @@
   background: rgba(16,14,18,.96);
   box-shadow: 0 0 38px rgba(255,210,120,.52);
 }
+
+/* === Glassy map popups (keep glow, match Holidays/Legend) === */
+#soApp .leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+  background: rgba(14,18,28,.56) !important;
+  border:1px solid rgba(80,255,190,.46) !important;
+  backdrop-filter: blur(10px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+}
+#soApp .leaflet-popup.normPopup .leaflet-popup-tip{
+  background: rgba(14,18,28,.56) !important;
+  backdrop-filter: blur(10px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+}
+
+#soApp .leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+  background: rgba(16,14,18,.56) !important;
+  border:1px solid rgba(255,215,140,.52) !important;
+  backdrop-filter: blur(10px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+}
+#soApp .leaflet-popup.favPopup .leaflet-popup-tip{
+  background: rgba(16,14,18,.56) !important;
+  backdrop-filter: blur(10px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+}
+
 
 
 /* === Favorite strip: wider + smoother gradient === */
@@ -5132,10 +5165,11 @@
   font-weight: 900;
 }
 #soApp .soHolidayMapCtrl .qiTop .pill{
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.10);
-  border: 1px solid rgba(255,255,255,.12);
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 #soApp .soHolidayMapCtrl .qiCountries{
   margin-top: 6px;
@@ -5173,6 +5207,20 @@
   line-height:1;
   transform:translate(10px,-8px);
   pointer-events:none;
+}
+
+
+/* Fix: map holiday UI labels and popup hint chips must stay transparent */
+#soApp .soHolidayMapCtrl .hint,
+#soApp .soHolidayMapCtrl .ttl,
+#soApp .leaflet-popup .hint{
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 
@@ -9488,7 +9536,8 @@ function refreshMarkerPopups(){
   const LS_MAP_HOL_PREVIEW = "soMapHolidayPreview";
   let mapHolidaysOn = false;
   let mapHolidayPreviewOn = true;
-  let __mapHolidayQuickCache = null; // { inDays, date, items, countries:[cc] }
+  let __mapHolidayQuickCache = null; // preview: next upcoming holiday
+  let __mapHolidayNowCache = null;   // current: holidays that apply today
 
   map.createPane("holidayBadgePane");
   const __hbp = map.getPane("holidayBadgePane");
@@ -9606,7 +9655,7 @@ function refreshMarkerPopups(){
   function renderMapHolidayBadges(){
     try{ holidayBadgeLayer.clearLayers(); }catch{}
     if(!mapHolidaysOn) return;
-    const q = __mapHolidayQuickCache;
+    const q = mapHolidayPreviewOn ? __mapHolidayQuickCache : __mapHolidayNowCache;
     const items = (q && Array.isArray(q.items)) ? q.items : [];
     if(!items.length) return;
 
@@ -9658,26 +9707,108 @@ function refreshMarkerPopups(){
     try{ localStorage.setItem(LS_MAP_HOL_PREVIEW, String(mapHolidayPreviewOn)); }catch{}
   }
 
-    function renderMapHolidayLineHTML(){
-    if(!mapHolidaysOn || !mapHolidayPreviewOn) return "";
+  async function computeHolidaySnapshotForMap({ preview=false } = {}){
+    const settings = loadHolidaySettings();
+    const selected = Array.isArray(settings.countries) ? settings.countries : [];
+    if(!selected.length) return { empty:true, reason:"no_countries" };
+
+    const selectedRegions = Array.isArray(settings.regions) ? settings.regions : [];
+    const includeNationwide = settings.includeNationwide !== false;
+    const typesState = (settings.types && typeof settings.types === "object") ? settings.types : null;
+
+    const year = (new Date()).getFullYear();
+    const years = preview ? [year, year + 1] : [year];
+    const today = parseISODateLocal(todayISO());
+
+    let all = [];
+    for(const cc of selected){
+      for(const y of years){
+        try{
+          const list = await getPublicHolidays(y, cc);
+          for(const h of (Array.isArray(list) ? list : [])){
+            all.push(Object.assign({}, h, { __cc: String(cc||"").toUpperCase() }));
+          }
+        }catch{}
+      }
+    }
+
+    all = addExtraObservances(all, years, selected);
+
+    let filtered = all.filter(h=>{
+      if(!h || !h.date) return false;
+      if(typesState && !matchesTypeFilter(h, typesState)) return false;
+      if(!matchesRegionFilter(h, selectedRegions, includeNationwide)) return false;
+      return true;
+    });
+
+    if(!preview){
+      const todayStr = todayISO();
+      const todays = expandHolidaysForDisplay(filtered.filter(h=> String(h.date) === todayStr), selectedRegions, includeNationwide);
+      if(!todays.length) return { empty:true, reason:"none_today", date: todayStr, items: [] };
+      return { empty:false, date: todayStr, items: todays, inDays: 0, isToday:true };
+    }
+
+    filtered = filtered.filter(h=>{
+      try{ return parseISODateLocal(h.date) >= today; }catch{ return false; }
+    }).sort((a,b)=>{
+      if(a.date !== b.date) return String(a.date).localeCompare(String(b.date));
+      const na = String(a.name || a.localName || "").toLowerCase();
+      const nb = String(b.name || b.localName || "").toLowerCase();
+      if(na !== nb) return na.localeCompare(nb);
+      return String(a.__cc||"").localeCompare(String(b.__cc||""));
+    });
+
+    if(!filtered.length) return { empty:true, reason:"none" };
+
+    const expanded = expandHolidaysForDisplay(filtered, selectedRegions, includeNationwide);
+    if(!expanded.length) return { empty:true, reason:"none" };
+
+    const nextDate = expanded[0]?.date || "";
+    const items = nextDate ? expanded.filter(x=>x.date === nextDate) : [];
+    if(!items.length) return { empty:true, reason:"none" };
+
+    let inDays = null;
+    try{
+      const d1 = parseISODateLocal(nextDate);
+      inDays = Math.max(0, daysBetweenDates(today, d1));
+    }catch{}
+    return { empty:false, date: nextDate, items, inDays, isToday: inDays === 0 };
+  }
+
+  function renderMapHolidayLineHTML(entry){
+    if(!mapHolidaysOn) return "";
     const s = loadHolidaySettings();
     const selected = Array.isArray(s.countries) ? s.countries : [];
     if(!selected.length) return `<div class="pline"><span class="ptime">Holidays:</span> <span class="hint">— (no countries selected)</span></div>`;
-    const q = __mapHolidayQuickCache;
-    if(!q || !q.date) return `<div class="pline"><span class="ptime">Holidays:</span> <span class="hint">loading…</span></div>`;
-    // Show first item (next date), include country code badge if multiple
-    const first = (Array.isArray(q.items) && q.items[0]) ? q.items[0] : null;
-    const nm = first ? (first.name || first.localName || "Holiday") : "Holiday";
-    const cc = first ? String(first.__cc || "").toUpperCase() : "";
-    const ccTag = (cc && selected.length > 1) ? ` <span class="pill" style="padding:2px 6px; font-size:11px; opacity:.9;">${escapeHTML(cc)}</span>` : "";
+
+    const q = mapHolidayPreviewOn ? __mapHolidayQuickCache : __mapHolidayNowCache;
+    if(!q){
+      return mapHolidayPreviewOn
+        ? `<div class="pline"><span class="ptime">Next holiday:</span> <span class="hint">loading…</span></div>`
+        : "";
+    }
+
+    const items = Array.isArray(q.items) ? q.items : [];
+    if(!items.length) return "";
+
+    const match = items.find(h=> entryMatchesNextHolidayItem(entry, h));
+    if(!match) return "";
+
+    const nm = String(match.name || match.localName || "Holiday");
+    const cc = String(match.__cc || "").toUpperCase();
+    const scope = String(match.__scope || cc || "").toUpperCase();
+    const badge = (scope && scope !== cc) ? scope : cc;
+    const ccTag = badge ? ` <span class="pill" style="padding:2px 6px; font-size:11px; opacity:.9;">${escapeHTML(badge)}</span>` : "";
     const inD = Number.isFinite(q.inDays) ? q.inDays : null;
-    const inTag = (inD !== null) ? ` <span class="hint">(in ${inD}d)</span>` : "";
-    return `<div class="pline"><span class="ptime">Holidays:</span> 🎉 ${escapeHTML(nm)}${ccTag} — ${escapeHTML(q.date)}${inTag}</div>`;
+    const label = mapHolidayPreviewOn ? "Next holiday:" : "Holiday:";
+    const inTag = mapHolidayPreviewOn && inD !== null ? ` <span class="hint">(in ${inD}d)</span>` : (q.isToday ? ` <span class="hint">(today)</span>` : "");
+    return `<div class="pline"><span class="ptime">${label}</span> 🎉 ${escapeHTML(nm)}${ccTag} — ${escapeHTML(q.date || todayISO())}${inTag}</div>`;
   }
 
   async function refreshMapHolidayQuick(){
     if(!mapHolidaysOn){
       __mapHolidayQuickCache = null;
+      __mapHolidayNowCache = null;
       updateMapHolidayControlUI();
       try{ refreshAllMarkerPopups(); }catch{}
       try{ renderMapHolidayBadges(); }catch{}
@@ -9685,28 +9816,25 @@ function refreshMarkerPopups(){
     }
     const token = ++__quickHolidayToken; // reuse existing token to avoid races
     try{
-      const res = await computeNextHolidayForQuick();
+      const nowRes = await computeHolidaySnapshotForMap({ preview:false });
       if(token !== __quickHolidayToken) return;
-      if(res && !res.empty){
-        let inDays = null;
-        try{
-          if(res.date){
-            const d0 = parseISODateLocal(todayISO());
-            const d1 = parseISODateLocal(res.date);
-            inDays = Math.max(0, daysBetweenDates(d0, d1));
+      __mapHolidayNowCache = (nowRes && !nowRes.empty)
+        ? { inDays: 0, date: nowRes.date, items: nowRes.items || [], isToday:true }
+        : { inDays: null, date: nowRes?.date || todayISO(), items: [], isToday:false };
+
+      const previewRes = await computeHolidaySnapshotForMap({ preview:true });
+      if(token !== __quickHolidayToken) return;
+      __mapHolidayQuickCache = (previewRes && !previewRes.empty)
+        ? {
+            inDays: Number.isFinite(previewRes.inDays) ? previewRes.inDays : null,
+            date: previewRes.date,
+            items: previewRes.items || [],
+            isToday: !!previewRes.isToday
           }
-        }catch{}
-        __mapHolidayQuickCache = {
-          inDays,
-          date: res.date,
-          items: res.items || [],
-          countries: (res.countries || [])
-        };
-      }else{
-        __mapHolidayQuickCache = { inDays: null, date: null, items: [], countries: [] };
-      }
+        : { inDays: null, date: null, items: [], isToday:false };
     }catch{
-      __mapHolidayQuickCache = { inDays: null, date: null, items: [], countries: [] };
+      __mapHolidayNowCache = { inDays: null, date: todayISO(), items: [], isToday:false };
+      __mapHolidayQuickCache = { inDays: null, date: null, items: [], isToday:false };
     }
     updateMapHolidayControlUI();
     try{ refreshAllMarkerPopups(); }catch{}
@@ -9740,11 +9868,6 @@ function refreshMarkerPopups(){
       return;
     }
 
-    if(!mapHolidayPreviewOn){
-      qi.innerHTML = `<div class="hint">Preview is off</div>`;
-      return;
-    }
-
     const s = loadHolidaySettings();
     const selected = Array.isArray(s.countries) ? s.countries : [];
     if(!selected.length){
@@ -9752,25 +9875,21 @@ function refreshMarkerPopups(){
       return;
     }
 
-    const q = __mapHolidayQuickCache;
+    const q = mapHolidayPreviewOn ? __mapHolidayQuickCache : __mapHolidayNowCache;
     const inD = (q && Number.isFinite(q.inDays)) ? q.inDays : null;
-    const top = inD !== null
-      ? `Holiday <span class="pill">(in ${inD}d)</span>:`
-      : `Holiday <span class="pill">(…)</span>:`;
+    const top = mapHolidayPreviewOn
+      ? (inD !== null ? `Holiday <span class="pill">(in ${inD}d)</span>:` : `Holiday <span class="pill">(…)</span>:`)
+      : `Holiday <span class="pill">(today)</span>:`;
     const countriesHtml = selected.map((cc,i)=>`<div>${i+1}. ${escapeHTML(countryLabel(cc))}</div>`).join("");
 
-    let nextHtml = "";
-    if(mapHolidayPreviewOn && q && q.date && Array.isArray(q.items) && q.items.length){
-      const names = q.items.slice(0,3).map(h=>{
-        const nm = h ? (h.name || h.localName || "Holiday") : "Holiday";
-        const cc = String(h?.__cc || "").toUpperCase();
-        return `${escapeHTML(nm)}${cc ? ` (${escapeHTML(cc)})` : ""}`;
-      }).join(" · ");
-      const more = Math.max(0, q.items.length - 3);
-      nextHtml = `<div class="qiNext">🎉 ${names}${more ? ` · +${more}` : ""}<br>${escapeHTML(q.date)}</div>`;
+    let statusHtml = "";
+    if(!mapHolidayPreviewOn){
+      statusHtml = (q && Array.isArray(q.items) && q.items.length)
+        ? `<div class="hint" style="margin-top:6px;">🎉 ${q.items.length} current holiday${q.items.length===1 ? "" : "s"}</div>`
+        : `<div class="hint" style="margin-top:6px;">No current holidays</div>`;
     }
 
-    qi.innerHTML = `<div class="qiTop">${top}</div><div class="qiCountries">${countriesHtml}</div>${nextHtml}`;
+    qi.innerHTML = `<div class="qiTop">${top}</div><div class="qiCountries">${countriesHtml}</div>${statusHtml}`;
   }
 
   // Leaflet control
@@ -9821,10 +9940,7 @@ function refreshMarkerPopups(){
       pv.checked = !!mapHolidayPreviewOn;
       pv.addEventListener("change", ()=>{
         saveMapHolidayPreview(pv.checked);
-        updateMapHolidayControlUI();
-        // popups may change (holiday line)
-        try{ refreshAllMarkerPopups(); }catch{}
-        try{ renderMapHolidayBadges(); }catch{}
+        refreshMapHolidayQuick();
       });
     }
 
@@ -10269,7 +10385,7 @@ async function geocodeAddress(addr){
         </div>
         ${timeLine}
         <div class="pline"><span class="ptime">Current Address:</span> ${where}${dist ? ` 📍${dist}` : ""}</div>
-        ${renderMapHolidayLineHTML()}
+        ${renderMapHolidayLineHTML(entry)}
         ${img}
       </div>
     `;
