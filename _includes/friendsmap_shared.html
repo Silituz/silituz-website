@@ -5036,6 +5036,146 @@
   #soApp .editorAccordion .accBody{ padding: 12px; }
 }
 
+
+
+/* Quick chip: multi-line (used for Holiday quick) */
+#soApp .qchip.qchipMulti{
+  height: auto;
+  padding: 8px 10px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  text-align: left;
+  white-space: normal;
+  line-height: 1.25;
+}
+#soApp .qchip.qchipMulti .qcTop{
+  font-weight: 900;
+}
+#soApp .qchip.qchipMulti .qcCountries{
+  font-size: 12px;
+  opacity: .9;
+}
+#soApp .qchip.qchipMulti .qcCountries div{
+  margin-top: 2px;
+}
+
+/* Map: Legend window (matches Holidays window, but wide like before) */
+#soApp .soMapLegendCtrl{
+  min-width: auto;
+  padding-right: 12px;
+}
+#soApp .soMapLegendCtrl .sub{
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.10);
+  font-size: 12.5px;
+  line-height: 1.25;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  white-space: nowrap;
+}
+#soApp .soMapLegendCtrl .sub .line{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin-top: 0;
+}
+#soApp .soMapLegendCtrl .legHeart{
+  width: 18px;
+  text-align:center;
+  font-size: 14px;
+}
+#soApp .soHolidayMapCtrl .qiNext{
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  font-size: 12px;
+  line-height: 1.3;
+  opacity: .95;
+}
+/* Map: Holidays toggle + quick panel */
+#soApp .soHolidayMapCtrl{
+  background: rgba(0,0,0,.52);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 10px 10px 8px 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  backdrop-filter: blur(8px);
+  color: var(--text);
+  min-width: 180px;
+}
+#soApp .soHolidayMapCtrl .row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+#soApp .soHolidayMapCtrl .ttl{
+  font-weight: 900;
+  letter-spacing: .2px;
+}
+#soApp .soHolidayMapCtrl .sub{
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.10);
+  font-size: 12.5px;
+  line-height: 1.25;
+}
+#soApp .soHolidayMapCtrl .qiTop{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-weight: 900;
+}
+#soApp .soHolidayMapCtrl .qiTop .pill{
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.12);
+}
+#soApp .soHolidayMapCtrl .qiCountries{
+  margin-top: 6px;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  opacity: .92;
+}
+#soApp .soHolidayMapCtrl .hint{
+  opacity: .75;
+  font-weight: 800;
+}
+#soApp .soHolidayMapCtrl .tog{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  user-select:none;
+}
+#soApp .soHolidayMapCtrl input[type="checkbox"]{
+  width: 16px;
+  height: 16px;
+  accent-color: rgb(16,185,129);
+}
+
+/* Map: small holiday marker badge */
+#soApp .holidayBadgeIcon{
+  width:20px; height:20px;
+  display:grid; place-items:center;
+  border-radius:999px;
+  background:rgba(15,23,42,.94);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 8px 20px rgba(0,0,0,.28), 0 0 0 1px rgba(255,255,255,.04) inset;
+  font-size:12px;
+  line-height:1;
+  transform:translate(10px,-8px);
+  pointer-events:none;
+}
+
+
 </style>
 <section id="soApp" class="soApp">
 <header>
@@ -7540,6 +7680,7 @@ function updateBirthdayCountdownUI(){
         list.appendChild(opt);
       }
     }catch{}
+    try{ if(typeof mapHolidaysOn !== 'undefined' && mapHolidaysOn) refreshMapHolidayQuick(); }catch{}
   })();
 
   // ==============================
@@ -9341,6 +9482,358 @@ function refreshMarkerPopups(){
 
 
   // ==============================
+  // Map: Holidays overlay toggle + quick info
+  // ==============================
+  const LS_MAP_HOL_TOGGLE = "soMapShowHolidays";
+  const LS_MAP_HOL_PREVIEW = "soMapHolidayPreview";
+  let mapHolidaysOn = false;
+  let mapHolidayPreviewOn = true;
+  let __mapHolidayQuickCache = null; // { inDays, date, items, countries:[cc] }
+
+  map.createPane("holidayBadgePane");
+  const __hbp = map.getPane("holidayBadgePane");
+  if(__hbp){
+    __hbp.style.zIndex = 690;
+    __hbp.style.pointerEvents = "none";
+  }
+  const holidayBadgeLayer = L.layerGroup().addTo(map);
+
+  const HOLIDAY_COUNTRY_ALIASES = {
+    DE:["germany","deutschland"],
+    US:["united states","united states of america","usa","u.s.a.","us"],
+    GB:["united kingdom","great britain","england","uk"],
+    AT:["austria","osterreich","österreich"],
+    CH:["switzerland","schweiz"],
+    NL:["netherlands","holland"],
+    BE:["belgium","belgien"],
+    FR:["france","frankreich"],
+    ES:["spain","espana","españa"],
+    IT:["italy","italien"],
+    JP:["japan"],
+    KR:["south korea","korea","sudkorea","südkorea"],
+    RU:["russia","russland"],
+    PL:["poland","polen"],
+    CA:["canada"]
+  };
+
+  const HOLIDAY_SCOPE_ALIASES = {
+    "DE-BW":["baden-wurttemberg","baden wurttemberg","baden-württemberg","baden württemberg"],
+    "DE-BY":["bavaria","bayern"],
+    "DE-BE":["berlin"],
+    "DE-BB":["brandenburg"],
+    "DE-HB":["bremen"],
+    "DE-HH":["hamburg"],
+    "DE-HE":["hesse","hessen"],
+    "DE-MV":["mecklenburg western pomerania","mecklenburg-vorpommern"],
+    "DE-NI":["lower saxony","niedersachsen"],
+    "DE-NW":["north rhine-westphalia","nordrhein-westfalen","nrw"],
+    "DE-RP":["rhineland-palatinate","rheinland-pfalz"],
+    "DE-SL":["saarland"],
+    "DE-SN":["saxony","sachsen"],
+    "DE-ST":["saxony-anhalt","sachsen-anhalt"],
+    "DE-SH":["schleswig-holstein","schleswig holstein"],
+    "DE-TH":["thuringia","thuringen","thüringen"],
+    "US-CA":["california"],
+    "US-NY":["new york"],
+    "US-TX":["texas"],
+    "US-FL":["florida"]
+  };
+
+  function foldForMatch(v){
+    return String(v||"")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  }
+
+  function entryAddressParts(e){
+    const raw = String(e?.currentAddress || e?.birthplace || "");
+    return raw.split(",").map(x=>foldForMatch(x)).filter(Boolean);
+  }
+
+  function entryHaystack(e){
+    return [e?.currentAddress, e?.birthplace, e?.tz].map(foldForMatch).filter(Boolean).join(" | ");
+  }
+
+  function entryCountryMatchesForHoliday(e, cc){
+    const code = String(cc||"").toUpperCase();
+    if(!code) return false;
+    const parts = entryAddressParts(e);
+    const hay = entryHaystack(e);
+    const labels = [countryLabel(code), ...(HOLIDAY_COUNTRY_ALIASES[code] || [])].map(foldForMatch).filter(Boolean);
+    if(parts.includes(foldForMatch(code))) return true;
+    if(labels.some(lbl=> parts.includes(lbl) || (lbl && hay.includes(lbl)))) return true;
+
+    const tz = String(e?.tz || "").toLowerCase();
+    if(code === "DE" && tz === "europe/berlin") return true;
+    if(code === "AT" && tz === "europe/vienna") return true;
+    if(code === "CH" && tz === "europe/zurich") return true;
+    if(code === "JP" && tz === "asia/tokyo") return true;
+    if(code === "KR" && tz === "asia/seoul") return true;
+    if(code === "US" && tz.startsWith("america/")) return true;
+    if(code === "CA" && tz.startsWith("america/")) return true;
+    return false;
+  }
+
+  function entryRegionMatchesForHoliday(e, scope){
+    const sc = String(scope||"").toUpperCase();
+    if(!sc || !sc.includes("-")) return false;
+    const parts = entryAddressParts(e);
+    const hay = entryHaystack(e);
+    const suffix = sc.split("-").slice(1).join("-");
+    const labels = [regionLabel(sc), ...(HOLIDAY_SCOPE_ALIASES[sc] || [])].map(foldForMatch).filter(Boolean);
+    if(parts.includes(foldForMatch(sc))) return true;
+    if(suffix && parts.includes(foldForMatch(suffix))) return true;
+    if(labels.some(lbl=> parts.includes(lbl) || (lbl && hay.includes(lbl)))) return true;
+    return false;
+  }
+
+  function entryMatchesNextHolidayItem(e, h){
+    if(!e || typeof e.lat !== "number" || typeof e.lon !== "number" || !h) return false;
+    const cc = String(h.__cc || "").toUpperCase();
+    const scope = String(h.__scope || cc || "").toUpperCase();
+    const countryHit = entryCountryMatchesForHoliday(e, cc);
+    if(scope && scope !== cc){
+      if(entryRegionMatchesForHoliday(e, scope)) return true;
+      if(!countryHit) return false;
+      return entryRegionMatchesForHoliday(e, scope);
+    }
+    return countryHit;
+  }
+
+  function renderMapHolidayBadges(){
+    try{ holidayBadgeLayer.clearLayers(); }catch{}
+    if(!mapHolidaysOn) return;
+    const q = __mapHolidayQuickCache;
+    const items = (q && Array.isArray(q.items)) ? q.items : [];
+    if(!items.length) return;
+
+    for(const e of entries){
+      if(!e || typeof e.lat !== "number" || typeof e.lon !== "number") continue;
+      const match = items.find(h=> entryMatchesNextHolidayItem(e, h));
+      if(!match) continue;
+      const scope = String(match.__scope || match.__cc || "").toUpperCase();
+      const nm = String(match.name || match.localName || "Holiday");
+      const title = `${nm}${scope ? ` • ${scope}` : ""}${q?.date ? ` • ${q.date}` : ""}`;
+      const icon = L.divIcon({
+        className: "",
+        html: `<div class="holidayBadgeIcon" title="${escapeHTML(title)}">🎉</div>`,
+        iconSize: [20,20],
+        iconAnchor: [10,10]
+      });
+      L.marker([e.lat, e.lon], {
+        icon,
+        pane: "holidayBadgePane",
+        interactive: false,
+        keyboard: false,
+        zIndexOffset: 1200
+      }).addTo(holidayBadgeLayer);
+    }
+  }
+
+  function loadMapHolidayToggle(){
+    try{
+      const raw = localStorage.getItem(LS_MAP_HOL_TOGGLE);
+      mapHolidaysOn = (raw === "true");
+    }catch{
+      mapHolidaysOn = false;
+    }
+    try{
+      const raw2 = localStorage.getItem(LS_MAP_HOL_PREVIEW);
+      // default: true
+      mapHolidayPreviewOn = (raw2 === null) ? true : (raw2 === "true");
+    }catch{
+      mapHolidayPreviewOn = true;
+    }
+  }
+  function saveMapHolidayToggle(val){
+    mapHolidaysOn = !!val;
+    try{ localStorage.setItem(LS_MAP_HOL_TOGGLE, String(mapHolidaysOn)); }catch{}
+  }
+
+  function saveMapHolidayPreview(val){
+    mapHolidayPreviewOn = !!val;
+    try{ localStorage.setItem(LS_MAP_HOL_PREVIEW, String(mapHolidayPreviewOn)); }catch{}
+  }
+
+    function renderMapHolidayLineHTML(){
+    if(!mapHolidaysOn || !mapHolidayPreviewOn) return "";
+    const s = loadHolidaySettings();
+    const selected = Array.isArray(s.countries) ? s.countries : [];
+    if(!selected.length) return `<div class="pline"><span class="ptime">Holidays:</span> <span class="hint">— (no countries selected)</span></div>`;
+    const q = __mapHolidayQuickCache;
+    if(!q || !q.date) return `<div class="pline"><span class="ptime">Holidays:</span> <span class="hint">loading…</span></div>`;
+    // Show first item (next date), include country code badge if multiple
+    const first = (Array.isArray(q.items) && q.items[0]) ? q.items[0] : null;
+    const nm = first ? (first.name || first.localName || "Holiday") : "Holiday";
+    const cc = first ? String(first.__cc || "").toUpperCase() : "";
+    const ccTag = (cc && selected.length > 1) ? ` <span class="pill" style="padding:2px 6px; font-size:11px; opacity:.9;">${escapeHTML(cc)}</span>` : "";
+    const inD = Number.isFinite(q.inDays) ? q.inDays : null;
+    const inTag = (inD !== null) ? ` <span class="hint">(in ${inD}d)</span>` : "";
+    return `<div class="pline"><span class="ptime">Holidays:</span> 🎉 ${escapeHTML(nm)}${ccTag} — ${escapeHTML(q.date)}${inTag}</div>`;
+  }
+
+  async function refreshMapHolidayQuick(){
+    if(!mapHolidaysOn){
+      __mapHolidayQuickCache = null;
+      updateMapHolidayControlUI();
+      try{ refreshAllMarkerPopups(); }catch{}
+      try{ renderMapHolidayBadges(); }catch{}
+      return;
+    }
+    const token = ++__quickHolidayToken; // reuse existing token to avoid races
+    try{
+      const res = await computeNextHolidayForQuick();
+      if(token !== __quickHolidayToken) return;
+      if(res && !res.empty){
+        let inDays = null;
+        try{
+          if(res.date){
+            const d0 = parseISODateLocal(todayISO());
+            const d1 = parseISODateLocal(res.date);
+            inDays = Math.max(0, daysBetweenDates(d0, d1));
+          }
+        }catch{}
+        __mapHolidayQuickCache = {
+          inDays,
+          date: res.date,
+          items: res.items || [],
+          countries: (res.countries || [])
+        };
+      }else{
+        __mapHolidayQuickCache = { inDays: null, date: null, items: [], countries: [] };
+      }
+    }catch{
+      __mapHolidayQuickCache = { inDays: null, date: null, items: [], countries: [] };
+    }
+    updateMapHolidayControlUI();
+    try{ refreshAllMarkerPopups(); }catch{}
+    try{ renderMapHolidayBadges(); }catch{}
+  }
+
+  function countryLabel(cc){
+    try{
+      const list = __availableCountries;
+      if(Array.isArray(list)){
+        const hit = list.find(x=>String(x.countryCode).toUpperCase() === String(cc).toUpperCase());
+        if(hit && hit.name) return hit.name;
+      }
+    }catch{}
+    return String(cc||"").toUpperCase();
+  }
+
+  function updateMapHolidayControlUI(){
+    const box = document.getElementById("soMapHolidayCtrlBox");
+    if(!box) return;
+    const chk = document.getElementById("soMapHolidayToggle");
+    if(chk) chk.checked = !!mapHolidaysOn;
+    const pv = document.getElementById("soMapHolidayPreview");
+    if(pv) pv.checked = !!mapHolidayPreviewOn;
+
+    const qi = document.getElementById("soMapHolidayQuick");
+    if(!qi) return;
+
+    if(!mapHolidaysOn){
+      qi.innerHTML = `<div class="hint">Off</div>`;
+      return;
+    }
+
+    if(!mapHolidayPreviewOn){
+      qi.innerHTML = `<div class="hint">Preview is off</div>`;
+      return;
+    }
+
+    const s = loadHolidaySettings();
+    const selected = Array.isArray(s.countries) ? s.countries : [];
+    if(!selected.length){
+      qi.innerHTML = `<div class="hint">No countries selected (Calendar → select countries)</div>`;
+      return;
+    }
+
+    const q = __mapHolidayQuickCache;
+    const inD = (q && Number.isFinite(q.inDays)) ? q.inDays : null;
+    const top = inD !== null
+      ? `Holiday <span class="pill">(in ${inD}d)</span>:`
+      : `Holiday <span class="pill">(…)</span>:`;
+    const countriesHtml = selected.map((cc,i)=>`<div>${i+1}. ${escapeHTML(countryLabel(cc))}</div>`).join("");
+
+    let nextHtml = "";
+    if(mapHolidayPreviewOn && q && q.date && Array.isArray(q.items) && q.items.length){
+      const names = q.items.slice(0,3).map(h=>{
+        const nm = h ? (h.name || h.localName || "Holiday") : "Holiday";
+        const cc = String(h?.__cc || "").toUpperCase();
+        return `${escapeHTML(nm)}${cc ? ` (${escapeHTML(cc)})` : ""}`;
+      }).join(" · ");
+      const more = Math.max(0, q.items.length - 3);
+      nextHtml = `<div class="qiNext">🎉 ${names}${more ? ` · +${more}` : ""}<br>${escapeHTML(q.date)}</div>`;
+    }
+
+    qi.innerHTML = `<div class="qiTop">${top}</div><div class="qiCountries">${countriesHtml}</div>${nextHtml}`;
+  }
+
+  // Leaflet control
+  const holidayCtrl = L.control({ position: "topright" });
+  holidayCtrl.onAdd = function(){
+    const div = L.DomUtil.create("div", "soHolidayMapCtrl");
+    div.id = "soMapHolidayCtrlBox";
+    div.innerHTML = `
+      <div class="row">
+        <div class="ttl">Holidays</div>
+        <label class="tog" title="Toggle holidays on map">
+          <input id="soMapHolidayToggle" type="checkbox" />
+          <span class="hint">show</span>
+        </label>
+      </div>
+      <div class="row" style="margin-top:8px; justify-content:flex-start;">
+        <label class="tog" title="Show/hide the next holiday preview in map popups">
+          <input id="soMapHolidayPreview" type="checkbox" />
+          <span class="hint">preview</span>
+        </label>
+      </div>
+      <div class="sub" id="soMapHolidayQuick"><div class="hint">—</div></div>
+    `;
+    // prevent map drag when interacting
+    L.DomEvent.disableClickPropagation(div);
+    return div;
+  };
+  holidayCtrl.addTo(map);
+
+  // init state + handlers
+  loadMapHolidayToggle();
+  // hook toggles
+  setTimeout(()=>{
+    const chk = document.getElementById("soMapHolidayToggle");
+    if(chk){
+      chk.checked = !!mapHolidaysOn;
+      chk.addEventListener("change", ()=>{
+        saveMapHolidayToggle(chk.checked);
+        refreshMapHolidayQuick();
+        // popups may change (holiday line)
+        try{ refreshAllMarkerPopups(); }catch{}
+        try{ renderMapHolidayBadges(); }catch{}
+      });
+    }
+
+    const pv = document.getElementById("soMapHolidayPreview");
+    if(pv){
+      pv.checked = !!mapHolidayPreviewOn;
+      pv.addEventListener("change", ()=>{
+        saveMapHolidayPreview(pv.checked);
+        updateMapHolidayControlUI();
+        // popups may change (holiday line)
+        try{ refreshAllMarkerPopups(); }catch{}
+        try{ renderMapHolidayBadges(); }catch{}
+      });
+    }
+
+    updateMapHolidayControlUI();
+    if(mapHolidaysOn) refreshMapHolidayQuick();
+    else try{ renderMapHolidayBadges(); }catch{}
+  }, 0);
+
+  // ==============================
   // Connection links layer (network)
   // ==============================
   map.createPane("connectionsPane");
@@ -9384,19 +9877,24 @@ function refreshMarkerPopups(){
   }
 
 
-// Map legend (bottom-right)
+// Map legend (bottom-right) — styled like Holidays window
 const mapLegend = L.control({ position: "bottomright" });
 mapLegend.onAdd = function(){
-  const div = L.DomUtil.create("div", "mapLegend");
+  const div = L.DomUtil.create("div", "soHolidayMapCtrl soMapLegendCtrl");
   div.innerHTML = `
-    <span class="legHeart" title="Good time">💚</span> Good time
-    <span class="sep">•</span>
-    <span class="legHeart" title="Maybe">💛</span> Maybe
-    <span class="sep">•</span>
-    <span class="legHeart" title="Sleeping">❤️</span> Sleeping
-    <span class="sep">•</span>
-    <span class="legMoon">🌘</span> Night
-  `;  return div;
+    <div class="row">
+      <div class="ttl">Legend</div>
+    </div>
+    <div class="sub">
+      <div class="line"><span class="legHeart">💚</span><span>Good time</span></div>
+      <div class="line"><span class="legHeart">💛</span><span>Maybe</span></div>
+      <div class="line"><span class="legHeart">❤️</span><span>Sleeping</span></div>
+      <div class="line"><span class="legHeart">🌘</span><span>Night</span></div>
+    </div>
+  `;
+  // prevent map drag when interacting
+  L.DomEvent.disableClickPropagation(div);
+  return div;
 };
 mapLegend.addTo(map);
 
@@ -9771,6 +10269,7 @@ async function geocodeAddress(addr){
         </div>
         ${timeLine}
         <div class="pline"><span class="ptime">Current Address:</span> ${where}${dist ? ` 📍${dist}` : ""}</div>
+        ${renderMapHolidayLineHTML()}
         ${img}
       </div>
     `;
@@ -10001,6 +10500,7 @@ async function geocodeAddress(addr){
 
     // network links behind markers
     renderConnectionLinks();
+    try{ renderMapHolidayBadges(); }catch{}
   }
 
   // ==============================
@@ -12569,29 +13069,31 @@ async function updateHolidayQuickChip(btn){
   const hs = loadHolidaySettings();
   const selected = Array.isArray(hs.countries) ? hs.countries : [];
   if(!selected.length){
-    btn.textContent = "🎉 Holiday: (select countries in 📅 Holidays)";
+    btn.classList.add("qchipMulti");
+    btn.innerHTML = `<div class="qcTop">Holiday</div><div class="qcCountries"><div>(select countries in 📅 Holidays)</div></div>`;
     try{ window.__quickHolidayLast = null; }catch{}
     return;
   }
 
   const token = ++__quickHolidayToken;
-  btn.textContent = "🎉 Holiday: …";
+  btn.classList.add("qchipMulti");
+  btn.innerHTML = `<div class="qcTop">Holiday <span class="pill">(…)</span>:</div><div class="qcCountries">${selected.map((cc,i)=>`<div>${i+1}. ${escapeHTML(countryLabel(cc))}</div>`).join("")}</div>`;
 
   try{
     const res = await computeNextHolidayForQuick();
     if(token !== __quickHolidayToken) return;
-    const label = formatHolidayQuickLabel(res);
 
-    try{
-      window.__quickHolidayLast = res;
-      const first = (res && !res.empty && Array.isArray(res.items) && res.items.length) ? res.items[0] : null;
-      window.__quickHolidayPrimary = first ? { date: res.date, scope: String(first.__scope || first.__cc || "").toUpperCase() } : null;
-    }catch{}
+    const d0 = parseISODateLocal(todayISO());
+    const d1 = res && res.date ? parseISODateLocal(res.date) : null;
+    const inDays = (d1 ? Math.max(0, daysBetweenDates(d0, d1)) : null);
 
-    btn.textContent = label || "🎉 Holiday: —";
+    const top = (inDays !== null) ? `Holiday <span class="pill">(in ${inDays}d)</span>:` : `Holiday <span class="pill">(…)</span>:`;
+    btn.innerHTML = `<div class="qcTop">${top}</div><div class="qcCountries">${selected.map((cc,i)=>`<div>${i+1}. ${escapeHTML(countryLabel(cc))}</div>`).join("")}</div>`;
+
+    try{ window.__quickHolidayLast = res; }catch{}
   }catch(err){
     if(token !== __quickHolidayToken) return;
-    btn.textContent = "🎉 Holiday: —";
+    btn.innerHTML = `<div class="qcTop">Holiday</div><div class="qcCountries"><div>—</div></div>`;
     try{ window.__quickHolidayLast = null; }catch{}
     try{ console.error("Holiday quick failed:", err); }catch{}
   }
@@ -13450,10 +13952,9 @@ function exportJSON(){
   }
 
   $("importBtn")?.addEventListener("click", (e)=>{
-    // If importBtn is a <label for="importFile">, its default behavior opens the picker.
-    // Only call the fallback when it is NOT a label.
-    const el = e?.currentTarget;
-    if(el && el.tagName === "LABEL" && el.getAttribute("for") === "importFile") return;
+    // Always open through openImportPicker() so re-selecting the same file works reliably.
+    // We prevent the <label for="importFile"> default behavior and handle it ourselves.
+    try{ e?.preventDefault?.(); }catch{}
     openImportPicker();
   });
 
