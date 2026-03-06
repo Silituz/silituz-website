@@ -5255,7 +5255,7 @@
         <details class="accSec" open>
           <summary>
             <span>🪪 Basics &amp; Dates</span>
-            <span class="accSub">Name, birthday, met-on, blood type, languages</span>
+            <span class="accSub">Name, birthday, met-on, languages</span>
             <span class="accBadge">Required</span>
           </summary>
           <div class="accBody">
@@ -5306,26 +5306,126 @@
                       <label>Other languages (optional)</label>
                       <input id="otherLangs" placeholder="e.g. English, Russian" />
                     </div>
-                    <div>
-                      <label>Blood type (optional)</label>
-                      <select id="bloodType">
-                        <option value="">—</option>
-                        <option value="A+">A+</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B-">B-</option>
-                        <option value="AB+">AB+</option>
-                        <option value="AB-">AB-</option>
-                        <option value="O+">O+</option>
-                        <option value="O-">O-</option>
-                        <option value="Unknown">Unknown</option>
-                      </select>
-                      <div class="hint">ABO + Rh factor (e.g. O−). Leave empty if unknown.</div>
-                    </div>
                   </div>
 
           </div>
         </details>
+
+        <details class="accSec">
+          <summary>
+            <span>🩺 Medical</span>
+            <span class="accSub">Blood type · Height · Allergies · Notes · Cycle</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+              <div>
+                <label>Blood type (optional)</label>
+                <select id="bloodType">
+                  <option value="">—</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                  <option value="Unknown">Unknown</option>
+                </select>
+                <div class="hint">ABO + Rh factor (e.g. O−). Leave empty if unknown.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>Height (cm)</label>
+                <input id="heightCm" type="number" inputmode="numeric" min="0" step="1" placeholder="e.g. 170" />
+              </div>
+              <div>
+                <label>Height (ft/in)</label>
+                <input id="heightUs" type="text" readonly placeholder="Auto (e.g. 5'7&quot;)" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>Allergies / Intolerances (optional)</label>
+                <textarea id="allergies" rows="3" placeholder="e.g. peanuts, lactose, penicillin"></textarea>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>Medical Notes (optional)</label>
+                <textarea id="medicalNotes" rows="4" placeholder="Anything important to remember (meds, conditions, reminders…)"></textarea>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>Menstrual Cycle (optional)</label>
+                <div id="cyclePanel" class="cyclePanel">
+                                          <div class="cycleGrid">
+                                            <div class="cycleRow">
+                                              <div>
+                                                <div class="miniLabel">Last period start</div>
+                                                <input id="cycleStart" type="date" />
+                                              </div>
+                                              <div>
+                                                <div class="miniLabel">Last period end</div>
+                                                <input id="cycleEnd" type="date" />
+                                              </div>
+                                            </div>
+
+                                            <div class="cycleRow">
+                                              <div>
+                                                <div class="miniLabel">Cycle length (days)</div>
+                                                <input id="cycleLen" type="number" min="15" max="60" step="1" placeholder="28" />
+                                              </div>
+                                              <div>
+                                                <div class="miniLabel">Period length (days)</div>
+                                                <input id="periodLen" type="number" min="1" max="15" step="1" placeholder="5" />
+                                              </div>
+                                            </div>
+
+                                            <div class="cycleActions">
+                                              <button type="button" id="cycleAddBtn" class="btn secondary smallBtn">Add 🩸 range</button>
+                                              <button type="button" id="cycleClearBtn" class="btn danger smallBtn">Clear</button>
+                                            </div>
+
+                                            <div class="cycleHint">
+                                              Stored locally per person. Predictions are estimates (not medical advice).
+                                              <span class="cycleLegend">
+                                                <span class="leg legPeriod">🩸 period</span>
+                                                <span class="leg legPred">🩸 predicted</span>
+                                                <span class="leg legFert">🌿 fertile</span>
+                                                <span class="leg legOvu">⭐ ovulation</span>
+                                              </span>
+                                            </div>
+
+                                            <div class="cycleSummary" id="cycleSummary"></div>
+                                            <div class="cycleList" id="cycleList"></div>
+
+                                            <div class="cycleCalWrap">
+                                              <div class="cycleCalHdr">
+                                                <button type="button" class="btn secondary smallBtn" id="cyclePrev" title="Previous month">‹</button>
+                                                <div id="cycleMonthLabel" class="cycleMonthLabel">—</div>
+                                                <button type="button" class="btn secondary smallBtn" id="cycleNext" title="Next month">›</button>
+                                              </div>
+                                              <div class="cycleWeekdays">
+                                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                                              </div>
+                                              <div class="cycleCal" id="cycleCal"></div>
+                                            </div>
+
+                                            <div class="hint">Tip: click days in the calendar to pick start/end.</div>
+                                          </div>
+                                        </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
 
         <details class="accSec">
           <summary>
@@ -5478,7 +5578,7 @@
         <details class="accSec">
           <summary>
             <span>📝 Notes</span>
-            <span class="accSub">Important, medical, media…</span>
+            <span class="accSub">Important, work, media…</span>
           </summary>
           <div class="accBody">
             <div class="row">
@@ -5486,78 +5586,19 @@
                                 <label>Notes</label>
                       <div class="notesTabs" id="notesTabs">
                         <button type="button" class="tabBtn active" data-notes-tab="important">🚨 Important</button>
-                        <button type="button" class="tabBtn" data-notes-tab="medical">🩺 Medical</button>
-                        <button type="button" class="tabBtn" data-notes-tab="work">💼 Work &amp; 🚀 Projects</button>
+                                                <button type="button" class="tabBtn" data-notes-tab="work">💼 Work &amp; 🚀 Projects</button>
                         <button type="button" class="tabBtn" data-notes-tab="media">👾 Media</button>
                         <button type="button" class="tabBtn" data-notes-tab="food">🍕 Food &amp; More</button>
                         <button type="button" class="tabBtn" data-notes-tab="other">📦 Other</button>
-                        <button type="button" class="tabBtn" data-notes-tab="cycle">🩸 Cycle</button>
-                      </div>
+</div>
 
                       <div class="notesPanels">
                         <textarea id="notes_important" class="notesPanel" data-notes-panel="important" placeholder="Things that are urgent, critical, or should not be forgotten"></textarea>
-                        <textarea id="notes_medical" class="notesPanel hidden" data-notes-panel="medical" placeholder="Medical notes (optional): allergies, meds, important health info"></textarea>
-                        <textarea id="notes_work" class="notesPanel hidden" data-notes-panel="work" placeholder="Work-related tasks, projects and ideas"></textarea>
+                                                <textarea id="notes_work" class="notesPanel hidden" data-notes-panel="work" placeholder="Work-related tasks, projects and ideas"></textarea>
                         <textarea id="notes_media" class="notesPanel hidden" data-notes-panel="media" placeholder="Media notes: favorite songs, shows, games, creators, links"></textarea>
                         <textarea id="notes_food" class="notesPanel hidden" data-notes-panel="food" placeholder="Food and drinks, restaurant ideas, places worth trying"></textarea>
                         <textarea id="notes_other" class="notesPanel hidden" data-notes-panel="other" placeholder="Miscellaneous notes"></textarea>
-                        <div id="cyclePanel" class="notesPanel hidden cyclePanel" data-notes-panel="cycle">
-                          <div class="cycleGrid">
-                            <div class="cycleRow">
-                              <div>
-                                <div class="miniLabel">Last period start</div>
-                                <input id="cycleStart" type="date" />
-                              </div>
-                              <div>
-                                <div class="miniLabel">Last period end</div>
-                                <input id="cycleEnd" type="date" />
-                              </div>
-                            </div>
-
-                            <div class="cycleRow">
-                              <div>
-                                <div class="miniLabel">Cycle length (days)</div>
-                                <input id="cycleLen" type="number" min="15" max="60" step="1" placeholder="28" />
-                              </div>
-                              <div>
-                                <div class="miniLabel">Period length (days)</div>
-                                <input id="periodLen" type="number" min="1" max="15" step="1" placeholder="5" />
-                              </div>
-                            </div>
-
-                            <div class="cycleActions">
-                              <button type="button" id="cycleAddBtn" class="btn secondary smallBtn">Add 🩸 range</button>
-                              <button type="button" id="cycleClearBtn" class="btn danger smallBtn">Clear</button>
-                            </div>
-
-                            <div class="cycleHint">
-                              Stored locally per person. Predictions are estimates (not medical advice).
-                              <span class="cycleLegend">
-                                <span class="leg legPeriod">🩸 period</span>
-                                <span class="leg legPred">🩸 predicted</span>
-                                <span class="leg legFert">🌿 fertile</span>
-                                <span class="leg legOvu">⭐ ovulation</span>
-                              </span>
-                            </div>
-
-                            <div class="cycleSummary" id="cycleSummary"></div>
-                            <div class="cycleList" id="cycleList"></div>
-
-                            <div class="cycleCalWrap">
-                              <div class="cycleCalHdr">
-                                <button type="button" class="btn secondary smallBtn" id="cyclePrev" title="Previous month">‹</button>
-                                <div id="cycleMonthLabel" class="cycleMonthLabel">—</div>
-                                <button type="button" class="btn secondary smallBtn" id="cycleNext" title="Next month">›</button>
-                              </div>
-                              <div class="cycleWeekdays">
-                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-                              </div>
-                              <div class="cycleCal" id="cycleCal"></div>
-                            </div>
-
-                            <div class="hint">Tip: click days in the calendar to pick start/end.</div>
-                          </div>
-                        </div>
+                        
 
                       </div>
                     </div>
@@ -5886,6 +5927,36 @@
   })();
 
   const $ = (id) => document.getElementById(id);
+
+  function cmToFeetInchesStr(cm){
+    const n = Number(cm);
+    if(!Number.isFinite(n) || n <= 0) return "";
+    const totalIn = n / 2.54;
+    let ft = Math.floor(totalIn / 12);
+    let inch = Math.round(totalIn - (ft * 12));
+    if(inch === 12){ ft += 1; inch = 0; }
+    return `${ft}\'${inch}"`;
+  }
+
+  function refreshHeightUs(){
+    const cmEl = $("heightCm");
+    const usEl = $("heightUs");
+    if(!cmEl || !usEl) return;
+    const s = cmToFeetInchesStr(cmEl.value);
+    usEl.value = s || "";
+  }
+
+
+  (function initMedicalExtras(){
+    const cmEl = $("heightCm");
+    if(cmEl){
+      cmEl.addEventListener("input", refreshHeightUs);
+      cmEl.addEventListener("change", refreshHeightUs);
+    }
+    // initial render
+    refreshHeightUs();
+
+  })();
 
   let __toastTimer = null;
   let __toastAction = null;
@@ -7862,7 +7933,7 @@ function setSpecial(id){
 
       // normalize notes (supports legacy string + new tabs)
       const n = e.notes;
-      const _emptyNotes = { important:"", medical:"", work:"", media:"", food:"", other:"" };
+      const _emptyNotes = { important:"", work:"", media:"", food:"", other:"" };
       if(typeof n === "string"){
         e.notes = { ..._emptyNotes, other:n };
       }else if(!n || typeof n !== "object"){
@@ -7871,9 +7942,10 @@ function setSpecial(id){
         // keep known keys; fall back to a few common legacy keys if present
         const workLegacy = (typeof n.projects==="string") ? n.projects : ((typeof n.project==="string") ? n.project : "");
         const mediaLegacy = (typeof n.music==="string") ? n.music : "";
+        const medicalLegacy = (typeof n.medical==="string") ? n.medical : ((typeof n.health==="string") ? n.health : "");
+        if(!e.medicalNotes && medicalLegacy) e.medicalNotes = medicalLegacy;
         e.notes = {
           important: (typeof n.important==="string") ? n.important : "",
-          medical: (typeof n.medical==="string") ? n.medical : ((typeof n.health==="string") ? n.health : ""),
           work: (typeof n.work==="string") ? n.work : workLegacy,
           media: (typeof n.media==="string") ? n.media : mediaLegacy,
           food: (typeof n.food==="string") ? n.food : "",
@@ -7914,7 +7986,17 @@ function setSpecial(id){
       // normalize blood type
       e.bloodType = (typeof e.bloodType === "string") ? e.bloodType.trim().slice(0, 12) : "";
 
-      
+      // normalize height (cm)
+      {
+        const hc = Math.floor(Number(e.heightCm));
+        e.heightCm = (Number.isFinite(hc) && hc > 0) ? Math.max(30, Math.min(260, hc)) : null;
+      }
+
+      // normalize allergies / intolerances
+      e.allergies = (typeof e.allergies === "string") ? e.allergies.trim().slice(0, 800) : "";
+
+      // normalize medical notes
+      e.medicalNotes = (typeof e.medicalNotes === "string") ? e.medicalNotes.trim().slice(0, 2000) : "";
 
       // normalize real name + display mode
       e.realName = (typeof e.realName === "string") ? e.realName.trim().slice(0, 80) : "";
@@ -8028,10 +8110,9 @@ e.fav = !!e.fav;
   // ==============================
   // Notes Categories + Tabs
   // ==============================
-  const NOTES_CATS = ["important","medical","work","media","food","other"];
+  const NOTES_CATS = ["important","work","media","food","other"];
   const NOTES_LABEL = {
     important: "🚨 Important",
-    medical: "🩺 Medical",
     work: "💼 Work & 🚀 Projects",
     media: "👾 Media",
     food: "🍕 Food & More",
@@ -8042,7 +8123,7 @@ e.fav = !!e.fav;
     // Backward-compat:
     // - very old saves used a single string
     // - some saves used different keys like "projects", "others", or capitalized labels
-    const empty = { important:"", medical:"", work:"", media:"", food:"", other:"" };
+    const empty = { important:"", work:"", media:"", food:"", other:"" };
     if(notes == null) return { ...empty };
     if(typeof notes === "string"){
       return { ...empty, other: notes };
@@ -8065,7 +8146,7 @@ e.fav = !!e.fav;
       const k = String(rawKey||"").trim().toLowerCase();
       if(!k) return null;
       if(k === "important" || k === "imp" || k === "urgent") return "important";
-      if(k === "medical" || k === "health" || k === "med" || k === "meds" || k === "allergy" || k === "allergies") return "medical";
+      if(k === "medical" || k === "health" || k === "med" || k === "meds" || k === "allergy" || k === "allergies") return "other";
       if(k === "work" || k === "job") return "work";
       if(k === "projects" || k === "project" || k === "proj") return "work"; // merged into Work & Projects
       if(k === "media" || k === "music" || k === "movies" || k === "movie" || k === "shows" || k === "show" || k === "series" || k === "games" || k === "game") return "media";
@@ -8104,7 +8185,6 @@ e.fav = !!e.fav;
   function getNotesFromForm(){
     const o = {
       important: ($("notes_important")?.value || "").trim(),
-      medical: ($("notes_medical")?.value || "").trim(),
       work: ($("notes_work")?.value || "").trim(),
       media: ($("notes_media")?.value || "").trim(),
       food: ($("notes_food")?.value || "").trim(),
@@ -8117,7 +8197,6 @@ e.fav = !!e.fav;
   function setNotesToForm(notes){
     const n = normalizeNotes(notes);
     const a = $("notes_important"); if(a) a.value = (n.important ?? "");
-    const m = $("notes_medical"); if(m) m.value = (n.medical ?? "");
     const b = $("notes_work"); if(b) b.value = (n.work ?? "");
     const x = $("notes_media"); if(x) x.value = (n.media ?? "");
     const c = $("notes_food"); if(c) c.value = (n.food ?? "");
@@ -8126,7 +8205,7 @@ e.fav = !!e.fav;
   }
 
   function clearNotesForm(){
-    for(const id of ["notes_important","notes_medical","notes_work","notes_media","notes_food","notes_other"]){
+    for(const id of ["notes_important","notes_work","notes_media","notes_food","notes_other"]){
       const el = $(id); if(el) el.value = "";
     }
   }
@@ -12176,6 +12255,9 @@ const birthdayCard = entry.birthdate ? (()=>{
       entry.nativeLang ? `<div class="profileCard"><div class="k">Native language</div><div class="v">${escapeHTML(entry.nativeLang)}</div></div>` : "",
       entry.otherLangs ? `<div class="profileCard"><div class="k">Other languages</div><div class="v">${escapeHTML(entry.otherLangs)}</div></div>` : "",
       entry.bloodType ? `<div class="profileCard"><div class="k">🩸 Blood type</div><div class="v">${notesHidden ? "🔒 Hidden" : escapeHTML(entry.bloodType)}</div></div>` : "",
+      (entry.heightCm && Number(entry.heightCm)>0) ? `<div class="profileCard"><div class="k">Height</div><div class="v">${notesHidden ? "🔒 Hidden" : escapeHTML(String(entry.heightCm) + " cm (" + (cmToFeetInchesStr(entry.heightCm)||"") + ")")}</div></div>` : "",
+      entry.allergies ? `<div class="profileCard"><div class="k">Allergies / Intolerances</div><div class="v" style="white-space:pre-wrap;">${notesHidden ? "🔒 Hidden" : escapeHTML(entry.allergies)}</div></div>` : "",
+      entry.medicalNotes ? `<div class="profileCard"><div class="k">Medical Notes</div><div class="v" style="white-space:pre-wrap;">${notesHidden ? "🔒 Hidden" : escapeHTML(entry.medicalNotes)}</div></div>` : "",
 
       eyeCardHTML(entry.eye),
 
@@ -12472,6 +12554,9 @@ const birthdayCard = entry.birthdate ? (()=>{
       { re: /Friendship/i, field: "metOn" },
       { re: /Connections?/i, field: "connSelect" },
       { re: /Blood type/i, field: "bloodType" },
+      { re: /Height/i, field: "heightCm" },
+      { re: /Allergies|Intolerances/i, field: "allergies" },
+      { re: /Medical Notes/i, field: "medicalNotes" },
       { re: /Eye/i, field: "eyeColorA" },
       { re: /Favorite Colors/i, field: "favColorInput" },
       { re: /Notes/i, field: "notes_important", tab: "important" },
@@ -12492,6 +12577,11 @@ const birthdayCard = entry.birthdate ? (()=>{
         // Keep current edit state; don't overwrite unsaved edits here.
         if(rule.tab) openFormNotesTab(rule.tab);
         const el = $(rule.field);
+        // If the target field is inside a collapsed editor section, open it first
+        try{
+          const det = el?.closest?.("details.accSec");
+          if(det && !det.open) det.open = true;
+        }catch{}
         const beh = prefersReducedMotion() ? "auto" : "smooth";
         if(el && el.scrollIntoView){
           el.scrollIntoView({ behavior: beh, block: "center" });
@@ -12520,6 +12610,10 @@ const birthdayCard = entry.birthdate ? (()=>{
     const _lcEl = $("lastContact"); if(_lcEl) _lcEl.value = "";
     const _reEl = $("remindEvery"); if(_reEl) _reEl.value = "";
     const _btEl = $("bloodType"); if(_btEl) _btEl.value = "";
+    const _hcEl = $("heightCm"); if(_hcEl) _hcEl.value = "";
+    const _huEl = $("heightUs"); if(_huEl) _huEl.value = "";
+    const _alEl = $("allergies"); if(_alEl) _alEl.value = "";
+    const _mnEl = $("medicalNotes"); if(_mnEl) _mnEl.value = "";
     $("timezone").value = "";
     $("coords").value = "";
     clearNotesForm();
@@ -12562,6 +12656,10 @@ const birthdayCard = entry.birthdate ? (()=>{
     const _lcEl = $("lastContact"); if(_lcEl) _lcEl.value = entry.lastContact ?? "";
     const _reEl = $("remindEvery"); if(_reEl) _reEl.value = (entry.remindEveryDays != null && entry.remindEveryDays !== 0) ? String(entry.remindEveryDays) : "";
     const _btEl = $("bloodType"); if(_btEl) _btEl.value = entry.bloodType ?? "";
+    const _hcEl = $("heightCm"); if(_hcEl) _hcEl.value = (entry.heightCm != null && entry.heightCm !== 0) ? String(entry.heightCm) : "";
+    const _alEl = $("allergies"); if(_alEl) _alEl.value = entry.allergies ?? "";
+    const _mnEl = $("medicalNotes"); if(_mnEl) _mnEl.value = (entry.medicalNotes ?? (entry.notes && typeof entry.notes==="object" ? (entry.notes.medical || entry.notes.health || "") : "")) ?? "";
+    refreshHeightUs();
     $("timezone").value = entry.tz ?? "";
     $("coords").value = (typeof entry.lat === "number" && typeof entry.lon === "number")
       ? `${entry.lat.toFixed(6)}, ${entry.lon.toFixed(6)}`
@@ -12794,6 +12892,10 @@ const birthdayCard = entry.birthdate ? (()=>{
     const remindEveryDays = Math.max(0, parseInt(_reRaw || "0", 10) || 0);
     const _btEl = $("bloodType");
     const bloodType = _btEl ? String(_btEl.value || "").trim() : "";
+    const _hcRaw = ($("heightCm")?.value || "").trim();
+    const heightCm = Math.max(0, parseInt(_hcRaw || "0", 10) || 0);
+    const allergies = ($("allergies")?.value || "").trim();
+    const medicalNotes = ($("medicalNotes")?.value || "").trim();
     const tz = $("timezone").value.trim();
     const notes = getNotesFromForm();
     const favColors = getFavColorsFromForm();
@@ -12860,6 +12962,7 @@ const birthdayCard = entry.birthdate ? (()=>{
           nickname, realName, showRealName, connections,
           birthdate, birthplace, currentAddress, metOn,
           bloodType,
+          heightCm, allergies, medicalNotes,
           nativeLang, otherLangs, tz, tags, lastContact, remindEveryDays, notes,
           favoriteColors: favColors,
           eye: eye,
@@ -12876,6 +12979,7 @@ const birthdayCard = entry.birthdate ? (()=>{
         nickname, realName, showRealName, connections,
         birthdate, birthplace, currentAddress, metOn,
         bloodType,
+        heightCm, allergies, medicalNotes,
         nativeLang, otherLangs, tz, tags, lastContact, remindEveryDays, notes,
         favoriteColors: favColors,
         eye: eye,
@@ -13101,7 +13205,7 @@ let __quickHolidayToken = 0;
 async function computeNextHolidayForQuick(){
   const settings = loadHolidaySettings();
   const selected = Array.isArray(settings.countries) ? settings.countries : [];
-  if(!selected.length) return { empty:true, reason:"no_countries" };
+  if(!selected.length) return { empty:true, reason:"no_countries", perCountry:[] };
 
   const selectedRegions = Array.isArray(settings.regions) ? settings.regions : [];
   const includeNationwide = settings.includeNationwide !== false;
@@ -13115,46 +13219,70 @@ async function computeNextHolidayForQuick(){
 
   const today = parseISODateLocal(todayISO());
 
-  let all = [];
-  for(const cc of selected){
+  // Gather holidays per country and compute "next per country"
+  const perCountry = [];
+  let globalNextDate = null;
+
+  for(const ccRaw of selected){
+    const cc = String(ccRaw||"").toUpperCase();
+    let all = [];
     for(const y of years){
       try{
         const list = await getPublicHolidays(y, cc);
         for(const h of (Array.isArray(list) ? list : [])){
-          all.push(Object.assign({}, h, { __cc: String(cc||"").toUpperCase() }));
+          all.push(Object.assign({}, h, { __cc: cc }));
         }
       }catch{}
     }
+
+    // Extra observances (keeps behavior consistent)
+    all = addExtraObservances(all, years, [cc]);
+
+    const filtered = all.filter(h=>{
+      if(!h || !h.date) return false;
+      const d = parseISODateLocal(h.date);
+      if(d < today) return false;
+      if(typesState && !matchesTypeFilter(h, typesState)) return false;
+      if(!matchesRegionFilter(h, selectedRegions, includeNationwide)) return false;
+      return true;
+    }).sort((a,b)=>{
+      if(a.date !== b.date) return String(a.date).localeCompare(String(b.date));
+      const na = String(a.name || a.localName || "").toLowerCase();
+      const nb = String(b.name || b.localName || "").toLowerCase();
+      return na.localeCompare(nb);
+    });
+
+    if(filtered.length){
+      const nextDate = filtered[0].date;
+      const items = filtered.filter(x=>x.date === nextDate);
+      const first = items[0] || filtered[0];
+      const en = String(first.name || "").trim();
+      const nm = en || String(first.localName || first.name || "—").trim() || "—";
+      perCountry.push({ cc, date: nextDate, name: nm, item:first });
+      if(!globalNextDate || String(nextDate).localeCompare(String(globalNextDate)) < 0){
+        globalNextDate = nextDate;
+      }
+    }else{
+      perCountry.push({ cc, date: "", name: "—", item:null });
+    }
   }
 
-  // Add explicit extra observances (e.g., US Women's Day)
-  all = addExtraObservances(all, years, selected);
+  // Build a global "next date" summary (for the top pill)
+  const itemsOnGlobal = [];
+  if(globalNextDate){
+    for(const pc of perCountry){
+      if(pc.date === globalNextDate && pc.item) itemsOnGlobal.push(pc.item);
+    }
+  }
 
-  const filtered = all.filter(h=>{
-    if(!h || !h.date) return false;
-    const d = parseISODateLocal(h.date);
-    if(d < today) return false;
-    if(typesState && !matchesTypeFilter(h, typesState)) return false;
-    if(!matchesRegionFilter(h, selectedRegions, includeNationwide)) return false;
-    return true;
-  }).sort((a,b)=>{
-    if(a.date !== b.date) return String(a.date).localeCompare(String(b.date));
-    const na = String(a.name || a.localName || "").toLowerCase();
-    const nb = String(b.name || b.localName || "").toLowerCase();
-    if(na !== nb) return na.localeCompare(nb);
-    return String(a.__cc||"").localeCompare(String(b.__cc||""));
-  });
-
-  if(!filtered.length) return { empty:true, reason:"none" };
-
-  const expanded = expandHolidaysForDisplay(filtered, selectedRegions, includeNationwide);
-  if(!expanded.length) return { empty:true, reason:"none" };
-
-  const nextDate = expanded[0]?.date || "";
-  const items = nextDate ? expanded.filter(x=>x.date === nextDate) : [];
-  if(!items.length) return { empty:true, reason:"none" };
-  return { date: nextDate, items };
+  return {
+    empty: !globalNextDate,
+    date: globalNextDate || "",
+    items: itemsOnGlobal,
+    perCountry
+  };
 }
+
 
 function formatHolidayQuickLabel(result){
   if(!result || result.empty) return null;
@@ -13193,7 +13321,7 @@ async function updateHolidayQuickChip(btn){
 
   const token = ++__quickHolidayToken;
   btn.classList.add("qchipMulti");
-  btn.innerHTML = `<div class="qcTop">Holiday <span class="pill">(…)</span>:</div><div class="qcCountries">${selected.map((cc,i)=>`<div>${i+1}. ${escapeHTML(countryLabel(cc))}</div>`).join("")}</div>`;
+  btn.innerHTML = `<div class="qcTop">Holiday <span class="pill">(…)</span>:</div><div class="qcCountries">${selected.map((cc,i)=>`<div>${i+1}. ${escapeHTML(String(cc||"").toUpperCase())} — …</div>`).join("")}</div>`;
 
   try{
     const res = await computeNextHolidayForQuick();
@@ -13204,7 +13332,15 @@ async function updateHolidayQuickChip(btn){
     const inDays = (d1 ? Math.max(0, daysBetweenDates(d0, d1)) : null);
 
     const top = (inDays !== null) ? `Holiday <span class="pill">(in ${inDays}d)</span>:` : `Holiday <span class="pill">(…)</span>:`;
-    btn.innerHTML = `<div class="qcTop">${top}</div><div class="qcCountries">${selected.map((cc,i)=>`<div>${i+1}. ${escapeHTML(countryLabel(cc))}</div>`).join("")}</div>`;
+
+    const per = (res && Array.isArray(res.perCountry)) ? res.perCountry : [];
+    const getName = (cc)=>{
+      const CC = String(cc||"").toUpperCase();
+      const it = per.find(x=>String(x.cc||"").toUpperCase()===CC);
+      return it && it.name ? String(it.name) : "—";
+    };
+
+    btn.innerHTML = `<div class="qcTop">${top}</div><div class="qcCountries">${selected.map((cc,i)=>`<div>${i+1}. ${escapeHTML(String(cc||"").toUpperCase())} — ${escapeHTML(getName(cc))}</div>`).join("")}</div>`;
 
     try{ window.__quickHolidayLast = res; }catch{}
   }catch(err){
@@ -13214,6 +13350,7 @@ async function updateHolidayQuickChip(btn){
     try{ console.error("Holiday quick failed:", err); }catch{}
   }
 }
+
 
 function updateQuickWidgets(){
   const chips = document.getElementById("quickChips");
@@ -13482,7 +13619,7 @@ function renderList(){
     let filtered = q ? entries.filter(e=>{
       const hay = [
         e.nickname, e.realName, e.connection, e.bloodType, eyeLabel(e.eye), e.nativeLang, e.otherLangs, e.tz,
-        e.currentAddress, e.birthplace, e.birthdate, e.metOn, e.notes,
+        e.currentAddress, e.birthplace, e.birthdate, e.metOn, e.notes, e.medicalNotes, e.allergies, (e.heightCm!=null?String(e.heightCm):""),
         connectionsText(e.connections),
         (Array.isArray(e.tags) ? e.tags.join(", ") : ""),
         e.lastContact, (e.remindEveryDays!=null ? String(e.remindEveryDays) : "")
@@ -13500,6 +13637,8 @@ function renderList(){
       if(advFilters){
         if(advFilters.hasNotes){
           filtered = filtered.filter(e=>{
+            const mn = String(e.medicalNotes||"").trim();
+            if(mn.length>0) return true;
             const n = e.notes;
             if(typeof n === "string") return n.trim().length>0;
             if(n && typeof n === "object"){
@@ -13936,16 +14075,19 @@ function exportJSON(){
       .map(x=>{
         // notes: support legacy string or partial object (incl. new tabs)
         const rawNotes = x.notes;
-        const _emptyNotes = { important:"", medical:"", work:"", media:"", food:"", other:"" };
+        const _emptyNotes = { important:"", work:"", media:"", food:"", other:"" };
         let notes;
+        let medicalNotesFromNotes = "";
         if(typeof rawNotes === "string"){
           notes = { ..._emptyNotes, other: rawNotes };
         }else if(rawNotes && typeof rawNotes === "object"){
           const workLegacy = (typeof rawNotes.projects==="string") ? rawNotes.projects : ((typeof rawNotes.project==="string") ? rawNotes.project : "");
           const mediaLegacy = (typeof rawNotes.music==="string") ? rawNotes.music : "";
+          const medicalLegacy = (typeof rawNotes.medical==="string") ? rawNotes.medical : ((typeof rawNotes.health==="string") ? rawNotes.health : "");
+          medicalNotesFromNotes = String((medicalLegacy ?? "") || "").trim().slice(0, 2000);
+
           notes = {
             important: (typeof rawNotes.important==="string") ? rawNotes.important : "",
-            medical: (typeof rawNotes.medical==="string") ? rawNotes.medical : ((typeof rawNotes.health==="string") ? rawNotes.health : ""),
             work: (typeof rawNotes.work==="string") ? rawNotes.work : workLegacy,
             media: (typeof rawNotes.media==="string") ? rawNotes.media : mediaLegacy,
             food: (typeof rawNotes.food==="string") ? rawNotes.food : "",
@@ -13965,6 +14107,12 @@ function exportJSON(){
         // cycle tracker
         const cycle = normalizeCycle(x.cycle);
 
+        // medical basics
+        const _hcRaw = (x.heightCm ?? x.height_cm ?? x.heightCM ?? x.height);
+        const heightCm = (Number.isFinite(Number(_hcRaw)) ? Math.max(0, Math.floor(Number(_hcRaw))) : null);
+        const allergies = (x.allergies ?? x.intolerances ?? x.allergiesIntolerances ?? "");
+        const medicalNotes = String((x.medicalNotes ?? x.medical_notes ?? "") || "").trim().slice(0, 2000) || medicalNotesFromNotes;
+
         return ({
           id: String(x.id || uuid()),
           nickname: String(x.nickname || x.name || x.fullname || x.displayName || ""),
@@ -13977,6 +14125,9 @@ function exportJSON(){
           metOn: x.metOn ? String(x.metOn) : "",
           connection: x.connection ? String(x.connection) : "",
           bloodType: x.bloodType ? String(x.bloodType) : "",
+          heightCm: heightCm,
+          allergies: String(allergies || "").trim().slice(0, 800),
+          medicalNotes: medicalNotes,
           nativeLang: x.nativeLang ? String(x.nativeLang) : "",
           otherLangs: x.otherLangs ? String(x.otherLangs) : "",
           tz: x.tz ? String(x.tz) : "",
@@ -14089,7 +14240,7 @@ function exportJSON(){
 
     try{
       const text = await file.text();
-      const parsed = JSON.parse(text);
+      const parsed = parseJSONLoose(text) ?? JSON.parse(text);
       const { cleaned, incomingSpecialId, incomingHolidaySettings } = parseImportPayload(parsed);
 
       if(cleaned.length === 0){
@@ -15380,7 +15531,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   // "packed" notes where everything ended up in notes.other with headers like:
   //   [🚨 Important], [💼 Work & 🚀 Projects], [🍕 Food & More], [📦 Other]
   function splitNotesPackedIntoOther(otherText){
-    const empty = { important:"", medical:"", work:"", media:"", food:"", other:"" };
+    const empty = { important:"", work:"", media:"", food:"", other:"" };
     const text = String(otherText||"").replace(/\r\n/g,"\n").trim();
     if(!text) return { ...empty };
 
@@ -15445,7 +15596,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   }
 
   function normalizeNotes(notes){
-    const empty = { important:"", medical:"", work:"", media:"", food:"", other:"" };
+    const empty = { important:"", work:"", media:"", food:"", other:"" };
 
     const append = (obj, key, txt, prefix=null) => {
       const t = String(txt||"").trim();
@@ -15458,7 +15609,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
       const k = String(rawKey||"").trim().toLowerCase();
       if(!k) return null;
       if(k === "important" || k === "imp" || k === "urgent") return "important";
-      if(k === "medical" || k === "health" || k === "med" || k === "meds" || k === "allergy" || k === "allergies") return "medical";
+      if(k === "medical" || k === "health" || k === "med" || k === "meds" || k === "allergy" || k === "allergies") return "other";
       if(k === "work" || k === "job") return "work";
       if(k === "projects" || k === "project" || k === "proj") return "work";
       if(k === "media" || k === "music" || k === "movies" || k === "movie" || k === "shows" || k === "show" || k === "series" || k === "games" || k === "game") return "media";
