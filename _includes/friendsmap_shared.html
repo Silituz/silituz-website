@@ -12737,37 +12737,26 @@ const birthdayCard = entry.birthdate ? (()=>{
     selectedId = id; // keep in sync so Special/Favorite changes refresh the open profile
     if(!e) return;
 
-    // Mark profile as favorite/non-favorite for gold vs cool accent background
     const pv = $("profileView");
     if(pv) pv.classList.toggle("isFavProfile", !!e.fav);
 
-    // Skeleton first (avoids "pop-in" and feels more app-like)
     const pb = $("profileBody");
     if(pb){ pb.innerHTML = profileSkeletonHTML(); }
 
     showProfileView();
-    // Always start at the top of the profile (the profile area is scrollable)
     try{ $("profileView").scrollTop = 0; }catch{}
-
-    const renderNow = ()=>{
-      try{
-        buildProfile(e);
-        try{ updateMobileSheets(); }catch{}
-      }catch(err){
-        console.error("buildProfile failed:", err);
-        const pb2 = $("profileBody");
-        if(pb2){
-          pb2.innerHTML = `<div class="profileCard"><div class="k">⚠️ Profile</div><div class="v">Something went wrong while rendering this card. Please check the console for details.</div></div>`;
-        }
-      }
-    };
+    try{ $("profileBody").scrollTop = 0; }catch{}
 
     try{ clearTimeout(openProfile.__renderTimer); }catch{}
-    const delay = prefersReducedMotion() ? 0 : 60;
-    if(delay > 0){
-      openProfile.__renderTimer = setTimeout(renderNow, delay);
-    }else{
-      renderNow();
+    try{
+      buildProfile(e);
+      try{ updateMobileSheets(); }catch{}
+    }catch(err){
+      console.error("buildProfile failed:", err);
+      const pb2 = $("profileBody");
+      if(pb2){
+        pb2.innerHTML = `<div class="profileCard"><div class="k">⚠️ Profile</div><div class="v">Something went wrong while rendering this card. Please check the console for details.</div></div>`;
+      }
     }
   }
 
@@ -16145,6 +16134,672 @@ document.addEventListener("DOMContentLoaded", ()=>{
     <div class="cmdkList" id="cmdkList"></div>
   </div>
 </div>
+
+
+<script>
+(function(){
+  const root = document.getElementById('soApp');
+  if(!root) return;
+  const byId = (id)=>document.getElementById(id);
+
+  function injectEnhancementStyles(){
+    if(document.getElementById('soEnhancementStyles')) return;
+    const st = document.createElement('style');
+    st.id = 'soEnhancementStyles';
+    st.textContent = `
+#soApp .activeFiltersMeta{display:none; align-items:center; justify-content:space-between; gap:10px; padding:8px 14px 0;}
+#soApp .activeFiltersMeta.show{display:flex;}
+#soApp .afMetaLeft{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+#soApp .afCount{font-size:12px; color:var(--muted); padding:7px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.10); background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); box-shadow:0 10px 24px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.05);}
+#soApp .afReset{display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:7px 11px; border-radius:999px; border:1px solid rgba(80,235,230,.26); background:linear-gradient(180deg, rgba(80,235,230,.14), rgba(122,167,255,.11)); color:var(--text); cursor:pointer; transition:transform .14s ease, box-shadow .14s ease, filter .14s ease, border-color .14s ease; box-shadow:0 14px 30px rgba(0,0,0,.18), 0 0 24px rgba(80,235,230,.10), inset 0 1px 0 rgba(255,255,255,.08);}
+#soApp .afReset:hover{transform:translateY(-1px); filter:brightness(1.05); border-color:rgba(80,235,230,.42); box-shadow:0 18px 34px rgba(0,0,0,.24), 0 0 28px rgba(80,235,230,.18), inset 0 1px 0 rgba(255,255,255,.12);}
+#soApp .afPill{border-color: rgba(80,235,230,.26); background: linear-gradient(180deg, rgba(80,235,230,.16), rgba(122,167,255,.12)); box-shadow: 0 12px 28px rgba(0,0,0,.16), 0 0 22px rgba(80,235,230,.10), inset 0 1px 0 rgba(255,255,255,.08);}
+#soApp .afPill button{color:rgba(255,255,255,.72); width:18px; height:18px; border-radius:999px;}
+#soApp .afPill button:hover{background:rgba(255,255,255,.10); color:#fff;}
+#soApp .profileHeadMeta{display:none; flex-wrap:wrap; gap:8px; margin-top:8px;}
+#soApp .profileHeadMeta.show{display:flex;}
+#soApp .profileMetaPill{display:inline-flex; align-items:center; gap:6px; padding:7px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.12); background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); box-shadow:0 10px 24px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.06); font-size:12px; color:var(--text);}
+#soApp .profileMetaPill.mainPlatform{border-color:rgba(80,235,230,.26); box-shadow:0 12px 28px rgba(0,0,0,.18), 0 0 22px rgba(80,235,230,.12), inset 0 1px 0 rgba(255,255,255,.08);}
+#soApp .profileMetaPill.isLink{appearance:none; -webkit-appearance:none; text-decoration:none; cursor:pointer; transition:transform .14s ease, filter .14s ease, border-color .14s ease, box-shadow .14s ease;}
+#soApp .profileMetaPill.isLink:hover{transform:translateY(-1px); filter:brightness(1.05); border-color:rgba(80,235,230,.42); box-shadow:0 16px 32px rgba(0,0,0,.22), 0 0 26px rgba(80,235,230,.18), inset 0 1px 0 rgba(255,255,255,.10);}
+#soApp .profileMetaPill.isLink .miniArrow{font-size:12px; opacity:.9;}
+#soApp #profileView .profileHead{position:sticky; top:0; z-index:4; backdrop-filter:blur(14px) saturate(145%); -webkit-backdrop-filter:blur(14px) saturate(145%); background:linear-gradient(180deg, rgba(8,12,21,.94), rgba(10,15,27,.84)); box-shadow:0 16px 40px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.05);}
+#soApp #profileView .profileHead .btns{flex-wrap:wrap;}
+#soApp #profileView .profileHead .btns button{box-shadow:0 10px 24px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.05);}
+#soApp #profileView .profileCard{border-color:rgba(255,255,255,.12) !important; box-shadow:0 20px 44px rgba(0,0,0,.22), 0 0 0 1px rgba(255,255,255,.03) inset, 0 0 24px rgba(122,167,255,.06) !important; backdrop-filter:blur(12px) saturate(140%) !important; -webkit-backdrop-filter:blur(12px) saturate(140%) !important;}
+#soApp #profileView .profileCard:hover{transform:translateY(-1px); box-shadow:0 24px 50px rgba(0,0,0,.26), 0 0 0 1px rgba(255,255,255,.04) inset, 0 0 28px rgba(80,235,230,.08) !important;}
+#soApp #profileView .profileCard>.k{display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:12px; letter-spacing:.3px; text-transform:none;}
+#soApp #profileView .profileCard>.v{font-size:14px; line-height:1.55;}
+#soApp .cardActionBtns{display:inline-flex; align-items:center; gap:6px; margin-left:auto;}
+#soApp .miniCardBtn{display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:999px; border:1px solid rgba(255,255,255,.12); background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); color:var(--text); cursor:pointer; box-shadow:0 8px 18px rgba(0,0,0,.18); transition:transform .14s ease, filter .14s ease, border-color .14s ease;}
+#soApp .miniCardBtn:hover{transform:translateY(-1px); filter:brightness(1.06); border-color:rgba(80,235,230,.30);}
+#soApp .socialsCard .socialLinksRow{margin-bottom:12px; gap:10px;}
+#soApp .socialsCard .socialIconLink{background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05)); box-shadow:0 14px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.07), 0 0 20px rgba(122,167,255,.08);}
+#soApp .socialsCard .socialIconLink[data-social="instagram"]{box-shadow:0 14px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.07), 0 0 20px rgba(214,90,255,.10);}
+#soApp .socialsCard .socialIconLink[data-social="youtube"]{box-shadow:0 14px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.07), 0 0 20px rgba(255,100,100,.10);}
+#soApp .socialsCard .socialIconLink[data-social="telegram"]{box-shadow:0 14px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.07), 0 0 20px rgba(86,180,255,.11);}
+#soApp .socialsCard .socialIconLink[data-social="whatsapp"]{box-shadow:0 14px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.07), 0 0 20px rgba(80,255,170,.10);}
+#soApp .socialsCard .socialIconLink.isActive{transform:translateY(-1px) scale(1.03); border-color:rgba(80,235,230,.36); box-shadow:0 18px 34px rgba(0,0,0,.22), 0 0 26px rgba(80,235,230,.18), inset 0 1px 0 rgba(255,255,255,.10);}
+#soApp .socialExpandWrap{display:block;}
+#soApp .socialExpandPanel{display:none; margin-top:6px; padding:12px 14px; border-radius:18px; border:1px solid rgba(255,255,255,.10); background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); box-shadow:0 14px 28px rgba(0,0,0,.14), inset 0 1px 0 rgba(255,255,255,.05);}
+#soApp .socialExpandPanel.open{display:block; animation:soSocialPanelIn .18s ease;}
+#soApp .socialExpandPanel.isMain{border-color:rgba(80,235,230,.26); box-shadow:0 16px 32px rgba(0,0,0,.18), 0 0 20px rgba(80,235,230,.10), inset 0 1px 0 rgba(255,255,255,.05);}
+#soApp .socialExpandTitle{font-size:12px; color:var(--muted); margin-bottom:4px;}
+#soApp .socialExpandName{font-size:14px; color:var(--emerald); font-weight:700; line-height:1.35; word-break:break-word; text-shadow:0 0 16px rgba(16,185,129,.18);}
+#soApp .socialRowBtns .miniCardBtn{color:var(--text); transition:transform .14s ease, filter .14s ease, border-color .14s ease, color .14s ease, box-shadow .14s ease;}
+#soApp .socialRowBtns .miniCardBtn:hover{color:var(--emerald); border-color:rgba(16,185,129,.42); box-shadow:0 10px 22px rgba(0,0,0,.20), 0 0 16px rgba(16,185,129,.14);}
+#soApp .socialExpandLink{font-size:11px; color:var(--muted); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+#soApp .socialRowBtns{display:inline-flex; align-items:center; gap:7px; margin-top:10px;}
+#soApp .socialRowBtns .miniCardBtn{width:28px; height:28px;}
+#soApp .socialPreviewChip .socialLabelMini{display:none;}
+@keyframes soSocialPanelIn{from{opacity:0; transform:translateY(4px);}to{opacity:1; transform:translateY(0);}}
+#soApp .importPreviewModal{position:fixed; inset:0; z-index:260; display:none; align-items:center; justify-content:center; padding:18px; background:rgba(3,6,12,.62); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);}
+#soApp .importPreviewModal.open{display:flex;}
+#soApp .importPreviewInner{width:min(760px, calc(100vw - 28px)); max-height:min(86vh, 920px); overflow:auto; border-radius:24px; border:1px solid rgba(255,255,255,.12); background:linear-gradient(180deg, rgba(8,12,21,.97), rgba(11,16,28,.96)); box-shadow:0 34px 90px rgba(0,0,0,.52), 0 0 0 1px rgba(255,255,255,.04) inset; padding:18px;}
+#soApp .importPreviewHead{display:flex; justify-content:space-between; gap:14px; align-items:flex-start; margin-bottom:14px;}
+#soApp .importPreviewTitle{font-size:18px; font-weight:800; color:var(--text);}
+#soApp .importPreviewSub{font-size:13px; color:var(--muted); margin-top:4px;}
+#soApp .importPreviewGrid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin:14px 0;}
+#soApp .importStat{padding:12px 14px; border-radius:18px; border:1px solid rgba(255,255,255,.10); background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); box-shadow:0 14px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.05);}
+#soApp .importStat .num{font-size:22px; font-weight:800; color:var(--text);}
+#soApp .importStat .lab{font-size:12px; color:var(--muted); margin-top:3px;}
+#soApp .importPreviewList{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+#soApp .importNameChip{padding:7px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.10); background:rgba(255,255,255,.05); color:var(--text); font-size:12px;}
+#soApp .importActions{display:flex; flex-wrap:wrap; justify-content:flex-end; gap:10px; margin-top:16px;}
+#soApp .profileCloseMobile{display:none;}
+#soApp .mobileSheetBackdrop{display:none;}
+#soApp .profileDuplicateBtn{display:inline-flex;}
+@media (max-width:980px){
+  #soApp .mobileSheetBackdrop{position:fixed; inset:0; z-index:180; background:rgba(3,6,12,.58); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);}
+  #soApp.mobileSheetOn .mobileSheetBackdrop{display:block;}
+  #soApp #profileView.mobileSheetActive, #soApp #calendarView.mobileSheetActive{position:fixed !important; left:8px !important; right:8px !important; top:max(8px, env(safe-area-inset-top)) !important; bottom:max(8px, env(safe-area-inset-bottom)) !important; z-index:220 !important; display:flex !important; flex-direction:column; border-radius:24px !important; overflow:hidden !important; border:1px solid rgba(255,255,255,.12) !important; background:linear-gradient(180deg, rgba(7,10,18,.98), rgba(11,15,26,.97)) !important; box-shadow:0 32px 86px rgba(0,0,0,.56), 0 0 0 1px rgba(255,255,255,.05) inset !important;}
+  #soApp #profileView.mobileSheetActive .profileHead, #soApp #calendarView.mobileSheetActive .profileHead{position:sticky; top:0; z-index:6; padding-top:max(10px, env(safe-area-inset-top));}
+  #soApp #profileView.mobileSheetActive .profileBody, #soApp #calendarView.mobileSheetActive .profileBody{overflow:auto; flex:1;}
+  #soApp .profileCloseMobile{display:inline-flex;}
+  #soApp .rightTabs{position:sticky; top:0; z-index:5;}
+}
+@media (max-width:780px){
+  #soApp .importPreviewGrid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  #soApp .socialRowBtns{justify-content:flex-start;}
+  #soApp .socialExpandLink{white-space:normal; overflow:visible; text-overflow:clip;}
+}
+`;
+    document.head.appendChild(st);
+  }
+
+  function ensureAuxUI(){
+    const afBar = byId('activeFiltersBar');
+    if(afBar && !byId('activeFiltersMeta')){
+      const meta = document.createElement('div');
+      meta.id = 'activeFiltersMeta';
+      meta.className = 'activeFiltersMeta';
+      meta.innerHTML = '<div class="afMetaLeft"><span class="afCount" id="activeFiltersCount">0 shown</span></div><button type="button" class="afReset" id="afResetAllBtn">Reset all</button>';
+      afBar.insertAdjacentElement('afterend', meta);
+    }
+    const pvHeadBtns = document.querySelector('#profileView .profileHead .btns');
+    if(pvHeadBtns && !byId('profileDuplicate')){
+      const dup = document.createElement('button');
+      dup.id = 'profileDuplicate';
+      dup.className = 'secondary profileDuplicateBtn';
+      dup.type = 'button';
+      dup.title = 'Duplicate as template';
+      dup.textContent = '⧉ Duplicate';
+      pvHeadBtns.insertBefore(dup, byId('profileEdit') || pvHeadBtns.firstChild);
+    }
+    if(pvHeadBtns && !byId('profileCloseMobile')){
+      const close = document.createElement('button');
+      close.id = 'profileCloseMobile';
+      close.className = 'secondary profileCloseMobile';
+      close.type = 'button';
+      close.title = 'Close card';
+      close.textContent = '✕ Close';
+      pvHeadBtns.appendChild(close);
+    }
+    const profileTitle = document.querySelector('#profileView .profileTitle');
+    if(profileTitle && !byId('profileHeadMeta')){
+      const meta = document.createElement('div');
+      meta.id = 'profileHeadMeta';
+      meta.className = 'profileHeadMeta';
+      profileTitle.appendChild(meta);
+    }
+    if(!byId('mobileSheetBackdrop')){
+      const bd = document.createElement('div');
+      bd.id = 'mobileSheetBackdrop';
+      bd.className = 'mobileSheetBackdrop';
+      root.appendChild(bd);
+    }
+    if(!byId('importPreviewModal')){
+      const modal = document.createElement('div');
+      modal.id = 'importPreviewModal';
+      modal.className = 'importPreviewModal';
+      modal.setAttribute('aria-hidden','true');
+      modal.innerHTML = `
+        <div class="importPreviewInner" role="dialog" aria-modal="true" aria-label="Import preview">
+          <div class="importPreviewHead">
+            <div>
+              <div class="importPreviewTitle">Import preview</div>
+              <div class="importPreviewSub" id="importPreviewSub">—</div>
+            </div>
+            <button type="button" class="secondary" id="importPreviewClose">Close</button>
+          </div>
+          <div class="importPreviewGrid" id="importPreviewGrid"></div>
+          <div class="profileCard" style="margin-top:4px;">
+            <div class="k">Names in file</div>
+            <div class="v"><div id="importPreviewNames" class="importPreviewList"></div></div>
+          </div>
+          <div class="profileCard" style="margin-top:12px;">
+            <div class="k">What happens</div>
+            <div class="v" id="importPreviewExplain">—</div>
+          </div>
+          <div class="importActions">
+            <button type="button" class="secondary" id="importPreviewCancel">Cancel</button>
+            <button type="button" class="secondary" id="importPreviewMerge">Merge</button>
+            <button type="button" id="importPreviewReplace">Replace</button>
+          </div>
+        </div>`;
+      root.appendChild(modal);
+    }
+  }
+
+  injectEnhancementStyles();
+  ensureAuxUI();
+
+  const searchEl = byId('search');
+  if(searchEl) searchEl.placeholder = 'Search (name, tags, socials, notes, place, timezone…)';
+
+  function copyTextSmart(text, okMsg){
+    const val = String(text ?? '').trim();
+    if(!val) return;
+    navigator.clipboard?.writeText(val).then(()=> toast(okMsg || 'Copied')).catch(()=> toast(okMsg || 'Copied'));
+  }
+
+  function socialDisplayValue(key, value){
+    const raw = String(value || '').trim();
+    if(!raw) return '';
+    if(key === 'email') return raw.replace(/^mailto:/i,'');
+    if(/^(https?:)?\/\//i.test(raw)){
+      try{
+        const u = new URL(raw.startsWith('http') ? raw : ('https:' + raw));
+        if(key === 'website') return u.hostname.replace(/^www\./i,'') + (u.pathname && u.pathname !== '/' ? u.pathname : '');
+        if(key === 'discord' || key === 'youtube') return u.hostname.replace(/^www\./i,'') + u.pathname;
+        const seg = (u.pathname || '').split('/').filter(Boolean);
+        if(key === 'tiktok' || key === 'instagram' || key === 'telegram') return seg.length ? ('@' + seg[seg.length-1].replace(/^@/,'')) : u.hostname.replace(/^www\./i,'');
+        if(key === 'whatsapp') return seg.length ? seg[seg.length-1] : u.pathname;
+        return u.hostname.replace(/^www\./i,'') + u.pathname;
+      }catch{return raw;}
+    }
+    if(key === 'website') return raw.replace(/^https?:\/\//i,'');
+    if(key === 'email') return raw;
+    if(key === 'discord') return raw;
+    if(key === 'whatsapp') return raw;
+    return raw.startsWith('@') ? raw : ('@' + raw.replace(/^@/,''));
+  }
+
+  const _socialsIndexText = socialsIndexText;
+  socialsIndexText = function(socials){
+    const s = normalizeSocials(socials);
+    const bits = [];
+    if(s.main) bits.push(s.main, socialLabel(s.main), 'main platform ' + socialLabel(s.main));
+    if(s.note) bits.push(s.note);
+    for(const k of SOCIAL_KEYS){
+      if(!s[k]) continue;
+      bits.push(k, socialLabel(k), s[k], socialDisplayValue(k, s[k]));
+    }
+    return bits.filter(Boolean).join(' | ');
+  };
+
+  const _renderSocialPreview = renderSocialPreview;
+  renderSocialPreview = function(){
+    const row = byId('socialPreviewRow');
+    if(!row) return;
+    const s = getSocialsFromForm();
+    const chips = [];
+    for(const k of SOCIAL_KEYS){
+      if(!s[k]) continue;
+      const isMain = s.main === k ? ' isMain' : '';
+      const display = socialDisplayValue(k, s[k]) || socialLabel(k);
+      chips.push(`<span class="socialPreviewChip${isMain}" data-social="${escapeHTML(k)}" title="${escapeHTML(socialLabel(k) + ': ' + display)}">${socialIconHTML(k)}</span>`);
+    }
+    row.innerHTML = chips.join('') || `<span class="hint">No socials set yet.</span>`;
+  };
+
+  socialsCardHTML = function(entry){
+    const s = socialsFromAny(entry);
+    const keys = SOCIAL_KEYS.filter(k => !!s[k]);
+    if(!keys.length) return '';
+    const mainKey = s.main && keys.includes(s.main) ? s.main : '';
+    const iconBar = keys.map(k=>{
+      const cls = 'socialIconLink' + (s.main === k ? ' isMain' : '');
+      const ttl = `${socialLabel(k)}${s.main===k ? ' · Main platform' : ''} · Show details`;
+      return `<button type="button" class="${cls}" data-social-toggle="${escapeHTML(k)}" data-social="${escapeHTML(k)}" title="${escapeHTML(ttl)}" aria-label="${escapeHTML(ttl)}" aria-expanded="false">${socialIconHTML(k)}</button>`;
+    }).join('');
+    const detailPanels = keys.map(k=>{
+      const href = socialValueToHref(k, s[k]);
+      const display = socialDisplayValue(k, s[k]) || String(s[k]||'');
+      const sub = href ? href.replace(/^https?:\/\//i,'') : String(s[k]||'');
+      return `<div class="socialExpandPanel${s.main===k ? ' isMain' : ''}" data-social-panel="${escapeHTML(k)}" hidden>
+        <div class="socialExpandTitle">${escapeHTML(socialLabel(k))}${s.main===k ? ' · Main platform' : ''}</div>
+        <div class="socialExpandName">${escapeHTML(display)}</div>
+        <div class="socialExpandLink">${escapeHTML(sub)}</div>
+        <div class="socialRowBtns">
+          ${href ? `<button type="button" class="miniCardBtn" data-social-open="${escapeHTML(href)}" title="Open ${escapeHTML(socialLabel(k))}">↗</button>` : ''}
+          <button type="button" class="miniCardBtn" data-social-copy="${escapeHTML(String(s[k]||''))}" data-social-label="${escapeHTML(socialLabel(k))}" title="Copy ${escapeHTML(socialLabel(k))}">⧉</button>
+        </div>
+      </div>`;
+    }).join('');
+    const note = s.note ? `<div class="hint" style="margin-top:12px;">${escapeHTML(s.note)}</div>` : '';
+    const openHint = `<div class="hint" style="margin-top:2px; margin-bottom:10px;">Tap an icon to show details.</div>`;
+    return `<div class="profileCard socialsCard" data-main-social="${escapeHTML(mainKey)}"><div class="k">🌐 Socials</div><div class="v"><div class="socialLinksRow">${iconBar}</div>${openHint}<div class="socialExpandWrap">${detailPanels}</div>${note}</div></div>`;
+  };
+
+  function openExternalLinkMaybe(url){
+    const href = String(url || '').trim();
+    if(!href) return;
+    try{ window.open(href, '_blank', 'noopener,noreferrer'); }catch{}
+  }
+
+  function resetAllFilters(){
+    searchQuery = '';
+    if(searchEl) searchEl.value = '';
+    activeFilter = 'all';
+    advFilters = { hasNotes:false, hasImage:false, hasAddress:false, missingTZ:false, tags:[] };
+    try{ renderAdvancedFiltersUI(); }catch{}
+    try{ syncFilterChipsToAll(); }catch{}
+    renderList();
+    try{ renderDashboard(); }catch{}
+  }
+
+  let __lastFilteredCount = 0;
+  let __lastTotalCount = 0;
+  const _oldRenderActiveFilterPills = renderActiveFilterPills;
+  renderActiveFilterPills = function(){
+    const wrap = byId('activeFiltersBar');
+    const meta = byId('activeFiltersMeta');
+    const countEl = byId('activeFiltersCount');
+    const pills = [];
+    const sq = String(searchQuery||'').trim();
+    if(sq) pills.push({ kind:'search', label:`Search: ${sq}` });
+    if(activeFilter === 'fav') pills.push({ kind:'main', value:'fav', label:'⭐ Favorites' });
+    if(activeFilter === 'bday') pills.push({ kind:'main', value:'bday', label:'🎂 Birthday' });
+    if(activeFilter === 'friend') pills.push({ kind:'main', value:'friend', label:'🎈 Friendship' });
+    if(advFilters?.hasNotes) pills.push({ kind:'adv', value:'hasNotes', label:'Has notes' });
+    if(advFilters?.hasImage) pills.push({ kind:'adv', value:'hasImage', label:'Has image' });
+    if(advFilters?.hasAddress) pills.push({ kind:'adv', value:'hasAddress', label:'Has address' });
+    if(advFilters?.missingTZ) pills.push({ kind:'adv', value:'missingTZ', label:'Missing timezone' });
+    if(Array.isArray(advFilters?.tags)) advFilters.tags.forEach(tag => pills.push({ kind:'tag', value:String(tag||''), label:'#' + String(tag||'') }));
+    if(wrap){
+      wrap.classList.toggle('show', pills.length > 0);
+      wrap.innerHTML = pills.map((p, i)=>`<span class="afPill"><span>${escapeHTML(p.label)}</span><button type="button" data-afpill-kind="${escapeHTML(p.kind)}" data-afpill-value="${escapeHTML(String(p.value||''))}" aria-label="Remove filter ${i+1}">×</button></span>`).join('');
+    }
+    if(countEl) countEl.textContent = `${__lastFilteredCount} shown · ${__lastTotalCount} total`;
+    if(meta) meta.classList.toggle('show', pills.length > 0 || __lastTotalCount > 0);
+  };
+
+  function entrySearchTextEnhanced(e){
+    const socials = normalizeSocials(e.socials);
+    const socialBits = [];
+    for(const k of SOCIAL_KEYS){
+      if(!socials[k]) continue;
+      socialBits.push(k, socialLabel(k), socials[k], socialDisplayValue(k, socials[k]));
+    }
+    const country = countryGuess(e);
+    return [
+      e.nickname, e.realName, e.connection, e.bloodType, eyeLabel(e.eye), e.nativeLang, e.otherLangs, e.tz,
+      e.currentAddress, e.birthplace, country, e.birthdate, e.metOn, e.notes, e.medicalNotes, e.allergies,
+      (e.heightCm!=null?String(e.heightCm):''), socials.main, socialLabel(socials.main||''), socials.note,
+      ...socialBits, connectionsText(e.connections), (Array.isArray(e.tags) ? e.tags.join(', ') : ''), e.lastContact,
+      (e.remindEveryDays!=null ? String(e.remindEveryDays) : '')
+    ].filter(Boolean).join(' | ').toLowerCase();
+  }
+
+  renderList = function(){
+    const ul = byId('list');
+    const q = (searchQuery||'').trim().toLowerCase();
+    let filtered = q ? entries.filter(e=> entrySearchTextEnhanced(e).includes(q)) : [...entries];
+    if(activeFilter === 'fav') filtered = filtered.filter(e => !!e.fav);
+    try{
+      if(advFilters){
+        if(advFilters.hasNotes){
+          filtered = filtered.filter(e=>{
+            const mn = String(e.medicalNotes||'').trim();
+            if(mn.length>0) return true;
+            const n = e.notes;
+            if(typeof n === 'string') return n.trim().length>0;
+            if(n && typeof n === 'object') return Object.values(n).some(v=> String(v||'').trim().length>0);
+            return false;
+          });
+        }
+        if(advFilters.hasImage) filtered = filtered.filter(e=> !!e.imageData);
+        if(advFilters.hasAddress) filtered = filtered.filter(e=> !!String(e.currentAddress||'').trim());
+        if(advFilters.missingTZ) filtered = filtered.filter(e=> !String(e.tz||'').trim());
+        if(Array.isArray(advFilters.tags) && advFilters.tags.length){
+          const want = advFilters.tags.map(x=>String(x||'').trim().toLowerCase()).filter(Boolean);
+          filtered = filtered.filter(e=>{
+            const t = Array.isArray(e.tags) ? e.tags.map(x=>String(x||'').trim().toLowerCase()) : [];
+            return want.every(w=> t.includes(w));
+          });
+        }
+      }
+    }catch{}
+    const sorted = [...filtered].sort((a,b)=>{
+      const sortMode = (activeFilter === 'bday' || activeFilter === 'friend');
+      const aS = (specialId && a.id===specialId); const bS = (specialId && b.id===specialId);
+      if(aS !== bS) return aS ? -1 : 1;
+      if(!sortMode){ const aF = !!a.fav, bF = !!b.fav; if(aF !== bF) return aF ? -1 : 1; }
+      if(activeFilter === 'bday'){
+        const da = daysUntilNextBirthday(a.birthdate), db = daysUntilNextBirthday(b.birthdate);
+        const va = (da === null ? Number.POSITIVE_INFINITY : da), vb = (db === null ? Number.POSITIVE_INFINITY : db);
+        if(va !== vb) return va - vb;
+        return (a.nickname||'').localeCompare(b.nickname||'', undefined, {sensitivity:'base'});
+      }
+      if(activeFilter === 'friend'){
+        const pa = parseDateYMD(a.metOn), pb = parseDateYMD(b.metOn);
+        const va = pa ? Date.UTC(pa.year, pa.month-1, pa.day) : Number.POSITIVE_INFINITY;
+        const vb = pb ? Date.UTC(pb.year, pb.month-1, pb.day) : Number.POSITIVE_INFINITY;
+        if(va !== vb) return va - vb;
+        return (a.nickname||'').localeCompare(b.nickname||'', undefined, {sensitivity:'base'});
+      }
+      if(activeFilter === 'all'){
+        const af = a.fav ? 1 : 0, bf = b.fav ? 1 : 0; if(af !== bf) return bf - af;
+      }
+      return (a.nickname||'').localeCompare(b.nickname||'', undefined, {sensitivity:'base'});
+    });
+    __lastFilteredCount = sorted.length;
+    __lastTotalCount = entries.length;
+    const prevScroll = ul.scrollTop;
+    ul.innerHTML = '';
+    renderAlphabet(sorted);
+    try{ renderActiveFilterPills(); }catch{}
+    for(const e of sorted){
+      const li = document.createElement('li');
+      li.className = 'item';
+      li.classList.toggle('isSelected', e.id === selectedId);
+      li.classList.toggle('isFav', !!e.fav);
+      li.classList.toggle('isSpecial', !!specialId && e.id === specialId);
+      li.dataset.id = e.id;
+      if(selectedId && e.id === selectedId) li.classList.add('selected');
+      const where = e.currentAddress || `${Number(e.lat).toFixed(2)}, ${Number(e.lon).toFixed(2)}`;
+      const dist = distanceLabelTo(e.lat, e.lon);
+      const t = personLocalTimeMin(e.tz);
+      let z = '';
+      if(e.birthdate){ const d = new Date(e.birthdate + 'T00:00:00'); if(!Number.isNaN(d.getTime())) z = ` · ${westernZodiac(d.getMonth()+1, d.getDate())} / ${chineseZodiacAnimal(d.getFullYear())}`; }
+      const nm = displayNames(e);
+      const avatar = e.imageData ? `<img class="avatar js-open-img" alt="${escapeHTML(e.nickname)}" src="${e.imageData}" />` : `<div class="avatarPh" title="No image">—</div>`;
+      li.innerHTML = `
+        <div class="meta">
+          <div class="nick"><div class="nameBlock">
+              <div class="nameMain nameLine">
+                <span class="listHeart" title="Best time to contact">${heartForTimezone(e.tz)}</span>
+                <span class="nameText">${escapeHTML(nm.main)}</span>
+                <span class="nameIcons">
+                  <button class="starInline js-star ${e.fav ? 'on' : ''}" title="${e.fav ? 'Unfavorite' : 'Favorite'}" type="button">${e.fav ? '⭐' : '☆'}</button>
+                  <button class="diamondInline js-special ${ (specialId && e.id===specialId) ? 'on specialOn' : '' }" title="${ (specialId && e.id===specialId) ? 'Unset special' : 'Set as special' }" type="button">${ (specialId && e.id===specialId) ? '∞' : '◈' }</button>
+                </span>
+              </div>
+              ${nm.sub ? `<div class="nameSub">${escapeHTML(nm.sub)}</div>` : ''}
+            </div></div>
+          ${activeFilter === 'bday' && (()=>{ const diff = monthsDaysUntilNextBirthday(e.birthdate); if(!diff) return ''; const ageTxt = (diff.age === null) ? '' : ` · turns ${diff.age}`; return `<div class="infoBlock">🎂 <b>${fmtMoDays(diff.months, diff.days)}</b>${ageTxt}</div>`; })() || ''}
+          ${activeFilter === 'friend' && (()=>{ const s = yearsMonthsDaysSince(e.metOn); if(!s) return ''; return `<div class="infoBlock">🎈 <b>${s.years}y ${s.months}m ${s.days}d</b></div>`; })() || ''}
+          <div class="tiny">${escapeHTML(where)}${dist ? ` · ${escapeHTML(dist)}` : ''}${e.birthdate ? ` · ${escapeHTML(fmtDate(e.birthdate))}${escapeHTML(z)}` : ''}${e.connection ? ` · ${escapeHTML(e.connection)}` : ''}${(!notesHidden && e.bloodType) ? ` · 🩸 ${escapeHTML(e.bloodType)}` : ''}</div>
+          ${Array.isArray(e.tags) && e.tags.length ? `<div class="tagRow">${e.tags.slice(0,3).map(t=>`<span class="tagMini js-tag" data-tag="${escapeHTML(t)}">#${escapeHTML(t)}</span>`).join('')}${e.tags.length>3 ? `<span class="tagMini js-tagMore" title="More tags…">+${e.tags.length-3}</span>` : ``}</div>` : ``}
+          <div class="tiny"><span class="localLabel">Local Time</span>: <span class="js-time localTimeVal" data-gran="m" data-tz="${escapeHTML(e.tz)}">${escapeHTML(t || '—')}</span> ${e.tz ? `(${escapeHTML(e.tz)})` : ''}</div>
+        </div>
+        <div class="actions">${avatar}<button class="iconBtn js-pin" title="Center on map" type="button">📍</button><button class="iconBtn js-book" title="Open profile" type="button">🪪</button><button class="iconBtn js-net" title="Connections / Network" type="button">🕸️</button><button class="secondary js-open" type="button">Open</button></div>`;
+      li.addEventListener('click', async (ev)=>{ if(ev.target.closest('button, a, input, textarea, select')) return; try{ await guardedSelectEntry(e.id, { panMap:false }); }catch{ guardedSelectEntry(e.id, { panMap:false }); } });
+      li.querySelector('.js-open').addEventListener('click', async (ev)=>{ ev.stopPropagation(); const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false }); if(ok){ openProfile(e.id); scrollRightCardIntoView(); } });
+      li.querySelector('.js-pin').addEventListener('click', (ev)=>{ ev.stopPropagation(); const isMobile = (window.matchMedia && window.matchMedia('(max-width: 980px)').matches); if(isMobile){ scrollRightCardIntoView(); setTimeout(()=> focusEntryOnMap(e.id), 70); } else focusEntryOnMap(e.id); });
+      li.querySelector('.js-book').addEventListener('click', async (ev)=>{ ev.stopPropagation(); const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false }); if(ok){ openProfile(e.id); scrollRightCardIntoView(); } });
+      li.querySelector('.js-net').addEventListener('click', (ev)=>{ ev.stopPropagation(); openNetworkModal(e.id); });
+      li.querySelectorAll('.js-tag').forEach(tg=>{ tg.addEventListener('click', (ev)=>{ ev.stopPropagation(); const tag = tg.getAttribute('data-tag') || ''; if(!tag) return; try{ setTagFilter([tag]); }catch{} try{ syncFilterChipsToAll(); }catch{} renderList(); try{ renderDashboard(); }catch{} toast(`Tag filter: #${tag}`); }); });
+      const _more = li.querySelector('.js-tagMore');
+      if(_more){ _more.addEventListener('click', (ev)=>{ ev.stopPropagation(); try{ openAdvancedFilters(true); }catch{} try{ byId('afTagSearch')?.focus(); }catch{} }); }
+      li.querySelector('.js-star').addEventListener('click', (ev)=>{ ev.stopPropagation(); e.fav = !e.fav; e.updatedAt = new Date().toISOString(); save(); toast(e.fav ? 'Added to favorites ⭐' : 'Removed from favorites'); });
+      li.querySelector('.js-special').addEventListener('click', (ev)=>{ ev.stopPropagation(); setSpecial(e.id); });
+      li.addEventListener('dblclick', async ()=>{ await guardedSelectEntry(e.id); });
+      ul.appendChild(li);
+    }
+    ul.scrollTop = prevScroll;
+    try{ updateStats(); }catch{}
+    try{ renderDashboard(); }catch{}
+  };
+
+  function applyProfileHeadMeta(entry){
+    const meta = byId('profileHeadMeta');
+    if(!meta) return;
+    const s = socialsFromAny(entry);
+    const pills = [];
+    if(s.main){
+      const mainHref = socialValueToHref(s.main, s[s.main] || '');
+      const mainInner = `${socialIconHTML(s.main)}<span>Main: ${escapeHTML(socialLabel(s.main))}</span>${mainHref ? '<span class="miniArrow">↗</span>' : ''}`;
+      pills.push(mainHref
+        ? `<a class="profileMetaPill mainPlatform isLink" href="${escapeHTML(mainHref)}" target="_blank" rel="noopener noreferrer" title="Open ${escapeHTML(socialLabel(s.main))}">${mainInner}</a>`
+        : `<span class="profileMetaPill mainPlatform">${mainInner}</span>`);
+    }
+    if(Array.isArray(entry.tags) && entry.tags.length){
+      pills.push(`<span class="profileMetaPill">#${escapeHTML(entry.tags[0])}${entry.tags.length>1 ? ` +${entry.tags.length-1}` : ''}</span>`);
+    }
+    meta.innerHTML = pills.join('');
+    meta.classList.toggle('show', pills.length > 0);
+  }
+
+  function appendCardAction(card, html){
+    const k = card?.querySelector('.k');
+    if(!k) return;
+    let wrap = k.querySelector('.cardActionBtns');
+    if(!wrap){ wrap = document.createElement('span'); wrap.className = 'cardActionBtns'; k.appendChild(wrap); }
+    wrap.insertAdjacentHTML('beforeend', html);
+  }
+
+  function enhanceProfileCards(entry){
+    applyProfileHeadMeta(entry);
+    const body = byId('profileBody');
+    if(!body) return;
+    body.querySelectorAll('.profileCard').forEach(card=>{
+      const kEl = card.querySelector('.k');
+      if(!kEl || card.dataset.enhancedCard === '1') return;
+      const label = (kEl.textContent || '').trim().toLowerCase();
+      if(label.includes('current address')) appendCardAction(card, `<button type="button" class="miniCardBtn" data-copy-card="address" title="Copy address">⧉</button>`);
+      if(label.includes('local time')) appendCardAction(card, `<button type="button" class="miniCardBtn" data-copy-card="timezone" title="Copy timezone">⧉</button>`);
+      if(label.includes('birthday')) appendCardAction(card, `<button type="button" class="miniCardBtn" data-copy-card="birthday" title="Copy birthday">⧉</button>`);
+      card.dataset.enhancedCard = '1';
+    });
+  }
+
+  const _oldBuildProfile = buildProfile;
+  buildProfile = function(entry){
+    _oldBuildProfile(entry);
+    try{ enhanceProfileCards(entry); }catch{}
+  };
+
+  function duplicateEntryTemplate(id){
+    const e = entries.find(x=>x.id===id);
+    if(!e) return;
+    const copy = JSON.parse(JSON.stringify(e));
+    copy.id = uuid();
+    copy.nickname = `${e.nickname || 'Entry'} Copy`;
+    copy.realName = e.realName || '';
+    fillForm(copy, { panMap:false, toast:false });
+    selectedId = null;
+    const del = byId('deleteBtn'); if(del) del.disabled = true;
+    try{ setFormDirty(true); }catch{}
+    toast('Template duplicated to editor');
+    scrollEditorIntoView({ focus:true });
+  }
+
+  const _oldUpdateMobileSheets = updateMobileSheets;
+  updateMobileSheets = function(){
+    const pv = byId('profileView');
+    const cv = byId('calendarView');
+    const isMobile = !!(window.matchMedia && window.matchMedia('(max-width: 980px)').matches);
+    if(!pv || !cv) return;
+    const profileOpen = isMobile && getComputedStyle(pv).display !== 'none';
+    const calOpen = isMobile && getComputedStyle(cv).display !== 'none';
+    // Keep the card stable: avoid forcing fixed/mobile-sheet layout onto the profile.
+    pv.classList.remove('mobileSheetActive');
+    cv.classList.remove('mobileSheetActive');
+    root.classList.toggle('mobileSheetOn', false);
+    const bd = byId('mobileSheetBackdrop');
+    if(bd) bd.style.display = 'none';
+  };
+
+  const _oldShowMapView = showMapView;
+  showMapView = function(){ _oldShowMapView(); try{ updateMobileSheets(); }catch{} };
+  const _oldShowProfileView = showProfileView;
+  showProfileView = function(){ _oldShowProfileView(); try{ updateMobileSheets(); }catch{} };
+  const _oldShowCalendarView = showCalendarView;
+  showCalendarView = function(){ _oldShowCalendarView(); try{ updateMobileSheets(); }catch{} };
+
+  function closeImportPreview(){
+    const modal = byId('importPreviewModal');
+    if(!modal) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    modal.dataset.pending = '';
+    closeImportPreview._pending = null;
+  }
+
+  function buildImportSummary(cleaned){
+    const current = Array.isArray(entries) ? entries : [];
+    let exact = 0, similar = 0, fresh = 0;
+    const existingIds = new Set(current.map(e=>String(e.id||'')));
+    const currentNick = new Map(current.map(e=>[String(e.nickname||'').trim().toLowerCase(), e]));
+    for(const inc of cleaned){
+      const hasId = existingIds.has(String(inc.id||''));
+      const dup = possibleDuplicateEntry({ nickname: inc.nickname, realName: inc.realName, socials: inc.socials }, '');
+      if(hasId) exact += 1;
+      else if(dup) similar += 1;
+      else if(currentNick.has(String(inc.nickname||'').trim().toLowerCase())) similar += 1;
+      else fresh += 1;
+    }
+    return { exact, similar, fresh, total: cleaned.length };
+  }
+
+  function applyImportedPayload(payload, mode){
+    const { cleaned, incomingSpecialId, incomingHolidaySettings } = payload || {};
+    if(!Array.isArray(cleaned) || !cleaned.length) return;
+    if(mode === 'merge'){
+      entries = mergeImported(entries, cleaned);
+      toast('Imported (merged) ✅');
+    }else{
+      entries = cleaned;
+      toast('Imported (replaced) ✅');
+    }
+    if(incomingSpecialId){
+      const exists = entries.some(e=>e && e.id === incomingSpecialId);
+      if(exists){
+        specialId = incomingSpecialId;
+        try{ localStorage.setItem(SPECIAL_STORAGE_KEY, specialId); }catch{}
+      }
+    }
+    if(incomingHolidaySettings){ try{ applyHolidaySettingsFromImport(incomingHolidaySettings); }catch{} }
+    selectedId = null;
+    save();
+    clearForm();
+    renderList();
+    try{ renderDashboard(); }catch{}
+    closeImportPreview();
+  }
+
+  function showImportPreview(payload, fileName){
+    const modal = byId('importPreviewModal');
+    if(!modal) return;
+    const summary = buildImportSummary(payload.cleaned || []);
+    byId('importPreviewSub').textContent = `${fileName || 'JSON file'} · ${summary.total} valid entries found`;
+    byId('importPreviewGrid').innerHTML = [
+      ['Valid', summary.total], ['New', summary.fresh], ['Similar', summary.similar], ['Exact IDs', summary.exact]
+    ].map(([lab,num])=>`<div class="importStat"><div class="num">${escapeHTML(String(num))}</div><div class="lab">${escapeHTML(lab)}</div></div>`).join('');
+    const names = (payload.cleaned || []).slice(0, 16).map(e=>`<span class="importNameChip">${escapeHTML(displayNames(e).main || e.nickname || e.realName || '—')}</span>`).join('') || '<span class="hint">No names found.</span>';
+    byId('importPreviewNames').innerHTML = names;
+    byId('importPreviewExplain').innerHTML = `Replace clears the current browser list and loads the file. Merge keeps your current list and imports the new file on top. Similar entries are only detected for your review here — they are not auto-merged by platform.`;
+    closeImportPreview._pending = payload;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+  }
+
+  const importInput = byId('importFile');
+  if(importInput && !importInput.dataset.previewBound){
+    importInput.dataset.previewBound = '1';
+    importInput.addEventListener('change', async (e)=>{
+      const file = e.target.files?.[0];
+      if(!file) return;
+      e.stopImmediatePropagation();
+      try{
+        const text = await file.text();
+        const parsed = parseJSONLoose(text) ?? JSON.parse(text);
+        const payload = parseImportPayload(parsed);
+        if(!payload.cleaned.length){ toast('Import failed: JSON has no valid entries'); return; }
+        showImportPreview(payload, file.name);
+      }catch(err){
+        toast('Could not import file');
+        try{ console.error('Import failed:', err); }catch{}
+      }finally{
+        e.target.value = '';
+      }
+    }, true);
+  }
+
+  document.addEventListener('click', (ev)=>{
+    const btn = ev.target.closest && ev.target.closest('[data-social-toggle], [data-social-open], [data-social-copy], [data-copy-card], #afResetAllBtn, #profileDuplicate, #profileCloseMobile, #mobileSheetBackdrop, #importPreviewClose, #importPreviewCancel, #importPreviewMerge, #importPreviewReplace');
+    if(!btn) return;
+    if(btn.id === 'afResetAllBtn'){ resetAllFilters(); return; }
+    if(btn.id === 'profileDuplicate'){ duplicateEntryTemplate(selectedId); return; }
+    if(btn.id === 'profileCloseMobile' || btn.id === 'mobileSheetBackdrop'){ showMapView(); return; }
+    if(btn.id === 'importPreviewClose' || btn.id === 'importPreviewCancel'){ closeImportPreview(); return; }
+    if(btn.id === 'importPreviewMerge'){ applyImportedPayload(closeImportPreview._pending, 'merge'); return; }
+    if(btn.id === 'importPreviewReplace'){ applyImportedPayload(closeImportPreview._pending, 'replace'); return; }
+    const toggleKey = btn.getAttribute('data-social-toggle');
+    if(toggleKey){
+      const card = btn.closest('.socialsCard');
+      if(card){
+        const willOpen = !btn.classList.contains('isActive');
+        card.querySelectorAll('[data-social-toggle]').forEach(el=>{
+          el.classList.remove('isActive');
+          el.setAttribute('aria-expanded', 'false');
+        });
+        card.querySelectorAll('[data-social-panel]').forEach(panel=>{
+          panel.classList.remove('open');
+          panel.hidden = true;
+        });
+        if(willOpen){
+          btn.classList.add('isActive');
+          btn.setAttribute('aria-expanded', 'true');
+          const panel = card.querySelector(`[data-social-panel="${toggleKey}"]`);
+          if(panel){
+            panel.hidden = false;
+            panel.classList.add('open');
+          }
+        }
+      }
+      return;
+    }
+    const copyKind = btn.getAttribute('data-copy-card');
+    if(copyKind){
+      const e = entries.find(x=>x.id===selectedId);
+      if(!e) return;
+      if(copyKind === 'address') copyTextSmart(e.currentAddress || `${e.lat}, ${e.lon}`, 'Address copied');
+      if(copyKind === 'timezone') copyTextSmart(e.tz || '', 'Timezone copied');
+      if(copyKind === 'birthday') copyTextSmart(e.birthdate || '', 'Birthday copied');
+      return;
+    }
+    const copyVal = btn.getAttribute('data-social-copy');
+    const copyLab = btn.getAttribute('data-social-label') || 'Value';
+    if(copyVal){ copyTextSmart(copyVal, `${copyLab} copied`); return; }
+    const openVal = btn.getAttribute('data-social-open');
+    if(openVal){ openExternalLinkMaybe(openVal); return; }
+  });
+
+  document.addEventListener('keydown', (ev)=>{
+    if(ev.key === 'Escape'){
+      const modal = byId('importPreviewModal');
+      if(modal?.classList.contains('open')){ closeImportPreview(); return; }
+    }
+  });
+
+  try{ renderSocialPreview(); }catch{}
+  try{ renderList(); }catch{}
+  try{ updateMobileSheets(); }catch{}
+})();
+</script>
 
 </section>
 
