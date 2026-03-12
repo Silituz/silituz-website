@@ -6609,7 +6609,7 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
               scrollRightCardIntoView();
             }
           }catch{
-            try{ openProfile(id); scrollRightCardIntoView(); }catch{}
+            try{ openProfileAndScrollTop(id); }catch{}
           }
         }
       });
@@ -6650,7 +6650,7 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
 
     const cmds = [
       { key:"map", title:"🗺️ Show Map", sub:"Switch right panel to Map", run: ()=>{ showMapView(); scrollRightCardIntoView(); } },
-      { key:"card", title:"🪪 Show Card", sub:"Switch right panel to Card (selected person)", run: ()=>{ if(selectedId){ openProfile(selectedId); scrollRightCardIntoView(); } else { toast("Select a person first"); } } },
+      { key:"card", title:"🪪 Show Card", sub:"Switch right panel to Card (selected person)", run: ()=>{ if(selectedId){ openProfileAndScrollTop(selectedId); } else { toast("Select a person first"); } } },
       { key:"privacy", title:"🔒 Toggle Privacy mode", sub:"Hide / show notes + private fields", run: async ()=>{ const nl = $("notesLock"); if(nl){ nl.checked = !nl.checked; nl.dispatchEvent(new Event("change")); } } },
       { key:"filters", title:"⋯ Open Advanced Filters", sub:"Smart filters + tags", run: ()=>{ openAdvancedFilters(true); } },
       { key:"clear", title:"🧹 Clear filters", sub:"Reset chips + advanced filters", run: ()=>{ syncFilterChipsToAll(); clearAdvancedFilters(); renderList(); renderDashboard(); } },
@@ -6756,7 +6756,7 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
               scrollRightCardIntoView();
             }
           }catch{
-            try{ openProfile(id); scrollRightCardIntoView(); }catch{}
+            try{ openProfileAndScrollTop(id); }catch{}
           }
           closeCmdk();
         }
@@ -6775,6 +6775,31 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
         target.scrollIntoView({ behavior: beh, block: "start" });
       }
     }catch{}
+  }
+
+  function scrollProfileTopIntoView(){
+    try{
+      const beh = prefersReducedMotion() ? "auto" : "smooth";
+      const target = document.querySelector("#profileView .profileTop")
+        || document.querySelector("#profileView .profileCard")
+        || document.getElementById("profileBody")
+        || document.getElementById("profileView")
+        || document.querySelector("#soApp .rightView")
+        || document.querySelector("#soApp .rightCol");
+      if(target && target.scrollIntoView){
+        target.scrollIntoView({ behavior: beh, block: "start" });
+      }
+      try{ document.getElementById("profileView")?.scrollTo?.({ top:0, behavior: beh }); }catch{}
+      try{ document.getElementById("profileView").scrollTop = 0; }catch{}
+      try{ document.getElementById("profileBody").scrollTop = 0; }catch{}
+    }catch{}
+  }
+
+  function openProfileAndScrollTop(id){
+    openProfile(id);
+    try{ requestAnimationFrame(()=> scrollProfileTopIntoView()); }catch{}
+    setTimeout(()=>{ try{ scrollProfileTopIntoView(); }catch{} }, 60);
+    setTimeout(()=>{ try{ scrollProfileTopIntoView(); }catch{} }, 140);
   }
 
   // Helper: bring the editor (left card / form area) into view
@@ -8564,8 +8589,7 @@ function renderList(){
         ev.stopPropagation();
         const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false });
         if(ok){
-          openProfile(e.id);
-          scrollRightCardIntoView();
+          openProfileAndScrollTop(e.id);
         }
       });
       li.querySelector(".js-net").addEventListener("click", (ev)=>{ ev.stopPropagation(); openNetworkModal(e.id); });
@@ -9477,8 +9501,7 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
       closeCtxMenu();
       const ok = await guardedSelectEntry(id, { panMap:false, toast:false });
       if(ok){
-        openProfile(id);
-        scrollRightCardIntoView();
+        openProfileAndScrollTop(id);
       }
       return;
     }
@@ -9488,14 +9511,7 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
       const ok = await guardedSelectEntry(id, { panMap:false, toast:false });
       if(!ok && id !== selectedId) return;
 
-      const nick = $("nickname");
-      const beh = prefersReducedMotion() ? "auto" : "smooth";
-      if(nick && nick.scrollIntoView){
-        nick.scrollIntoView({ behavior: beh, block:"center" });
-        setTimeout(()=>{ try{ nick.focus({ preventScroll:true }); }catch{ try{ nick.focus(); }catch{} } }, 120);
-      }else{
-        try{ window.scrollTo({ top:0, behavior: beh }); }catch{ window.scrollTo(0,0); }
-      }
+      scrollEditorIntoView();
       toast("Edit mode");
       return;
     }
