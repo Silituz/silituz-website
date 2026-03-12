@@ -6767,12 +6767,12 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
   // Mobile helper: in stacked layout, bring the right card (map/profile) into view
   function scrollRightCardIntoView(){
     try{
-      if(window.matchMedia && window.matchMedia("(max-width: 980px)").matches){
-        const rv = document.querySelector("#soApp .rightView");
-        if(rv && rv.scrollIntoView){
-          const beh = prefersReducedMotion() ? "auto" : "smooth";
-          rv.scrollIntoView({ behavior: beh, block: "start" });
-        }
+      const beh = prefersReducedMotion() ? "auto" : "smooth";
+      const target = document.getElementById("profileView")
+        || document.querySelector("#soApp .rightView")
+        || document.querySelector("#soApp .rightCol");
+      if(target && target.scrollIntoView){
+        target.scrollIntoView({ behavior: beh, block: "start" });
       }
     }catch{}
   }
@@ -7105,7 +7105,7 @@ const birthdayCard = entry.birthdate ? (()=>{
     const nick = $("nickname");
     const beh = prefersReducedMotion() ? "auto" : "smooth";
     if(nick && nick.scrollIntoView){
-      nick.scrollIntoView({ behavior: beh, block: "center" });
+      nick.scrollIntoView({ behavior: beh, block: "start" });
       setTimeout(()=>{
         try{ nick.focus({ preventScroll:true }); }catch{ try{ nick.focus(); }catch(e2){} }
       }, 120);
@@ -7278,7 +7278,7 @@ const birthdayCard = entry.birthdate ? (()=>{
         }catch{}
         const beh = prefersReducedMotion() ? "auto" : "smooth";
         if(el && el.scrollIntoView){
-          el.scrollIntoView({ behavior: beh, block: "center" });
+          el.scrollIntoView({ behavior: beh, block: "start" });
           setTimeout(()=>{ try{ el.focus({ preventScroll:true }); }catch{ try{ el.focus(); }catch{} } }, 130);
           flashField(el);
         }
@@ -8528,7 +8528,7 @@ function renderList(){
           <button class="iconBtn js-pin" title="Center on map" type="button">📍</button>
           <button class="iconBtn js-book" title="Open profile" type="button">🪪</button>
           <button class="iconBtn js-net" title="Connections / Network" type="button">🕸️</button>
-          <button class="secondary js-open" type="button">Open</button>
+          <button class="secondary js-open" type="button">Edit</button>
         </div>
       `;
 
