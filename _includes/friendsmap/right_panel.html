@@ -1,0 +1,88 @@
+  <div class="card rightView">
+  <div class="rightTabs" role="tablist" aria-label="Right view tabs">
+    <button id="tabMap" class="rtTab active" type="button" role="tab" aria-selected="true">🗺️ Map</button>
+    <button id="tabCard" class="rtTab" type="button" role="tab" aria-selected="false">🪪 Card</button>
+    <button id="tabCal" class="rtTab" type="button" role="tab" aria-selected="false">📅 Holidays</button>
+  </div>
+
+    <div id="mapView">
+      <div id="map"></div>
+    </div>
+
+    <div id="profileView">
+      <div class="profileHead">
+        <div class="profileTitle">
+          <b id="profileName">—</b>
+          <div id="profileRealName" class="profileRealName"></div>
+          <div class="badgeRow">
+            <div class="specialOneBadge">♾️ My Special One</div>
+            <div class="favBadge">⭐ Favorite</div>
+          </div>
+          <span id="profileSub">—</span>
+        </div>
+        <div class="btns" style="gap:8px; justify-content:flex-end;">
+          <button id="profileEdit" class="secondary" title="Edit this entry">✏️ Edit</button>
+          <button id="profilePin" class="secondary" title="Back to map">📍 Map</button>
+          <button id="profileNetwork" class="secondary" title="Open network">🕸️ Network</button>
+        </div>
+      </div>
+      <div class="profileBody" id="profileBody"></div>
+    </div>
+
+    <div id="calendarView" style="display:none;">
+      <div class="profileHead">
+        <div class="profileTitle">
+          <b>📅 Holidays</b>
+          <span>Pick countries and see upcoming holidays</span>
+        </div>
+        <div class="btns" style="gap:8px; justify-content:flex-end;">
+          <button id="calRefreshBtn" class="secondary" title="Reload holidays">↻ Refresh</button>
+          <button id="calBackToMapBtn" class="secondary" title="Back to map">📍 Map</button>
+        </div>
+      </div>
+
+      <div class="profileBody" style="padding:14px; display:flex; flex-direction:column; gap:12px;">
+        <div class="profileCard">
+          <div class="k">Countries</div>
+          <div class="v">
+            <div class="hint" style="margin-top:2px;">Type to search, then click a suggestion. Multiple countries supported.</div>
+            <input id="calCountrySearch" type="text" placeholder="Search country (e.g. Germany, United States, Japan)..." style="width:100%; margin-top:8px;" />
+            <div id="calSuggestions" class="hint" style="margin-top:10px;"></div>
+            <div id="calSelectedCountries" class="tagRow" style="margin-top:10px;"></div>
+          </div>
+        </div>
+
+        <div class="profileCard">
+          <div class="k">States / Regions</div>
+          <div class="v">
+            <div class="hint" style="margin-top:2px;">Optional: filter holidays that apply to specific states/regions (e.g. DE-BY, US-CA). Start typing to search available regions from the selected countries.</div>
+            <input id="calRegionSearch" type="text" placeholder="Search state/region (e.g. Bavaria, California, DE-BY)..." style="width:100%; margin-top:8px;" />
+            <div id="calRegionSuggestions" class="hint" style="margin-top:10px;"></div>
+            <div id="calSelectedRegions" class="tagRow" style="margin-top:10px;"></div>
+            <label class="calChk" style="margin-top:10px;">
+              <input type="checkbox" id="calIncludeNationwide" checked />
+              <span>Include nationwide holidays</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="profileCard">
+          <div class="k">Importance</div>
+          <div class="v" id="calTypeFilters">—</div>
+        </div>
+
+        <div class="profileCard">
+          <div class="k">Next holiday (global)</div>
+          <div class="v" id="calNextHoliday">—</div>
+        </div>
+
+        <div class="profileCard">
+          <div class="k">Upcoming</div>
+          <div class="v" id="calHolidayList">—</div>
+        </div>
+
+        <button id="calLoadMoreBtn" class="secondary" type="button">Load more</button>
+      </div>
+    </div>
+  </div>
+</div>

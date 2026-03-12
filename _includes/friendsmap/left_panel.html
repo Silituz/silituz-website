@@ -1,0 +1,546 @@
+  <div class="card">
+    <div class="panel">
+
+      <div class="editorAccordion" id="editorAccordion" aria-label="Editor sections">
+
+        <details class="accSec" open>
+          <summary>
+            <span>🪪 Basics &amp; Dates</span>
+            <span class="accSub">Name, birthday, met-on, languages</span>
+            <span class="accBadge">Required</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+                    <div>
+                      <label>Nickname / Display name *</label>
+                      <input id="nickname" placeholder="e.g. Silituz / Coco / ..." />
+
+                      <label style="margin-top:10px;">Real name (optional)</label>
+                      <input id="realName" placeholder="e.g. René Wirth" />
+                      <div class="miniToggle" style="margin-top:8px;">
+                        <input id="showRealName" type="checkbox" checked />
+                        <label for="showRealName" style="margin:0; cursor:pointer;">Show real name as main name (nickname below)</label>
+                      </div>
+                    </div>
+                    <div>
+                      <label>Birthdate (optional)</label>
+                      <input id="birthdate" type="date" />
+                      <div id="birthdateMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
+                      <div id="bdayCountdown" class="bdayCountdown"></div>
+                      <div class="zodiacBox">
+                        <div class="zodiacItem">
+                          <span id="zodiacLine">Zodiac: — | Chinese Element: — | Chinese Zodiac: —</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div>
+                      <label>Birthplace (optional)</label>
+                      <input id="birthplace" placeholder="e.g. Warsaw, Poland" />
+                    </div>
+                    <div>
+                      <label>Met on (date, optional)</label>
+            <input id="metOn" type="date" />
+                      <div id="metOnMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
+                      <div id="metKnownForLine" class="bdayCountdown"></div>
+            </div>
+                  </div>
+
+                  <div class="row">
+                    <div>
+                      <label>Native language (optional)</label>
+                      <input id="nativeLang" placeholder="e.g. Spanish" />
+                    </div>
+                    <div>
+                      <label>Other languages (optional)</label>
+                      <input id="otherLangs" placeholder="e.g. English, Russian" />
+                    </div>
+                  </div>
+
+          </div>
+        </details>
+
+        <details class="accSec">
+          <summary>
+            <span>🩺 Medical</span>
+            <span class="accSub">Blood type · Height · Allergies · Notes · Cycle</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+              <div>
+                <label>Blood type (optional)</label>
+                <select id="bloodType">
+                  <option value="">—</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                  <option value="Unknown">Unknown</option>
+                </select>
+                <div class="hint">ABO + Rh factor (e.g. O−). Leave empty if unknown.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>Height (cm)</label>
+                <input id="heightCm" type="number" inputmode="numeric" min="0" step="1" placeholder="e.g. 170" />
+              </div>
+              <div>
+                <label>Height (ft/in)</label>
+                <input id="heightUs" type="text" readonly placeholder="Auto (e.g. 5'7&quot;)" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>Allergies / Intolerances (optional)</label>
+                <textarea id="allergies" rows="3" placeholder="e.g. peanuts, lactose, penicillin"></textarea>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>Medical Notes (optional)</label>
+                <textarea id="medicalNotes" rows="4" placeholder="Anything important to remember (meds, conditions, reminders…)"></textarea>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>Menstrual Cycle (optional)</label>
+                <div id="cyclePanel" class="cyclePanel">
+                                          <div class="cycleGrid">
+                                            <div class="cycleRow">
+                                              <div>
+                                                <div class="miniLabel">Last period start</div>
+                                                <input id="cycleStart" type="date" />
+                                              </div>
+                                              <div>
+                                                <div class="miniLabel">Last period end</div>
+                                                <input id="cycleEnd" type="date" />
+                                              </div>
+                                            </div>
+
+                                            <div class="cycleRow">
+                                              <div>
+                                                <div class="miniLabel">Cycle length (days)</div>
+                                                <input id="cycleLen" type="number" min="15" max="60" step="1" placeholder="28" />
+                                              </div>
+                                              <div>
+                                                <div class="miniLabel">Period length (days)</div>
+                                                <input id="periodLen" type="number" min="1" max="15" step="1" placeholder="5" />
+                                              </div>
+                                            </div>
+
+                                            <div class="cycleActions">
+                                              <button type="button" id="cycleAddBtn" class="btn secondary smallBtn">Add 🩸 range</button>
+                                              <button type="button" id="cycleClearBtn" class="btn danger smallBtn">Clear</button>
+                                            </div>
+
+                                            <div class="cycleHint">
+                                              Stored locally per person. Predictions are estimates (not medical advice).
+                                              <span class="cycleLegend">
+                                                <span class="leg legPeriod">🩸 period</span>
+                                                <span class="leg legPred">🩸 predicted</span>
+                                                <span class="leg legFert">🌿 fertile</span>
+                                                <span class="leg legOvu">⭐ ovulation</span>
+                                              </span>
+                                            </div>
+
+                                            <div class="cycleSummary" id="cycleSummary"></div>
+                                            <div class="cycleList" id="cycleList"></div>
+
+                                            <div class="cycleCalWrap">
+                                              <div class="cycleCalHdr">
+                                                <button type="button" class="btn secondary smallBtn" id="cyclePrev" title="Previous month">‹</button>
+                                                <div id="cycleMonthLabel" class="cycleMonthLabel">—</div>
+                                                <button type="button" class="btn secondary smallBtn" id="cycleNext" title="Next month">›</button>
+                                              </div>
+                                              <div class="cycleWeekdays">
+                                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                                              </div>
+                                              <div class="cycleCal" id="cycleCal"></div>
+                                            </div>
+
+                                            <div class="hint">Tip: click days in the calendar to pick start/end.</div>
+                                          </div>
+                                        </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+
+        <details class="accSec">
+          <summary>
+            <span>📍 Location &amp; Timezone</span>
+            <span class="accSub">Address, timezone, coordinates</span>
+            <span class="accBadge">Required</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+                    <div>
+                      <label>Current address (optional)</label>
+                      <input id="currentAddress" placeholder="e.g. Los Angeles, CA" />
+                      <div class="hint">Used for coordinates (auto-geocode) if coordinates are empty.</div>
+                    </div>
+                    <div>
+                      <label>Timezone (IANA) *</label>
+                      <input id="timezone" placeholder="e.g. America/Los_Angeles" list="tzlist" />
+                      <datalist id="tzlist"></datalist>
+                      <div id="tzMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
+                      <div class="hint">Examples: <span class="kbd">Europe/Berlin</span>, <span class="kbd">America/Los_Angeles</span>, <span class="kbd">Asia/Tokyo</span></div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+<div>
+                      <label>Coordinates (optional)</label>
+                      <input id="coords" placeholder="lat, lon (or click on the map)" />
+                      <div id="coordsMsg" class="fieldMsg" aria-live="polite" style="display:none"></div>
+                      <div class="hint">Click on the map to set the location.</div>
+                    </div>
+                  </div>
+
+          </div>
+        </details>
+
+
+        <details class="accSec">
+          <summary>
+            <span>🖼️ Picture</span>
+            <span class="accSub">Photo</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+                    <div>
+                      <label>Image (upload, optional)</label>
+                      <input id="imageFile" type="file" accept="image/*" />
+                      <div class="hint">Stored locally (compressed). No external hosting needed.</div>
+                      <div class="preview" id="imgPreview" style="display:none">
+                        <img id="imgPreviewEl" alt="Preview"/>
+                        <div class="hint" id="imgPreviewText">—</div>
+                      </div>
+                    </div>
+                    
+                  </div>
+          </div>
+        </details>
+
+        <details class="accSec">
+          <summary>
+            <span>🔗 Connections &amp; Tags</span>
+            <span class="accSub">Connections, tags, reminders</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+                    <div>
+                      <label>Connections (optional)</label>
+                      <div class="colorInputRow">
+                        <select id="connSelect"></select>
+                        <select id="connRelType"></select>
+                        <button id="addConnBtn" type="button" class="secondary smallBtn">Add</button>
+                      </div>
+                      <div id="connPills" class="connPills"></div>
+                      <div class="hint">Connections, tags, reminders (network + quick navigation). You can add/remove anytime.</div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div>
+                      <label>Tags (optional)</label>
+                      <input id="tags" placeholder="e.g. Juju, Work, Family (comma separated)" />
+                      <div class="hint">Used for smart filtering + quick search.</div>
+                    </div>
+                    <div>
+                      <label>Last contact (optional)</label>
+                      <input id="lastContact" type="date" />
+                    </div>
+                    <div>
+                      <label>Remind every (days, optional)</label>
+                      <input id="remindEvery" type="number" min="0" step="1" placeholder="e.g. 14" />
+                      <div class="hint">Shows overdue check‑ins in the dashboard.</div>
+                    </div>
+                  </div>
+
+          </div>
+        </details>
+
+        <details class="accSec">
+          <summary>
+            <span>🎨 Visuell</span>
+            <span class="accSub">Eye color, favorite colors</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+                    <div>
+                      <label>Eye Color</label>
+                      <div class="colorInputRow eyeColorRow">
+                        <input id="eyeColorA" type="text" list="eyeColorList" placeholder="Primary (e.g. blue, #3b82f6)" />
+                        <select id="eyeMode" title="Mix style">
+                          <option value="solid">Solid</option>
+                          <option value="blend">Blend</option>
+                          <option value="split">Split</option>
+                          <option value="speckle">Speckled</option>
+                          <option value="ring">Ring</option>
+                        </select>
+                        <input id="eyeColorB" type="text" list="eyeColorList" placeholder="Secondary (optional)" />
+                        <button id="eyeClearBtn" type="button" class="secondary smallBtn">Clear</button>
+                      </div>
+                      <div id="eyePreview" class="eyePreview"></div>
+                      <div class="hint">Enter 1 or 2 colors. If you enter a 2nd color and keep “Solid”, we automatically treat it as “Blend”.</div>
+                      <datalist id="eyeColorList">
+                        <option value="brown"></option>
+                        <option value="blue"></option>
+                        <option value="green"></option>
+                        <option value="hazel"></option>
+                        <option value="gray"></option>
+                        <option value="amber"></option>
+                        <option value="black"></option>
+                        <option value="turquoise"></option>
+                        <option value="gold"></option>
+                        <option value="#3b82f6"></option>
+                        <option value="#10b981"></option>
+                        <option value="#fbbf24"></option>
+                        <option value="#8b5a2b"></option>
+                      </datalist>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div>
+                      <label>Favorite Colors</label>
+                      <div class="colorInputRow">
+                        <input id="favColorInput" type="text" placeholder="Add a color (e.g. turquoise, gold, #ff8800)" />
+                        <button id="addFavColorBtn" type="button" class="secondary smallBtn">Add</button>
+                      </div>
+                      <div id="favColorsPills" class="favColorsPills"></div>
+                      <div class="hint">Up to 6 colors.</div>
+                    </div>
+                  </div>
+          </div>
+        </details>
+
+
+        <details class="accSec">
+          <summary>
+            <span>🌐 Socials</span>
+            <span class="accSub">Main platform, handles, links</span>
+          </summary>
+          <div class="accBody">
+            <div class="socialMainRow">
+              <div>
+                <label>Main Platform (optional)</label>
+                <select id="socialMain">
+                  <option value="">—</option>
+                  <option value="tiktok">TikTok</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="discord">Discord</option>
+                  <option value="telegram">Telegram</option>
+                  <option value="whatsapp">WhatsApp</option>
+                  <option value="youtube">YouTube</option>
+                  <option value="website">Website</option>
+                  <option value="email">E‑Mail</option>
+                </select>
+              </div>
+              <div>
+                <label>Quick note (optional)</label>
+                <input id="socialNote" placeholder="e.g. main account / backup / private" />
+                <div class="hint socialHint">You can store full links or short handles/usernames.</div>
+              </div>
+            </div>
+
+            <div class="socialGrid" style="margin-top:10px;">
+              <div>
+                <label>TikTok</label>
+                <input id="socialTikTok" placeholder="e.g. https://www.tiktok.com/@name or @name" />
+              </div>
+              <div>
+                <label>Instagram</label>
+                <input id="socialInstagram" placeholder="e.g. https://www.instagram.com/name or @name" />
+              </div>
+              <div>
+                <label>Discord</label>
+                <input id="socialDiscord" placeholder="e.g. username / invite link" />
+              </div>
+              <div>
+                <label>Telegram</label>
+                <input id="socialTelegram" placeholder="e.g. https://t.me/name or @name" />
+              </div>
+              <div>
+                <label>WhatsApp</label>
+                <input id="socialWhatsApp" placeholder="e.g. https://wa.me/..." />
+              </div>
+              <div>
+                <label>YouTube</label>
+                <input id="socialYouTube" placeholder="e.g. channel link / @name" />
+              </div>
+              <div>
+                <label>Website / Linktree</label>
+                <input id="socialWebsite" placeholder="e.g. https://example.com" />
+              </div>
+              <div>
+                <label>E‑Mail</label>
+                <input id="socialEmail" placeholder="e.g. name@example.com" />
+              </div>
+            </div>
+
+            <div class="socialPreviewRow" id="socialPreviewRow"></div>
+          </div>
+        </details>
+
+        <details class="accSec">
+          <summary>
+            <span>📝 Notes</span>
+            <span class="accSub">Important, work, media…</span>
+          </summary>
+          <div class="accBody">
+            <div class="row">
+                    <div>
+                                <label>Notes</label>
+                      <div class="notesTabs" id="notesTabs">
+                        <button type="button" class="tabBtn active" data-notes-tab="important">🚨 Important</button>
+                                                <button type="button" class="tabBtn" data-notes-tab="work">💼 Work &amp; 🚀 Projects</button>
+                        <button type="button" class="tabBtn" data-notes-tab="media">👾 Media</button>
+                        <button type="button" class="tabBtn" data-notes-tab="food">🍕 Food &amp; More</button>
+                        <button type="button" class="tabBtn" data-notes-tab="other">📦 Other</button>
+</div>
+
+                      <div class="notesPanels">
+                        <textarea id="notes_important" class="notesPanel" data-notes-panel="important" placeholder="Things that are urgent, critical, or should not be forgotten"></textarea>
+                                                <textarea id="notes_work" class="notesPanel hidden" data-notes-panel="work" placeholder="Work-related tasks, projects and ideas"></textarea>
+                        <textarea id="notes_media" class="notesPanel hidden" data-notes-panel="media" placeholder="Media notes: favorite songs, shows, games, creators, links"></textarea>
+                        <textarea id="notes_food" class="notesPanel hidden" data-notes-panel="food" placeholder="Food and drinks, restaurant ideas, places worth trying"></textarea>
+                        <textarea id="notes_other" class="notesPanel hidden" data-notes-panel="other" placeholder="Miscellaneous notes"></textarea>
+                        
+
+                      </div>
+                    </div>
+                  </div>
+          </div>
+        </details>
+
+      </div>
+
+<div class="saveStateRow" id="saveStateRow">
+        <span id="saveStatePill" class="saveStatePill saved">Saved ✓</span>
+        <button id="undoEditBtn" type="button" class="secondary smallBtn" hidden>Undo</button>
+      </div>
+      <div class="btns">
+        <button id="saveBtn">Save / Set marker</button>
+        <button id="newBtn" class="secondary">New</button>
+        <button id="deleteBtn" class="danger" disabled>Delete</button>
+        <button id="removeImgBtn" class="secondary" title="Remove image from entry">Remove image</button>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="hint">
+        • Current address can be auto-geocoded via OpenStreetMap (Nominatim).<br>
+        • Everything is stored in <b>localStorage</b> in this browser. Use Export/Import to move data to another device.
+      </div>
+    </div>
+
+      <div class="searchBar">
+    <input id="search" placeholder="Search (name, notes, dates, timezone…)" />
+  </div>
+
+
+  <div class="filterWrap">
+  <div class="filterBar" id="filterBar" aria-label="List filters">
+    <button class="fChip active" data-filter="all" type="button">All</button>
+    <button class="fChip" data-filter="fav" type="button">⭐ Favorites</button>
+<button class="fChip" data-filter="bday" type="button">🎂 Birthday</button>
+    <button class="fChip" data-filter="friend" type="button">🎈 Friendship</button>
+    <button id="moreFiltersBtn" class="fChip" type="button" title="More filters">⋯ More</button>
+  </div>
+
+  <div class="filterPopover" id="filterPopover" aria-hidden="true">
+    <div class="fpGrid">
+      <div class="fpGroup">
+        <div class="fpTitle">Smart Filters</div>
+        <div class="fpChecks">
+          <label><input id="afHasNotes" type="checkbox" /> Has notes</label>
+          <label><input id="afHasImage" type="checkbox" /> Has image</label>
+          <label><input id="afHasAddress" type="checkbox" /> Has address</label>
+          <label><input id="afMissingTZ" type="checkbox" /> Missing timezone</label>
+        </div>
+        <div class="fpActions">
+          <button id="afClearBtn" type="button" class="secondary smallBtn">Clear</button>
+        </div>
+      </div>
+
+      <div class="fpGroup">
+        <div class="fpTitle">Tags</div>
+        <input id="afTagSearch" type="text" placeholder="Type to find a tag…" />
+        <div class="fpTags" id="afTags"></div>
+        <div class="hint" style="margin-top:10px;">Tip: click a tag in the list to filter instantly.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="activeFiltersBar" id="activeFiltersBar" aria-label="Active filters"></div>
+
+<div class="dash" id="dash" aria-label="Dashboard">
+  <div class="dashRow" id="dashRow"></div>
+</div>
+
+
+<!-- Alphabet helper (A–Z) -->
+    <div class="alphaBar" id="alpha"></div>
+
+    <ul class="list" id="list"></ul>
+
+    <div class="footer-tools">
+      <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
+        <div class="btns">
+          <button id="exportBtn" type="button" class="secondary">Export JSON</button>
+          <label id="importBtn" class="btnLike secondary" for="importFile" role="button" tabindex="0">Import JSON (file)</label>
+          <button id="clusterToggleBtn" type="button" class="secondary">🧷 Cluster: On</button>
+          
+          <button id="myLocBtn" type="button" class="secondary" title="Show my current location marker">📍 My location</button>
+          <button id="clearAllBtn" type="button" class="danger">Delete all</button>
+        </div>
+
+        <div class="toggleRow">
+          <input id="mergeImport" type="checkbox" />
+          <label for="mergeImport" style="margin:0; cursor:pointer;">
+            Merge on import (recommended if you already have entries here)
+          </label>
+        </div>
+
+        <div class="toggleRow">
+          <input id="notesLock" type="checkbox" />
+          <label for="notesLock" style="margin:0; cursor:pointer;">
+            🔒 Privacy mode (hide notes + private fields)
+          </label>
+          <button id="setPinBtn" type="button" class="secondary smallBtn" title="Set / change PIN (optional)">Set PIN</button>
+        </div>
+
+
+        <div class="toggleRow">
+          <input id="linksToggle" type="checkbox" />
+          <label for="linksToggle" style="margin:0; cursor:pointer;">
+            🕸️ Show connection links on map
+          </label>
+        </div>
+
+        <div class="toggleRow">
+          <input id="weatherToggle" type="checkbox" />
+          <label for="weatherToggle" style="margin:0; cursor:pointer;">
+            ☁️ Show weather in cards (Open‑Meteo)
+          </label>
+        </div>
+</div>
+
+      <!-- Hidden file input for JSON import -->
+      <input id="importFile" class="soHiddenFile" type="file" accept="application/json,.json" />
+    </div>
+  </div>
