@@ -6765,6 +6765,17 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
   }
 
   // Mobile helper: in stacked layout, bring the right card (map/profile) into view
+  function scrollWindowToElementTop(target, extraOffset=0){
+    try{
+      if(!target) return;
+      const beh = prefersReducedMotion() ? "auto" : "smooth";
+      const rect = target.getBoundingClientRect();
+      const top = Math.max(0, Math.round((window.pageYOffset || document.documentElement.scrollTop || 0) + rect.top - extraOffset));
+      try{ window.scrollTo({ top, behavior: beh }); }
+      catch{ window.scrollTo(0, top); }
+    }catch{}
+  }
+
   function scrollRightCardIntoView(){
     try{
       const beh = prefersReducedMotion() ? "auto" : "smooth";
@@ -7127,16 +7138,7 @@ const birthdayCard = entry.birthdate ? (()=>{
     }
 
     // jump to the form and focus the first field
-    const nick = $("nickname");
-    const beh = prefersReducedMotion() ? "auto" : "smooth";
-    if(nick && nick.scrollIntoView){
-      nick.scrollIntoView({ behavior: beh, block: "start" });
-      setTimeout(()=>{
-        try{ nick.focus({ preventScroll:true }); }catch{ try{ nick.focus(); }catch(e2){} }
-      }, 120);
-    }else{
-      try{ window.scrollTo({ top: 0, behavior: beh }); }catch(e3){ window.scrollTo(0,0); }
-    }
+    scrollEditorIntoView({ focus:true });
 
     toast("Edit mode");
   });
@@ -8551,7 +8553,7 @@ function renderList(){
         <div class="actions">
           ${avatar}
           <button class="iconBtn js-pin" title="Center on map" type="button">📍</button>
-          <button class="iconBtn js-book" title="Open profile" type="button">🪪</button>
+          <button class="iconBtn js-book" title="Visitenkarte" type="button">🪪</button>
           <button class="iconBtn js-net" title="Connections / Network" type="button">🕸️</button>
           <button class="secondary js-open" type="button">Edit</button>
         </div>
@@ -8568,7 +8570,7 @@ function renderList(){
         ev.stopPropagation();
         const ok = await guardedSelectEntry(e.id, { panMap:false, toast:false });
         if(ok){
-          // "Open" in the list should jump to the editor (not the visit card)
+          // "Edit" in the list should jump to the editor (not the visit card)
           scrollEditorIntoView();
         }
       });
@@ -9511,7 +9513,7 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
       const ok = await guardedSelectEntry(id, { panMap:false, toast:false });
       if(!ok && id !== selectedId) return;
 
-      scrollEditorIntoView();
+      scrollEditorIntoView({ focus:true });
       toast("Edit mode");
       return;
     }
