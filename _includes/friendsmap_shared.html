@@ -4457,6 +4457,157 @@
   font-weight:800;
 }
 
+#soApp #profileView .weatherDayRow[data-day-index]{
+  cursor:pointer;
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+}
+#soApp #profileView .weatherDayRow[data-day-index]:hover{
+  border-color: rgba(16,185,129,.30);
+  background: rgba(16,185,129,.08);
+  transform: translateY(-1px);
+}
+#soApp #profileView .weatherDayRow.active{
+  border-color: rgba(16,185,129,.46);
+  background: rgba(16,185,129,.12);
+  box-shadow: 0 12px 30px rgba(16,185,129,.12);
+}
+#soApp #profileView .weatherHourlyWrap{
+  margin-top:8px;
+  padding:10px;
+  border-radius:14px;
+  border:1px solid rgba(16,185,129,.18);
+  background: rgba(8,18,16,.42);
+}
+#soApp #profileView .weatherHourlyHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+#soApp #profileView .weatherHourlyTitle{
+  font-weight:800;
+  font-size:12px;
+  color: var(--text);
+}
+#soApp #profileView .weatherHourlyList{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap:8px;
+}
+#soApp #profileView .weatherHourCard{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  padding:8px 9px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.05);
+}
+#soApp #profileView .weatherHourTime{
+  font-size:12px;
+  font-weight:800;
+  color: var(--text);
+}
+#soApp #profileView .weatherHourMain{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+}
+#soApp #profileView .weatherHourTemp{
+  font-weight:800;
+  color: var(--text);
+}
+#soApp #profileView .weatherHourMeta{
+  font-size:11px;
+  color: var(--muted);
+  line-height:1.25;
+}
+#soApp #profileView .weatherHourDesc{
+  font-size:11px;
+  color: var(--muted);
+  font-weight:700;
+}
+#soApp #profileView .weatherAlertBtn{
+  position:relative;
+  transition: border-color 140ms ease, background 140ms ease, color 140ms ease, box-shadow 140ms ease;
+}
+#soApp #profileView .weatherAlertBtn:hover{
+  border-color: rgba(245,158,11,.35);
+  background: rgba(245,158,11,.10);
+  color: #ffd27d;
+}
+#soApp #profileView .weatherAlertBtn.hasAlerts{
+  border-color: rgba(245,158,11,.38);
+  background: rgba(245,158,11,.10);
+  color: #ffd27d;
+  box-shadow: 0 8px 24px rgba(245,158,11,.14);
+}
+#soApp #profileView .weatherAlertBtn.hasAlerts::after{
+  content: attr(data-count);
+  position:absolute;
+  top:-5px;
+  right:-5px;
+  min-width:16px;
+  height:16px;
+  padding:0 4px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+  font-weight:900;
+  background: #ef4444;
+  color:#fff;
+  box-shadow: 0 6px 18px rgba(239,68,68,.30);
+}
+.weatherAlertNote{
+  font-size:12px;
+  color: var(--muted);
+  line-height:1.35;
+  margin-bottom:10px;
+}
+.weatherAlertList{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.weatherAlertItem{
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  border-radius:14px;
+  padding:10px 12px;
+}
+.weatherAlertItem[data-level="yellow"]{
+  border-color: rgba(250,204,21,.28);
+  background: rgba(250,204,21,.08);
+}
+.weatherAlertItem[data-level="orange"]{
+  border-color: rgba(249,115,22,.30);
+  background: rgba(249,115,22,.09);
+}
+.weatherAlertItem[data-level="red"]{
+  border-color: rgba(239,68,68,.32);
+  background: rgba(239,68,68,.10);
+}
+.weatherAlertTitle{
+  font-weight:900;
+  font-size:13px;
+  color: var(--text);
+}
+.weatherAlertDetail{
+  margin-top:4px;
+  font-size:12px;
+  color: var(--muted);
+  line-height:1.35;
+}
+.weatherAlertEmpty{
+  font-size:13px;
+  color: var(--text);
+  font-weight:700;
+}
+
 
 /* =========================================================
    UI UPGRADE (2026-03-02)
@@ -6065,6 +6216,19 @@
   </div>
 </div>
 
+<!-- Weather alerts overlay -->
+<div class="timeCompareModal" id="weatherAlertsModal" aria-hidden="true">
+  <div class="timeCompareInner" role="dialog" aria-modal="true" aria-label="Weather alerts and hints">
+    <div class="timeCompareTop">
+      <div class="timeCompareTitle">⚠️ Weather alerts / hints</div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button id="weatherAlertsClose" class="secondary" type="button" style="padding:6px 10px;">Close</button>
+      </div>
+    </div>
+    <div class="timeCompareBody" id="weatherAlertsBody">—</div>
+  </div>
+</div>
+
 <!-- Context menu (right click / long press) -->
 <div class="ctxMenu" id="ctxMenu" aria-hidden="true">
   <button class="ctxItem" type="button" data-act="open">🪪 Open card</button>
@@ -6294,6 +6458,10 @@ function setWeatherUnit(u){
         if(isWeatherForecastOpen()){
           renderProfileWeatherForecast(e);
         }
+        const hourlyDay = $("profileWeatherCard")?.dataset?.hourlyDay || "";
+        if(hourlyDay && isWeatherHourlyOpen()){
+          renderProfileWeatherHourly(e, hourlyDay);
+        }
       }
     }
   }catch{}
@@ -6309,6 +6477,7 @@ function hideWeatherForecast(forceClose=false){
   if(fc){
     fc.hidden = true;
   }
+  hideWeatherHourly(forceClose);
   if(btn){
     btn.setAttribute("aria-expanded","false");
     // keep icon; no need to change text
@@ -6355,13 +6524,49 @@ function _dayLabel(dateStr){
     return s;
   }
 }
+function _hourLabel(isoStr){
+  const s = String(isoStr || "");
+  const m = /(\d{2}):(\d{2})$/.exec(s);
+  if(m) return m[1] + ":" + m[2];
+  return s.slice(-5) || "—";
+}
+function _resetWeatherAlertButton(titleText){
+  const btn = document.querySelector("#profileWeatherCard .js-weather-alerts");
+  if(!btn) return;
+  btn.classList.remove("hasAlerts");
+  btn.setAttribute("data-count", "");
+  btn.title = titleText || "Weather alerts / hints";
+}
+function _setWeatherAlertButton(entry, curData=null, dailyData=null, hourlyData=null){
+  const btn = document.querySelector("#profileWeatherCard .js-weather-alerts");
+  if(!btn) return;
+  if(!entry || notesHidden || !weatherOn){
+    _resetWeatherAlertButton();
+    return;
+  }
+  const lat = entry?.lat, lon = entry?.lon;
+  if(!(typeof lat === "number" && isFinite(lat) && typeof lon === "number" && isFinite(lon))){
+    _resetWeatherAlertButton("No coordinates saved");
+    return;
+  }
+  const cur = curData || _getWeatherCurCache(lat, lon);
+  const daily = dailyData || _getWeatherDailyCache(lat, lon);
+  const hourly = hourlyData || _getWeatherHourlyCache(lat, lon);
+  const alerts = _collectWeatherAlerts(cur, daily, hourly);
+  const count = alerts.length;
+  btn.classList.toggle("hasAlerts", count > 0);
+  btn.setAttribute("data-count", count > 0 ? String(Math.min(count, 9)) : "");
+  btn.title = count > 0 ? (count + " weather hint" + (count === 1 ? "" : "s")) : "Weather alerts / hints";
+}
 
-const WEATHER_CACHE_KEY = LS_KEY + "__weather_cache_v2";
+const WEATHER_CACHE_KEY = LS_KEY + "__weather_cache_v3";
 const WEATHER_CUR_TTL_MS = 10 * 60 * 1000;  // 10 minutes
 const WEATHER_DAILY_TTL_MS = 60 * 60 * 1000; // 60 minutes
 let __weatherSaveTimer = null;
 let __weatherReqToken = 0;
 let __weatherDailyReqToken = 0;
+let __weatherHourlyReqToken = 0;
+const WEATHER_HOURLY_TTL_MS = 30 * 60 * 1000; // 30 minutes
 
 function _loadWeatherCache(){
   try{
@@ -6370,7 +6575,7 @@ function _loadWeatherCache(){
     return (obj && typeof obj === "object") ? obj : {};
   }catch{ return {}; }
 }
-let __weatherCache = _loadWeatherCache(); // { "<lat,lon>": {cur:{ts,data}, daily:{ts,data}} }
+let __weatherCache = _loadWeatherCache(); // { "<lat,lon>": {cur:{ts,data}, daily:{ts,data}, hourly:{ts,data}} }
 
 function _weatherKey(lat, lon){
   const la = Number(lat), lo = Number(lon);
@@ -6416,6 +6621,22 @@ function _setWeatherDailyCache(lat, lon, data){
   if(!k) return;
   __weatherCache[k] = __weatherCache[k] || {};
   __weatherCache[k].daily = { ts: Date.now(), data };
+  _scheduleWeatherSave();
+}
+function _getWeatherHourlyCache(lat, lon){
+  const k = _weatherKey(lat, lon);
+  if(!k) return null;
+  const it = __weatherCache[k];
+  const hourly = it && it.hourly ? it.hourly : null;
+  if(!hourly || !hourly.ts) return null;
+  if((Date.now() - Number(hourly.ts)) > WEATHER_HOURLY_TTL_MS) return null;
+  return hourly.data || null;
+}
+function _setWeatherHourlyCache(lat, lon, data){
+  const k = _weatherKey(lat, lon);
+  if(!k) return;
+  __weatherCache[k] = __weatherCache[k] || {};
+  __weatherCache[k].hourly = { ts: Date.now(), data };
   _scheduleWeatherSave();
 }
 
@@ -6483,6 +6704,28 @@ async function fetchWeatherForecastOpenMeteo(lat, lon, tz){
     wind_kmh: d.wind_speed_10m_max || []
   };
 }
+async function fetchWeatherHourlyOpenMeteo(lat, lon, tz){
+  const url =
+    `https://api.open-meteo.com/v1/forecast` +
+    `?latitude=${encodeURIComponent(lat)}` +
+    `&longitude=${encodeURIComponent(lon)}` +
+    `&hourly=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m` +
+    `&forecast_days=7` +
+    `&timezone=${encodeURIComponent(tz || "auto")}`;
+  const res = await fetch(url, { method:"GET" });
+  if(!res.ok) throw new Error("Hourly forecast fetch failed");
+  const data = await res.json();
+  const h = data && data.hourly ? data.hourly : null;
+  if(!h) throw new Error("No hourly forecast data");
+  return {
+    time: h.time || [],
+    code: h.weather_code || [],
+    t_c: h.temperature_2m || [],
+    feels_c: h.apparent_temperature || [],
+    precip_mm: h.precipitation || [],
+    wind_kmh: h.wind_speed_10m || []
+  };
+}
 
 function _setWeatherCurrentUI(html){
   const cur = $("profileWeatherCurrent");
@@ -6520,6 +6763,148 @@ function _renderCurrentWeatherHTML(d){
   );
 }
 
+function isWeatherHourlyOpen(){
+  const wrap = $("profileWeatherHourlyWrap");
+  return !!(wrap && !wrap.hidden);
+}
+function hideWeatherHourly(forceClear=false){
+  const wrap = $("profileWeatherHourlyWrap");
+  const list = $("profileWeatherHourlyList");
+  const card = $("profileWeatherCard");
+  if(wrap) wrap.hidden = true;
+  if(card) card.dataset.hourlyDay = "";
+  document.querySelectorAll("#profileWeatherForecastList .weatherDayRow.active").forEach(el=>el.classList.remove("active"));
+  if(forceClear && list) list.innerHTML = "";
+}
+function _setActiveWeatherDay(dayStr){
+  document.querySelectorAll("#profileWeatherForecastList .weatherDayRow[data-day]").forEach(el=>{
+    el.classList.toggle("active", (el.getAttribute("data-day") || "") === String(dayStr || ""));
+  });
+}
+function _hourlyRowsForDay(hd, dayStr){
+  const times = Array.isArray(hd?.time) ? hd.time : [];
+  const codes = Array.isArray(hd?.code) ? hd.code : [];
+  const temps = Array.isArray(hd?.t_c) ? hd.t_c : [];
+  const feels = Array.isArray(hd?.feels_c) ? hd.feels_c : [];
+  const precip = Array.isArray(hd?.precip_mm) ? hd.precip_mm : [];
+  const wind = Array.isArray(hd?.wind_kmh) ? hd.wind_kmh : [];
+  const rows = [];
+  for(let i=0;i<times.length;i++){
+    if(String(times[i] || "").slice(0,10) !== String(dayStr || "")) continue;
+    rows.push({
+      time: times[i],
+      code: codes[i],
+      t_c: temps[i],
+      feels_c: feels[i],
+      precip_mm: precip[i],
+      wind_kmh: wind[i]
+    });
+  }
+  return rows;
+}
+function _renderHourlyHTML(dayStr, rows){
+  if(!rows.length) return '<span class="weatherMuted">No hourly data available for this day.</span>';
+  return rows.map(r=>{
+    const desc = describeWeatherCode(r.code, 1);
+    const feelsPart = (isFinite(Number(r.feels_c)) && Math.abs(Number(r.feels_c) - Number(r.t_c)) >= 1)
+      ? (' · feels ' + _fmtTemp(r.feels_c) + _tempUnit())
+      : '';
+    const prMm = isFinite(Number(r.precip_mm)) ? Number(r.precip_mm).toFixed(1) : '—';
+    const wK = isFinite(Number(r.wind_kmh)) ? Math.round(Number(r.wind_kmh)) : '—';
+    return (
+      '<div class="weatherHourCard">' +
+        '<div class="weatherHourTime">' + escapeHTML(_hourLabel(r.time)) + '</div>' +
+        '<div class="weatherHourMain">' +
+          '<span>' + desc.emoji + '</span>' +
+          '<span class="weatherHourTemp">' + _fmtTemp(r.t_c) + _tempUnit() + '</span>' +
+        '</div>' +
+        '<div class="weatherHourDesc">' + escapeHTML(desc.text) + feelsPart + '</div>' +
+        '<div class="weatherHourMeta">☔ ' + prMm + 'mm · 💨 ' + wK + 'km/h</div>' +
+      '</div>'
+    );
+  }).join("");
+}
+function _pushWeatherAlert(arr, level, key, title, detail){
+  if(!key) key = title + '|' + detail;
+  if(arr.some(x=>x.key === key)) return;
+  arr.push({ level, key, title, detail });
+}
+function _collectWeatherAlerts(cur, daily, hourly){
+  const out = [];
+  const levelRank = { red:3, orange:2, yellow:1 };
+  if(cur){
+    const c = Number(cur.code), wind = Number(cur.wind_kmh), pr = Number(cur.precip_mm);
+    if(c === 95) _pushWeatherAlert(out, 'red', 'cur-thunder', 'Thunderstorm right now', 'Current conditions show a thunderstorm at this location.');
+    if(c === 96 || c === 99) _pushWeatherAlert(out, 'red', 'cur-hail', 'Thunderstorm with hail right now', 'Current conditions point to thunder and hail risk.');
+    if(isFinite(wind) && wind >= 70) _pushWeatherAlert(out, 'red', 'cur-wind-red', 'Very strong wind right now', 'Current wind is around ' + Math.round(wind) + ' km/h.');
+    else if(isFinite(wind) && wind >= 45) _pushWeatherAlert(out, 'orange', 'cur-wind-orange', 'Strong wind right now', 'Current wind is around ' + Math.round(wind) + ' km/h.');
+    if(isFinite(pr) && pr >= 8) _pushWeatherAlert(out, 'orange', 'cur-rain', 'Heavy precipitation right now', 'Current precipitation is around ' + pr.toFixed(1) + ' mm.');
+  }
+  const dTimes = Array.isArray(daily?.time) ? daily.time : [];
+  const dCodes = Array.isArray(daily?.code) ? daily.code : [];
+  const dPrecip = Array.isArray(daily?.precip_mm) ? daily.precip_mm : [];
+  const dWind = Array.isArray(daily?.wind_kmh) ? daily.wind_kmh : [];
+  for(let i=0;i<Math.min(dTimes.length, dCodes.length); i++){
+    const day = _dayLabel(dTimes[i]);
+    const code = Number(dCodes[i]);
+    const pr = Number(dPrecip[i]);
+    const wind = Number(dWind[i]);
+    if(code === 95) _pushWeatherAlert(out, 'red', 'daily-thunder-' + dTimes[i], 'Thunderstorm risk on ' + day, 'Forecast indicates thunderstorm conditions.');
+    if(code === 96 || code === 99) _pushWeatherAlert(out, 'red', 'daily-hail-' + dTimes[i], 'Thunderstorm with hail risk on ' + day, 'Forecast indicates thunderstorm and hail conditions.');
+    if(isFinite(wind) && wind >= 70) _pushWeatherAlert(out, 'red', 'daily-wind-red-' + dTimes[i], 'Very strong wind on ' + day, 'Peak wind may reach around ' + Math.round(wind) + ' km/h.');
+    else if(isFinite(wind) && wind >= 45) _pushWeatherAlert(out, 'orange', 'daily-wind-orange-' + dTimes[i], 'Strong wind on ' + day, 'Peak wind may reach around ' + Math.round(wind) + ' km/h.');
+    if(isFinite(pr) && pr >= 30) _pushWeatherAlert(out, 'red', 'daily-rain-red-' + dTimes[i], 'Very heavy rain on ' + day, 'Total precipitation may reach around ' + pr.toFixed(1) + ' mm.');
+    else if(isFinite(pr) && pr >= 15) _pushWeatherAlert(out, 'orange', 'daily-rain-orange-' + dTimes[i], 'Heavy rain on ' + day, 'Total precipitation may reach around ' + pr.toFixed(1) + ' mm.');
+  }
+  const times = Array.isArray(hourly?.time) ? hourly.time : [];
+  const codes = Array.isArray(hourly?.code) ? hourly.code : [];
+  const precip = Array.isArray(hourly?.precip_mm) ? hourly.precip_mm : [];
+  const wind = Array.isArray(hourly?.wind_kmh) ? hourly.wind_kmh : [];
+  const dailyMap = {};
+  for(let i=0;i<times.length;i++){
+    const dayKey = String(times[i] || '').slice(0,10);
+    if(!dayKey) continue;
+    dailyMap[dayKey] = dailyMap[dayKey] || { thunder:[], hail:[], maxWind:-Infinity, maxPrecip:0 };
+    const box = dailyMap[dayKey];
+    const c = Number(codes[i]);
+    const w = Number(wind[i]);
+    const p = Number(precip[i]);
+    if(c === 95) box.thunder.push(_hourLabel(times[i]));
+    if(c === 96 || c === 99) box.hail.push(_hourLabel(times[i]));
+    if(isFinite(w)) box.maxWind = Math.max(box.maxWind, w);
+    if(isFinite(p)) box.maxPrecip = Math.max(box.maxPrecip, p);
+  }
+  Object.keys(dailyMap).forEach(dayKey=>{
+    const day = _dayLabel(dayKey);
+    const box = dailyMap[dayKey];
+    if(box.hail.length){
+      _pushWeatherAlert(out, 'red', 'hourly-hail-' + dayKey, 'Hail window on ' + day, 'Likely around ' + box.hail.slice(0,3).join(', ') + (box.hail.length > 3 ? '…' : '') + '.');
+    }else if(box.thunder.length){
+      _pushWeatherAlert(out, 'red', 'hourly-thunder-' + dayKey, 'Thunder window on ' + day, 'Likely around ' + box.thunder.slice(0,3).join(', ') + (box.thunder.length > 3 ? '…' : '') + '.');
+    }
+    if(isFinite(box.maxWind) && box.maxWind >= 70){
+      _pushWeatherAlert(out, 'red', 'hourly-wind-red-' + dayKey, 'Very strong wind hours on ' + day, 'Hourly wind may spike to about ' + Math.round(box.maxWind) + ' km/h.');
+    }else if(isFinite(box.maxWind) && box.maxWind >= 45){
+      _pushWeatherAlert(out, 'orange', 'hourly-wind-orange-' + dayKey, 'Strong wind hours on ' + day, 'Hourly wind may spike to about ' + Math.round(box.maxWind) + ' km/h.');
+    }
+    if(isFinite(box.maxPrecip) && box.maxPrecip >= 8){
+      _pushWeatherAlert(out, 'orange', 'hourly-rain-' + dayKey, 'Heavy precipitation hours on ' + day, 'Hourly precipitation may reach about ' + box.maxPrecip.toFixed(1) + ' mm.');
+    }
+  });
+  return out.sort((a,b)=> (levelRank[b.level] || 0) - (levelRank[a.level] || 0));
+}
+function _renderWeatherAlertsHTML(alerts){
+  const note = '<div class="weatherAlertNote">These are forecast-based hints from the weather data and not official regional emergency warnings.</div>';
+  if(!alerts.length){
+    return note + '<div class="weatherAlertEmpty">No stronger weather hints right now. It currently looks fairly calm.</div>';
+  }
+  return note + '<div class="weatherAlertList">' + alerts.map(a=>(
+    '<div class="weatherAlertItem" data-level="' + escapeHTML(a.level) + '">' +
+      '<div class="weatherAlertTitle">' + escapeHTML(a.title) + '</div>' +
+      '<div class="weatherAlertDetail">' + escapeHTML(a.detail) + '</div>' +
+    '</div>'
+  )).join('') + '</div>';
+}
 async function renderProfileWeather(entry){
   const card = $("profileWeatherCard");
   const curEl = $("profileWeatherCurrent");
@@ -6531,6 +6916,7 @@ async function renderProfileWeather(entry){
   // Privacy mode: treat weather as private (uses coordinates)
   if(notesHidden){
     hideWeatherForecast(true);
+    _resetWeatherAlertButton("Hidden in Privacy mode");
     if(meta) meta.textContent = "🔒 Hidden";
     _setWeatherCurrentUI('<span class="weatherMuted">Hidden in Privacy mode.</span>');
     return;
@@ -6538,6 +6924,7 @@ async function renderProfileWeather(entry){
 
   if(!weatherOn){
     hideWeatherForecast(true);
+    _resetWeatherAlertButton("Weather is disabled");
     if(meta) meta.textContent = "Off";
     _setWeatherCurrentUI('<span class="weatherMuted">Weather is disabled. Enable it in the footer tools.</span>');
     return;
@@ -6548,6 +6935,7 @@ async function renderProfileWeather(entry){
   const lat = entry?.lat, lon = entry?.lon;
   if(!(typeof lat === "number" && isFinite(lat) && typeof lon === "number" && isFinite(lon))){
     hideWeatherForecast(true);
+    _resetWeatherAlertButton("No coordinates saved");
     _setWeatherCurrentUI('<span class="weatherMuted">No coordinates saved. Add coordinates to see weather.</span>');
     return;
   }
@@ -6556,6 +6944,7 @@ async function renderProfileWeather(entry){
   const cached = _getWeatherCurCache(lat, lon);
   if(cached){
     _setWeatherCurrentUI(_renderCurrentWeatherHTML(cached));
+    _setWeatherAlertButton(entry, cached);
     return;
   }
 
@@ -6571,13 +6960,15 @@ async function renderProfileWeather(entry){
 
     _setWeatherCurCache(lat, lon, d);
     _setWeatherCurrentUI(_renderCurrentWeatherHTML(d));
+    _setWeatherAlertButton(entry, d);
   }catch(err){
     console.warn("Weather failed:", err);
+    _resetWeatherAlertButton();
     _setWeatherCurrentUI('<span class="weatherMuted">Could not load weather right now.</span>');
   }
 }
 
-function _renderForecastHTML(fd){
+function _renderForecastHTML(fd, selectedDay=""){
   const times = Array.isArray(fd.time) ? fd.time : [];
   const codes = Array.isArray(fd.code) ? fd.code : [];
   const tmax = Array.isArray(fd.tmax_c) ? fd.tmax_c : [];
@@ -6591,18 +6982,20 @@ function _renderForecastHTML(fd){
   let out = "";
   for(let i=0;i<n;i++){
     const desc = describeWeatherCode(codes[i], 1);
-    const day = _dayLabel(times[i]);
+    const dayKey = String(times[i] || "");
+    const day = _dayLabel(dayKey);
     const hi = _fmtTemp(tmax[i]);
     const lo = _fmtTemp(tmin[i]);
     const prMm = (isFinite(Number(pr[i])) ? Number(pr[i]).toFixed(1) : "—");
     const wK = (isFinite(Number(wind[i])) ? Math.round(Number(wind[i])) : "—");
+    const active = (String(selectedDay || "") === dayKey) ? " active" : "";
     out += (
-      '<div class="weatherDayRow">' +
+      '<div class="weatherDayRow' + active + '" role="button" tabindex="0" data-day-index="' + i + '" data-day="' + escapeHTML(dayKey) + '">' +
         '<div class="wdLeft">' +
           '<span class="wdEmoji">' + desc.emoji + '</span>' +
           '<div class="wdText">' +
             '<div class="wdDay">' + escapeHTML(day) + '</div>' +
-            '<div class="wdDesc">' + escapeHTML(desc.text) + '</div>' +
+            '<div class="wdDesc">' + escapeHTML(desc.text) + ' · tap for hourly details</div>' +
           '</div>' +
         '</div>' +
         '<div class="wdRight">' +
@@ -6616,6 +7009,107 @@ function _renderForecastHTML(fd){
   return out;
 }
 
+async function renderProfileWeatherHourly(entry, dayStr){
+  const wrap = $("profileWeatherHourlyWrap");
+  const list = $("profileWeatherHourlyList");
+  const title = $("profileWeatherHourlyTitle");
+  const card = $("profileWeatherCard");
+  if(!wrap || !list || !title || !card) return;
+
+  if(notesHidden){
+    wrap.hidden = false;
+    list.innerHTML = '<span class="weatherMuted">Hidden in Privacy mode.</span>';
+    return;
+  }
+  if(!weatherOn){
+    wrap.hidden = false;
+    list.innerHTML = '<span class="weatherMuted">Weather is disabled.</span>';
+    return;
+  }
+
+  const lat = entry?.lat, lon = entry?.lon;
+  if(!(typeof lat === "number" && isFinite(lat) && typeof lon === "number" && isFinite(lon))){
+    wrap.hidden = false;
+    list.innerHTML = '<span class="weatherMuted">No coordinates saved.</span>';
+    return;
+  }
+
+  wrap.hidden = false;
+  title.textContent = _dayLabel(dayStr) + ' · Hourly details';
+  card.dataset.hourlyDay = String(dayStr || '');
+  _setActiveWeatherDay(dayStr);
+
+  const cached = _getWeatherHourlyCache(lat, lon);
+  if(cached){
+    const rows = _hourlyRowsForDay(cached, dayStr);
+    list.innerHTML = _renderHourlyHTML(dayStr, rows);
+    _setWeatherAlertButton(entry, _getWeatherCurCache(lat, lon), _getWeatherDailyCache(lat, lon), cached);
+    return;
+  }
+
+  const token = ++__weatherHourlyReqToken;
+  list.innerHTML = '<span class="weatherLoading">Loading hourly forecast…</span>';
+
+  try{
+    const hd = await fetchWeatherHourlyOpenMeteo(lat, lon, entry.tz || "auto");
+    if(token !== __weatherHourlyReqToken) return;
+    if(card.dataset.entryid !== String(entry.id || "")) return;
+
+    _setWeatherHourlyCache(lat, lon, hd);
+    const rows = _hourlyRowsForDay(hd, dayStr);
+    list.innerHTML = _renderHourlyHTML(dayStr, rows);
+    _setWeatherAlertButton(entry, _getWeatherCurCache(lat, lon), _getWeatherDailyCache(lat, lon), hd);
+  }catch(err){
+    console.warn("Hourly forecast failed:", err);
+    list.innerHTML = '<span class="weatherMuted">Could not load hourly forecast right now.</span>';
+  }
+}
+function openWeatherAlertsModal(html){
+  const modal = $("weatherAlertsModal");
+  const body = $("weatherAlertsBody");
+  if(!modal || !body) return;
+  body.innerHTML = html || "—";
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+}
+function closeWeatherAlertsModal(){
+  const modal = $("weatherAlertsModal");
+  if(!modal) return;
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+}
+async function openWeatherAlerts(entry){
+  if(notesHidden){
+    openWeatherAlertsModal('<div class="weatherAlertNote">Weather details are hidden in Privacy mode.</div>');
+    return;
+  }
+  if(!weatherOn){
+    openWeatherAlertsModal('<div class="weatherAlertNote">Weather is currently disabled in the footer tools.</div>');
+    return;
+  }
+  const lat = entry?.lat, lon = entry?.lon;
+  if(!(typeof lat === "number" && isFinite(lat) && typeof lon === "number" && isFinite(lon))){
+    openWeatherAlertsModal('<div class="weatherAlertNote">No coordinates are saved for this profile.</div>');
+    return;
+  }
+
+  openWeatherAlertsModal('<span class="weatherLoading">Checking weather hints…</span>');
+
+  try{
+    const cur = _getWeatherCurCache(lat, lon) || await fetchWeatherOpenMeteo(lat, lon, entry.tz || "auto");
+    const daily = _getWeatherDailyCache(lat, lon) || await fetchWeatherForecastOpenMeteo(lat, lon, entry.tz || "auto");
+    const hourly = _getWeatherHourlyCache(lat, lon) || await fetchWeatherHourlyOpenMeteo(lat, lon, entry.tz || "auto");
+    _setWeatherCurCache(lat, lon, cur);
+    _setWeatherDailyCache(lat, lon, daily);
+    _setWeatherHourlyCache(lat, lon, hourly);
+    _setWeatherAlertButton(entry, cur, daily, hourly);
+    const alerts = _collectWeatherAlerts(cur, daily, hourly);
+    openWeatherAlertsModal(_renderWeatherAlertsHTML(alerts));
+  }catch(err){
+    console.warn("Weather alerts failed:", err);
+    openWeatherAlertsModal('<div class="weatherAlertNote">Could not load weather alerts right now.</div>');
+  }
+}
 async function renderProfileWeatherForecast(entry){
   const fc = $("profileWeatherForecast");
   const list = $("profileWeatherForecastList");
@@ -6640,9 +7134,11 @@ async function renderProfileWeatherForecast(entry){
     return;
   }
 
+  const selectedDay = $("profileWeatherCard")?.dataset?.hourlyDay || "";
   const cached = _getWeatherDailyCache(lat, lon);
   if(cached){
-    list.innerHTML = _renderForecastHTML(cached);
+    list.innerHTML = _renderForecastHTML(cached, selectedDay);
+    _setWeatherAlertButton(entry, _getWeatherCurCache(lat, lon), cached, _getWeatherHourlyCache(lat, lon));
     return;
   }
 
@@ -6656,7 +7152,8 @@ async function renderProfileWeatherForecast(entry){
     if(card.dataset.entryid !== String(entry.id || "")) return;
 
     _setWeatherDailyCache(lat, lon, d);
-    list.innerHTML = _renderForecastHTML(d);
+    list.innerHTML = _renderForecastHTML(d, selectedDay);
+    _setWeatherAlertButton(entry, _getWeatherCurCache(lat, lon), d, _getWeatherHourlyCache(lat, lon));
   }catch(err){
     console.warn("Forecast failed:", err);
     list.innerHTML = '<span class="weatherMuted">Could not load forecast right now.</span>';
@@ -6680,6 +7177,56 @@ async function renderProfileWeatherForecast(entry){
         toggleWeatherForecast(e);
       }catch{}
       return;
+    }
+    const alertBtn = ev.target.closest("#profileWeatherCard .js-weather-alerts");
+    if(alertBtn){
+      try{
+        if(!selectedId) return;
+        const e = entries.find(x=>x.id===selectedId);
+        if(!e) return;
+        openWeatherAlerts(e);
+      }catch{}
+      return;
+    }
+    const dayRow = ev.target.closest("#profileWeatherCard .weatherDayRow[data-day]");
+    if(dayRow){
+      try{
+        if(!selectedId) return;
+        const e = entries.find(x=>x.id===selectedId);
+        if(!e) return;
+        const dayStr = dayRow.getAttribute("data-day") || "";
+        const currentDay = $("profileWeatherCard")?.dataset?.hourlyDay || "";
+        if(currentDay === dayStr && isWeatherHourlyOpen()){
+          hideWeatherHourly(true);
+        }else{
+          renderProfileWeatherHourly(e, dayStr);
+        }
+      }catch{}
+      return;
+    }
+    const closeHourlyBtn = ev.target.closest("#profileWeatherCard .js-weather-hourly-close");
+    if(closeHourlyBtn){
+      hideWeatherHourly(true);
+      return;
+    }
+  });
+  document.addEventListener("keydown", (ev)=>{
+    const activeRow = ev.target.closest?.("#profileWeatherCard .weatherDayRow[data-day]");
+    if(activeRow && (ev.key === "Enter" || ev.key === " ")){
+      ev.preventDefault();
+      activeRow.click();
+    }
+  });
+})();
+
+(function bindWeatherAlertsModal(){
+  const modal = $("weatherAlertsModal");
+  const closeBtn = $("weatherAlertsClose");
+  closeBtn && closeBtn.addEventListener("click", closeWeatherAlertsModal);
+  modal && modal.addEventListener("click", (ev)=>{ if(ev.target === modal) closeWeatherAlertsModal(); });
+  document.addEventListener("keydown", (ev)=>{
+    if(ev.key === "Escape" && $("weatherAlertsModal")?.classList.contains("open")){
+      closeWeatherAlertsModal();
     }
   });
 })();
@@ -12607,6 +13154,7 @@ const subLine = subParts.join(" · ");
             <div class="weatherHeadLeft">
               <span>Weather</span>
               <button class="miniIconBtn miniIconBtn-sm js-weather-forecast" type="button" title="7-day forecast" aria-expanded="false">📅</button>
+              <button class="miniIconBtn miniIconBtn-sm weatherAlertBtn js-weather-alerts" type="button" title="Weather alerts / hints" data-count="">⚠️</button>
               <span class="weatherMeta"></span>
             </div>
             <div class="weatherHeadRight">
@@ -12620,6 +13168,13 @@ const subLine = subParts.join(" · ");
             <div id="profileWeatherCurrent">${weatherBody}</div>
             <div class="weatherForecast" id="profileWeatherForecast" hidden>
               <div class="weatherForecastList" id="profileWeatherForecastList"></div>
+              <div class="weatherHourlyWrap" id="profileWeatherHourlyWrap" hidden>
+                <div class="weatherHourlyHead">
+                  <span class="weatherHourlyTitle" id="profileWeatherHourlyTitle">Hourly details</span>
+                  <button class="miniIconBtn miniIconBtn-sm js-weather-hourly-close" type="button" title="Close hourly details">✕</button>
+                </div>
+                <div class="weatherHourlyList" id="profileWeatherHourlyList"></div>
+              </div>
             </div>
           </div>
         </div>
