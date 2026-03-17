@@ -5503,6 +5503,22 @@ async function geocodeAddress(addr){
     updateMobileSheets();
   }
 
+  function showMapForCurrentSelection(){
+    if(selectedId && entries.some(x=>x.id===selectedId)){
+      focusEntryOnMap(selectedId);
+      return;
+    }
+    showMapView();
+  }
+
+  function openCurrentCardAtTop(){
+    if(selectedId && entries.some(x=>x.id===selectedId)){
+      openProfileAndScrollTop(selectedId);
+      return;
+    }
+    toast("Select a person first");
+  }
+
 
   // ==============================
   // Calendar view: holidays (Nager.Date)
@@ -6725,14 +6741,14 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
     const q = String(query||"").trim().toLowerCase();
 
     const cmds = [
-      { key:"map", title:"🗺️ Show Map", sub:"Switch right panel to Map", run: ()=>{ showMapView(); scrollRightCardIntoView(); } },
-      { key:"card", title:"🪪 Show Card", sub:"Switch right panel to Card (selected person)", run: ()=>{ if(selectedId){ openProfileAndScrollTop(selectedId); } else { toast("Select a person first"); } } },
+      { key:"map", title:"🗺️ Show Map", sub:"Switch right panel to Map", run: ()=>{ showMapForCurrentSelection(); scrollRightCardIntoView(); } },
+      { key:"card", title:"🪪 Show Card", sub:"Switch right panel to Card (selected person)", run: ()=>{ openCurrentCardAtTop(); } },
       { key:"privacy", title:"🔒 Toggle Privacy mode", sub:"Hide / show notes + private fields", run: async ()=>{ const nl = $("notesLock"); if(nl){ nl.checked = !nl.checked; nl.dispatchEvent(new Event("change")); } } },
       { key:"filters", title:"⋯ Open Advanced Filters", sub:"Smart filters + tags", run: ()=>{ openAdvancedFilters(true); } },
       { key:"clear", title:"🧹 Clear filters", sub:"Reset chips + advanced filters", run: ()=>{ syncFilterChipsToAll(); clearAdvancedFilters(); renderList(); renderDashboard(); } },
       { key:"export", title:"Export JSON", sub:"Download your data", run: ()=>{ exportJSON(); } },
       { key:"import", title:"Import JSON", sub:"Load data from a file", run: ()=>{ try{ openImportPicker(); }catch{ $("importFile")?.click(); } } },
-      { key:"new", title:"New entry", sub:"Clear editor for a new person", run: ()=>{ guardedAction(clearForm); } },
+      { key:"new", title:"New entry", sub:"Clear editor for a new person", run: ()=>{ guardedAction(()=>{ clearForm(); scrollEditorIntoView({ focus:true }); }); } },
     ];
 
     // Special parsing: "tag xxx"
@@ -7899,34 +7915,9 @@ Continue saving anyway?`);
 
   function renderAlphabet(sorted){
     const alpha = $("alpha");
+    if(!alpha) return;
     alpha.innerHTML = "";
-
-    const firstIdByLetter = new Map();
-    for(const e of sorted){
-      const L = firstLetter(e.nickname);
-      if(!firstIdByLetter.has(L)) firstIdByLetter.set(L, e.id);
-    }
-
-    const letters = [];
-    for(let i=0;i<26;i++) letters.push(String.fromCharCode(65+i));
-    letters.push("#");
-
-    for(const L of letters){
-      const btn = document.createElement("button");
-      btn.className = "aBtn";
-      btn.textContent = L;
-      btn.disabled = !firstIdByLetter.has(L);
-      btn.addEventListener("click", ()=>{
-        const id = firstIdByLetter.get(L);
-        if(!id) return;
-        const ul = $("list");
-        const li = ul.querySelector(`li[data-id="${CSS.escape(id)}"]`);
-        if(li){
-          li.scrollIntoView({ behavior:"smooth", block:"start", inline:"nearest" });
-        }
-      });
-      alpha.appendChild(btn);
-    }
+    try{ alpha.style.display = "none"; }catch{}
   }
 
   // ==============================
@@ -7998,17 +7989,8 @@ Continue saving anyway?`);
 
     const grid = document.getElementById("hdrStatsGrid");
     if(grid){
-      const birthdayName = nextBirthday ? (displayNames(nextBirthday.e)?.main || nextBirthday.e.nickname || nextBirthday.e.realName || "—") : "—";
-      const overdueName = overdue ? (displayNames(overdue.e)?.main || overdue.e.nickname || overdue.e.realName || "—") : "—";
-      const noContactName = noContactLongest ? (displayNames(noContactLongest.e)?.main || noContactLongest.e.nickname || noContactLongest.e.realName || "—") : "—";
-      const recentName = recentlyEdited ? (displayNames(recentlyEdited)?.main || recentlyEdited.nickname || recentlyEdited.realName || "—") : "—";
-      grid.innerHTML = [
-        { k:"Next birthday", v: nextBirthday ? `${birthdayName} · ${nextBirthday.d === 0 ? "today" : `in ${nextBirthday.d}d`}` : "—" },
-        { k:"Overdue", v: overdue ? `${overdueName} · +${overdue.od}d` : "None" },
-        { k:"No contact", v: noContactLongest ? `${noContactName} · ${fmtDate(noContactLongest.e.lastContact)}` : "—" },
-        { k:"New this month", v: `${newThisMonth}` },
-        { k:"Recently edited", v: recentlyEdited ? `${recentName} · ${fmtDateTime(recentlyEdited.updatedAt)}` : "—" }
-      ].map(s=>`<div class="hdrStatPill"><span class="k">${escapeHTML(s.k)}</span><span class="v">${escapeHTML(String(s.v||"—"))}</span></div>`).join("");
+      grid.innerHTML = "";
+      try{ grid.style.display = "none"; }catch{}
     }
     try{ updateQuickWidgets(); }catch{}
   }
@@ -10077,12 +10059,12 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
   const _tabCard = $("tabCard");
     const _tabCal = $("tabCal");
 if(_tabMap) _tabMap.addEventListener("click", ()=>{
-    showMapView();
+    showMapForCurrentSelection();
     scrollRightCardIntoView();
   });
   if(_tabCard) _tabCard.addEventListener("click", ()=>{
     if(selectedId){
-      openProfile(selectedId);
+      openProfileAndScrollTop(selectedId);
       scrollRightCardIntoView();
     }else{
       toast("Select a person first");
@@ -10716,7 +10698,7 @@ function mountDistanceButtonIntoMap(attempt=0){
   })();
 
   function runQuickAction(act){
-    if(act === "new") return guardedAction(clearForm);
+    if(act === "new") return guardedAction(()=>{ clearForm(); scrollEditorIntoView({ focus:true }); });
     if(act === "save") return handleSave();
     if(act === "search"){
       const s = $("search");
@@ -10728,8 +10710,8 @@ function mountDistanceButtonIntoMap(attempt=0){
     }
     if(act === "import") return openImportPicker();
     if(act === "export") return exportJSON();
-    if(act === "map") return showMapView();
-    if(act === "card") return selectedId ? openProfile(selectedId) : toast("Select a person first");
+    if(act === "map") return showMapForCurrentSelection();
+    if(act === "card") return openCurrentCardAtTop();
   }
 
   (function initMobileQuickBar(){
@@ -10747,3 +10729,4 @@ function mountDistanceButtonIntoMap(attempt=0){
 try{ syncOverlayLock(); }catch{}
 
 </script>
+
