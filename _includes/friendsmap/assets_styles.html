@@ -5684,4 +5684,92 @@
   #soApp .hdrStatsGrid{ grid-template-columns: 1fr; }
 }
 
+
+
+/* === Patch: compact header, always-visible quick bar, map-integrated distance button === */
+#soApp .hdrRight{ width:min(560px, 100%); margin-left:auto; }
+#soApp .hdrSub{ max-width:none; }
+#soApp .hdrStatsGrid{
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap:6px;
+  margin-top:8px;
+}
+#soApp .hdrStatPill{
+  padding:7px 9px;
+  min-height:58px;
+  justify-content:center;
+}
+#soApp .hdrStatPill .k{
+  font-size:10px;
+  line-height:1.1;
+}
+#soApp .hdrStatPill .v{
+  font-size:11px;
+  line-height:1.15;
+  white-space:normal;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+}
+
+#soApp .mobileQuickBar{
+  display:flex;
+  left:50%;
+  right:auto;
+  transform:translateX(-50%);
+  width:min(760px, calc(100vw - 20px));
+  justify-content:center;
+  overflow-x:auto;
+}
+#soApp .mobileQuickBar button{
+  min-width:70px;
+  flex:0 0 auto;
+}
+
+#soApp .leaflet-control-distance{
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+#soApp .leaflet-control-distance #distanceFloatingBtn{
+  position:static !important;
+  left:auto !important;
+  bottom:auto !important;
+  z-index:auto !important;
+  width:36px !important;
+  height:36px !important;
+  margin:0;
+  padding:0 !important;
+  border-radius:10px;
+  background: rgba(20,24,35,.95);
+  color: rgba(230,120,120,.95);
+  border: 1px solid rgba(220,90,90,.6);
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+}
+#soApp .leaflet-control-distance #distanceHint{
+  position:absolute;
+  left:0;
+  bottom:44px;
+  z-index:700;
+  max-width:260px;
+}
+
+@media (max-width: 1200px){
+  #soApp .hdrStatsGrid{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+@media (max-width: 860px){
+  #soApp .hdrRight{ width:100%; }
+  #soApp .hdrStatsGrid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  #soApp .mobileQuickBar{ width:calc(100vw - 16px); }
+}
+@media (max-width: 520px){
+  #soApp .hdrStatsGrid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  #soApp .hdrStatPill{ min-height:54px; }
+}
+@media (max-width: 360px){
+  #soApp .hdrStatsGrid{ grid-template-columns: 1fr; }
+}
+
 </style>
