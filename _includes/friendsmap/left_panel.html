@@ -275,7 +275,7 @@
 
         <details class="accSec">
           <summary>
-            <span>🎨 Visuell</span>
+            <span>🎨 Visual</span>
             <span class="accSub">Eye color, favorite colors</span>
           </summary>
           <div class="accBody">
@@ -514,7 +514,9 @@
           <label for="mergeImport" style="margin:0; cursor:pointer;">
             Merge on import (recommended if you already have entries here)
           </label>
+          <button id="restoreImportBackupBtn" type="button" class="secondary smallBtn" title="Restore the last automatic pre-import backup">Restore backup</button>
         </div>
+        <div id="importStatusHint" class="hint importStatusHint">Imports are previewed before applying. A backup is created automatically.</div>
 
         <div class="toggleRow">
           <input id="notesLock" type="checkbox" />
