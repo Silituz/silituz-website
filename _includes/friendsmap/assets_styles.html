@@ -5772,4 +5772,179 @@
   #soApp .hdrStatsGrid{ grid-template-columns: 1fr; }
 }
 
+
+
+/* === Liquid dock + focus map pack === */
+#soApp .tabIcon,
+#soApp .btnIcon,
+#soApp .mqIcon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:18px;
+  min-width:18px;
+  font-size:14px;
+  line-height:1;
+  opacity:.92;
+}
+#soApp .rtTab,
+#soApp #profileEdit,
+#soApp #profilePin,
+#soApp #profileNetwork,
+#soApp #calRefreshBtn,
+#soApp #calBackToMapBtn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+#soApp .rtTab{
+  transition: transform .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease, color .16s ease;
+}
+#soApp .rtTab:hover{ transform: translateY(-1px); }
+#soApp .rtTab.active{
+  box-shadow: 0 10px 28px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.14);
+}
+#soApp #mapView,
+#soApp #profileView,
+#soApp #calendarView{
+  transform-origin:center top;
+}
+#soApp .soView.isViewEntering{
+  animation: soViewIn .22s ease-out;
+}
+@keyframes soViewIn{
+  from{ opacity:.0; transform: translateY(8px) scale(.988); }
+  to{ opacity:1; transform: translateY(0) scale(1); }
+}
+
+#soApp .mobileQuickBar{
+  display:flex;
+  left:50%;
+  right:auto;
+  transform:translateX(-50%);
+  width:min(860px, calc(100vw - 18px));
+  justify-content:center;
+  gap:10px;
+  padding:10px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.04)),
+    linear-gradient(180deg, rgba(16,20,30,.58), rgba(8,12,20,.72));
+  box-shadow:
+    0 22px 60px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.22),
+    inset 0 -1px 0 rgba(255,255,255,.04);
+  -webkit-backdrop-filter: blur(22px) saturate(165%);
+  backdrop-filter: blur(22px) saturate(165%);
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+#soApp .mobileQuickBar::-webkit-scrollbar{ display:none; }
+#soApp .mobileQuickBar::before{
+  content:"";
+  position:absolute;
+  inset:1px;
+  border-radius:inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,0) 30%, rgba(255,255,255,.04));
+  pointer-events:none;
+}
+#soApp .mobileQuickBar button{
+  position:relative;
+  min-width:72px;
+  flex:0 0 auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:9px 12px;
+  border-radius:16px;
+  border:1px solid transparent;
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+  transition: transform .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease, filter .16s ease;
+}
+#soApp .mobileQuickBar button:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  border-color: rgba(255,255,255,.12);
+}
+#soApp .mobileQuickBar button:active{ transform: translateY(0) scale(.985); }
+#soApp .mobileQuickBar button.isActive{
+  background: linear-gradient(180deg, rgba(122,167,255,.22), rgba(122,167,255,.10));
+  border-color: rgba(122,167,255,.30);
+  box-shadow: 0 10px 24px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.18), 0 0 0 1px rgba(122,167,255,.10);
+}
+#soApp .mobileQuickBar .mqIcon{
+  width:20px;
+  min-width:20px;
+  font-size:15px;
+}
+#soApp .mobileQuickBar .mqLabel{
+  font-size:11px;
+  line-height:1;
+  letter-spacing:.01em;
+}
+
+#soApp .leaflet-control-focusreset{
+  background: transparent;
+  box-shadow:none;
+  border:0;
+}
+#soApp .mapFocusResetBtn{
+  min-width:96px;
+  height:36px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:0 12px;
+  border-radius:12px;
+  border:1px solid rgba(122,167,255,.26);
+  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.04)), rgba(10,14,24,.78);
+  color:var(--text);
+  font-size:12px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.28);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+}
+#soApp .mapFocusResetBtn[hidden]{ display:none !important; }
+#soApp .mapFocusResetBtn .btnIcon{ width:16px; min-width:16px; }
+#soApp .leaflet-control-distance #distanceFloatingBtn{
+  background: linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,.05)), rgba(14,18,28,.84);
+  color: rgba(255,182,182,.98);
+  border: 1px solid rgba(255,120,120,.32);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+}
+#soApp .leaflet-marker-icon.soFocused{
+  filter: drop-shadow(0 0 10px rgba(122,167,255,.42)) drop-shadow(0 0 24px rgba(122,167,255,.18));
+  transform: translateY(-1px) scale(1.05);
+}
+#soApp .leaflet-marker-icon.soNeighbor{
+  filter: drop-shadow(0 0 10px rgba(16,185,129,.18));
+}
+#soApp .leaflet-marker-icon.soDimmed{
+  filter: saturate(.72) brightness(.92);
+}
+#soApp path.so-focus-line{
+  stroke: rgba(122,167,255,.82) !important;
+  stroke-width: 3.2 !important;
+  stroke-dasharray: none !important;
+}
+#soApp path.so-neighbor-line{
+  stroke: rgba(16,185,129,.48) !important;
+}
+#soApp path.so-dim-line{
+  stroke: rgba(255,255,255,.18) !important;
+  opacity: .22 !important;
+}
+@media (max-width: 860px){
+  #soApp .mobileQuickBar{ width:calc(100vw - 14px); gap:8px; }
+}
+@media (max-width: 520px){
+  #soApp .mobileQuickBar button{ min-width:68px; padding:8px 10px; }
+}
+
 </style>
