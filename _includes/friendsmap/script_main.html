@@ -10697,34 +10697,106 @@ function mountDistanceButtonIntoMap(attempt=0){
     refreshImportBackupUI();
   })();
 
-  function runQuickAction(act){
-    if(act === "new") return guardedAction(()=>{ clearForm(); scrollEditorIntoView({ focus:true }); });
-    if(act === "save") return handleSave();
+  function quickBarPressGlow(btn, opts={}){
+    if(!btn) return;
+    btn.classList.remove('isPressed');
+    void btn.offsetWidth;
+    btn.classList.add('isPressed');
+    clearTimeout(btn.__quickGlowTimer);
+    const hold = Math.max(280, Number(opts.hold || 460));
+    btn.__quickGlowTimer = setTimeout(()=>{
+      btn.classList.remove('isPressed');
+    }, hold);
+  }
+
+  function triggerImportFromQuickBar(){
+    try{
+      const input = $("importFile");
+      if(input && typeof input.showPicker === "function"){
+        try{ input.value = ""; }catch{}
+        input.showPicker();
+        return true;
+      }
+    }catch{}
+    try{
+      const labelBtn = $("importBtn");
+      if(labelBtn){
+        labelBtn.click();
+        return true;
+      }
+    }catch{}
+    try{
+      openImportPicker();
+      return true;
+    }catch{}
+    return false;
+  }
+
+  function runQuickAction(act, srcBtn=null){
+    if(srcBtn) quickBarPressGlow(srcBtn);
+
+    if(act === "new"){
+      updateQuickDockState('none');
+      return guardedAction(()=>{ clearForm(); scrollEditorIntoView({ focus:true }); });
+    }
+    if(act === "save"){
+      updateQuickDockState('none');
+      return handleSave();
+    }
     if(act === "search"){
+      updateQuickDockState('none');
       const s = $("search");
       if(s){
         try{ s.focus(); }catch{}
-        try{ s.scrollIntoView({behavior:"smooth", block:"center"}); }catch{}
+        try{ s.scrollIntoView({behavior: prefersReducedMotion() ? "auto" : "smooth", block:"center"}); }catch{}
       }
       return;
     }
-    if(act === "import") return openImportPicker();
-    if(act === "export") return exportJSON();
-    if(act === "map") return showMapForCurrentSelection();
-    if(act === "card") return openCurrentCardAtTop();
+    if(act === "import"){
+      updateQuickDockState('none');
+      const ok = triggerImportFromQuickBar();
+      if(!ok) toast("Import could not be opened");
+      return;
+    }
+    if(act === "export"){
+      updateQuickDockState('none');
+      return exportJSON();
+    }
+    if(act === "map"){
+      updateQuickDockState('map');
+      return showMapForCurrentSelection();
+    }
+    if(act === "card"){
+      updateQuickDockState('card');
+      return openCurrentCardAtTop();
+    }
   }
 
-  (function initMobileQuickBar(){
-    if(document.__mobileQuickBound) return;
-    document.__mobileQuickBound = true;
-    document.addEventListener("click", (ev)=>{
-      const btn = ev.target.closest("#mobileQuickBar button[data-mqa]");
-      if(!btn) return;
-      ev.preventDefault();
-      ev.stopPropagation();
-      runQuickAction(btn.getAttribute("data-mqa"));
+  function bindMobileQuickBar(){
+    const root = document.getElementById("mobileQuickBar");
+    if(!root || root.__boundQuickBar) return;
+    root.__boundQuickBar = true;
+
+    root.querySelectorAll('button[data-mqa]').forEach((btn)=>{
+      const act = btn.getAttribute('data-mqa') || '';
+
+      btn.addEventListener('pointerdown', ()=>{
+        quickBarPressGlow(btn, { hold: 520 });
+      }, { passive:true });
+
+      btn.addEventListener('click', (ev)=>{
+        ev.preventDefault();
+        ev.stopPropagation();
+        runQuickAction(act, btn);
+      });
     });
-  })();
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', bindMobileQuickBar, { once:true });
+  }else{
+    bindMobileQuickBar();
+  }
 
 
 
@@ -10743,7 +10815,8 @@ function mountDistanceButtonIntoMap(attempt=0){
     const root = document.getElementById('mobileQuickBar');
     if(!root) return;
     root.querySelectorAll('button[data-view]').forEach(btn=>{
-      const on = btn.getAttribute('data-view') === which;
+      const view = btn.getAttribute('data-view') || '';
+      const on = !!which && which !== 'none' && view === which;
       btn.classList.toggle('isActive', on);
       btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
@@ -11066,12 +11139,6 @@ function mountDistanceButtonIntoMap(attempt=0){
     ev.preventDefault();
     ev.stopPropagation();
     clearMapFocus({ zoomOut:true });
-  });
-
-  document.addEventListener('click', (ev)=>{
-    const btn = ev.target.closest('#mobileQuickBar button[data-view]');
-    if(!btn) return;
-    updateQuickDockState(btn.getAttribute('data-view'));
   });
 
   try{ updateQuickDockState('map'); }catch{}
