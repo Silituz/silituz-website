@@ -15,31 +15,31 @@
 </div>
 
 <div class="mobileQuickBar" id="mobileQuickBar" aria-label="Quick actions">
-  <button type="button" class="quickActionBtn" data-mqa="new" aria-label="New entry" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickAction ? window.__soQuickAction('new', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="new" aria-label="New entry" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'new\', this) : false;">
     <span class="mqIcon" aria-hidden="true">＋</span>
     <span class="mqLabel">New</span>
   </button>
-  <button type="button" class="quickActionBtn" data-mqa="save" aria-label="Save" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickAction ? window.__soQuickAction('save', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="save" aria-label="Save" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'save\', this) : false;">
     <span class="mqIcon" aria-hidden="true">⌘</span>
     <span class="mqLabel">Save</span>
   </button>
-  <button type="button" class="quickActionBtn" data-mqa="search" aria-label="Search" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickAction ? window.__soQuickAction('search', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="search" aria-label="Search" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'search\', this) : false;">
     <span class="mqIcon" aria-hidden="true">⌕</span>
     <span class="mqLabel">Search</span>
   </button>
-  <button type="button" class="quickActionBtn" data-mqa="import" aria-label="Import JSON" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickAction ? window.__soQuickAction('import', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="import" aria-label="Import JSON" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'import\', this) : false;">
     <span class="mqIcon" aria-hidden="true">⇣</span>
     <span class="mqLabel">Import</span>
   </button>
-  <button type="button" class="quickActionBtn" data-mqa="export" aria-label="Export JSON" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickAction ? window.__soQuickAction('export', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="export" aria-label="Export JSON" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'export\', this) : false;">
     <span class="mqIcon" aria-hidden="true">⇡</span>
     <span class="mqLabel">Export</span>
   </button>
-  <button type="button" class="quickActionBtn" data-mqa="map" data-view="map" aria-label="Map" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickAction ? window.__soQuickAction('map', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="map" data-view="map" aria-label="Map" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'map\', this) : false;">
     <span class="mqIcon" aria-hidden="true">⌖</span>
     <span class="mqLabel">Map</span>
   </button>
-  <button type="button" class="quickActionBtn" data-mqa="card" data-view="card" aria-label="Card" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickAction ? window.__soQuickAction('card', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="card" data-view="card" aria-label="Card" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'card\', this) : false;">
     <span class="mqIcon" aria-hidden="true">▣</span>
     <span class="mqLabel">Card</span>
   </button>
