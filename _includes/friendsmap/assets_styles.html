@@ -5986,4 +5986,44 @@
   #soApp .mobileQuickBar button{ min-width:68px; padding:8px 10px; }
 }
 
+
+/* === Final quick bar override: stronger neon glow + more transparent liquid dock === */
+#soApp .mobileQuickBar{
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02)), linear-gradient(180deg, rgba(10,14,22,.34), rgba(7,11,18,.46)) !important;
+  border-color: rgba(255,255,255,.10) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(170%) !important;
+  backdrop-filter: blur(28px) saturate(170%) !important;
+  box-shadow: 0 20px 56px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(255,255,255,.03) !important;
+}
+#soApp .mobileQuickBar::before{
+  background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.04) 26%, rgba(255,255,255,.01) 62%, rgba(255,255,255,.06)) !important;
+}
+#soApp .mobileQuickBar button{
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.025)) !important;
+  border-color: rgba(255,255,255,.05) !important;
+}
+#soApp .mobileQuickBar button:hover{
+  border-color: rgba(16,185,129,.20) !important;
+  box-shadow: 0 0 0 1px rgba(16,185,129,.10), 0 0 18px rgba(16,185,129,.10), inset 0 1px 0 rgba(255,255,255,.16) !important;
+}
+#soApp .mobileQuickBar button:active,
+#soApp .mobileQuickBar button:focus-visible,
+#soApp .mobileQuickBar button.isPressed,
+#soApp .mobileQuickBar button.isGlow{
+  outline: none !important;
+  border-color: rgba(16,185,129,.78) !important;
+  background: linear-gradient(180deg, rgba(16,185,129,.20), rgba(16,185,129,.07)) !important;
+  box-shadow: 0 0 0 1px rgba(16,185,129,.24), 0 0 24px rgba(16,185,129,.34), 0 0 52px rgba(16,185,129,.24), inset 0 1px 0 rgba(255,255,255,.22), inset 0 0 0 1px rgba(16,185,129,.16) !important;
+}
+#soApp .mobileQuickBar button.isPressed::after,
+#soApp .mobileQuickBar button.isGlow::after,
+#soApp .mobileQuickBar button:active::after,
+#soApp .mobileQuickBar button:focus-visible::after{
+  opacity: 1 !important;
+}
+#soApp .mobileQuickBar button.isActive{
+  border-color: rgba(16,185,129,.52) !important;
+  background: linear-gradient(180deg, rgba(16,185,129,.24), rgba(16,185,129,.10)) !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,.20), 0 0 0 1px rgba(16,185,129,.16), 0 0 20px rgba(16,185,129,.16), inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
 </style>
