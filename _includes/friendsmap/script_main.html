@@ -5503,17 +5503,37 @@ async function geocodeAddress(addr){
     updateMobileSheets();
   }
 
+  function resolveQuickActionTargetId(){
+    try{
+      if(selectedId && entries.some(x=>x.id===selectedId)) return selectedId;
+    }catch{}
+    try{
+      const li = document.querySelector('#list .item.selected[data-id]');
+      const id = li?.getAttribute('data-id') || '';
+      if(id && entries.some(x=>x.id===id)) return id;
+    }catch{}
+    try{
+      const pid = $('profileView')?.dataset?.id || '';
+      if(pid && entries.some(x=>x.id===pid)) return pid;
+    }catch{}
+    return '';
+  }
+
   function showMapForCurrentSelection(){
-    if(selectedId && entries.some(x=>x.id===selectedId)){
-      focusEntryOnMap(selectedId);
+    const id = resolveQuickActionTargetId();
+    if(id){
+      try{ selectedId = id; }catch{}
+      focusEntryOnMap(id);
       return;
     }
     showMapView();
   }
 
   function openCurrentCardAtTop(){
-    if(selectedId && entries.some(x=>x.id===selectedId)){
-      openProfileAndScrollTop(selectedId);
+    const id = resolveQuickActionTargetId();
+    if(id){
+      try{ selectedId = id; }catch{}
+      openProfileAndScrollTop(id);
       return;
     }
     toast("Select a person first");
@@ -10699,29 +10719,39 @@ function mountDistanceButtonIntoMap(attempt=0){
 
   function quickBarPressGlow(btn, opts={}){
     if(!btn) return;
-    btn.classList.remove('isPressed');
+    btn.classList.remove('isPressed','isGlow');
     void btn.offsetWidth;
-    btn.classList.add('isPressed');
+    btn.classList.add('isPressed','isGlow');
     clearTimeout(btn.__quickGlowTimer);
-    const hold = Math.max(280, Number(opts.hold || 460));
+    const hold = Math.max(360, Number(opts.hold || 760));
     btn.__quickGlowTimer = setTimeout(()=>{
-      btn.classList.remove('isPressed');
+      btn.classList.remove('isPressed','isGlow');
     }, hold);
   }
 
   function triggerImportFromQuickBar(){
-    try{
-      const input = $("importFile");
-      if(input && typeof input.showPicker === "function"){
-        try{ input.value = ""; }catch{}
-        input.showPicker();
+    const input = $("importFile");
+    if(input){
+      try{ input.value = ""; }catch{}
+      try{
+        if(typeof input.showPicker === "function"){
+          input.showPicker();
+          return true;
+        }
+      }catch{}
+      try{
+        input.click();
         return true;
-      }
-    }catch{}
+      }catch{}
+      try{
+        input.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true, view:window }));
+        return true;
+      }catch{}
+    }
     try{
       const labelBtn = $("importBtn");
       if(labelBtn){
-        labelBtn.click();
+        labelBtn.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true, view:window }));
         return true;
       }
     }catch{}
@@ -10797,6 +10827,35 @@ function mountDistanceButtonIntoMap(attempt=0){
   }else{
     bindMobileQuickBar();
   }
+
+  window.__soQuickPress = function(btn){
+    try{ quickBarPressGlow(btn, { hold: 820 }); }catch{}
+    return true;
+  };
+  window.__soQuickAction = function(act, btn){
+    try{
+      runQuickAction(String(act || ''), btn || null);
+    }catch(err){
+      try{ console.error('Quick action failed:', act, err); }catch{}
+      try{ toast('Quick action failed'); }catch{}
+    }
+    return false;
+  };
+
+  document.addEventListener('click', (ev)=>{
+    const btn = ev.target && ev.target.closest ? ev.target.closest('#mobileQuickBar button[data-mqa]') : null;
+    if(!btn) return;
+    const act = btn.getAttribute('data-mqa') || '';
+    if(btn.__handledInline) return;
+    btn.__handledInline = true;
+    setTimeout(()=>{ try{ btn.__handledInline = false; }catch{} }, 0);
+    if(ev.defaultPrevented) return;
+    try{
+      ev.preventDefault();
+      ev.stopPropagation();
+    }catch{}
+    window.__soQuickAction(act, btn);
+  }, true);
 
 
 
