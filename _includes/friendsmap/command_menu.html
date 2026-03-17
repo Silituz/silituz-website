@@ -1,4 +1,4 @@
-<button id="distanceFloatingBtn" title="Distance tool">📏</button>
+<button id="distanceFloatingBtn" title="Distance tool" aria-label="Distance tool">📏</button>
 
 <div id="distanceHint"></div>
 
@@ -14,13 +14,33 @@
   </div>
 </div>
 
-
-<div class="mobileQuickBar" id="mobileQuickBar" aria-label="Mobile quick actions">
-  <button type="button" data-mqa="new">➕<span>New</span></button>
-  <button type="button" data-mqa="save">💾<span>Save</span></button>
-  <button type="button" data-mqa="search">🔎<span>Search</span></button>
-  <button type="button" data-mqa="import">📥<span>Import</span></button>
-  <button type="button" data-mqa="export">📤<span>Export</span></button>
-  <button type="button" data-mqa="map">🗺️<span>Map</span></button>
-  <button type="button" data-mqa="card">🪪<span>Card</span></button>
+<div class="mobileQuickBar" id="mobileQuickBar" aria-label="Quick actions">
+  <button type="button" data-mqa="new" aria-label="New entry">
+    <span class="mqIcon" aria-hidden="true">＋</span>
+    <span class="mqLabel">New</span>
+  </button>
+  <button type="button" data-mqa="save" aria-label="Save">
+    <span class="mqIcon" aria-hidden="true">⌘</span>
+    <span class="mqLabel">Save</span>
+  </button>
+  <button type="button" data-mqa="search" aria-label="Search">
+    <span class="mqIcon" aria-hidden="true">⌕</span>
+    <span class="mqLabel">Search</span>
+  </button>
+  <button type="button" data-mqa="import" aria-label="Import JSON">
+    <span class="mqIcon" aria-hidden="true">⇣</span>
+    <span class="mqLabel">Import</span>
+  </button>
+  <button type="button" data-mqa="export" aria-label="Export JSON">
+    <span class="mqIcon" aria-hidden="true">⇡</span>
+    <span class="mqLabel">Export</span>
+  </button>
+  <button type="button" data-mqa="map" data-view="map" aria-label="Map">
+    <span class="mqIcon" aria-hidden="true">⌖</span>
+    <span class="mqLabel">Map</span>
+  </button>
+  <button type="button" data-mqa="card" data-view="card" aria-label="Card">
+    <span class="mqIcon" aria-hidden="true">▣</span>
+    <span class="mqLabel">Card</span>
+  </button>
 </div>
