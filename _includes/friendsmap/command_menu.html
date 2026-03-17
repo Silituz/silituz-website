@@ -15,32 +15,147 @@
 </div>
 
 <div class="mobileQuickBar" id="mobileQuickBar" aria-label="Quick actions">
-  <button type="button" class="quickActionBtn" data-mqa="new" aria-label="New entry" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'new\', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="new" aria-label="New entry" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickDirectRun ? window.__soQuickDirectRun(event, 'new', this) : false;">
     <span class="mqIcon" aria-hidden="true">＋</span>
     <span class="mqLabel">New</span>
   </button>
-  <button type="button" class="quickActionBtn" data-mqa="save" aria-label="Save" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'save\', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="save" aria-label="Save" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickDirectRun ? window.__soQuickDirectRun(event, 'save', this) : false;">
     <span class="mqIcon" aria-hidden="true">⌘</span>
     <span class="mqLabel">Save</span>
   </button>
-  <button type="button" class="quickActionBtn" data-mqa="search" aria-label="Search" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'search\', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="search" aria-label="Search" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickDirectRun ? window.__soQuickDirectRun(event, 'search', this) : false;">
     <span class="mqIcon" aria-hidden="true">⌕</span>
     <span class="mqLabel">Search</span>
   </button>
-  <button type="button" class="quickActionBtn" data-mqa="import" aria-label="Import JSON" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'import\', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="import" aria-label="Import JSON" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickDirectRun ? window.__soQuickDirectRun(event, 'import', this) : false;">
     <span class="mqIcon" aria-hidden="true">⇣</span>
     <span class="mqLabel">Import</span>
   </button>
-  <button type="button" class="quickActionBtn" data-mqa="export" aria-label="Export JSON" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'export\', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="export" aria-label="Export JSON" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickDirectRun ? window.__soQuickDirectRun(event, 'export', this) : false;">
     <span class="mqIcon" aria-hidden="true">⇡</span>
     <span class="mqLabel">Export</span>
   </button>
-  <button type="button" class="quickActionBtn" data-mqa="map" data-view="map" aria-label="Map" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'map\', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="map" data-view="map" aria-label="Map" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickDirectRun ? window.__soQuickDirectRun(event, 'map', this) : false;">
     <span class="mqIcon" aria-hidden="true">⌖</span>
     <span class="mqLabel">Map</span>
   </button>
-  <button type="button" class="quickActionBtn" data-mqa="card" data-view="card" aria-label="Card" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickRun ? window.__soQuickRun(event, \'card\', this) : false;">
+  <button type="button" class="quickActionBtn" data-mqa="card" data-view="card" aria-label="Card" onpointerdown="window.__soQuickPress && window.__soQuickPress(this)" onclick="return window.__soQuickDirectRun ? window.__soQuickDirectRun(event, 'card', this) : false;">
     <span class="mqIcon" aria-hidden="true">▣</span>
     <span class="mqLabel">Card</span>
   </button>
 </div>
+
+
+<script>
+(function(){
+  function byId(id){ return document.getElementById(id); }
+  function safeClick(id){
+    const el = byId(id);
+    if(!el) return false;
+    try{ el.click(); return true; }catch(e){}
+    try{ el.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true, view:window })); return true; }catch(e){}
+    return false;
+  }
+  function smoothBlock(el, block){
+    try{ el?.scrollIntoView({ behavior: (window.prefersReducedMotion && window.prefersReducedMotion()) ? 'auto' : 'smooth', block: block || 'center' }); }catch(e){}
+  }
+  function glow(btn){
+    if(!btn) return;
+    try{ btn.classList.remove('isPressed','isGlow'); void btn.offsetWidth; btn.classList.add('isPressed','isGlow'); }catch(e){}
+    clearTimeout(btn.__qg);
+    btn.__qg = setTimeout(function(){ try{ btn.classList.remove('isPressed','isGlow'); }catch(e){} }, 900);
+  }
+  function currentId(){
+    try{
+      const li = document.querySelector('#list .item.selected[data-id]');
+      if(li && li.dataset && li.dataset.id) return li.dataset.id;
+    }catch(e){}
+    try{
+      const pv = byId('profileView');
+      if(pv && pv.dataset && pv.dataset.id) return pv.dataset.id;
+    }catch(e){}
+    return '';
+  }
+  window.__soQuickPress = function(btn){ glow(btn); return true; };
+  window.__soQuickDirectRun = function(ev, act, btn){
+    try{ ev && ev.preventDefault && ev.preventDefault(); }catch(e){}
+    try{ ev && ev.stopPropagation && ev.stopPropagation(); }catch(e){}
+    glow(btn);
+
+    if(act === 'new'){
+      if(typeof window.guardedAction === 'function' && typeof window.clearForm === 'function'){
+        try{ window.guardedAction(function(){ window.clearForm(); if(typeof window.scrollEditorIntoView === 'function') window.scrollEditorIntoView({ focus:true }); }); return false; }catch(e){}
+      }
+      safeClick('newBtn');
+      if(typeof window.scrollEditorIntoView === 'function') try{ window.scrollEditorIntoView({ focus:true }); }catch(e){}
+      return false;
+    }
+
+    if(act === 'save'){
+      if(typeof window.handleSave === 'function'){
+        try{ window.handleSave(); return false; }catch(e){}
+      }
+      safeClick('saveBtn');
+      return false;
+    }
+
+    if(act === 'search'){
+      const s = byId('search');
+      if(s){
+        smoothBlock(s, 'center');
+        try{ s.focus(); }catch(e){}
+        try{ s.select && s.select(); }catch(e){}
+      }
+      return false;
+    }
+
+    if(act === 'import'){
+      const input = byId('importFile');
+      if(input){
+        try{ input.value = ''; }catch(e){}
+        if(typeof input.showPicker === 'function'){
+          try{ input.showPicker(); return false; }catch(e){}
+        }
+        try{ input.click(); return false; }catch(e){}
+      }
+      safeClick('importBtn');
+      return false;
+    }
+
+    if(act === 'export'){
+      if(typeof window.exportJSON === 'function'){
+        try{ window.exportJSON(); return false; }catch(e){}
+      }
+      safeClick('exportBtn');
+      return false;
+    }
+
+    if(act === 'map'){
+      const id = currentId();
+      if(id && typeof window.focusEntryOnMap === 'function'){
+        try{ window.focusEntryOnMap(id); return false; }catch(e){}
+      }
+      safeClick('tabMap');
+      if(typeof window.showMapView === 'function') try{ window.showMapView(); }catch(e){}
+      return false;
+    }
+
+    if(act === 'card'){
+      const id = currentId();
+      if(id && typeof window.openProfileAndScrollTop === 'function'){
+        try{ window.openProfileAndScrollTop(id); return false; }catch(e){}
+      }
+      safeClick('tabCard');
+      if(typeof window.showProfileView === 'function') try{ window.showProfileView(); }catch(e){}
+      const pv = byId('profileView');
+      try{ pv && pv.scrollTo && pv.scrollTo({ top:0, behavior: (window.prefersReducedMotion && window.prefersReducedMotion()) ? 'auto' : 'smooth' }); }catch(e){}
+      try{ if(pv) pv.scrollTop = 0; }catch(e){}
+      return false;
+    }
+
+    return false;
+  };
+  window.__soQuickRun = window.__soQuickDirectRun;
+})();
+</script>
+
