@@ -2731,6 +2731,7 @@ e.fav = !!e.fav;
     try{ if(tempPin){ tempLayer.removeLayer(tempPin); tempPin = null; } }catch{}
     renderMarkers();
     updateCount();
+    try{ updateStats(); }catch{}
   }
 
   // ==============================
@@ -10199,6 +10200,7 @@ if(_tabMap) _tabMap.addEventListener("click", ()=>{
   renderList();
   renderMarkers();
   updateCount();
+  try{ updateStats(); }catch{}
   updateZodiacUI();
   tick();
   setInterval(tick, 1000);
@@ -10504,13 +10506,50 @@ try{
 }catch{}
 
 
-// Wire the button
-document.addEventListener("DOMContentLoaded", ()=>{
+// Wire the button + mount it into the map controls so it is not floating over the page
+function bindDistanceButtonOnce(){
+  if(document.__distanceBtnBound) return true;
+  document.__distanceBtnBound = true;
+  document.addEventListener("click", (ev)=>{
+    const btn = ev.target.closest("#distanceFloatingBtn");
+    if(!btn) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    distToggle();
+  });
+  return true;
+}
+
+function mountDistanceButtonIntoMap(attempt=0){
   const btn = document.getElementById("distanceFloatingBtn");
-  if(btn){
-    btn.addEventListener("click", (ev)=>{ ev.preventDefault(); ev.stopPropagation(); distToggle(); });
+  if(!btn || typeof L === "undefined" || typeof map === "undefined" || !map){
+    if(attempt < 40) setTimeout(()=> mountDistanceButtonIntoMap(attempt+1), 150);
+    return;
   }
-});
+  if(btn.__mountedIntoMap) return;
+
+  const control = L.control({ position: "bottomleft" });
+  control.onAdd = function(){
+    const wrap = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-distance");
+    wrap.appendChild(btn);
+    const hint = document.getElementById("distanceHint");
+    if(hint) wrap.appendChild(hint);
+    L.DomEvent.disableClickPropagation(wrap);
+    L.DomEvent.disableScrollPropagation(wrap);
+    return wrap;
+  };
+  control.addTo(map);
+  btn.__mountedIntoMap = true;
+}
+
+(function initDistanceToolUi(){
+  bindDistanceButtonOnce();
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", ()=> mountDistanceButtonIntoMap(), { once:true });
+  }else{
+    mountDistanceButtonIntoMap();
+  }
+})();
 
 
   // ==============================
@@ -10676,25 +10715,32 @@ document.addEventListener("DOMContentLoaded", ()=>{
     refreshImportBackupUI();
   })();
 
-  (function initMobileQuickBar(){
-    const bar = $("mobileQuickBar");
-    if(!bar || bar.__bound) return;
-    bar.__bound = true;
-    bar.addEventListener("click", (ev)=>{
-      const btn = ev.target.closest("button[data-mqa]");
-      if(!btn) return;
-      const act = btn.getAttribute("data-mqa");
-      if(act === "new") return guardedAction(clearForm);
-      if(act === "save") return handleSave();
-      if(act === "search"){
-        const s = $("search");
-        if(s){ s.focus(); s.scrollIntoView({behavior:"smooth", block:"center"}); }
-        return;
+  function runQuickAction(act){
+    if(act === "new") return guardedAction(clearForm);
+    if(act === "save") return handleSave();
+    if(act === "search"){
+      const s = $("search");
+      if(s){
+        try{ s.focus(); }catch{}
+        try{ s.scrollIntoView({behavior:"smooth", block:"center"}); }catch{}
       }
-      if(act === "import") return openImportPicker();
-      if(act === "export") return exportJSON();
-      if(act === "map") return showMapView();
-      if(act === "card") return selectedId ? openProfile(selectedId) : toast("Select a person first");
+      return;
+    }
+    if(act === "import") return openImportPicker();
+    if(act === "export") return exportJSON();
+    if(act === "map") return showMapView();
+    if(act === "card") return selectedId ? openProfile(selectedId) : toast("Select a person first");
+  }
+
+  (function initMobileQuickBar(){
+    if(document.__mobileQuickBound) return;
+    document.__mobileQuickBound = true;
+    document.addEventListener("click", (ev)=>{
+      const btn = ev.target.closest("#mobileQuickBar button[data-mqa]");
+      if(!btn) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      runQuickAction(btn.getAttribute("data-mqa"));
     });
   })();
 
