@@ -17,6 +17,23 @@
   </div>
 </div>
 
+<div class="importPreviewModal" id="importPreviewModal" aria-hidden="true">
+  <div class="importPreviewInner" role="dialog" aria-modal="true" aria-label="Import preview">
+    <div class="importPreviewTop">
+      <div class="importPreviewTitle">📥 Import preview</div>
+      <div class="importPreviewBtns">
+        <button id="importPreviewMerge" class="secondary" type="button">Merge</button>
+        <button id="importPreviewReplace" class="danger" type="button">Replace all</button>
+        <button id="importPreviewCancel" class="secondary" type="button">Cancel</button>
+      </div>
+    </div>
+    <div class="importPreviewMeta" id="importPreviewMeta">—</div>
+    <div class="importPreviewSummary" id="importPreviewSummary">—</div>
+    <div class="importPreviewList" id="importPreviewList">—</div>
+    <div class="importPreviewError" id="importPreviewError" hidden></div>
+  </div>
+</div>
+
 <!-- Time compare overlay -->
 <div class="timeCompareModal" id="timeCompareModal" aria-hidden="true">
   <div class="timeCompareInner" role="dialog" aria-modal="true" aria-label="Time comparison">
@@ -94,6 +111,12 @@
     <div class="netLegend">
       <span><span class="k">Tip:</span> hover a node to highlight connections · click a node to open profile</span>
       <span><span class="kbd">Esc</span> closes</span>
+    </div>
+    <div class="netLegendTags">
+      <span class="netLegendTag">⭐ Favorite</span>
+      <span class="netLegendTag">♾️ Special</span>
+      <span class="netLegendTag">↔ Mutual link</span>
+      <span class="netLegendTag danger">⛓️ Enemy / underground</span>
     </div>
   </div>
 </div>
