@@ -5818,4 +5818,28 @@
   line-height:1;
 }
 
+
+/* === Safer quick bar transparency tune only === */
+#soApp .mobileQuickBar{
+  background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.01)), rgba(9,13,21,.14) !important;
+  border:1px solid rgba(255,255,255,.05) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(165%) !important;
+  backdrop-filter: blur(30px) saturate(165%) !important;
+  box-shadow: 0 12px 28px rgba(0,0,0,.14), inset 0 1px 0 rgba(255,255,255,.07) !important;
+}
+#soApp .mobileQuickBar button{
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01)) !important;
+  border:1px solid rgba(255,255,255,.045) !important;
+}
+#soApp .mobileQuickBar button:active,
+#soApp .mobileQuickBar button:focus-visible{
+  border-color: rgba(16,185,129,.72) !important;
+  background: linear-gradient(180deg, rgba(16,185,129,.16), rgba(16,185,129,.04)) !important;
+  box-shadow:
+    0 0 0 1px rgba(16,185,129,.18),
+    0 0 18px rgba(16,185,129,.22),
+    0 0 36px rgba(16,185,129,.11),
+    inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+
 </style>
