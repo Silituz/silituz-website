@@ -5503,37 +5503,17 @@ async function geocodeAddress(addr){
     updateMobileSheets();
   }
 
-  function resolveQuickActionTargetId(){
-    try{
-      if(selectedId && entries.some(x=>x.id===selectedId)) return selectedId;
-    }catch{}
-    try{
-      const li = document.querySelector('#list .item.selected[data-id]');
-      const id = li?.getAttribute('data-id') || '';
-      if(id && entries.some(x=>x.id===id)) return id;
-    }catch{}
-    try{
-      const pid = $('profileView')?.dataset?.id || '';
-      if(pid && entries.some(x=>x.id===pid)) return pid;
-    }catch{}
-    return '';
-  }
-
   function showMapForCurrentSelection(){
-    const id = resolveQuickActionTargetId();
-    if(id){
-      try{ selectedId = id; }catch{}
-      focusEntryOnMap(id);
+    if(selectedId && entries.some(x=>x.id===selectedId)){
+      focusEntryOnMap(selectedId);
       return;
     }
     showMapView();
   }
 
   function openCurrentCardAtTop(){
-    const id = resolveQuickActionTargetId();
-    if(id){
-      try{ selectedId = id; }catch{}
-      openProfileAndScrollTop(id);
+    if(selectedId && entries.some(x=>x.id===selectedId)){
+      openProfileAndScrollTop(selectedId);
       return;
     }
     toast("Select a person first");
@@ -10717,195 +10697,34 @@ function mountDistanceButtonIntoMap(attempt=0){
     refreshImportBackupUI();
   })();
 
-  function quickBarPressGlow(btn, opts={}){
-    if(!btn) return;
-    btn.classList.remove('isPressed','isGlow');
-    void btn.offsetWidth;
-    btn.classList.add('isPressed','isGlow');
-    clearTimeout(btn.__quickGlowTimer);
-    const hold = Math.max(420, Number(opts.hold || 880));
-    btn.__quickGlowTimer = setTimeout(()=>{
-      btn.classList.remove('isPressed','isGlow');
-    }, hold);
-  }
-
-  function __quickProxyClick(id){
-    const el = $(id);
-    if(!el) return false;
-    try{ el.click(); return true; }catch{}
-    try{ el.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true, view:window })); return true; }catch{}
-    return false;
-  }
-
-  function triggerImportFromQuickBar(){
-    const input = $("importFile");
-    if(input){
-      try{ input.value = ""; }catch{}
-      try{
-        if(typeof input.showPicker === "function"){
-          input.showPicker();
-          return true;
-        }
-      }catch{}
-      try{
-        const oldPos = input.style.position;
-        const oldLeft = input.style.left;
-        const oldTop = input.style.top;
-        const oldOpacity = input.style.opacity;
-        const oldPointer = input.style.pointerEvents;
-        input.style.position = 'fixed';
-        input.style.left = '12px';
-        input.style.top = '12px';
-        input.style.opacity = '0.001';
-        input.style.pointerEvents = 'auto';
-        input.click();
-        setTimeout(()=>{
-          try{ input.style.position = oldPos; }catch{}
-          try{ input.style.left = oldLeft; }catch{}
-          try{ input.style.top = oldTop; }catch{}
-          try{ input.style.opacity = oldOpacity; }catch{}
-          try{ input.style.pointerEvents = oldPointer; }catch{}
-        }, 250);
-        return true;
-      }catch{}
-    }
-    if(__quickProxyClick('importBtn')) return true;
-    try{ openImportPicker(); return true; }catch{}
-    return false;
-  }
-
-  function runQuickAction(act, srcBtn=null){
-    if(srcBtn) quickBarPressGlow(srcBtn);
-
-    if(act === "new"){
-      updateQuickDockState('none');
-      if(__quickProxyClick('newBtn')){
-        try{ scrollEditorIntoView({ focus:true }); }catch{}
-        return true;
-      }
-      try{ return guardedAction(()=>{ clearForm(); scrollEditorIntoView({ focus:true }); }); }catch{}
-      return false;
-    }
-    if(act === "save"){
-      updateQuickDockState('none');
-      if(__quickProxyClick('saveBtn')) return true;
-      try{ handleSave(); return true; }catch{}
-      return false;
-    }
+  function runQuickAction(act){
+    if(act === "new") return guardedAction(()=>{ clearForm(); scrollEditorIntoView({ focus:true }); });
+    if(act === "save") return handleSave();
     if(act === "search"){
-      updateQuickDockState('none');
       const s = $("search");
       if(s){
         try{ s.focus(); }catch{}
-        try{ s.scrollIntoView({behavior: prefersReducedMotion() ? "auto" : "smooth", block:"center"}); }catch{}
-        return true;
+        try{ s.scrollIntoView({behavior:"smooth", block:"center"}); }catch{}
       }
-      return false;
+      return;
     }
-    if(act === "import"){
-      updateQuickDockState('none');
-      const ok = triggerImportFromQuickBar();
-      if(!ok) toast("Import could not be opened");
-      return ok;
-    }
-    if(act === "export"){
-      updateQuickDockState('none');
-      if(__quickProxyClick('exportBtn')) return true;
-      try{ exportJSON(); return true; }catch{}
-      return false;
-    }
-    if(act === "map"){
-      updateQuickDockState('map');
-      try{
-        const id = resolveQuickActionTargetId();
-        if(id){
-          selectedId = id;
-          focusEntryOnMap(id);
-          return true;
-        }
-      }catch{}
-      if(__quickProxyClick('tabMap')) return true;
-      try{ showMapView(); return true; }catch{}
-      return false;
-    }
-    if(act === "card"){
-      updateQuickDockState('card');
-      try{
-        const id = resolveQuickActionTargetId();
-        if(id){
-          selectedId = id;
-          openProfileAndScrollTop(id);
-          return true;
-        }
-      }catch{}
-      if(__quickProxyClick('tabCard')) return true;
-      try{ showProfileView(); }catch{}
-      try{ $("profileView")?.scrollTo?.({ top:0, behavior: prefersReducedMotion() ? "auto" : "smooth" }); }catch{}
-      try{ $("profileView").scrollTop = 0; }catch{}
-      return true;
-    }
-    return false;
+    if(act === "import") return openImportPicker();
+    if(act === "export") return exportJSON();
+    if(act === "map") return showMapForCurrentSelection();
+    if(act === "card") return openCurrentCardAtTop();
   }
 
-  function bindMobileQuickBar(){
-    const root = document.getElementById("mobileQuickBar");
-    if(!root || root.__boundQuickBar) return;
-    root.__boundQuickBar = true;
-
-    root.querySelectorAll('button[data-mqa]').forEach((btn)=>{
-      const act = btn.getAttribute('data-mqa') || '';
-
-      btn.addEventListener('pointerdown', ()=>{
-        quickBarPressGlow(btn, { hold: 640 });
-      }, { passive:true });
-
-      btn.addEventListener('click', (ev)=>{
-        try{ ev.preventDefault(); ev.stopPropagation(); }catch{}
-        runQuickAction(act, btn);
-      });
+  (function initMobileQuickBar(){
+    if(document.__mobileQuickBound) return;
+    document.__mobileQuickBound = true;
+    document.addEventListener("click", (ev)=>{
+      const btn = ev.target.closest("#mobileQuickBar button[data-mqa]");
+      if(!btn) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      runQuickAction(btn.getAttribute("data-mqa"));
     });
-  }
-
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', bindMobileQuickBar, { once:true });
-  }else{
-    bindMobileQuickBar();
-  }
-
-  window.__soQuickPress = function(btn){
-    try{ quickBarPressGlow(btn, { hold: 980 }); }catch{}
-    return true;
-  };
-
-  window.__soQuickRun = function(ev, act, btn){
-    try{ ev?.preventDefault?.(); }catch{}
-    try{ ev?.stopPropagation?.(); }catch{}
-    try{
-      return runQuickAction(String(act || ''), btn || null);
-    }catch(err){
-      try{ console.error('Quick action failed:', act, err); }catch{}
-      try{ toast('Quick action failed'); }catch{}
-      return false;
-    }
-  };
-
-  window.__soQuickAction = function(act, btn){
-    try{
-      return runQuickAction(String(act || ''), btn || null);
-    }catch(err){
-      try{ console.error('Quick action failed:', act, err); }catch{}
-      try{ toast('Quick action failed'); }catch{}
-      return false;
-    }
-  };
-
-  document.addEventListener('click', (ev)=>{
-    const btn = ev.target && ev.target.closest ? ev.target.closest('#mobileQuickBar button[data-mqa]') : null;
-    if(!btn) return;
-    try{ ev.preventDefault(); ev.stopPropagation(); }catch{}
-    const act = btn.getAttribute('data-mqa') || '';
-    window.__soQuickRun(ev, act, btn);
-  }, true);
+  })();
 
 
 
@@ -10924,8 +10743,7 @@ function mountDistanceButtonIntoMap(attempt=0){
     const root = document.getElementById('mobileQuickBar');
     if(!root) return;
     root.querySelectorAll('button[data-view]').forEach(btn=>{
-      const view = btn.getAttribute('data-view') || '';
-      const on = !!which && which !== 'none' && view === which;
+      const on = btn.getAttribute('data-view') === which;
       btn.classList.toggle('isActive', on);
       btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
@@ -11250,10 +11068,110 @@ function mountDistanceButtonIntoMap(attempt=0){
     clearMapFocus({ zoomOut:true });
   });
 
+  document.addEventListener('click', (ev)=>{
+    const btn = ev.target.closest('#mobileQuickBar button[data-view]');
+    if(!btn) return;
+    updateQuickDockState(btn.getAttribute('data-view'));
+  });
+
   try{ updateQuickDockState('map'); }catch{}
   try{ updateMapFocusResetControl(); }catch{}
 
 try{ syncOverlayLock(); }catch{}
+
+
+  // ==============================
+  // Bottom quick bar proxy actions
+  // ==============================
+  function __soProxyClick(el){
+    if(!el) return false;
+    try{ el.focus && el.focus({ preventScroll:true }); }catch{}
+    try{ el.click(); return true; }catch{}
+    try{ el.dispatchEvent(new MouseEvent("click", { bubbles:true, cancelable:true, view:window })); return true; }catch{}
+    return false;
+  }
+
+  window.__soQuickProxyAction = function(act, btn){
+    const action = String(act || "").toLowerCase();
+
+    if(action === "new"){
+      const ok = __soProxyClick($("newBtn"));
+      try{ if(typeof scrollEditorIntoView === "function") scrollEditorIntoView({ focus:true }); }catch{}
+      return ok;
+    }
+
+    if(action === "save"){
+      return __soProxyClick($("saveBtn"));
+    }
+
+    if(action === "search"){
+      const s = $("search");
+      if(!s) return false;
+      try{ s.scrollIntoView({ behavior: (typeof prefersReducedMotion === "function" && prefersReducedMotion()) ? "auto" : "smooth", block:"center" }); }catch{}
+      try{ s.focus(); }catch{}
+      try{ s.select && s.select(); }catch{}
+      return true;
+    }
+
+    if(action === "import"){
+      const input = $("importFile");
+      if(input){
+        try{ input.value = ""; }catch{}
+        try{
+          if(typeof input.showPicker === "function"){
+            input.showPicker();
+            return true;
+          }
+        }catch{}
+        try{
+          input.click();
+          return true;
+        }catch{}
+      }
+      return __soProxyClick($("importBtn"));
+    }
+
+    if(action === "export"){
+      return __soProxyClick($("exportBtn"));
+    }
+
+    if(action === "map"){
+      const ok = __soProxyClick($("tabMap"));
+      try{
+        if(selectedId && typeof showMapForCurrentSelection === "function"){
+          showMapForCurrentSelection();
+        }
+      }catch{}
+      return ok;
+    }
+
+    if(action === "card"){
+      const ok = __soProxyClick($("tabCard"));
+      try{
+        const pv = $("profileView");
+        if(pv){
+          pv.scrollTop = 0;
+          pv.scrollTo && pv.scrollTo({ top:0, behavior: (typeof prefersReducedMotion === "function" && prefersReducedMotion()) ? "auto" : "smooth" });
+        }
+      }catch{}
+      return ok;
+    }
+
+    return false;
+  };
+
+  document.addEventListener("DOMContentLoaded", ()=>{
+    document.querySelectorAll(".mobileQuickBar .quickActionBtn[data-mqa]").forEach((btn)=>{
+      btn.addEventListener("click", (ev)=>{
+        const act = btn.dataset.mqa || "";
+        try{ ev.preventDefault(); }catch{}
+        try{ ev.stopPropagation(); }catch{}
+        try{ window.__soQuickPress && window.__soQuickPress(btn); }catch{}
+        try{ window.__soQuickProxyAction && window.__soQuickProxyAction(act, btn); }catch(e){ try{ console.error(e); }catch{} }
+      }, { capture:true });
+    });
+  });
+
 
 </script>
 
