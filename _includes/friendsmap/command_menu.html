@@ -48,113 +48,38 @@
 
 <script>
 (function(){
-  function byId(id){ return document.getElementById(id); }
-  function safeClick(id){
-    const el = byId(id);
-    if(!el) return false;
-    try{ el.click(); return true; }catch(e){}
-    try{ el.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true, view:window })); return true; }catch(e){}
-    return false;
-  }
-  function smoothBlock(el, block){
-    try{ el?.scrollIntoView({ behavior: (window.prefersReducedMotion && window.prefersReducedMotion()) ? 'auto' : 'smooth', block: block || 'center' }); }catch(e){}
-  }
   function glow(btn){
     if(!btn) return;
-    try{ btn.classList.remove('isPressed','isGlow'); void btn.offsetWidth; btn.classList.add('isPressed','isGlow'); }catch(e){}
+    try{
+      btn.classList.remove('isPressed','isGlow');
+      void btn.offsetWidth;
+      btn.classList.add('isPressed','isGlow');
+    }catch(e){}
     clearTimeout(btn.__qg);
-    btn.__qg = setTimeout(function(){ try{ btn.classList.remove('isPressed','isGlow'); }catch(e){} }, 900);
+    btn.__qg = setTimeout(function(){
+      try{ btn.classList.remove('isPressed','isGlow'); }catch(e){}
+    }, 950);
   }
-  function currentId(){
-    try{
-      const li = document.querySelector('#list .item.selected[data-id]');
-      if(li && li.dataset && li.dataset.id) return li.dataset.id;
-    }catch(e){}
-    try{
-      const pv = byId('profileView');
-      if(pv && pv.dataset && pv.dataset.id) return pv.dataset.id;
-    }catch(e){}
-    return '';
-  }
-  window.__soQuickPress = function(btn){ glow(btn); return true; };
+
+  window.__soQuickPress = function(btn){
+    glow(btn);
+    return true;
+  };
+
   window.__soQuickDirectRun = function(ev, act, btn){
     try{ ev && ev.preventDefault && ev.preventDefault(); }catch(e){}
     try{ ev && ev.stopPropagation && ev.stopPropagation(); }catch(e){}
     glow(btn);
-
-    if(act === 'new'){
-      if(typeof window.guardedAction === 'function' && typeof window.clearForm === 'function'){
-        try{ window.guardedAction(function(){ window.clearForm(); if(typeof window.scrollEditorIntoView === 'function') window.scrollEditorIntoView({ focus:true }); }); return false; }catch(e){}
+    try{
+      if(typeof window.__soQuickProxyAction === 'function'){
+        window.__soQuickProxyAction(act, btn);
       }
-      safeClick('newBtn');
-      if(typeof window.scrollEditorIntoView === 'function') try{ window.scrollEditorIntoView({ focus:true }); }catch(e){}
-      return false;
+    }catch(e){
+      try{ console.error('Quick action failed:', act, e); }catch(_){}
     }
-
-    if(act === 'save'){
-      if(typeof window.handleSave === 'function'){
-        try{ window.handleSave(); return false; }catch(e){}
-      }
-      safeClick('saveBtn');
-      return false;
-    }
-
-    if(act === 'search'){
-      const s = byId('search');
-      if(s){
-        smoothBlock(s, 'center');
-        try{ s.focus(); }catch(e){}
-        try{ s.select && s.select(); }catch(e){}
-      }
-      return false;
-    }
-
-    if(act === 'import'){
-      const input = byId('importFile');
-      if(input){
-        try{ input.value = ''; }catch(e){}
-        if(typeof input.showPicker === 'function'){
-          try{ input.showPicker(); return false; }catch(e){}
-        }
-        try{ input.click(); return false; }catch(e){}
-      }
-      safeClick('importBtn');
-      return false;
-    }
-
-    if(act === 'export'){
-      if(typeof window.exportJSON === 'function'){
-        try{ window.exportJSON(); return false; }catch(e){}
-      }
-      safeClick('exportBtn');
-      return false;
-    }
-
-    if(act === 'map'){
-      const id = currentId();
-      if(id && typeof window.focusEntryOnMap === 'function'){
-        try{ window.focusEntryOnMap(id); return false; }catch(e){}
-      }
-      safeClick('tabMap');
-      if(typeof window.showMapView === 'function') try{ window.showMapView(); }catch(e){}
-      return false;
-    }
-
-    if(act === 'card'){
-      const id = currentId();
-      if(id && typeof window.openProfileAndScrollTop === 'function'){
-        try{ window.openProfileAndScrollTop(id); return false; }catch(e){}
-      }
-      safeClick('tabCard');
-      if(typeof window.showProfileView === 'function') try{ window.showProfileView(); }catch(e){}
-      const pv = byId('profileView');
-      try{ pv && pv.scrollTo && pv.scrollTo({ top:0, behavior: (window.prefersReducedMotion && window.prefersReducedMotion()) ? 'auto' : 'smooth' }); }catch(e){}
-      try{ if(pv) pv.scrollTop = 0; }catch(e){}
-      return false;
-    }
-
     return false;
   };
+
   window.__soQuickRun = window.__soQuickDirectRun;
 })();
 </script>
