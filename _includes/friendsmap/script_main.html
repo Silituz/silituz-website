@@ -10263,13 +10263,58 @@ try{
 }catch{}
 
 
-// Wire the button
-document.addEventListener("DOMContentLoaded", ()=>{
+// Mount the distance tool into Leaflet (bottom-left) and wire the button
+let __distanceControlMounted = false;
+function mountDistanceControl(){
+  if(__distanceControlMounted || !window.L || !map) return;
   const btn = document.getElementById("distanceFloatingBtn");
-  if(btn){
+  const hint = document.getElementById("distanceHint");
+  if(!btn) return;
+
+  const ctrl = L.control({ position: "bottomleft" });
+  ctrl.onAdd = function(){
+    const wrap = L.DomUtil.create("div", "leaflet-control leaflet-control-distance");
+    try{ L.DomEvent.disableClickPropagation(wrap); L.DomEvent.disableScrollPropagation(wrap); }catch{}
+    wrap.appendChild(btn);
+    if(hint) wrap.appendChild(hint);
+    return wrap;
+  };
+  ctrl.addTo(map);
+  __distanceControlMounted = true;
+
+  if(!btn.dataset.distanceBound){
     btn.addEventListener("click", (ev)=>{ ev.preventDefault(); ev.stopPropagation(); distToggle(); });
+    btn.dataset.distanceBound = "1";
   }
+}
+
+function syncModalMapLock(){
+  const app = document.getElementById("soApp");
+  if(!app) return;
+  const selectors = [
+    ".unsavedModal.open",
+    ".timeCompareModal.open",
+    ".imgModal.show",
+    ".netModal.show",
+    ".cmdk.open",
+    ".ctxMenu[style*='display: block']"
+  ];
+  const locked = selectors.some(sel => document.querySelector(sel));
+  app.classList.toggle("modalLock", locked);
+  if(locked){
+    try{ map.closePopup(); }catch{}
+  }
+}
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  mountDistanceControl();
+  syncModalMapLock();
+  const mo = new MutationObserver(()=> syncModalMapLock());
+  mo.observe(document.body, { attributes:true, subtree:true, attributeFilter:["class", "style"] });
 });
+
+setTimeout(mountDistanceControl, 0);
+setTimeout(syncModalMapLock, 0);
 
 
   // ==============================
@@ -10400,47 +10445,5 @@ document.addEventListener("DOMContentLoaded", ()=>{
     return out;
   }
 
-
-
-(function(){
-  const app = document.getElementById('soApp');
-  if(!app) return;
-
-  const watchIds = [
-    'cmdk',
-    'imgModal',
-    'netModal',
-    'unsavedModal',
-    'timeCompareModal',
-    'weatherAlertsModal',
-    'ctxMenu'
-  ];
-
-  function isOverlayOpen(el){
-    if(!el) return false;
-    const cls = String(el.className || '');
-    if(cls.includes('open') || cls.includes('show')) return true;
-    if(el.getAttribute && el.getAttribute('aria-hidden') === 'false') return true;
-    return false;
-  }
-
-  function syncOverlayState(){
-    const active = watchIds.some((id)=> isOverlayOpen(document.getElementById(id)));
-    app.classList.toggle('soOverlayActive', active);
-    if(active){
-      try{ if(typeof map !== 'undefined' && map && map.closePopup) map.closePopup(); }catch{}
-    }
-  }
-
-  const mo = new MutationObserver(syncOverlayState);
-  watchIds.forEach((id)=>{
-    const el = document.getElementById(id);
-    if(el){
-      mo.observe(el, { attributes:true, attributeFilter:['class','aria-hidden','style'] });
-    }
-  });
-
-  syncOverlayState();
-})();
 
 </script>
