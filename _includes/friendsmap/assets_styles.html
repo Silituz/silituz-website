@@ -1972,54 +1972,47 @@
 }
 
 
-/* === Distance tool inside map (left) === */
-#soApp #mapView{
-  position: relative;
-  isolation: isolate;
+/* === Floating Distance Tool Button (always visible) === */
+#soApp #distanceFloatingBtn{
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 9999;
+  background: rgba(20,24,35,.95);
+  color: rgba(230,120,120,.95);
+  border: 1px solid rgba(220,90,90,.6);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
 }
-#soApp .mapOverlayTools{
-  position: absolute;
-  left: 12px;
-  top: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  z-index: 1200;
-  pointer-events: none;
+#soApp #distanceFloatingBtn.active{
+  background: rgba(220,90,90,.18);
+  box-shadow: 0 0 16px rgba(220,90,90,.45);
 }
-#soApp .mapOverlayTools > *{
-  pointer-events: auto;
-}
+
+
+/* === Distance Tool (armed) === */
 #soApp #distanceFloatingBtn{
   display:flex;
   align-items:center;
   justify-content:center;
   gap:8px;
   width:42px;
-  height:42px;
+  height: var(--special-band-height);
   padding:0 !important;
-  position: relative;
-  left: auto;
-  bottom: auto;
-  z-index: auto;
-  background: rgba(20,24,35,.95);
-  color: rgba(230,120,120,.95);
-  border: 1px solid rgba(220,90,90,.6);
-  border-radius: 12px;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(0,0,0,.35);
 }
 #soApp #distanceFloatingBtn.active{
   background: rgba(220,90,90,.18) !important;
   box-shadow: 0 0 16px rgba(220,90,90,.45) !important;
 }
+
 #soApp #distanceHint{
-  position: static;
-  left: auto;
-  bottom: auto;
-  z-index: auto;
+  position: fixed;
+  left: 66px;
+  bottom: 16px;
+  z-index: 9999;
   max-width: 320px;
   padding: 7px 10px;
   border-radius: 12px;
@@ -5531,29 +5524,105 @@
   }
 }
 
-/* --- Keep map below dialogs / popups / sheets --- */
-#soApp #mapView{ z-index: 1; }
-#soApp #profileView,
-#soApp #calendarView{
-  position: relative;
-  z-index: 3;
-}
-#soApp .cmdk,
-#soApp .imgModal,
-#soApp .netModal,
-#soApp .unsavedModal,
-#soApp .timeCompareModal,
-#soApp .ctxMenu{
-  z-index: 12000 !important;
-}
-#soApp.soOverlayActive .leaflet-pane,
-#soApp.soOverlayActive .leaflet-control-container,
-#soApp.soOverlayActive #distanceFloatingBtn,
-#soApp.soOverlayActive #distanceHint{
-  pointer-events: none !important;
-}
-#soApp.soOverlayActive .mapOverlayTools{
-  opacity: 0.18;
+</style>
+
+
+
+/* === Distance tool: keep hidden until mounted into Leaflet, show bottom-left with glass look === */
+#soApp > #distanceFloatingBtn,
+#soApp > #distanceHint{
+  display:none !important;
 }
 
-</style>
+#soApp #mapView{
+  position:relative;
+}
+
+#soApp .leaflet-control-container .leaflet-bottom.leaflet-left{
+  z-index: 720;
+}
+
+#soApp .leaflet-control-distance{
+  position: relative;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin: 0 0 12px 12px !important;
+  padding: 6px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(16,22,34,.46), rgba(10,14,24,.30)) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.18);
+  backdrop-filter: blur(16px) saturate(1.18);
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.30),
+    0 0 0 1px rgba(255,255,255,.05) inset;
+}
+
+#soApp .leaflet-control-distance #distanceFloatingBtn{
+  display:flex !important;
+  position: static !important;
+  left:auto !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:auto !important;
+  z-index:auto !important;
+  width:38px !important;
+  height:38px !important;
+  margin:0 !important;
+  padding:0 !important;
+  border-radius:12px !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04)) !important;
+  color: rgba(255,200,200,.98) !important;
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.22),
+    0 0 0 1px rgba(255,255,255,.03) inset !important;
+}
+
+#soApp .leaflet-control-distance #distanceFloatingBtn:hover{
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06)) !important;
+}
+
+#soApp .leaflet-control-distance #distanceFloatingBtn.active{
+  background: linear-gradient(180deg, rgba(220,90,90,.24), rgba(220,90,90,.12)) !important;
+  border-color: rgba(255,140,140,.34) !important;
+  box-shadow:
+    0 0 18px rgba(220,90,90,.22),
+    0 8px 20px rgba(0,0,0,.26) !important;
+}
+
+#soApp .leaflet-control-distance #distanceHint{
+  display:none;
+  position:absolute !important;
+  left: 52px !important;
+  right:auto !important;
+  bottom: 0 !important;
+  top:auto !important;
+  z-index: 721 !important;
+  max-width: min(280px, calc(100vw - 110px));
+  padding: 8px 10px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  background: linear-gradient(180deg, rgba(16,22,34,.72), rgba(10,14,24,.54)) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.18);
+  backdrop-filter: blur(16px) saturate(1.18);
+  color: rgba(255,235,235,.96) !important;
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.32),
+    0 0 0 1px rgba(255,255,255,.05) inset !important;
+}
+
+@media (max-width: 680px){
+  #soApp .leaflet-control-distance{
+    margin: 0 0 10px 10px !important;
+    padding: 5px;
+  }
+  #soApp .leaflet-control-distance #distanceHint{
+    left: 46px !important;
+    max-width: min(220px, calc(100vw - 90px));
+    font-size: 11px;
+  }
+}
+
