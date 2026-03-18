@@ -86,7 +86,7 @@
       width:100%;
       padding:10px 10px;
       border-radius: 12px;
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.08);
       background: rgba(10,14,24,.65);
       color: var(--text);
       outline:none;
@@ -658,7 +658,7 @@
       padding:6px 10px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
+      background: rgba(255,255,255,.035);
       font-size:12px;
       color: rgba(255,255,255,.84);
       cursor:pointer;
@@ -929,7 +929,7 @@
       padding:0;
       line-height:1;
     }
-    #soApp .starInline:hover{ background: rgba(255,255,255,.08); }
+    #soApp .starInline:hover{ background: rgba(255,255,255,.055); }
     #soApp .starInline.on{
       background: rgba(255,215,0,.12);
       border-color: rgba(255,215,0,.28);
@@ -4387,7 +4387,7 @@
   transition: background 140ms ease, color 140ms ease;
 }
 #soApp #profileView .weatherUnitToggle .wUnitBtn:hover{
-  background: rgba(255,255,255,.08);
+  background: rgba(255,255,255,.055);
   color: var(--text);
 }
 #soApp #profileView .weatherUnitToggle .wUnitBtn.active{
@@ -4412,7 +4412,7 @@
   padding:6px 8px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.05);
+  background: rgba(255,255,255,.035);
 }
 #soApp #profileView .wdLeft{
   display:flex;
@@ -4502,7 +4502,7 @@
   padding:8px 9px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.05);
+  background: rgba(255,255,255,.035);
 }
 #soApp #profileView .weatherHourTime{
   font-size:12px;
@@ -5073,7 +5073,7 @@
   border-radius: 16px;
   border:1px solid rgba(255,255,255,.14);
   background: rgba(8,12,20,.92);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(22px) saturate(1.15);
   box-shadow: 0 30px 90px rgba(0,0,0,.65);
   overflow:hidden;
 }
@@ -5475,7 +5475,7 @@
 #soApp .socialPreviewChip{
   display:inline-flex; align-items:center; gap:7px;
   padding:7px 10px; border-radius:999px;
-  background: rgba(255,255,255,.05);
+  background: rgba(255,255,255,.035);
   border:1px solid rgba(255,255,255,.10);
   color:var(--muted); font-size:12px;
 }
@@ -5622,7 +5622,7 @@
   padding:6px 10px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.05);
+  background: rgba(255,255,255,.035);
   font-size:12px;
 }
 #soApp .netLegendTag.danger{
@@ -5653,9 +5653,9 @@
   padding:8px;
   border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
-  background: rgba(8,12,20,.90);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 18px 48px rgba(0,0,0,.40);
+  background: linear-gradient(180deg, rgba(15,22,32,.30), rgba(10,14,24,.18));
+  backdrop-filter: blur(22px) saturate(1.15);
+  box-shadow: 0 14px 36px rgba(0,0,0,.22);
   overflow-x:auto;
 }
 #soApp .mobileQuickBar button{
@@ -5722,6 +5722,10 @@
   width:min(760px, calc(100vw - 20px));
   justify-content:center;
   overflow-x:auto;
+  background: linear-gradient(180deg, rgba(20,28,40,.24), rgba(10,16,28,.14));
+  border-color: rgba(255,255,255,.07);
+  box-shadow: 0 14px 34px rgba(0,0,0,.18);
+  backdrop-filter: blur(24px) saturate(1.18);
 }
 #soApp .mobileQuickBar button{
   min-width:70px;
