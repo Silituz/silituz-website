@@ -1,0 +1,5559 @@
+<!-- Social Organizer (scoped include) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<style>
+
+
+
+
+
+
+
+#soApp{--special-band-height: var(--special-band-height);}
+
+    #soApp{
+      --bg:#0b0f1a;
+      --text:#e9eefc;
+      --muted:#a9b4d0;
+      --accent:#7aa7ff;
+      --danger:#ff6b6b;
+      --emerald:#10b981;
+      --line:rgba(255,255,255,.08);
+      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    #soApp *{box-sizing:border-box}
+    #soApp, #soApp{height:100%}
+    #soApp{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: radial-gradient(1200px 600px at 15% 10%, rgba(122,167,255,.18), transparent 55%),
+                  radial-gradient(900px 500px at 80% 20%, rgba(125,255,178,.12), transparent 55%),
+                  linear-gradient(180deg, #070a12, #0b0f1a 40%, #070a12);
+      color:var(--text);
+    }
+    #soApp header{
+      padding:18px 18px 10px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    #soApp .brand{display:flex; align-items:center; gap:10px; user-select:none;}
+    #soApp .dot{
+      width:14px;height: var(--special-band-height);border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,.2) 32%, transparent 60%),
+                  linear-gradient(135deg, rgba(122,167,255,1), rgba(125,255,178,1));
+      box-shadow: 0 0 20px rgba(122,167,255,.35);
+    }
+    #soApp h1{font-size:16px; margin:0; letter-spacing:.2px; color: rgb(16, 185, 129)}
+    #soApp .sub{font-size:12px;color:var(--muted); margin-top:2px}
+
+    #soApp .wrap{
+      display:grid;
+      grid-template-columns: 480px 1fr;
+      gap:14px;
+      padding:0 18px 18px;
+      height: calc(100% - 64px);
+    }
+    @media (max-width: 980px){
+      #soApp .wrap{grid-template-columns:1fr; height:auto}
+      #soApp #map{height:55vh}
+    }
+
+    #soApp .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    #soApp .panel{
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    #soApp .row{display:flex; gap:10px}
+    #soApp .row > *{flex:1}
+
+    #soApp label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px;}
+    #soApp input, #soApp textarea, #soApp select{
+      width:100%;
+      padding:10px 10px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(10,14,24,.65);
+      color: var(--text);
+      outline:none;
+    }
+    #soApp textarea{min-height: var(--special-band-height); resize: vertical}
+    #soApp .hint{font-size:12px; color: var(--muted); line-height:1.35;}
+
+    #soApp .zodiacBox{
+      margin-top:8px;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    #soApp .zodiacLink{
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(122,167,255,.45);
+    }
+    #soApp .zodiacLink:hover{ text-decoration: underline; }
+    #soApp .zodiacItem{
+      font-size:12px;
+      color: var(--muted);
+      white-space:nowrap;
+    }
+    #soApp .zodiacItem b{color:var(--text)}
+
+    #soApp .btns{display:flex; gap:10px; flex-wrap:wrap}
+    #soApp button, #soApp .btnLike{
+      border:none;
+      border-radius: 999px;
+      padding:10px 14px;
+      background: rgba(122,167,255,.16);
+      color: var(--text);
+      cursor:pointer;
+      transition: .15s ease;
+      border:1px solid rgba(122,167,255,.28);
+    }
+    #soApp .btnLike{
+      user-select:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    #soApp button:hover, #soApp .btnLike:hover{transform: translateY(-1px); background: rgba(122,167,255,.24)}
+    #soApp button.secondary, #soApp .btnLike.secondary{background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10)}
+    #soApp button.danger, #soApp .btnLike.danger{background: rgba(255,107,107,.16); border-color: rgba(255,107,107,.28)}
+    #soApp button:disabled{opacity:.5; cursor:not-allowed; transform:none}
+
+    /* Hidden file input (keep in DOM; Safari/embedded pages can block click when display:none) */
+    #soApp .soHiddenFile{
+      position: fixed;
+      left: -9999px;
+      top: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    #soApp .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:12px;
+      color: var(--muted);
+      white-space:nowrap;
+    }
+
+    #soApp .hr{height: var(--special-band-height); background: var(--line); margin: 2px 0}
+
+    /* Alphabet bar */
+    #soApp .alphaBar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      padding:10px 14px;
+      border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      background: rgba(0,0,0,.05);
+    }
+    #soApp .alphaBar .aBtn{
+      padding:6px 9px;
+      font-size:12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+    }
+    #soApp .alphaBar .aBtn:hover{transform:none; background: rgba(255,255,255,.10)}
+    #soApp .alphaBar .aBtn:disabled{opacity:.35; cursor:not-allowed}
+
+    /* List */
+    #soApp .list{
+      padding:0;
+      margin:0;
+      list-style:none;
+      max-height: 34vh;
+      overflow:auto;
+    }
+    #soApp .item{
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      background: rgba(0,0,0,.05);
+    }
+    #soApp .item:hover{background: rgba(0,0,0,.12)}
+    #soApp .item.selected{outline: 1px solid rgba(122,167,255,.35); outline-offset:-1px}
+
+    #soApp .meta{min-width:0}
+    #soApp .nick{font-weight:700; font-size:14px; display:flex; gap:6px; align-items:flex-start;}
+    #soApp .nameBlock{min-width:0; display:flex; flex-direction:column; line-height:1.1; flex:1;}
+    #soApp .nameMain{color: var(--emerald) !important; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:.15px;}
+    #soApp .nameSub{color: var(--muted) !important; font-weight:600; font-size:12px; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:.95;}
+
+    /* Name line: keep icons right after the name (not pushed to the far right) */
+    #soApp .nameLine{ display:flex; align-items:center; gap:6px; min-width:0; }
+    #soApp .nameText{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    #soApp .nameIcons{ display:inline-flex; align-items:center; gap:6px; flex:0 0 auto; }
+
+    #soApp .listHeart{
+      display:inline-flex;
+      width: 18px;
+      justify-content:center;
+      margin-right: 0;
+      font-size: 14px;
+      line-height: 1;
+      transform: translateY(1px);
+      filter: drop-shadow(0 0 1px rgba(0,0,0,.35));
+      flex: 0 0 auto;
+    }
+    #soApp .starInline, #soApp .diamondInline{ margin-left:0 !important; }
+    #soApp .profileTitle .pheart{ margin-right:6px; }
+
+    #soApp .tiny{font-size:12px; color:var(--muted); margin-top:3px}
+
+    #soApp .actions{display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
+
+    #soApp .iconBtn{
+      padding:8px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color: var(--text);
+      cursor:pointer;
+    }
+    #soApp .iconBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
+
+    #soApp .avatar{
+      width:34px;
+      height: var(--special-band-height);
+      border-radius: 10px;
+      object-fit: cover;
+      border:1px solid rgba(255,255,255,.12);
+      cursor:pointer;
+    }
+    #soApp .avatarPh{
+      width:34px;
+      height: var(--special-band-height);
+      border-radius: 10px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: var(--muted);
+      font-size:14px;
+      user-select:none;
+    }
+
+    /* Map & right panel */
+    #soApp #map{height:100%; min-height: 420px}
+
+    #soApp .rightView{height:100%}
+    #soApp #mapView{height:100%}
+
+    #soApp #profileView{
+      height:100%;
+      display:none;
+      overflow:auto;
+    }
+    #soApp .profileHead{
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      background: rgba(8,12,20,.82);
+      backdrop-filter: blur(10px);
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    #soApp .profileTitle{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    #soApp .profileTitle b{
+      font-size:14px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    #soApp .profileTitle span{font-size:12px; color:var(--muted)}
+    #soApp .profileBody{padding:14px; display:flex; flex-direction:column; gap:12px}
+    #soApp .profileGrid{display:grid; grid-template-columns: 1fr; gap:10px}
+
+    #soApp .profileCard{
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      background: rgba(0,0,0,.14);
+    }
+    #soApp .profileCard .k{font-size:12px; color:var(--muted); margin-bottom:4px}
+
+/* Visit Card: green section headers */
+#soApp #profileView .profileCard > .k{
+  color: var(--emerald) !important;
+  font-weight: 800;
+}
+
+/* Calendar: green section headers */
+#soApp #calendarView .profileCard > .k{
+  color: var(--emerald) !important;
+  font-weight: 800;
+}
+
+    #soApp .profileCard .v{font-size:13px; color:var(--text); white-space:pre-wrap; word-break:break-word}
+
+    #soApp .profileImg{
+      width:110px;
+      height: var(--special-band-height);
+      border-radius: 16px;
+      object-fit: cover;
+      border:1px solid rgba(255,255,255,.12);
+      cursor:pointer;
+    }
+    #soApp .profileTop{position: relative;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    #soApp .footer-tools{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      padding:10px 14px;
+      border-top:1px solid var(--line);
+      background: rgba(0,0,0,.06);
+    }
+
+    #soApp .toast{
+      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      background: rgba(18,26,43,.92);
+      border:1px solid rgba(255,255,255,.12);
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      opacity:0;
+      pointer-events:none;
+      transition: .18s ease;
+      z-index: 50;
+
+      display:flex;
+      align-items:center;
+      gap:10px;
+      max-width: min(92vw, 620px);
+    }
+    #soApp .toastMsg{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #soApp .toastAction{
+      border:1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      padding:6px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:12px;
+      line-height:1;
+    }
+    #soApp .toastAction:hover{ filter: brightness(1.08); }
+    #soApp .toastAction:active{ transform: translateY(1px) scale(0.99); }
+
+#soApp .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px)}
+
+    #soApp .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+      padding:2px 6px;
+      border-radius: 8px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+    }
+
+    /* Leaflet popup (match dark theme) */
+    #soApp .leaflet-popup-content-wrapper{
+      background: rgba(0,0,0,.52);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      /* wider but visually smaller */
+      max-width: min(680px, 94vw);
+    }
+    #soApp .leaflet-popup-content{
+      /* smaller padding + better use of width */
+      margin: 10px 12px;
+      min-width: 320px;
+      font-size: 12.5px;
+      line-height: 1.35;
+    }
+    @media (max-width: 420px){
+      #soApp .leaflet-popup-content{ min-width: 0; margin: 10px 10px; }
+    }
+    #soApp .leaflet-popup-tip{
+      background: rgba(0,0,0,.52);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    #soApp .leaflet-container a.leaflet-popup-close-button{
+      color: var(--muted);
+      width: 28px;
+      height: var(--special-band-height);
+      line-height: var(--special-band-height);
+      font-size: 18px;
+    }
+    #soApp .leaflet-container a.leaflet-popup-close-button:hover{
+      color: var(--text);
+      background: transparent;
+    }
+    #soApp .popup{
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    #soApp .popup .pnotes{ white-space: pre-line; }
+    #soApp .popup .pname{font-weight:800; font-size:13.5px; margin:0 0 6px; display:flex; align-items:flex-start; gap:6px}
+    #soApp .popup .pnameBlock{display:flex; flex-direction:column; min-width:0}
+    #soApp .popup .pMain{font-weight:800; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    #soApp .popup .pline{font-size:12px; margin:3px 0; color: var(--muted)}
+    #soApp .popup .ptime{font-weight:700; color: var(--text)}
+    #soApp .popup .thumbRow{display:flex; gap:10px; align-items:center; margin-top:8px}
+    #soApp .popup img.thumb{width:72px;height: var(--special-band-height);border-radius:12px;object-fit:cover;cursor:pointer;display:block; border:1px solid rgba(255,255,255,.12)}
+    #soApp .popup .thumbHint{font-size:12px; color: var(--muted); opacity:.9}
+
+    /* Compact map popup (minimal info) */
+    #soApp .popup-compact .pline{ margin: 4px 0; }
+    #soApp .popup-compact .pSub{ font-size: 12px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #soApp .popup-openCard{ padding: 8px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.12); color: var(--text); cursor: pointer; }
+    #soApp .popup-openCard:hover{ border-color: rgba(16,185,129,.25); box-shadow: 0 0 0 1px rgba(16,185,129,.10), 0 0 14px rgba(16,185,129,.10); }
+
+/* Preview in form */
+    #soApp .preview{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-top:6px;
+    }
+    #soApp .preview img{
+      width:48px;height: var(--special-band-height);border-radius:12px; object-fit:cover;
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    #soApp .toggleRow{
+      display:flex; align-items:center; gap:10px;
+      padding:8px 10px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:12px;
+      background: rgba(0,0,0,.10);
+      color: var(--muted);
+      font-size:12px;
+    }
+    #soApp .toggleRow input{width:auto; margin:0}
+
+
+    #soApp .miniToggle{
+      display:flex; align-items:center; gap:10px;
+      color: var(--muted);
+      font-size:12px;
+    }
+    #soApp .miniToggle input{ width:auto; margin:0; }
+
+    #soApp .realNameLine{
+      margin-top:4px;
+      font-size:12px;
+      color: var(--muted);
+      opacity:.95;
+    }
+    #soApp .realNameLine.locked{
+      filter: blur(6px);
+      opacity:.55;
+    }
+    #soApp .profileRealName{
+      margin-top:6px;
+      font-size:13px;
+      color: var(--muted);
+      opacity:.95;
+    }
+    #soApp .profileRealName.locked{
+      filter: blur(7px);
+      opacity:.55;
+    }
+
+    #soApp .connPills{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+    #soApp .connPill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.10);
+      font-size:12px;
+      color: rgba(255,255,255,.92);
+    }
+    #soApp .connPill .open{
+      cursor:pointer;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+    #soApp .connPill .xbtn{
+      border:0;
+      background:transparent;
+      color: rgba(255,255,255,.70);
+      cursor:pointer;
+      font-size:14px;
+      line-height:1;
+      padding:0;
+    }
+
+    /* Image modal */
+    #soApp .imgModal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      background: rgba(0,0,0,.58);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+    }
+    #soApp .imgModal.show{display:flex}
+    #soApp .imgModalInner{
+      position: relative;
+      z-index: 10000;
+      max-width: min(920px, 92vw);
+      max-height: 86vh;
+      background: rgba(18,26,43,.92);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    #soApp .imgModalInner img{
+      max-width: 100%;
+      max-height: 74vh;
+      border-radius: 14px;
+      display:block;
+      object-fit: contain;
+      background: rgba(0,0,0,.2);
+    }
+    #soApp .imgModalHint{
+      font-size:12px;
+      color: var(--muted);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+  
+
+    /* Network modal (graph view) */
+    #soApp .netModal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      background: rgba(0,0,0,.58);
+      backdrop-filter: blur(8px);
+      z-index: 9998;
+    }
+    #soApp .netModal.show{display:flex;}
+    #soApp .netModalInner{
+      width:min(1200px, 96vw);
+      max-height: 88vh;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: radial-gradient(900px 420px at 20% 10%, rgba(122,167,255,.14), transparent 60%),
+                  radial-gradient(800px 420px at 80% 0%, rgba(16,185,129,.10), transparent 60%),
+                  rgba(7,10,18,.88);
+      box-shadow: var(--shadow);
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    #soApp .netTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:4px 4px 2px;
+      flex-wrap:wrap;
+    }
+    #soApp .netTitle{
+      font-weight:800;
+      letter-spacing:.2px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    #soApp .netTitle .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      font-size:12px;
+      color: rgba(255,255,255,.86);
+    }
+    #soApp .netControls{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    #soApp .netControls input[type="text"]{
+      width: min(320px, 55vw);
+      padding:9px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline:none;
+    }
+    #soApp .netControls label{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin:0;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      font-size:12px;
+      color: rgba(255,255,255,.84);
+      cursor:pointer;
+      user-select:none;
+      white-space:nowrap;
+    }
+    #soApp .netControls label input{ accent-color: var(--emerald); }
+    #soApp .netCanvasWrap{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      background: rgba(0,0,0,.18);
+      overflow:auto;
+      padding:10px;
+      flex:1;
+      min-height: 260px;
+    }
+    #soApp #netSvg{
+      display:block;
+      width:100%;
+      height:auto;
+      min-width: 980px;
+    }
+    #soApp .netLegend{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      font-size:12px;
+      color: var(--muted);
+      padding:0 6px 2px;
+      flex-wrap:wrap;
+    }
+    #soApp .netLegend .k{opacity:.9}
+    #soApp .netLegend .kbd{
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.86);
+      font-size:11px;
+    }
+
+    /* SVG styling */
+    #soApp .netTierLabel{
+      fill: rgba(255,255,255,.56);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    #soApp .netTierLine{
+      stroke: rgba(255,255,255,.08);
+      stroke-width: 1;
+    }
+    #soApp .netEdge{
+      stroke: rgba(255,255,255,.14);
+      stroke-width: 1.25;
+      fill:none;
+      opacity: .9;
+    }
+    #soApp .netEdge.enemy{ stroke: rgba(255,107,107,.34); }
+    #soApp .netEdge.isDim{ opacity: .10; }
+    #soApp .netEdge.isHot{
+      stroke: rgba(122,167,255,.68);
+      stroke-width: 2.1;
+      opacity: .95;
+    }
+
+
+    /* Edge labels (relationship types) */
+    #soApp .netEdgeLabel{
+      fill: rgba(255,255,255,.74);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .10px;
+      paint-order: stroke;
+      stroke: rgba(0,0,0,.55);
+      stroke-width: 3;
+      opacity: .55;
+      pointer-events: none;
+      user-select: none;
+    }
+    #soApp .netEdgeLabel.enemy{
+      fill: rgba(255,171,171,.82);
+    }
+    #soApp .netEdgeLabel.isDim{ opacity: .06; }
+    #soApp .netEdgeLabel.isHot{ opacity: .96; }
+
+    /* Centered focus node */
+    #soApp .netNode.isCenter circle{
+      fill: rgba(16,185,129,.16);
+      stroke: rgba(16,185,129,.92);
+      stroke-width: 2.8;
+    }
+    #soApp .netNode.isCenter text.nm{
+      fill: rgba(233,238,252,.96);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    #soApp .netNode.isCenter text.ini{
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    /* Solar-system network additions */
+    #soApp .netOrbit{
+      fill:none;
+      stroke: rgba(255,255,255,.08);
+      stroke-width: 1;
+      stroke-dasharray: 6 10;
+      opacity: .9;
+    }
+    #soApp .netOrbit.underground{
+      stroke: rgba(255,107,107,.18);
+      stroke-dasharray: 4 12;
+    }
+    #soApp .netOrbitLabel{
+      fill: rgba(255,255,255,.46);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .18px;
+    }
+
+    #soApp .netYou circle{
+      fill: rgba(16,185,129,.10);
+      stroke: rgba(16,185,129,.55);
+      stroke-width: 2;
+    }
+    #soApp .netYou text{
+      fill: rgba(233,238,252,.95);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .35px;
+      pointer-events:none;
+    }
+
+    #soApp .netNode circle{
+      fill: rgba(255,255,255,.08);
+      stroke: rgba(255,255,255,.22);
+      stroke-width: 1.2;
+    }
+    #soApp .netNode.isUnderground circle{
+      stroke: rgba(255,107,107,.44);
+    }
+    #soApp .netNode text.ini{
+      font-size: 12px;
+      font-weight: 900;
+    }
+    #soApp .netNode text.nm{
+      fill: rgba(255,255,255,.72);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    #soApp .netNode.isFav circle{ stroke: rgba(255, 215, 0, .60); }
+    #soApp .netNode.isSpecial circle{ stroke: rgba(16,185,129,.76); }
+    #soApp .netNode.isHot circle{ stroke: rgba(122,167,255,.88); stroke-width: 2.1; }
+    #soApp .netNode.isFocus circle{ stroke: rgba(255,255,255,.92); stroke-width: 2.4; }
+
+
+    #soApp .netNode{ cursor:pointer; }
+    #soApp .netNode rect{
+      fill: rgba(255,255,255,.07);
+      stroke: rgba(255,255,255,.18);
+      stroke-width: 1;
+    }
+    #soApp .netNode text{
+      fill: rgba(233,238,252,.95);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .15px;
+      pointer-events:none;
+    }
+    #soApp .netNode .sub{
+      fill: rgba(255,255,255,.60);
+      font-size: 10px;
+      font-weight: 700;
+    }
+    #soApp .netNode.isFav rect{ stroke: rgba(255, 215, 0, .60); }
+    #soApp .netNode.isSpecial rect{ stroke: rgba(16,185,129,.72); }
+    #soApp .netNode.isDim{ opacity: .18; }
+    #soApp .netNode.isHot rect{ stroke: rgba(122,167,255,.78); }
+    #soApp .netNode.isFocus rect{ stroke: rgba(255,255,255,.88); stroke-width: 2; }
+
+    #soApp .heart{
+      font-size: 14px;
+      line-height: 1;
+      margin-right: 0px;
+    }
+    #soApp .searchBar{
+      padding:12px 12px 0;
+      border-top:1px solid rgba(255,255,255,.06);
+      background: rgba(0,0,0,.10);
+    }
+    #soApp .searchBar input{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.28);
+      color:var(--text);
+      font-size:13px;
+      outline:none;
+    }
+    
+    /* Filter chips (list) */
+    #soApp .filterBar{
+      padding:10px 12px 0;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      border-top:1px solid rgba(255,255,255,.06);
+      background: rgba(0,0,0,.10);
+    }
+    #soApp .fChip{
+      padding:7px 10px;
+      font-size:12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      cursor:pointer;
+      user-select:none;
+      transition: .12s ease;
+    }
+    #soApp .fChip:hover{ background: rgba(255,255,255,.10); }
+    #soApp .fChip.active{
+      color: var(--text);
+      border-color: rgba(122,167,255,.55);
+      background: rgba(122,167,255,.18);
+      box-shadow: 0 0 0 4px rgba(122,167,255,.12);
+    }
+    #soApp .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      font-size:12px;
+      color: var(--muted);
+      white-space:nowrap;
+      margin-left:8px;
+    }
+    #soApp .badge b{ color: var(--text); font-weight:700; }
+    #soApp .starBtn{
+      padding:8px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color: var(--text);
+      cursor:pointer;
+    }
+    #soApp .starBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
+    #soApp .starBtn.on{
+      background: rgba(255,215,0,.12);
+      border-color: rgba(255,215,0,.28);
+    }
+
+    #soApp .starInline{
+      margin-left:8px;
+      width:26px;
+      height: var(--special-band-height);
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.14);
+      color: var(--text);
+      cursor:pointer;
+      display:inline-grid;
+      place-items:center;
+      padding:0;
+      line-height:1;
+    }
+    #soApp .starInline:hover{ background: rgba(255,255,255,.08); }
+    #soApp .starInline.on{
+      background: rgba(255,215,0,.12);
+      border-color: rgba(255,215,0,.28);
+    }
+
+    #soApp .bdayCountdown{
+      margin-top:6px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    /* Emerald highlight for name + Local Time */
+    #soApp .nameMain, #soApp .popup .pMain, #soApp #profileName, #soApp .localLabel, #soApp .localTimeVal{
+      color: var(--emerald) !important;
+    }
+    #soApp .popup .pSub{ color: var(--muted) !important; font-weight:600; font-size:12px; margin-top:2px; opacity:.95; }
+    #soApp #profileName{ font-weight:800; }
+    #soApp .popup .pname{ margin:0 0 6px; }
+    #soApp .popup .pname .pheart{ margin-right:6px; }
+
+    /* Map legend (bottom-right) */
+    #soApp .mapLegend{
+      padding:8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.52);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      font-size:12px;
+      letter-spacing:.1px;
+      color: var(--text);
+      user-select:none;
+      display:inline-block;
+      line-height:1.25;
+    }
+    #soApp .mapLegend .legDot{
+      display:inline-block;
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      margin-right:6px;
+      vertical-align:-1px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.35), 0 0 10px rgba(0,0,0,.25);
+    }
+
+    #soApp .mapLegend .legHeart{
+      display:inline-flex;
+      width: 16px;
+      justify-content:center;
+      margin-right:6px;
+      font-size: 14px;
+      line-height: 1;
+      vertical-align: -1px;
+      filter: drop-shadow(0 0 1px rgba(0,0,0,.35)) drop-shadow(0 0 8px rgba(0,0,0,.25));
+    }
+    #soApp .mapLegend .lg{ background:#10b981; }
+    #soApp .mapLegend .ly{ background:#fbbf24; }
+    #soApp .mapLegend .lr{ background:#ff6b6b; }
+    #soApp .mapLegend .sep{ margin:0 8px; opacity:.78; }
+    #soApp .mapLegend .legMoon{ margin-left:2px; }
+
+
+    /* =============================
+       MOBILE FORM WIDTH FIX
+       Ziel:
+       - Nickname Feld auf Mobile deutlich breiter
+       - Birthdate Feld etwas schmaler
+       - NUR mobile, Desktop bleibt unverändert
+       ============================= */
+    @media (max-width: 480px) {
+      /* erste Zeile: Nickname + Birthdate */
+      #soApp .panel .row:first-of-type{
+        display: grid;
+        grid-template-columns: 2.2fr 1fr; /* Name breiter, Birthday schmaler */
+        gap: 10px;
+      }
+
+      /* Inputs selbst etwas komfortabler */
+      #soApp .panel .row:first-of-type input{
+        padding: 12px 12px;
+        font-size: 14px;
+      }
+
+      /* Birthdate darf sich nicht aufblähen */
+      #soApp #birthdate{ min-width: 0; }
+    }
+
+    /* My location marker (special) */
+    #soApp .myLocWrap{ position: relative; width: 22px; height: var(--special-band-height); }
+    #soApp .myLocDot{
+      position:absolute; inset:0;
+      border-radius:999px;
+      background: rgba(0, 229, 255, .92);
+      border: 2px solid rgba(255,255,255,.92);
+      box-shadow: 0 0 18px rgba(0, 229, 255, .55);
+    }
+    #soApp .myLocRing{
+      position:absolute; inset:-6px;
+      border-radius:999px;
+      border: 2px solid rgba(0, 229, 255, .55);
+      animation: myPulse 1.8s ease-out infinite;
+      box-shadow: 0 0 10px rgba(0, 229, 255, .25);
+    }
+    @keyframes myPulse{
+      0%{ transform: scale(.65); opacity:.85; }
+      70%{ transform: scale(1.25); opacity:0; }
+      100%{ transform: scale(1.25); opacity:0; }
+    }
+
+
+    /* =============================
+       CLUSTER PINS (zoomed out)
+       ============================= */
+    #soApp .clusterPin{
+      width: 40px;
+      height: var(--special-band-height);
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.22);
+      /* color comes from JS via --cluster-bg (single/2/3 color) */
+      background: var(--cluster-bg, rgba(12,18,34,.92));
+      box-shadow: 0 12px 30px rgba(0,0,0,.35), 0 0 0 6px rgba(122,167,255,.10);
+      color: var(--text);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: .2px;
+      position: relative;
+      overflow: hidden;
+    }
+    #soApp .clusterPin::before{
+      content:""; position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,0));
+      pointer-events:none;
+    }
+    #soApp .clusterPin::after{
+      content:"";
+      position:absolute;
+      width: 56px;
+      height: var(--special-band-height);
+      border-radius: 999px;
+      border: 1px dashed rgba(122,167,255,.35);
+      opacity: .55;
+    }
+
+
+/* =============================
+   MICRO-ANIMATIONS + UI POLISH
+   ============================= */
+
+/* 1) Tap / click feedback */
+#soApp button, #soApp .iconBtn, #soApp .fChip, #soApp .starBtn, #soApp .starInline, #soApp .aBtn{
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
+}
+#soApp button:active, #soApp .iconBtn:active, #soApp .fChip:active, #soApp .starBtn:active, #soApp .starInline:active, #soApp .aBtn:active{
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 0 0 4px rgba(122,167,255,.14);
+}
+
+/* 2) Popup soft fade-in */
+#soApp .leaflet-popup{
+  animation: popupIn .16s ease-out;
+}
+@keyframes popupIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 3) List selection pulse */
+#soApp .item.selected{
+  animation: selectPulse .22s ease-out;
+}
+@keyframes selectPulse {
+  from { box-shadow: 0 0 0 0 rgba(122,167,255,.22); }
+  to   { box-shadow: 0 0 0 8px rgba(122,167,255,0); }
+}
+
+/* =============================
+   MOBILE FORM WIDTH FIX
+   - Nickname wider
+   - Birthdate narrower
+   - mobile-only
+   ============================= */
+@media (max-width: 480px) {
+  /* First form row (Nickname + Birthdate) */
+  #soApp .panel .row:first-of-type{
+    display: grid !important;
+    grid-template-columns: 2.4fr 1fr !important;
+    gap: 10px !important;
+    align-items: start;
+  }
+  #soApp .panel .row:first-of-type > div{ min-width: 0; }
+  #soApp #nickname, #soApp #birthdate{ min-width: 0; }
+}
+
+
+/* Header stats (top-right) */
+#soApp .hdrRight{ text-align:right; }
+#soApp .hdrTitle{ color: var(--green); font-weight:800; letter-spacing:.2px; }
+#soApp .hdrSub{ color: var(--muted); font-size:12.5px; margin-top:2px; max-width: 48vw; }
+@media (max-width: 480px){
+  #soApp .hdrSub{ max-width: 60vw; }
+}
+
+
+#soApp .stats-title{color:#10b981; font-weight:600;}
+
+    /* Framed info line under name (Birthday / Friendship sort) */
+    #soApp .infoBlock{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      margin-top:6px;
+      padding:6px 10px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      font-size:12px;
+      color: var(--text);
+      white-space:nowrap;
+      max-width:100%;
+    }
+    #soApp .infoBlock b{font-weight:700;}
+
+
+/* ============================
+   Premium UI polish (no new features)
+   ============================ */
+#soApp, #soApp{ text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+#soApp{
+  --card: rgba(255,255,255,.055);
+  --card2: rgba(255,255,255,.075);
+  --cardBorder: rgba(255,255,255,.12);
+  --cardBorder2: rgba(255,255,255,.18);
+  --shadowSoft: 0 10px 26px rgba(0,0,0,.32);
+  --shadowLift: 0 18px 50px rgba(0,0,0,.44);
+  --glowGreen: rgba(87, 255, 170, .35);
+  --glowYellow: rgba(255, 220, 90, .35);
+  --glowRed: rgba(255, 106, 130, .35);
+}
+
+/* subtle background depth */
+#soApp::before{
+  content:"";
+  position:fixed;
+  inset:-20vh -10vw;
+  background:
+    radial-gradient(900px 600px at 20% 10%, rgba(122,167,255,.12), transparent 60%),
+    radial-gradient(700px 520px at 80% 12%, rgba(255,120,180,.09), transparent 62%),
+    radial-gradient(900px 620px at 55% 90%, rgba(80,255,190,.08), transparent 65%);
+  pointer-events:none;
+  z-index:-1;
+  filter: blur(0px);
+}
+
+/* list feels like premium cards */
+#soApp .list{ padding: 6px; }
+#soApp .item{
+  margin: 8px 6px;
+  border-bottom: none;
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--card2), var(--card));
+  border: 1px solid var(--cardBorder);
+  box-shadow: var(--shadowSoft), 0 0 0 1px rgba(80,255,190,.10) inset, 0 0 22px rgba(80,255,190,.16);
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+  will-change: transform;
+  position: relative;
+  overflow: hidden;
+}
+#soApp .item::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background: radial-gradient(420px 120px at 18% 0%, rgba(122,167,255,.10), transparent 60%);
+  opacity:.9;
+  pointer-events:none;
+}
+#soApp .item:hover{
+  transform: translateY(-1px);
+  box-shadow: var(--shadowLift);
+  border-color: var(--cardBorder2);
+}
+#soApp .item:active{ transform: translateY(0px) scale(.995); }
+
+/* heart glow accents (purely visual) */
+#soApp .item.heartGreen::after, #soApp .item.heartYellow::after, #soApp .item.heartRed::after{
+  content:"";
+  position:absolute;
+  inset:-40px -40px auto auto;
+  width:180px;
+  height: var(--special-band-height);
+  border-radius: 999px;
+  filter: blur(18px);
+  opacity:.55;
+  pointer-events:none;
+}
+#soApp .item.heartGreen::after{ background: radial-gradient(circle, var(--glowGreen), transparent 60%); }
+#soApp .item.heartYellow::after{ background: radial-gradient(circle, var(--glowYellow), transparent 60%); }
+#soApp .item.heartRed::after{ background: radial-gradient(circle, var(--glowRed), transparent 60%); }
+
+/* typography hierarchy */
+#soApp .nick{ gap:8px; }
+#soApp .nameMain{
+  letter-spacing: .15px;
+}
+#soApp .tiny{
+  line-height: 1.35;
+  opacity: .92;
+}
+#soApp .localLabel{ opacity:.85; }
+
+/* framed info blocks: slightly more "chip" */
+#soApp .infoBlock{
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.07);
+  box-shadow: 0 10px 22px rgba(0,0,0,.22);
+}
+#soApp .infoBlock b{ letter-spacing:.2px; }
+
+/* micro motion (respect reduced motion) */
+@media (prefers-reduced-motion: no-preference){
+  #soApp .item{ animation: itemIn .22s ease both; }
+  @keyframes itemIn{
+    from{ opacity:0; transform: translateY(4px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+  #soApp .iconBtn, #soApp .secondary, #soApp .badge, #soApp .chip, #soApp .aBtn{
+    transition: transform .14s ease, background .14s ease, border-color .14s ease, opacity .14s ease;
+  }
+  #soApp .iconBtn:hover, #soApp .secondary:hover{ transform: translateY(-1px); }
+}
+
+/* mobile tuning */
+@media (max-width: 560px){
+  #soApp .list{ max-height: 42vh; }
+  #soApp .item{ margin: 8px 4px; }
+}
+
+
+/* Selected list item (visual focus) */
+#soApp .item.isSelected{
+  border-color: rgba(255,255,255,.32);
+  background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.06));
+  box-shadow: 0 0 0 2px rgba(80,255,190,.22), 0 22px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(80,255,190,.14) inset, 0 0 60px rgba(80,255,190,.28);
+  transform: translateY(-1px);
+}
+#soApp .item.isSelected::before{
+  background: radial-gradient(520px 160px at 18% 0%, rgba(190,225,255,.16), transparent 62%);
+}
+#soApp .item.isSelected::after{
+  opacity:.72;
+}
+
+
+/* Favorite card accent (subtle, premium) */
+#soApp .item.isFav{
+  border-color: rgba(255, 230, 140, .16);
+}
+#soApp .item.isFav::before{
+  background:
+    radial-gradient(420px 120px at 18% 0%, rgba(255, 230, 140, .10), transparent 62%),
+    radial-gradient(520px 160px at 68% 10%, rgba(255, 190, 90, .06), transparent 65%);
+}
+
+/* Selected + Favorite = special spotlight */
+#soApp .item.isSelected.isFav{
+  border-color: rgba(255, 230, 140, .28);
+  box-shadow:
+    0 26px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(255, 230, 140, .12) inset,
+    0 0 60px rgba(255, 220, 120, .26);
+}
+#soApp .item.isSelected.isFav::after{
+  opacity:.78;
+  background: radial-gradient(circle, rgba(255, 220, 120, .42), transparent 60%);
+}
+
+/* tiny shimmer line (very subtle) */
+#soApp .item.isSelected.isFav .nameMain{
+  text-shadow: 0 0 18px rgba(255, 220, 120, .18);
+}
+
+
+
+/* Selected + Favorite + My Special One -> Special wins */
+#soApp .item.isSelected.isFav.isSpecial{
+  border-color: rgba(90, 235, 230, .42) !important;
+  box-shadow:
+    0 0 0 2px rgba(80,240,230,.45),
+    0 26px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(90, 235, 230, .14) inset,
+    0 0 78px rgba(80,240,230,.40) !important;
+}
+#soApp .item.isSelected.isFav.isSpecial::after{
+  opacity: 1 !important;
+  background: radial-gradient(520px 170px at 50% 0%, rgba(80,235,230,.22), transparent 65%) !important;
+}
+/* === Strong selection glow (frame-focused, no background lift) === */
+#soApp .item.isSelected{
+  background: linear-gradient(180deg, var(--card2), var(--card)); /* keep original */
+  box-shadow:
+    0 0 0 1.5px rgba(160,200,255,.55),
+    0 0 22px rgba(120,170,255,.55),
+    0 14px 42px rgba(0,0,0,.55);
+}
+#soApp .item.isSelected::before{ opacity:.35; }
+
+/* Favorite selection = different color identity (golden) */
+#soApp .item.isSelected.isFav{
+  box-shadow:
+    0 0 0 1.5px rgba(255,215,140,.75),
+    0 0 26px rgba(255,210,120,.75),
+    0 18px 48px rgba(0,0,0,.6);
+}
+
+/* Optional soft pulse on select (very subtle) */
+@media (prefers-reduced-motion: no-preference){
+  #soApp .item.isSelected{
+    animation: selectPulse .6s ease-out 1;
+  }
+  @keyframes selectPulse{
+    from{
+      box-shadow:
+        0 0 0 0 rgba(120,170,255,.0),
+        0 0 0 rgba(120,170,255,.0),
+        0 14px 42px rgba(0,0,0,.55);
+    }
+    to{
+      box-shadow:
+        0 0 0 1.5px rgba(160,200,255,.55),
+        0 0 22px rgba(120,170,255,.55),
+        0 14px 42px rgba(0,0,0,.55);
+    }
+  }
+}
+
+
+/* === Unified Visit Card Background (Option A) === */
+#soApp .profileCard, #soApp .visitCard, #soApp .profile{
+  background:
+    linear-gradient(180deg, rgba(20,28,40,.92), rgba(14,20,30,.92));
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+/* Inner sections calmer & glass-like */
+#soApp .profileCard .section, #soApp .visitCard .section, #soApp .profile .section{
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* Remove competing gradients inside visit card */
+#soApp .profileCard .section::before, #soApp .visitCard .section::before, #soApp .profile .section::before{
+  display:none !important;
+}
+
+
+/* === Profile / Visit Card: Option A + C (unified but pep) === */
+#soApp #profileView{
+  position: relative;
+  overflow: hidden; /* keep glows inside the visit card area */
+  background: linear-gradient(180deg, rgba(14,18,28,.92), rgba(10,13,20,.92));
+}
+#soApp #profileView::before{
+  content:"";
+  position: absolute; /* was fixed -> leaked behind list in profile mode */
+  inset: -22% -18%;
+  pointer-events:none;
+  z-index: 0;
+  background:
+    radial-gradient(900px 620px at 18% 8%, rgba(120,170,255,.13), transparent 62%),
+    radial-gradient(760px 560px at 78% 16%, rgba(80,255,190,.08), transparent 64%),
+    radial-gradient(900px 700px at 55% 95%, rgba(255,120,180,.06), transparent 66%);
+  opacity: .95;
+}
+#soApp #profileView > *{ position: relative; z-index: 1; }
+
+/* Favorite profile: gold spotlight (only here, not everywhere) */
+#soApp #profileView.isFavProfile::before{
+  background:
+    radial-gradient(980px 700px at 22% 10%, rgba(255, 220, 120, .18), transparent 64%),
+    radial-gradient(860px 620px at 78% 18%, rgba(255, 200, 90, .10), transparent 66%),
+    radial-gradient(900px 700px at 55% 95%, rgba(120,170,255,.08), transparent 70%);
+}
+
+/* Calm inner cards (avoid multi competing gradients) */
+#soApp .profileCard{
+  background: rgba(255,255,255,.04) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04) !important;
+}
+#soApp .profileCard::before{ display:none !important; }
+
+
+/* === Profile mode: remove ALL glow effects === */
+#soApp #profileView .item, #soApp #profileView .item.isSelected, #soApp #profileView .item.isFav, #soApp #profileView .item::before, #soApp #profileView .item::after{
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+#soApp.profileMode .item.isSelected{
+  box-shadow: 0 0 0 1px rgba(255,255,255,.18) !important;
+}
+
+#soApp.profileMode .leaflet-popup-content-wrapper, #soApp.profileMode .leaflet-popup-tip{
+  box-shadow: none !important;
+}
+
+
+/* === When profile (visit card) is open: disable list selection glow completely === */
+#soApp.profileMode .item.isSelected, #soApp.profileMode .item.isSelected.isFav, #soApp.profileMode .item.isSelected.fromMap, #soApp.profileMode .item.isSelected.fromList{
+  box-shadow: none !important;
+  transform: none !important;
+}
+#soApp.profileMode .item.isSelected::after, #soApp.profileMode .item.isSelected::before{
+  display:none !important;
+}
+#soApp.profileMode .item.isSelected{
+  border-color: rgba(255,255,255,.18) !important;
+}
+
+
+/* === Nuclear option: kill ALL glow sources while profileMode is active === */
+/* 1) Remove global background glows */
+#soApp.profileMode::before, #soApp.profileMode::after{
+  opacity: 0 !important;
+  display:none !important;
+}
+
+/* 2) Remove profileView stage glows */
+#soApp.profileMode #profileView::before, #soApp.profileMode #profileView::after, #soApp.profileMode #profileView.isFavProfile::before{
+  display:none !important;
+  opacity:0 !important;
+}
+
+/* 3) Remove list item ambient glows (heart blobs + card sheen) */
+#soApp.profileMode .item::before, #soApp.profileMode .item::after, #soApp.profileMode .item.heartGreen::after, #soApp.profileMode .item.heartYellow::after, #soApp.profileMode .item.heartRed::after{
+  display:none !important;
+  opacity:0 !important;
+}
+
+/* 4) Ensure no shadows anywhere in list items during profileMode */
+#soApp.profileMode .item, #soApp.profileMode .item *{
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+/* Keep a minimal selection border so you still know what's selected */
+#soApp.profileMode .item.isSelected{
+  border-color: rgba(255,255,255,.18) !important;
+}
+
+/* In profileMode we still want the selected person to gently glow (frame only) */
+#soApp.profileMode .item.isSelected{
+  box-shadow:
+    0 0 0 1.5px rgba(160,200,255,.45) !important,
+    0 0 18px rgba(120,170,255,.38) !important,
+    0 14px 42px rgba(0,0,0,.55) !important;
+}
+#soApp.profileMode .item.isSelected.isFav{
+  box-shadow:
+    0 0 0 1.5px rgba(255,215,140,.55) !important,
+    0 0 22px rgba(255,210,120,.48) !important,
+    0 16px 46px rgba(0,0,0,.60) !important;
+}
+#soApp.profileMode .item.isSelected.isSpecial{
+  box-shadow:
+    0 0 0 1.5px rgba(80,240,230,.55) !important,
+    0 0 24px rgba(80,240,230,.50) !important,
+    0 16px 48px rgba(0,0,0,.60) !important;
+}
+
+
+/* === Unify left panel background (top edit area, list, footer) === */
+#soApp{
+  --leftStage: rgba(10,13,20,.94);
+  --leftStageSolid: rgba(10,13,20,.98);
+  --leftBorder: rgba(255,255,255,.10);
+}
+
+/* Left main card becomes the single source of truth */
+#soApp .card{
+  background: var(--leftStage) !important;
+  border-color: var(--leftBorder) !important;
+}
+
+/* Ensure all left sub-areas use the exact same background */
+#soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .list, #soApp .footer-tools, #soApp .hint, #soApp .panel{
+  background: var(--leftStage) !important;
+}
+
+/* The list itself is <ul>; make sure it doesn't look like a different strip */
+#soApp .list{
+  border-top: 1px solid rgba(255,255,255,.06) !important;
+  border-bottom: 1px solid rgba(255,255,255,.06) !important;
+}
+
+/* Footer area: same color, no gradient differences */
+#soApp .footer-tools{
+  background: var(--leftStage) !important;
+  border-top: 1px solid rgba(255,255,255,.08) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* If there is any form container in left area, unify it too */
+#soApp .form, #soApp .formGrid, #soApp .formWrap, #soApp .formSection, #soApp #form, #soApp #editor, #soApp #left, #soApp .left{
+  background: transparent !important;
+}
+
+
+/* === Further unify: remove subtle overlays + make profile panel match === */
+#soApp::before{ opacity: .18 !important; } /* keep slight ambience but reduce banding */
+
+/* Remove any card sheen overlays that can shift perceived color */
+#soApp .card::before{ display:none !important; }
+#soApp .item::before{ opacity:.35; } /* keep gentle, not affecting stage strips */
+
+/* Ensure the list strips are not influenced by transparency */
+#soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .list, #soApp .footer-tools, #soApp .hint, #soApp .panel{
+  background: var(--leftStageSolid) !important;
+}
+
+/* Profile / Visit card area: same background family */
+#soApp #profileView{
+  background: var(--leftStageSolid) !important;
+}
+#soApp #profileView .profileHead{
+  background: var(--leftStageSolid) !important;
+  border-bottom: 1px solid rgba(255,255,255,.08) !important;
+  box-shadow: none !important;
+}
+#soApp #profileView .profileCard{
+  background: var(--leftStageSolid) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  box-shadow: none !important;
+}
+
+
+/* === Absolute solid stage: eliminate all perceived color shifts === */
+#soApp{
+  --stageSolid: #0A0D14; /* single source of truth */
+}
+
+/* Turn off any backdrop / translucency that can vary with content behind */
+#soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .list, #soApp .footer-tools, #soApp .hint, #soApp .panel, #soApp .card, #soApp #profileView, #soApp #profileView .profileHead, #soApp #profileView .profileCard{
+  background-color: var(--stageSolid) !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Kill all overlay sheens that can change perceived brightness */
+#soApp::before{ display:none !important; }
+#soApp .card::before, #soApp .card::after, #soApp .searchBar::before, #soApp .filterBar::before, #soApp .alphaBar::before, #soApp .footer-tools::before, #soApp #profileView::before, #soApp #profileView::after, #soApp #profileView .profileHead::before, #soApp #profileView .profileHead::after, #soApp .profileCard::before, #soApp .profileCard::after{
+  display:none !important;
+}
+
+/* Ensure borders are consistent (no gradients) */
+#soApp .card, #soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .footer-tools, #soApp .panel, #soApp .hint, #soApp #profileView .profileHead, #soApp #profileView .profileCard{
+  border-color: rgba(255,255,255,.10) !important;
+  box-shadow: none !important;
+}
+
+/* Keep list items premium without affecting stage color */
+#soApp .item{
+  background-image: none !important;
+}
+
+
+/* === One background everywhere (kills hard cuts in edit/list/profile) === */
+#soApp{ --stageSolid: #0A0D14; }
+
+/* Make the page itself the single background */
+#soApp, #soApp{
+  background: var(--stageSolid) !important;
+  background-image: none !important;
+}
+
+/* Common outer wrappers (safety net) */
+#soApp #app, #soApp .app, #soApp .wrap, #soApp .container, #soApp .main, #soApp .layout, #soApp .shell{
+  background: var(--stageSolid) !important;
+  background-image: none !important;
+}
+
+/* Left + Profile panes: no separate gradients/alphas */
+#soApp .card, #soApp #profileView, #soApp #profileView .profileHead, #soApp #profileView .profileCard, #soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .list, #soApp .footer-tools, #soApp .hint, #soApp .panel{
+  background: var(--stageSolid) !important;
+  background-image: none !important;
+  background-color: var(--stageSolid) !important;
+}
+
+/* Remove any remaining pseudo background layers that could create bands */
+#soApp::before, #soApp::after, #soApp .card::before, #soApp .card::after, #soApp .searchBar::before, #soApp .searchBar::after, #soApp .filterBar::before, #soApp .filterBar::after, #soApp .alphaBar::before, #soApp .alphaBar::after, #soApp .list::before, #soApp .list::after, #soApp .footer-tools::before, #soApp .footer-tools::after, #soApp #profileView::before, #soApp #profileView::after, #soApp #profileView .profileHead::before, #soApp #profileView .profileHead::after, #soApp #profileView .profileCard::before, #soApp #profileView .profileCard::after{
+  display:none !important;
+  opacity:0 !important;
+}
+
+/* Make separators subtle (so they don't look like 'cuts') */
+#soApp .searchBar, #soApp .filterBar, #soApp .alphaBar, #soApp .footer-tools, #soApp .card, #soApp #profileView .profileHead, #soApp #profileView .profileCard{
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+
+
+/* === My Special One (only when Special + Favorite) === */
+#soApp #profileView .specialOneBadge{
+  display:none;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid rgba(80,240,230,.30);
+  background: rgba(80,240,230,.10);
+  color: rgba(200,255,250,.98);
+  box-shadow: 0 0 18px rgba(80,240,230,.18);
+  margin-top:6px;
+  white-space:nowrap;
+}
+#soApp #profileView.isSpecialProfile .specialOneBadge{ display:inline-flex; }
+
+/* === Favorite top band on profile image row (gold) === */
+#soApp #profileView.isFavProfile 
+
+/* === Special top band overrides Favorite when both === */
+#profileView.isSpecialProfile 
+
+/* === Fix: don't stack two bands (gold + turquoise) on the profile.
+   We use ONE band only (the bottom band on .profileHead) and simply recolor it.
+   So the top band on the image row is disabled entirely. === */
+#profileView 
+
+
+/* === Favorite indicator in visit card (gold strip + badge) === */
+#profileView .favBadge{
+  display:none;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid rgba(255,215,140,.22);
+  background: rgba(255,215,140,.10);
+  color: rgba(255,235,190,.95);
+  box-shadow: 0 0 18px rgba(255,215,140,.16);
+  margin-top:6px;
+}
+#soApp #profileView.isFavProfile .favBadge{ display:inline-flex; }
+
+#soApp #profileView.isFavProfile .profileHead{
+  border-bottom-color: rgba(255,215,140,.22) !important;
+}
+#soApp #profileView.isFavProfile .profileHead::after{
+  content:"";
+  position:absolute;
+  left:12px; right:12px; bottom:-1px;
+  height: var(--special-band-height);
+  background: linear-gradient(90deg, transparent, rgba(255,215,140,.55), transparent);
+}
+
+
+/* === Map popup glow: normal (cool) vs favorite (gold) === */
+#soApp .leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+  background: rgba(14,18,28,.96);
+  color: rgba(255,255,255,.92);
+  border:1px solid rgba(80,255,190,.46);
+  box-shadow:
+    0 0 0 1px rgba(160,200,255,.20) inset,
+    0 0 46px rgba(80,255,190,.40),
+    0 28px 90px rgba(0,0,0,.62);
+}
+#soApp .leaflet-popup.normPopup .leaflet-popup-tip{
+  background: rgba(14,18,28,.96);
+  box-shadow: 0 0 46px rgba(80,255,190,.36);
+}
+#soApp .leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+  background: rgba(16,14,18,.96);
+  color: rgba(255,255,255,.92);
+  border:1px solid rgba(255,215,140,.52);
+  box-shadow:
+    0 0 0 1px rgba(255,215,140,.24) inset,
+    0 0 38px rgba(255,210,120,.62),
+    0 30px 96px rgba(0,0,0,.66);
+}
+#soApp .leaflet-popup.favPopup .leaflet-popup-tip{
+  background: rgba(16,14,18,.96);
+  box-shadow: 0 0 38px rgba(255,210,120,.52);
+}
+
+/* === Glassy map popups (keep glow, match Holidays/Legend) === */
+#soApp .leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+  background: rgba(14,18,28,.56) !important;
+  border:1px solid rgba(80,255,190,.46) !important;
+  backdrop-filter: blur(10px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+}
+#soApp .leaflet-popup.normPopup .leaflet-popup-tip{
+  background: rgba(14,18,28,.56) !important;
+  backdrop-filter: blur(10px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+}
+
+#soApp .leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+  background: rgba(16,14,18,.56) !important;
+  border:1px solid rgba(255,215,140,.52) !important;
+  backdrop-filter: blur(10px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+}
+#soApp .leaflet-popup.favPopup .leaflet-popup-tip{
+  background: rgba(16,14,18,.56) !important;
+  backdrop-filter: blur(10px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+}
+
+
+
+/* === Favorite strip: wider + smoother gradient === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:4px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,215,140,.35) 15%,
+    rgba(255,215,140,.85) 50%,
+    rgba(255,215,140,.35) 85%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px rgba(255,215,140,.55);
+}
+
+/* === Popup glow: slightly richer colors === */
+#soApp .leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(255,215,140,.65) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,215,140,.30) inset,
+    0 0 68px rgba(255,210,120,.85),
+    0 36px 120px rgba(0,0,0,.70) !important;
+}
+#soApp .leaflet-popup.favPopup .leaflet-popup-tip{
+  box-shadow: 0 0 68px rgba(255,210,120,.72) !important;
+}
+
+#soApp .leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(140,190,255,.55) !important;
+  box-shadow:
+    0 0 0 1px rgba(140,190,255,.25) inset,
+    0 0 64px rgba(120,170,255,.78),
+    0 34px 112px rgba(0,0,0,.68) !important;
+}
+#soApp .leaflet-popup.normPopup .leaflet-popup-tip{
+  box-shadow: 0 0 64px rgba(120,170,255,.65) !important;
+}
+
+
+/* === Fav band (visit card): thicker gradient like reference === */
+#soApp #profileView .profileHead{ position: relative; overflow: hidden; }
+
+#soApp #profileView.isFavProfile .profileHead
+/* keep the bottom strip too, #soApp slightly wider */
+#profileView.isFavProfile .profileHead::after{
+  height:5px !important;
+}
+
+
+/* === Final tweak: favorite band exactly like reference === */
+/* remove top glow band, keep ONLY the bottom gradient bar */
+#soApp #profileView.isFavProfile .profileHead::before{
+  display:none !important;
+}
+
+/* bottom band: centered, softer edges, correct vertical spacing */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:6px !important;
+  bottom:-1px !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.25) 20%,
+    rgba(255,215,140,.9) 50%,
+    rgba(255,215,140,.25) 80%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 14px rgba(255,215,140,.45) !important;
+}
+
+/* === Special One: recolor the SAME bottom band to turquoise (no second bar) === */
+#soApp #profileView.isSpecialProfile .profileHead{
+  border-bottom-color: rgba(80,240,230,.22) !important;
+}
+#soApp #profileView.isSpecialProfile .profileHead::after{
+  content:"";
+  position:absolute;
+  left:12px; right:12px;
+  bottom:-1px;
+  height: var(--special-band-height);
+  background: linear-gradient(
+    90deg,
+    rgba(80,240,230,0) 0%,
+    rgba(80,240,230,.25) 20%,
+    rgba(80,240,230,.95) 50%,
+    rgba(0,200,190,.25) 80%,
+    rgba(80,240,230,0) 100%
+  ) !important;
+  box-shadow: 0 0 16px rgba(80,240,230,.55) !important;
+}
+
+
+/* === Fix: make favorite band truly thicker and visible === */
+#soApp #profileView .profileHead{
+  overflow: visible !important; /* allow band to extend */
+}
+
+#soApp #profileView.isFavProfile .profileHead::after{
+  content:"";
+  position:absolute;
+  left:-16px;
+  right:-16px;
+  bottom:-6px;              /* move band down so height is visible */
+  height:14px !important;   /* real thickness */
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.30) 18%,
+    rgba(255,215,140,.95) 50%,
+    rgba(255,215,140,.30) 82%,
+    rgba(255,215,140,0) 100%
+  );
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 0 22px rgba(255,215,140,.55);
+  pointer-events:none;
+}
+
+
+/* === Only change: favorite band to 30px height === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:30px !important;
+  bottom:-14px !important;
+  box-shadow: 0 0 32px rgba(255,215,140,.65) !important;
+}
+
+
+/* === Unblock favorite band: override earlier 'display:none' safety reset === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  display:block !important;
+  opacity:1 !important;
+  content:"" !important;
+}
+
+
+/* === Adjust favorite band to half thickness === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:15px !important;   /* half of 30px */
+  bottom:-7px !important;
+  box-shadow: 0 0 20px rgba(255,215,140,.55) !important;
+}
+
+
+/* === Refine favorite band: slightly thinner, remove hard center line === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:12px !important;          /* a bit thinner */
+  bottom:-6px !important;
+  /* smoother gradient without a sharp center line */
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.28) 22%,
+    rgba(255,215,140,.55) 50%,
+    rgba(255,215,140,.28) 78%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 16px rgba(255,215,140,.45) !important;
+}
+
+
+/* === Final micro-tune: 10px band, no hard center line at all === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:10px !important;
+  bottom:-5px !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.22) 30%,
+    rgba(255,215,140,.32) 50%,
+    rgba(255,215,140,.22) 70%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(255,215,140,.35) !important;
+}
+
+/* ensure no other rule adds a center highlight */
+#soApp #profileView.isFavProfile .profileHead::after::before, #soApp #profileView.isFavProfile .profileHead::after::after{
+  display:none !important;
+}
+
+
+/* === Ultra-fix: 11px band + explicitly kill centerline sources === */
+#soApp #profileView.isFavProfile .profileHead{
+  border-bottom-color: transparent !important; /* kill 1px border line */
+}
+
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:11px !important;
+  bottom:-5px !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.18) 35%,
+    rgba(255,215,140,.24) 50%,
+    rgba(255,215,140,.18) 65%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 10px rgba(255,215,140,.30) !important;
+}
+
+/* absolutely ensure no 1px hairline from any pseudo/border */
+#soApp #profileView.isFavProfile .profileHead, #soApp #profileView.isFavProfile .profileHead *{
+  outline: none !important;
+}
+
+
+/* === Final: richer gold color, same size === */
+#soApp #profileView.isFavProfile .profileHead::after{
+  height:11px !important;
+  bottom:-5px !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,205,120,.35) 30%,
+    rgba(255,195,90,.55) 50%,
+    rgba(255,205,120,.35) 70%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 14px rgba(255,195,90,.55) !important;
+}
+
+
+/* === Distance tool inside map (left) === */
+#soApp #mapView{
+  position: relative;
+  isolation: isolate;
+}
+#soApp .mapOverlayTools{
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  z-index: 1200;
+  pointer-events: none;
+}
+#soApp .mapOverlayTools > *{
+  pointer-events: auto;
+}
+#soApp #distanceFloatingBtn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  width:42px;
+  height:42px;
+  padding:0 !important;
+  position: relative;
+  left: auto;
+  bottom: auto;
+  z-index: auto;
+  background: rgba(20,24,35,.95);
+  color: rgba(230,120,120,.95);
+  border: 1px solid rgba(220,90,90,.6);
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+}
+#soApp #distanceFloatingBtn.active{
+  background: rgba(220,90,90,.18) !important;
+  box-shadow: 0 0 16px rgba(220,90,90,.45) !important;
+}
+#soApp #distanceHint{
+  position: static;
+  left: auto;
+  bottom: auto;
+  z-index: auto;
+  max-width: 320px;
+  padding: 7px 10px;
+  border-radius: 12px;
+  background: rgba(10,13,20,.92);
+  border: 1px solid rgba(220,90,90,.35);
+  color: rgba(255,220,220,.92);
+  font-size: 12px;
+  line-height: 1.15;
+  display:none;
+}
+#soApp #distanceHint b{ color: rgba(255,185,185,.98); }
+
+#soApp .distanceLabel{
+  background: rgba(10,13,20,.92);
+  color: rgba(255,200,200,.95);
+  border: 1px solid rgba(220,90,90,.55);
+  padding: 5px 9px;
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  line-height: 1.15;
+  box-shadow: 0 10px 25px rgba(0,0,0,.35);
+}
+#soApp .distanceMid{
+  width: 16px;
+  height: var(--special-band-height);
+  border-radius: 999px;
+  border: 2px dashed rgba(220,90,90,.65);
+  background: rgba(10,13,20,.15);
+}
+
+
+/* === Distance Tool refinements === */
+#soApp .distanceLabel{
+  background: rgba(5,7,12,.96) !important;
+  color: rgba(255,245,245,.98) !important;
+  border: 1px solid rgba(255,120,120,.72) !important;
+  font-weight: 700;
+  letter-spacing: .2px;
+  padding: 6px 10px !important;
+  border-radius: 12px !important;
+  font-size: 13px !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,.65);
+  box-shadow: 0 12px 30px rgba(0,0,0,.55), 0 0 18px rgba(220,90,90,.18);
+}
+#soApp .distanceMid{
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 999px;
+  border: 2px solid rgba(255,140,140,.85) !important;
+  background: rgba(10,13,20,.55) !important;
+  box-shadow: 0 0 16px rgba(220,90,90,.25);
+  position: relative;
+}
+#soApp .distanceMid::after{
+  content:"";
+  position:absolute;
+  left:50%; top:50%;
+  width:4px; height: var(--special-band-height);
+  transform: translate(-50%,-50%);
+  border-radius:999px;
+  background: rgba(255,180,180,.95);
+}
+#soApp #distanceHint{
+  border-color: rgba(220,90,90,.28) !important;
+  color: rgba(255,235,235,.90) !important;
+}
+
+
+/* === Distance Info Popup (red glow) === */
+#soApp .leaflet-popup.distInfoPopup .leaflet-popup-content-wrapper{
+  background: rgba(8,10,16,.96);
+  color: rgba(255,245,245,.95);
+  border: 1px solid rgba(220,90,90,.65);
+  box-shadow:
+    0 0 0 1px rgba(220,90,90,.18) inset,
+    0 0 34px rgba(220,90,90,.55),
+    0 28px 90px rgba(0,0,0,.62);
+  border-radius: 14px;
+}
+#soApp .leaflet-popup.distInfoPopup .leaflet-popup-tip{
+  background: rgba(8,10,16,.96);
+  box-shadow: 0 0 28px rgba(220,90,90,.45);
+}
+#soApp .distInfo{
+  font-size: 12px;
+  line-height: 1.25;
+  min-width: 250px;
+}
+#soApp .distInfo .row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+#soApp .distInfo .row:last-child{ border-bottom:none; }
+#soApp .distInfo .k{ opacity:.85; }
+#soApp .distInfo .v{ font-weight:700; color: rgba(255,220,220,.98); }
+#soApp .distInfo .title{
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: rgba(255,230,230,.98);
+}
+#soApp .distInfo .controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin: 6px 0 8px 0;
+}
+#soApp .distInfo select{
+  background: rgba(12,15,24,.9);
+  color: rgba(255,245,245,.95);
+  border: 1px solid rgba(220,90,90,.35);
+  border-radius: 10px;
+  padding: 4px 8px;
+  outline: none;
+}
+
+/* numbered markers for point 1 / 2 */
+#soApp .distPointBadge{
+  width: 18px;
+  height: var(--special-band-height);
+  border-radius: 999px;
+  background: rgba(220,90,90,.25);
+  border: 2px solid rgba(255,150,150,.85);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: rgba(255,235,235,.98);
+  font-weight: 800;
+  font-size: 11px;
+  box-shadow: 0 0 14px rgba(220,90,90,.25);
+}
+
+
+/* Nearest place marker (same red family) */
+#soApp .nearestPlacePin{
+  width: 14px;
+  height: var(--special-band-height);
+  border-radius: 999px;
+  border: 2px solid rgba(255,150,150,.9);
+  background: rgba(220,90,90,.35);
+  box-shadow: 0 0 18px rgba(220,90,90,.45);
+}
+
+
+/* Midpoint pin marker (styled like map pin, red glow) */
+#soApp .midpointPin{
+  width: 22px;
+  height: var(--special-band-height);
+  background: linear-gradient(180deg, rgba(255,120,120,.95), rgba(180,60,60,.95));
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow:
+    0 0 18px rgba(220,90,90,.55),
+    0 0 36px rgba(220,90,90,.25);
+  border: 2px solid rgba(255,200,200,.85);
+  position: relative;
+}
+#soApp .midpointPin::after{
+  content:"";
+  width: 8px;
+  height: var(--special-band-height);
+  background: rgba(10,10,10,.65);
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%) rotate(45deg);
+  border-radius: 999px;
+}
+
+
+/* === Special person (turquoise) === */
+#soApp .item.isSpecial{
+  border-color: rgba(90, 235, 230, .22);
+}
+#soApp .item.isSpecial::before{
+  background:
+    radial-gradient(420px 120px at 18% 0%, rgba(80, 235, 230, .12), transparent 62%),
+    radial-gradient(520px 160px at 68% 10%, rgba(40, 190, 220, .08), transparent 65%);
+}
+#soApp .item.isSelected.isSpecial{
+  border-color: rgba(90, 235, 230, .42);
+  box-shadow:
+    0 0 0 2px rgba(80,240,230,.45),
+    0 26px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(90, 235, 230, .14) inset,
+    0 0 72px rgba(80,240,230,.36);
+}
+@keyframes specialPulse{
+  0%,100%{ filter: drop-shadow(0 0 0 rgba(80,235,230,0)); opacity:.0; }
+  50%{ filter: drop-shadow(0 0 16px rgba(80,235,230,.55)); opacity:.75; }
+}
+#soApp .item.isSelected.isSpecial::after{
+  opacity: 1 !important;
+  background: radial-gradient(520px 170px at 50% 0%, rgba(80,235,230,.18), transparent 65%);
+  animation: specialPulse 2.4s ease-in-out infinite;
+}
+
+/* inline "special" button next to favorite star */
+#soApp .diamondInline{
+  margin-left: 8px;
+  border: 1px solid rgba(90,235,230,.28);
+  background: rgba(8,12,20,.35);
+  color: rgba(160,255,250,.95);
+  border-radius: 10px;
+  padding: 2px 7px;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+#soApp .diamondInline.on{
+  border-color: rgba(90,235,230,.55);
+  background: rgba(80,235,230,.10);
+  box-shadow: 0 0 18px rgba(80,235,230,.22);
+}
+
+
+/* === Special ∞ animation (turquoise, always running) === */
+#soApp .diamondInline.specialOn{
+  position: relative;
+  color: rgba(120,255,245,.98) !important;
+  text-shadow: 0 0 10px rgba(80,240,230,.55), 0 0 18px rgba(80,240,230,.25);
+}
+#soApp .diamondInline.specialOn::before{
+  content:"";
+  position:absolute;
+  inset:-6px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, rgba(120,255,245,.35), rgba(0,0,0,0) 60%);
+  filter: blur(4px);
+  opacity: .85;
+  animation: spGlow 1.8s ease-in-out infinite;
+  pointer-events:none;
+}
+#soApp .diamondInline.specialOn{
+  animation: spFloat 2.2s ease-in-out infinite;
+}
+@keyframes spGlow{
+  0%,100%{ transform: scale(.9); opacity:.55; }
+  50%{ transform: scale(1.08); opacity: 1; }
+}
+@keyframes spFloat{
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-1.5px); }
+}
+
+
+/* === Special (turquoise) list highlight (like fav) === */
+#soApp .item.isSpecial{
+  border-color: rgba(80,240,230,.22);
+}
+#soApp .item.isSpecial::before{
+  background:
+    radial-gradient(420px 120px at 18% 0%, rgba(80,240,230,.14), transparent 62%),
+    radial-gradient(520px 160px at 68% 10%, rgba(0,200,190,.10), transparent 66%);
+}
+#soApp .item.isSpecial.isSelected{
+  box-shadow: 0 22px 70px rgba(0,0,0,.55), 0 0 26px rgba(80,240,230,.35);
+  border-color: rgba(80,240,230,.38);
+}
+
+
+/* === Special (turquoise) profile background + top band === */
+#soApp .isSpecialProfile::before{
+  background:
+    radial-gradient(980px 700px at 22% 10%, rgba(80,240,230,.18), transparent 64%),
+    radial-gradient(860px 620px at 78% 18%, rgba(0,200,190,.12), transparent 66%),
+    radial-gradient(900px 700px at 55% 95%, rgba(80,240,230,.10), transparent 62%);
+}
+
+
+/* === Special (turquoise) map popup glow === */
+#soApp .leaflet-popup.specialPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(80,240,230,.38);
+  box-shadow: 0 0 0 1px rgba(80,240,230,.18) inset, 0 0 120px rgba(80,240,230,.85), 0 38px 140px rgba(0,0,0,.74);
+}
+#soApp .leaflet-popup.specialPopup .leaflet-popup-tip{
+  background: rgba(12,18,34,.96);
+  box-shadow: 0 0 120px rgba(80,240,230,.80);
+}
+
+
+/* === Mi Vida (Special) list aura + subtle motion === */
+#soApp .item.isSpecial{ position: relative; border-color: rgba(80,240,230,.28) !important; }
+#soApp .item.isSpecial::before{
+  content:""; position:absolute; inset:-1px; border-radius:22px; pointer-events:none;
+  background:
+    radial-gradient(520px 160px at 20% 0%, rgba(80,240,230,.22), transparent 62%),
+    radial-gradient(560px 200px at 70% 10%, rgba(0,200,190,.16), transparent 66%),
+    radial-gradient(520px 200px at 55% 110%, rgba(80,240,230,.12), transparent 70%);
+  opacity:.85; animation:mividaAura 4.2s ease-in-out infinite;
+}
+#soApp .item.isSpecial::after{
+  content:""; position:absolute; inset:-2px; border-radius:24px; pointer-events:none;
+  box-shadow: 0 0 0 1px rgba(80,240,230,.10) inset, 0 0 22px rgba(80,240,230,.28), 0 0 50px rgba(80,240,230,.14);
+  opacity:.55; animation:mividaGlow 2.8s ease-in-out infinite;
+}
+@keyframes mividaAura{ 0%,100%{ transform:translateY(0); opacity:.75;} 50%{ transform:translateY(-2px); opacity:.98;} }
+@keyframes mividaGlow{ 0%,100%{ opacity:.45;} 50%{ opacity:.8;} }
+
+
+/* === Mi Vida badge + special top band === */
+#soApp .badge.specialBadge{
+  display:inline-flex; align-items:center; gap:.45rem;
+  padding:.38rem .75rem; border-radius:999px;
+  border:1px solid rgba(80,240,230,.35);
+  background: rgba(10,18,22,.55);
+  color: rgba(170,255,248,.95);
+  box-shadow: 0 0 16px rgba(80,240,230,.18);
+  font-weight:600;
+}
+
+
+/* === Popup wrappers: make each clearly different === */
+#soApp .leaflet-popup.normPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(120,160,255,.16);
+  box-shadow: 0 0 0 1px rgba(120,160,255,.14) inset, 0 0 64px rgba(120,170,255,.70), 0 34px 112px rgba(0,0,0,.68);
+}
+#soApp .leaflet-popup.favPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(255,210,120,.22);
+  box-shadow: 0 0 0 1px rgba(255,210,120,.18) inset, 0 0 68px rgba(255,210,120,.78), 0 36px 120px rgba(0,0,0,.70);
+}
+#soApp .leaflet-popup.specialPopup .leaflet-popup-content-wrapper{
+  border-color: rgba(80,240,230,.32);
+  box-shadow: 0 0 0 1px rgba(80,240,230,.16) inset, 0 0 78px rgba(80,240,230,.70), 0 34px 120px rgba(0,0,0,.70);
+}
+
+
+
+/* === Stronger profile (visit card) glow to match Favorite style === */
+#soApp #profileView{
+  position: relative;
+}
+#soApp #profileView.isFavProfile{
+  border: 1px solid rgba(255,215,140,.28) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 0 0 1px rgba(255,215,140,.14) inset,
+    0 0 54px rgba(255,215,140,.22),
+    0 28px 90px rgba(0,0,0,.62) !important;
+}
+#soApp #profileView.isFavProfile .profileCard{
+  border-color: rgba(255,215,140,.18) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 0 26px rgba(255,215,140,.14) !important;
+}
+#soApp #profileView.isFavProfile .profileHead
+
+/* =========================================================
+   My Special One: use SAME bar as Favorite (recolored), #soApp no extra second bar, #soApp and Special wins over Favorite.
+   ========================================================= */
+#profileView.isSpecialProfile 
+
+#profileView.isSpecialProfile .profileHead::after{
+  height:5px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(80,240,230,.35) 15%,
+    rgba(80,240,230,.95) 50%,
+    rgba(80,240,230,.35) 85%,
+    transparent 100%
+  ) !important;
+  box-shadow: 0 0 18px rgba(80,240,230,.55) !important;
+}
+
+/* ensure Special still wins even when Favorite is also present */
+#soApp #profileView.isFavProfile.isSpecialProfile .profileHead::after{
+  height:5px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(80,240,230,.35) 15%,
+    rgba(80,240,230,.95) 50%,
+    rgba(80,240,230,.35) 85%,
+    transparent 100%
+  ) !important;
+  box-shadow: 0 0 18px rgba(80,240,230,.55) !important;
+}
+
+
+/* =========================================================
+   v93.1 FIX (clean + reliable):
+   - Profile band uses ONE unified ::after base that is explicitly enabled
+     for Favorite OR Special (so Special-only never collapses to a 1px line)
+   - When both are active, Special wins (turquoise) and band is nudged
+     slightly down so it never covers the Local Time line.
+   - Thickness: Special band a bit thicker than before, and even thicker
+     when BOTH Favorite + Special are active (like your first screenshot).
+   ========================================================= */
+
+#soApp #profileView .profileHead{
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Base band (disabled by default) */
+#soApp #profileView .profileHead::after{
+  content: "" !important;
+  position: absolute !important;
+  left: -18px !important;   /* a touch wider */
+  right: -18px !important;
+  bottom: -7px !important;
+  height: 18px !important;  /* default thickness once enabled */
+  border-radius: 0 0 8px 8px !important;
+  pointer-events: none !important;
+  display: none !important;
+  opacity: 1 !important;
+}
+
+/* Favorite band (gold) */
+#soApp #profileView.isFavProfile .profileHead::after{
+  display: block !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,215,140,0) 0%,
+    rgba(255,215,140,.30) 18%,
+    rgba(255,215,140,.92) 50%,
+    rgba(255,215,140,.30) 82%,
+    rgba(255,215,140,0) 100%
+  ) !important;
+  box-shadow: 0 0 22px rgba(255,215,140,.55) !important;
+}
+
+/* Special band (turquoise) — MUST work even when Favorite is OFF */
+#soApp #profileView.isSpecialProfile .profileHead::after{
+  display: block !important;
+  background: linear-gradient(
+    90deg,
+    rgba(80,240,230,0) 0%,
+    rgba(80,240,230,.32) 18%,
+    rgba(80,240,230,.98) 50%,
+    rgba(0,200,190,.32) 82%,
+    rgba(80,240,230,0) 100%
+  ) !important;
+  box-shadow: 0 0 26px rgba(80,240,230,.70) !important;
+}
+
+/* Both active: Special wins + a bit thicker and slightly lower */
+#soApp #profileView.isFavProfile.isSpecialProfile .profileHead::after{
+  height: 22px !important;   /* thicker like screenshot 1 */
+  bottom: -10px !important;  /* lower so it never touches Local Time */
+  box-shadow: 0 0 30px rgba(80,240,230,.78) !important;
+}
+
+/* Also give the content a hair more breathing room only when both badges show */
+#soApp #profileView.isBothProfileBadges .profileTop{
+  margin-top: 2px !important;
+}
+
+/* Special-only: kill any 1px divider illusion */
+#soApp #profileView.isSpecialProfile .profileHead{
+  border-bottom-color: transparent !important;
+}
+
+
+
+/* Special only */
+#soApp .profile-card.is-special:not(.is-favorite) .special-band, #soApp .profile-card.is-special:not(.is-favorite)
+
+/* Special + Favorite */
+.profile-card.is-special.is-favorite .special-band, #soApp .profile-card.is-special.is-favorite
+
+
+:root{
+  --band-height-special-only: 7px;
+  --band-height-special-favorite: 3px;
+}
+
+/* base band */
+#soApp .special-band{
+  height: var(--band-height-special-only);
+  box-shadow: 0 0 6px rgba(64,224,208,.55);
+}
+
+/* Special + Favorite → thinner & calmer */
+#soApp .profile-card.is-special.is-favorite .special-band{
+  height: var(--band-height-special-favorite) !important;
+  box-shadow: 0 0 3px rgba(64,224,208,.45);
+}
+
+
+/* =========================================================
+   SINGLE PROFILE TOP BAND (FINAL)
+   - One band only
+   - Same thin thickness for Favorite & Special
+   - No layout / image shifting
+   ========================================================= */
+
+#soApp #profileView{ --profile-top-band-h: 4px; } /* thin, unified */
+
+
+
+/* Favorite (gold) */
+
+
+/* Special (with or without Favorite) */
+
+
+
+/* Force SAME band height for Favorite, Special, and both */
+
+
+
+/* =========================================================
+   UNIFIED PROFILE TOP BAND (FINAL ALIGNMENT)
+   - Same thickness for Favorite, Special, and both
+   ========================================================= */
+#soApp #profileView{
+  --profile-top-band-h: 4px;
+}
+
+#soApp #profileView .profileTop::after{
+  display:block !important;
+  height: var(--profile-top-band-h) !important;
+}
+
+/* Restore Favorite badge */
+
+
+
+/* =========================================================
+   SAFE OVERRIDE (v106)
+   Unify band thickness + effects across states.
+   - Do not touch layout.
+   - Keep Favorite badge.
+   - One band (.profileTop::after) with same height for all.
+   - Favorite uses gold palette
+   - Special-only & Fav+Special use turquoise palette but same effect style.
+   ========================================================= */
+
+#soApp #profileView{
+  --profile-top-band-h: 4px;
+}
+
+/* Make sure the band exists and is always the same thickness */
+#soApp #profileView .profileTop::after{
+  display:block !important;
+  top:0 !important;
+  height: var(--profile-top-band-h) !important;
+  opacity:.98 !important;
+  border-radius: 0 0 14px 14px !important;
+  pointer-events:none !important;
+}
+
+/* FAVORITE (gold) - reference effects */
+#soApp #profileView.isFavProfile:not(.isSpecialProfile) .profileTop::after{
+  background: linear-gradient(90deg,
+    rgba(0,0,0,0),
+    rgba(255,220,120,1),
+    rgba(255,195,90,.95),
+    rgba(0,0,0,0)
+  ) !important;
+  filter: drop-shadow(0 0 10px rgba(255,210,110,.22)) !important;
+}
+
+/* SPECIAL (turquoise) - same style, only color changed */
+#soApp #profileView.isSpecialProfile .profileTop::after{
+  background: linear-gradient(90deg,
+    rgba(0,0,0,0),
+    rgba(80,240,230,1),
+    rgba(0,200,190,.95),
+    rgba(0,0,0,0)
+  ) !important;
+  filter: drop-shadow(0 0 10px rgba(80,240,230,.22)) !important;
+}
+
+/* Ensure Favorite badge is shown like before */
+
+
+
+/* =========================================================
+   v107: EFFECTS MATCH FAVORITE (not thickness)
+   Copy Favorite visual effects to Special states.
+   Only change gold -> turquoise colors.
+   Applies to LIST items (not layout).
+   ========================================================= */
+
+/* Special-only: same structure as Favorite */
+#soApp .item.isSelected.isSpecial{
+  border-color: rgba(90, 235, 230, .28) !important;
+  box-shadow:
+    0 26px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(90, 235, 230, .12) inset,
+    0 0 60px rgba(80,240,230,.26) !important;
+}
+
+/* Favorite + Special: same as Favorite too (but turquoise wins) */
+#soApp .item.isSelected.isFav.isSpecial{
+  border-color: rgba(90, 235, 230, .28) !important;
+  box-shadow:
+    0 26px 80px rgba(0,0,0,.58),
+    0 0 0 1px rgba(90, 235, 230, .12) inset,
+    0 0 60px rgba(80,240,230,.26) !important;
+}
+
+/* Radial highlight: copy Favorite ::after behavior */
+#soApp .item.isSelected.isSpecial::after, #soApp .item.isSelected.isFav.isSpecial::after{
+  opacity:.78 !important;
+  background: radial-gradient(circle, rgba(80,240,230,.42), transparent 60%) !important;
+  animation: none !important;
+}
+
+/* Name glow: copy Favorite behavior */
+#soApp .item.isSelected.isSpecial .nameMain, #soApp .item.isSelected.isFav.isSpecial .nameMain{
+  text-shadow: 0 0 18px rgba(80,240,230,.18) !important;
+}
+
+
+/* =========================================================
+   BADGES INLINE (v108)
+   - Show Special + Favorite badges
+   - Same row, Special first, Favorite second
+   ========================================================= */
+
+/* Ensure badge container is inline */
+#soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
+  display:flex !important;
+  align-items:center;
+  gap:8px;
+}
+
+/* Ensure both badges are visible */
+#soApp #profileView .specialBadge, #soApp /* Order: Special first, #soApp Favorite second */
+#profileView .specialBadge{ order: 1; }
+#soApp #profileView .favBadge{ order: 2; }
+
+
+/* =========================================================
+   BADGES REFINED (v109)
+   - Smaller badges
+   - Special first, Favorite second
+   - Favorite has its own golden glow badge again
+   ========================================================= */
+
+/* Badge row */
+#soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
+  display:flex !important;
+  align-items:center;
+  gap:6px;
+}
+
+/* Base badge size (smaller) */
+#soApp #profileView .specialBadge, #soApp #profileView .favBadge{
+  font-size: 12px !important;
+  padding: 4px 8px !important;
+  border-radius: 999px;
+  line-height: 1;
+}
+
+/* Special badge (turquoise, calm) */
+#soApp #profileView .specialBadge{
+  background: rgba(80,240,230,.12);
+  border: 1px solid rgba(80,240,230,.45);
+  color: rgb(160,245,235);
+  box-shadow: 0 0 10px rgba(80,240,230,.25);
+  order: 1;
+}
+
+/* Favorite badge (gold, glowing, own identity) */
+
+
+
+/* =========================================================
+   BADGES INLINE & COMPACT (v110)
+   - Badges only as wide as text
+   - Special + Favorite on SAME line
+   ========================================================= */
+
+/* Force badge row inline */
+#soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
+  display:flex !important;
+  flex-wrap: nowrap !important;
+  align-items:center;
+  gap:6px;
+}
+
+/* Compact badges: width fits text */
+#soApp #profileView .specialBadge, #soApp /* Ensure Favorite is NOT pushed to new line */
+#profileView .favBadge{
+  margin-top: 0 !important;
+}
+
+
+/* =========================================================
+   BADGES EQUAL HEIGHT & FULL TEXT (v111)
+   - Special badge same height as Favorite
+   - Full text always visible
+   ========================================================= */
+
+/* Unify badge height & vertical alignment */
+#soApp #profileView .specialBadge, #soApp /* Ensure Special badge is not visually smaller */
+#profileView .specialBadge{
+  line-height: 1.1 !important;
+}
+
+
+/* =========================================================
+   v112 BADGE ROW FIX
+   - Special + Favorite in ONE line
+   - Badges are compact (fit text)
+   - Local Time stays below badges (profileSub)
+   ========================================================= */
+#soApp #profileView .profileTitle{ gap:4px; }
+#soApp #profileView .badgeRow{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:nowrap;
+}
+#soApp #profileView .specialOneBadge, #soApp #profileView .favBadge{
+  margin-top:0 !important;
+  margin-left:0 !important;
+  width:auto !important;
+  display:none;               /* default hidden; toggled by profile state */
+  align-items:center;
+  gap:6px;
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:12px;
+  line-height:1;
+  white-space:nowrap;
+}
+
+/* show rules */
+#soApp #profileView.isSpecialProfile .specialOneBadge{ display:inline-flex; }
+#soApp #profileView.isFavProfile .favBadge{ display:inline-flex; }
+
+/* Special styling */
+#soApp #profileView .specialOneBadge{
+  border:1px solid rgba(80,240,230,.35);
+  background: rgba(10,18,22,.55);
+  color: rgba(200,255,250,.98);
+  box-shadow: 0 0 18px rgba(80,240,230,.18);
+  font-weight:600;
+}
+/* Favorite styling */
+#soApp #profileView .favBadge{
+  border:1px solid rgba(255,215,140,.22);
+  background: rgba(255,215,140,.10);
+  color: rgba(255,235,190,.95);
+  box-shadow: 0 0 18px rgba(255,215,140,.16);
+  font-weight:600;
+}
+
+
+/* =========================================================
+   v113: Badge visibility fix
+   - Favorite badge ONLY when profile is actually favorite
+   - Special badge ONLY when profile is actually special
+   ========================================================= */
+
+/* Default: hide both */
+#soApp #profileView .favBadge{ display:none !important; }
+#soApp #profileView .specialBadge{ display:none !important; }
+
+/* Show when flags are present */
+#soApp #profileView.isFavProfile .favBadge{ display:inline-flex !important; }
+#soApp #profileView.isSpecialProfile .specialBadge{ display:inline-flex !important; }
+
+
+/* Notes category tabs */
+#soApp .notesTabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:8px 0 8px;
+}
+#soApp .notesTabs .tabBtn{
+  border:1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  padding:6px 10px;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:12px;
+  line-height:1;
+}
+#soApp .notesTabs .tabBtn.active{
+  background: rgba(56,189,248,0.18);
+  border-color: rgba(56,189,248,0.35);
+  box-shadow: 0 0 0 1px rgba(56,189,248,0.10), 0 0 18px rgba(56,189,248,0.12);
+}
+#soApp .notesPanel{
+  min-height: 92px;
+}
+
+
+/* =============================
+   SMOOTH TABS PACK (v1)
+   - crossfade + mini-slide
+   - animated indicator
+   - height transition
+   - reduced motion support
+============================= */
+#soApp .notesWidget{ --tab-dir: 1; }
+
+#soApp .notesTabs{
+  position:relative;
+  padding-bottom: 6px;
+  scroll-behavior: smooth;
+}
+
+#soApp .notesTabs .tabIndicator{
+  position:absolute;
+  left:0;
+  bottom:0;
+  height:2px;
+  width: var(--ind-width, 24px);
+  border-radius:999px;
+  background: rgba(16,185,129,0.85);
+  box-shadow: 0 0 14px rgba(16,185,129,0.18);
+  transform: translateX(var(--ind-left, 0px));
+  transition: transform 180ms ease, width 180ms ease;
+  pointer-events:none;
+}
+
+#soApp .notesPanels{
+  position:relative;
+  transition: height 190ms ease;
+}
+
+#soApp .notesPanelBox{
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  opacity:0;
+  transform: translateX(calc(var(--tab-dir) * 6px)) translateY(2px);
+  transition: opacity 180ms ease, transform 180ms ease;
+  pointer-events:none;
+}
+
+#soApp .notesPanelBox.isActive{
+  opacity:1;
+  transform: translateX(0px) translateY(0px);
+  pointer-events:auto;
+}
+
+#soApp .notesPanelBox.isWasActive{
+  opacity:1;
+  transform: translateX(0px) translateY(0px);
+  pointer-events:none;
+}
+
+#soApp .notesWidget.isSwitching .notesPanelBox.isWasActive{
+  opacity:0;
+  transform: translateX(calc(var(--tab-dir) * -6px)) translateY(2px);
+}
+
+#soApp .notesPanelBox.prepEnter{
+  opacity:0;
+  transform: translateX(calc(var(--tab-dir) * 6px)) translateY(2px);
+}
+
+#soApp .notesWidget.isSwitching .notesPanels::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:100%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.00), rgba(255,255,255,0.06), rgba(255,255,255,0.00));
+  transform: translateX(-45%);
+  animation: soShimmer 520ms ease-in-out 1;
+  pointer-events:none;
+}
+@keyframes soShimmer{
+  from{ transform:translateX(-45%); }
+  to{ transform:translateX(45%); }
+}
+
+/* Make active tab style match the emerald theme a bit more */
+#soApp .notesTabs .tabBtn.active{
+  background: rgba(16,185,129,0.14) !important;
+  border-color: rgba(16,185,129,0.30) !important;
+  box-shadow: 0 0 0 1px rgba(16,185,129,0.10), 0 0 18px rgba(16,185,129,0.12) !important;
+}
+
+@media (prefers-reduced-motion: reduce){
+  #soApp .notesPanels,
+  #soApp .notesPanelBox,
+  #soApp .notesTabs .tabIndicator{
+    transition:none !important;
+    animation:none !important;
+  }
+}
+
+/* =============================
+   PREMIUM FEEDBACK (v1)
+============================= */
+
+/* Soft highlight after quick jumps */
+#soApp .item.flash{
+  animation: soFlash 900ms ease-out 1;
+}
+@keyframes soFlash{
+  0%{ box-shadow: 0 0 0 0 rgba(16,185,129,0.0); }
+  18%{ box-shadow: 0 0 0 2px rgba(16,185,129,0.26), 0 0 26px rgba(16,185,129,0.18); }
+  100%{ box-shadow: 0 0 0 0 rgba(16,185,129,0.0); }
+}
+
+/* Skeleton loading (used in profile view) */
+#soApp .soSkeleton{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+#soApp .soSkelRow{
+  display:flex;
+  gap:10px;
+}
+#soApp .soSkelBlock{
+  height: 14px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  position: relative;
+  overflow: hidden;
+}
+#soApp .soSkelBlock::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(90deg, rgba(255,255,255,0.00), rgba(255,255,255,0.10), rgba(255,255,255,0.00));
+  transform: translateX(-60%);
+  animation: soSkel 820ms ease-in-out infinite;
+}
+@keyframes soSkel{
+  from{ transform:translateX(-60%); }
+  to{ transform:translateX(60%); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  #soApp .soSkelBlock::after{ animation:none !important; }
+}
+
+
+
+/* Cycle tracker (local-only) */
+#soApp .cyclePanel{
+  min-height: 280px;
+  padding:12px;
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:14px;
+  background: rgba(255,255,255,0.04);
+}
+#soApp .cycleGrid{ display:flex; flex-direction:column; gap:10px; }
+#soApp .cycleRow{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+@media (max-width: 520px){
+  #soApp .cycleRow{ grid-template-columns: 1fr; }
+}
+#soApp .miniLabel{
+  font-size:12px;
+  opacity:.86;
+  margin-bottom:6px;
+}
+#soApp .cycleActions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+#soApp .cycleHint{
+  font-size:12px;
+  opacity:.86;
+  line-height:1.35;
+}
+#soApp .cycleLegend{
+  display:inline-flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-left:8px;
+}
+#soApp .cycleLegend .leg{
+  display:inline-flex;
+  gap:6px;
+  align-items:center;
+  padding:4px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+}
+#soApp .cycleLegend .legPeriod{ box-shadow: 0 0 0 1px rgba(255,80,120,0.15), 0 0 16px rgba(255,80,120,0.10); }
+#soApp .cycleLegend .legPred{ box-shadow: 0 0 0 1px rgba(255,80,120,0.10), 0 0 16px rgba(255,80,120,0.06); opacity:.9; }
+#soApp .cycleLegend .legFert{ box-shadow: 0 0 0 1px rgba(16,185,129,0.14), 0 0 16px rgba(16,185,129,0.08); }
+#soApp .cycleLegend .legOvu{ box-shadow: 0 0 0 1px rgba(251,191,36,0.14), 0 0 16px rgba(251,191,36,0.08); }
+
+#soApp .cycleSummary{
+  font-size:12px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.18);
+}
+#soApp .cycleSummary b{ font-weight:700; }
+
+#soApp .cycleList{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+#soApp .cycleChip{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  font-size:12px;
+}
+#soApp .cycleChip .x{
+  cursor:pointer;
+  padding:2px 6px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+}
+#soApp .cycleChip .x:hover{ background: rgba(255,255,255,0.08); }
+
+#soApp .cycleCalWrap{
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:14px;
+  padding:10px;
+  background: rgba(0,0,0,0.12);
+}
+#soApp .cycleCalHdr{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+#soApp .cycleMonthLabel{
+  font-weight:700;
+  letter-spacing:.3px;
+  font-size:13px;
+  opacity:.95;
+}
+#soApp .cycleWeekdays{
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap:6px;
+  font-size:11px;
+  opacity:.8;
+  margin-bottom:6px;
+  text-align:center;
+}
+#soApp .cycleCal{
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap:6px;
+}
+#soApp .cDay{
+  position:relative;
+  min-height:34px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.03);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  cursor:pointer;
+  user-select:none;
+}
+#soApp .cDay.off{
+  opacity:.45;
+  background: rgba(255,255,255,0.02);
+}
+#soApp .cDay.today{
+  box-shadow: 0 0 0 2px rgba(56,189,248,0.18), 0 0 18px rgba(56,189,248,0.12);
+}
+#soApp .cDay.period{
+  border-color: rgba(255,80,120,0.35);
+  background: rgba(255,80,120,0.14);
+  box-shadow: 0 0 0 1px rgba(255,80,120,0.10), 0 0 18px rgba(255,80,120,0.10);
+}
+#soApp .cDay.pred{
+  border-color: rgba(255,80,120,0.22);
+  background: rgba(255,80,120,0.08);
+}
+#soApp .cDay.fert{
+  border-color: rgba(16,185,129,0.26);
+  background: rgba(16,185,129,0.10);
+  box-shadow: 0 0 0 1px rgba(16,185,129,0.08), 0 0 18px rgba(16,185,129,0.08);
+}
+#soApp .cDay.ov{
+  border-color: rgba(251,191,36,0.30);
+  background: rgba(251,191,36,0.12);
+}
+#soApp .cDay.sel{
+  outline: 2px solid rgba(56,189,248,0.35);
+}
+
+#soApp .hidden{ display:none !important; }
+
+/* Favorite Colors input */
+#soApp .colorInputRow{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+#soApp .smallBtn{ padding:8px 12px; font-size:12px; border-radius:10px; }
+#soApp .favColorsPills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:10px;
+}
+
+/* Liquid rain-glass color pills (readable) */
+#soApp .colorPillGlass{
+  --c: 95,140,255;
+  --a: 0.42;
+  --g: 0.95;
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  padding:10px 16px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:0.25px;
+  line-height:1;
+  color: rgba(255,255,255,0.98);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55), 0 0 10px rgba(0,0,0,0.25);
+  overflow:hidden;
+  user-select:none;
+
+  background:
+    radial-gradient(140% 160% at 18% 18%, rgba(255,255,255,0.60), rgba(255,255,255,0.10) 48%, rgba(255,255,255,0) 74%),
+    radial-gradient(160% 160% at 80% 30%, rgba(var(--c), 0.64), rgba(var(--c), 0.14) 52%, rgba(var(--c), 0) 76%),
+    linear-gradient(135deg,
+      rgba(var(--c), var(--a)) 0%,
+      rgba(var(--c), 0.26) 35%,
+      rgba(255,255,255,0.11) 55%,
+      rgba(var(--c), 0.30) 100%
+    );
+  border: 1px solid rgba(255,255,255,0.26);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.50),
+    inset 0 -14px 18px rgba(0,0,0,0.40),
+    0 10px 22px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(255,255,255,0.06);
+  -webkit-backdrop-filter: blur(14px) saturate(155%);
+  backdrop-filter: blur(14px) saturate(155%);
+}
+#soApp .colorPillGlass::before{
+  content:"";
+  position:absolute;
+  top:-18%;
+  left:-16%;
+  width:72%;
+  height:155%;
+  transform: rotate(16deg);
+  background: linear-gradient(to bottom,
+    rgba(255,255,255,0.82),
+    rgba(255,255,255,0.30),
+    rgba(255,255,255,0.10),
+    rgba(255,255,255,0)
+  );
+  opacity:0.60;
+  pointer-events:none;
+}
+#soApp .colorPillGlass::after{
+  content:"";
+  position:absolute;
+  inset:-7px;
+  border-radius:999px;
+  background:
+    radial-gradient(circle at 28% 28%, rgba(255,255,255,0.22), transparent 55%),
+    radial-gradient(circle at 72% 62%, rgba(var(--c), 0.70), transparent 62%);
+  filter: blur(12px);
+  opacity: var(--g);
+  z-index:-1;
+}
+#soApp .colorPillGlass .drops{
+  position:absolute;
+  inset:-2px;
+  pointer-events:none;
+  opacity:0.90;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(circle at 14% 58%, rgba(255,255,255,0.62) 0 1.8px, rgba(255,255,255,0.14) 3px, rgba(255,255,255,0) 7px),
+    radial-gradient(circle at 22% 36%, rgba(255,255,255,0.52) 0 1.4px, rgba(255,255,255,0.14) 2.7px, rgba(255,255,255,0) 6.5px),
+    radial-gradient(circle at 33% 70%, rgba(255,255,255,0.56) 0 1.6px, rgba(255,255,255,0.12) 3.0px, rgba(255,255,255,0) 7.0px),
+    radial-gradient(circle at 48% 44%, rgba(255,255,255,0.64) 0 1.9px, rgba(255,255,255,0.14) 3.4px, rgba(255,255,255,0) 8.0px),
+    radial-gradient(circle at 61% 66%, rgba(255,255,255,0.52) 0 1.5px, rgba(255,255,255,0.12) 2.9px, rgba(255,255,255,0) 6.9px),
+    radial-gradient(circle at 74% 40%, rgba(255,255,255,0.62) 0 1.8px, rgba(255,255,255,0.14) 3.2px, rgba(255,255,255,0) 7.6px),
+    radial-gradient(circle at 86% 62%, rgba(255,255,255,0.54) 0 1.6px, rgba(255,255,255,0.12) 3.0px, rgba(255,255,255,0) 7.0px),
+    radial-gradient(circle at 92% 30%, rgba(255,255,255,0.48) 0 1.3px, rgba(255,255,255,0.10) 2.6px, rgba(255,255,255,0) 6.2px);
+  filter: blur(0.15px);
+}
+#soApp .colorPillGlass .x{
+  opacity:0.85;
+  margin-left:10px;
+  font-weight:900;
+  cursor:pointer;
+}
+#soApp .colorPillGlass .x:hover{ opacity:1; }
+
+
+#soApp .notesPanelBox{
+  padding:8px 10px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  white-space: pre-wrap;
+}
+#soApp .favColorsInline{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:8px;
+}
+
+
+/* =============================
+   MOBILE PACK (Handy Optimierung)
+   ============================= */
+@media (max-width: 560px){
+  #soApp header{
+    padding: 14px 12px 8px;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  #soApp .wrap{
+    padding: 0 12px 12px;
+    gap: 12px;
+  }
+  #soApp #map{ height: 48vh; min-height: 340px; }
+  #soApp .list{ max-height: 46vh; }
+  #soApp .item{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  #soApp .actions{ justify-content: flex-start; }
+  #soApp .nick{
+    white-space: normal;
+    overflow: visible;
+  }
+  #soApp .nameMain, #soApp .nameSub{
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  #soApp .infoBlock{
+    white-space: normal;
+    line-height: 1.25;
+  }
+  #soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
+    flex-wrap: wrap !important;
+    row-gap: 6px;
+  }
+  #soApp .notesTabs{
+    margin: 6px 0 6px;
+    gap: 6px;
+  }
+  #soApp .notesTabs .tabBtn{
+    padding: 8px 10px;
+  }
+  #soApp .colorInputRow{
+    flex-direction: column;
+    align-items: stretch;
+  }
+  #soApp .smallBtn{ width: 100%; }
+}
+@media (max-width: 380px){
+  #soApp #map{ height: 44vh; min-height: 320px; }
+  #soApp .list{ max-height: 44vh; }
+  #soApp .item{ padding: 12px 12px; }
+}
+
+
+
+/* =============================
+   MOBILE FORM BEAUTIFY (Editor oben)
+   ============================= */
+@media (max-width: 560px){
+  /* Formular-Card angenehmer und “appiger” */
+  #soApp .panel{
+    padding: 14px;
+  }
+
+  /* Felder untereinander, mehr Luft */
+  #soApp .row{
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* iOS/Android: 16px verhindert Auto-Zoom beim Tippen */
+  #soApp input, #soApp textarea, #soApp select{
+    font-size: 16px;
+    padding: 12px 12px;
+    border-radius: 14px;
+  }
+
+  #soApp textarea{
+    min-height: 140px;
+  }
+
+  /* Buttons immer griffbereit (sticky) */
+  #soApp .btns{
+    position: sticky;
+    bottom: 10px;
+    z-index: 25;
+    padding: 10px;
+    border-radius: 16px;
+    background: rgba(9,12,20,.82);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.10);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  /* Save prominent */
+  #soApp #saveBtn{
+    grid-column: 1 / -1;
+  }
+  #soApp .btns button{
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Notes Tabs: horizontal scroll statt quetschen */
+  #soApp .notesTabs{
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+  #soApp .notesTabs::-webkit-scrollbar{ height: 6px; }
+}
+
+
+/* =============================
+   MOBILE FORM BEAUTIFY (v3)
+   Makes the top edit area cleaner & easier on phones
+   ============================= */
+@media (max-width: 560px){
+  #soApp header{ padding: 12px 12px 10px !important; }
+  #soApp .hdrRight{ width:100%; text-align:left; }
+  #soApp .hdrRight .hdrTitle{ display:none !important; }
+  #soApp .hdrSub{ font-size:12px !important; opacity:.9; line-height:1.25; }
+
+  #soApp .panel{ padding: 14px 12px !important; }
+  #soApp .panel .row{
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-bottom: 12px !important;
+  }
+  #soApp .panel .row:first-of-type{ grid-template-columns: 1fr !important; }
+
+  #soApp .panel label{
+    font-size: 12px !important;
+    letter-spacing: .2px;
+    margin-bottom: 6px !important;
+    opacity: .92;
+  }
+  #soApp .panel input, #soApp .panel select, #soApp .panel textarea{
+    width: 100%;
+    font-size: 16px !important;
+    padding: 12px 14px !important;
+    border-radius: 14px !important;
+  }
+  #soApp input[type="date"]{ min-height: 46px; }
+
+  #soApp .hint, #soApp .bdayCountdown{
+    font-size: 12px !important;
+    line-height: 1.25;
+    margin-top: 6px !important;
+  }
+
+  #soApp .panel .row .smallBtn, #soApp .panel .row button.smallBtn{
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 380px){
+  #soApp .panel{ padding: 12px 10px !important; }
+  #soApp .panel input, #soApp .panel select, #soApp .panel textarea{ padding: 11px 12px !important; }
+}
+
+
+/* =============================
+   MOBILE MAP POPUP TUNING
+   ============================= */
+@media (max-width: 560px){
+  #soApp .leaflet-popup-content-wrapper{
+    max-width: 260px;
+    padding: 8px;
+  }
+  #soApp .leaflet-popup-content{
+    margin: 6px;
+    font-size: 13px;
+    line-height: 1.25;
+  }
+  #soApp .popup-image-wrap{
+    position: relative;
+  }
+  #soApp .popup-card-btn{
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(20,20,24,0.75);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  #soApp .popup-card-btn:hover{
+    background: rgba(30,30,36,0.9);
+  }
+}
+
+
+/* =============================
+   TWEAKS: Smaller color pills + prettier notes tabs
+   ============================= */
+
+/* Color pills (Map + Profile) a bit smaller */
+#soApp .colorPillGlass{
+  padding: 8px 12px !important;
+  font-size: 11px !important;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+#soApp .colorPillGlass .xBtn{
+  width: 18px !important;
+  height: 18px !important;
+  margin-left: 8px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+}
+
+/* Notes tabs: more "segmented / glass" and nicer on mobile */
+#soApp .notesTabs{
+  gap: 6px !important;
+}
+#soApp .notesTabs .tabBtn{
+  padding: 7px 10px !important;
+  font-size: 12px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,0.055) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.22);
+  backdrop-filter: blur(8px);
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+#soApp .notesTabs .tabBtn:active{
+  transform: scale(0.98);
+}
+#soApp .notesTabs .tabBtn.active{
+  background: rgba(56,189,248,0.20) !important;
+  border-color: rgba(56,189,248,0.40) !important;
+  box-shadow: 0 10px 26px rgba(56,189,248,0.12), 0 10px 24px rgba(0,0,0,0.22);
+}
+
+/* Mobile: tabs scroll horizontally instead of wrapping into ugly multi-lines */
+@media (max-width: 560px){
+  #soApp .notesTabs{
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+  #soApp .notesTabs::-webkit-scrollbar{ display:none; } /* Chrome/Safari */
+  #soApp .notesTabs .tabBtn{
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+
+
+/* =============================
+   FIX: Nothing should overflow on 390px
+   ============================= */
+
+/* Always include padding/border in width calculations */
+#soApp *, #soApp *::before, #soApp *::after{ box-sizing: border-box; }
+
+/* Avoid horizontal scrolling */
+#soApp, #soApp{ overflow-x: hidden; }
+#soApp .wrap, #soApp main, #soApp header, #soApp .panel, #soApp .list, #soApp #profileView{ max-width: 100%; }
+
+/* Ensure all images / cards never exceed container */
+#soApp img, #soApp video, #soApp canvas, #soApp svg{ max-width: 100%; height: auto; }
+
+/* Wrap long text gracefully */
+#soApp .nick, #soApp .infoBlock, #soApp .meta, #soApp .metaLine, #soApp .small, #soApp .statLine, #soApp .notePreview, #soApp .popup *{
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Buttons/rows: allow wrapping instead of pushing layout wider */
+#soApp .actions, #soApp .badgeRow, #soApp .badges, #soApp .tagRow, #soApp .pillRow, #soApp .notesTabs{
+  max-width: 100%;
+}
+
+/* Some flex rows may force overflow; allow wrap on narrow screens */
+@media (max-width: 560px){
+  #soApp .row{ flex-wrap: wrap !important; }
+  #soApp .row > *{ min-width: 0; } /* critical for flex text overflow */
+  #soApp .actions{ flex-wrap: wrap; gap: 8px; }
+  #soApp .actions > *{ min-width: 0; }
+
+  /* Inputs: full width, no weird min widths */
+  #soApp input, #soApp select, #soApp textarea{
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+
+/* =============================
+   MOBILE WIDTH CLIP FIXES (390px)
+   ============================= */
+@media (max-width: 560px){
+
+  /* Cards should not clip inner content/shadows on mobile */
+  #soApp .card{ overflow: visible !important; }
+
+  /* Zodiac line in editor: allow wrapping + slightly smaller */
+  #soApp #zodiacLine{
+    display:block;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    line-height: 1.25;
+    font-size: 12px;
+  }
+
+  /* Profile cards value lines: wrap instead of overflowing */
+  #soApp #profileView .profileCard .v{
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.25;
+    font-size: 13px;
+    min-width: 0;
+  }
+
+  /* Notes tabs: keep inside the card, no clipping at right edge */
+  #soApp .notesTabs{
+    padding-right: 10px;
+  }
+
+  /* Buttons inside rows shouldn't force width */
+  #soApp .notesTabs .tabBtn{
+    max-width: 100%;
+  }
+}
+
+
+/* =============================
+   LAYOUT SHIFT FIX (Profile open makes page "wider")
+   - reserve scrollbar gutter to prevent width jump
+   - kill any hidden overflow widths on mobile
+   ============================= */
+#soApp{
+  scrollbar-gutter: stable both-edges; /* Firefox/Chromium: prevents width jump */
+}
+#soApp{
+  overflow-y: scroll; /* always reserve vertical scrollbar space */
+}
+
+/* Safety: nothing in views should exceed viewport */
+#soApp #listView, #soApp #profileView, #soApp #mapView, #soApp .wrap, #soApp main, #soApp header{
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Leaflet popup / dist info must not enforce min-width on mobile */
+@media (max-width: 560px){
+  #soApp .leaflet-popup-content{
+    min-width: 0 !important;
+    max-width: 260px !important;
+  }
+  #soApp .distInfo{
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}
+
+
+/* =============================
+   FIX: Width jump when opening Profile (nested scrollbars / gutter)
+   ============================= */
+
+/* Do NOT reserve both edges (causes big right gutter when scrollbar appears) */
+#soApp{ scrollbar-gutter: stable; }
+
+/* Mobile: avoid nested scroll container in #profileView that triggers width recalculation */
+@media (max-width: 560px){
+  #soApp #profileView{
+    overflow: visible !important;
+    height: auto !important;
+    max-width: 100%;
+  }
+  #soApp #mapView{
+    height: auto !important;
+  }
+  #soApp .rightView{
+    height: auto !important;
+    overflow: visible !important;
+  }
+}
+
+
+/* =============================
+   FIX: Clicking Visitenkarte causes horizontal overflow (nowrap text)
+   ============================= */
+@media (max-width: 560px){
+
+  /* Allow long info/zodiac strings to wrap instead of forcing wider layout */
+  #soApp .infoBlock, #soApp .zodiacItem, #soApp #zodiacLine, #soApp #profileView .profileTitle, #soApp #profileView .profileTitle b, #soApp #profileView .profileCard .v{
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Badges: prevent them from pushing width; keep single line with ellipsis if needed */
+  #soApp #profileView .badgeRow, #soApp #profileView .badges, #soApp #profileView .tagRow{
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  #soApp #profileView .specialOneBadge, #soApp #profileView .favBadge{
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* As a final safety net: no element may exceed viewport width */
+  #soApp #profileView *{
+    max-width: 100%;
+  }
+}
+
+
+/* =============================
+   FIX: Opening Profile causes whole page to overflow (glows/shadows)
+   Reason: .card overflow: visible makes box-shadows count into scrollWidth in Firefox.
+   Solution: keep cards clipped, and handle tabs/lines inside.
+   ============================= */
+@media (max-width: 560px){
+
+  /* Revert card overflow to avoid horizontal scroll from glows */
+  #soApp .card, #soApp .panel, #soApp .profileCard, #soApp #profileView{
+    overflow: hidden !important;
+  }
+
+  /* Keep notes tabs inside the card without needing overflow:visible */
+  #soApp .notesTabs{
+    padding-right: 14px !important;
+  }
+
+  /* Ensure inner content doesn't sit flush to the edge */
+  #soApp .card .sectionTitle, #soApp .card .row, #soApp .card .notesTabs, #soApp .card .pillRow{
+    max-width: 100%;
+  }
+}
+
+
+
+/* --- Site integration overrides (prevents affecting global layout) --- */
+#soApp{height:auto; min-height:0;}
+#soApp .wrap{height:auto;}
+
+
+/* =========================================================
+   Eye Color (NEW)
+   - Uses the existing glass pills, but draws two tiny "eyes"
+   - Supports mix modes: solid, blend, split, speckle, ring
+   ========================================================= */
+#soApp .eyeColorRow{
+  flex-wrap: wrap;
+}
+#soApp .eyeColorRow input{
+  min-width: 170px;
+  flex: 1 1 210px;
+}
+#soApp .eyeColorRow select{
+    min-width: 130px;
+  flex: 0 0 auto;
+}
+#soApp .eyePreview{
+  margin-top: 10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+
+/* Eye pill = colorPillGlass + eye icon */
+#soApp .colorPillGlass.eyePill{
+  gap: 10px;
+  padding-left: 12px;
+}
+#soApp .colorPillGlass.eyePill.isTiny{
+  padding: 7px 10px;
+  font-size: 11px;
+  letter-spacing: 0.15px;
+}
+#soApp .eyeIcon{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  flex: 0 0 auto;
+}
+#soApp .eyeIcon .eye{
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.28);
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,0.45),
+    0 0 14px rgba(var(--e1,95,140,255),0.22);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.90) 0 3.4px, rgba(255,255,255,0) 5.1px),
+    radial-gradient(circle at 50% 58%, rgba(0,0,0,0.88) 0 3.8px, rgba(0,0,0,0.32) 5.5px, rgba(0,0,0,0) 7.4px),
+    radial-gradient(circle at 50% 52%, rgba(var(--e1,95,140,255), 0.98) 0 11.0px, rgba(var(--e1,95,140,255),0.18) 15.1px, rgba(var(--e1,95,140,255),0) 17.1px);
+}
+#soApp .colorPillGlass.eyePill.isTiny .eyeIcon .eye{
+  width: 18px;
+  height: 18px;
+}
+
+
+/* Context sizing tweaks (Eyes)
+   - Not shown in the main list (only in profile + map popup)
+   - Slightly smaller in map popup and in the profile "business card"
+*/
+#soApp .popup .colorPillGlass.eyePill.isTiny{
+  padding: 6px 8px;
+  font-size: 10.5px;
+  letter-spacing: 0.12px;
+  gap: 8px;
+}
+#soApp .popup .colorPillGlass.eyePill.isTiny .eyeIcon{
+  gap: 6px;
+  transform: scale(0.92);
+  transform-origin: left center;
+}
+
+#soApp .profileBody .colorPillGlass.eyePill{
+  padding: 8px 12px;
+  font-size: 11.5px;
+  letter-spacing: 0.20px;
+  gap: 9px;
+  padding-left: 10px;
+}
+#soApp .profileBody .colorPillGlass.eyePill .eyeIcon{
+  gap: 7px;
+  transform: scale(0.95);
+  transform-origin: left center;
+}
+
+/* Blend */
+#soApp .colorPillGlass.eyePill[data-mode="blend"] .eyeIcon .eye{
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.90) 0 3.4px, rgba(255,255,255,0) 5.1px),
+    radial-gradient(circle at 50% 58%, rgba(0,0,0,0.88) 0 3.8px, rgba(0,0,0,0.32) 5.5px, rgba(0,0,0,0) 7.4px),
+    radial-gradient(circle at 30% 40%, rgba(var(--e1,95,140,255), 0.98) 0 10.6px, rgba(var(--e2,95,140,255),0.92) 11.0px 15.4px, rgba(var(--e1,95,140,255),0) 17.1px);
+
+}
+
+/* Split */
+#soApp .colorPillGlass.eyePill[data-mode="split"] .eyeIcon .eye{
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.90) 0 3.4px, rgba(255,255,255,0) 5.1px),
+    radial-gradient(circle at 50% 58%, rgba(0,0,0,0.88) 0 3.8px, rgba(0,0,0,0.32) 5.5px, rgba(0,0,0,0) 7.4px),
+    radial-gradient(circle at 50% 52%, rgba(0,0,0,0) 0 7.5px, rgba(0,0,0,0) 7.5px),
+    conic-gradient(from 90deg, rgba(var(--e1,95,140,255),0.98) 0 50%, rgba(var(--e2,95,140,255),0.98) 50% 100%);
+
+}
+
+/* Speckled */
+#soApp .colorPillGlass.eyePill[data-mode="speckle"] .eyeIcon .eye{
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.90) 0 3.4px, rgba(255,255,255,0) 5.1px),
+    radial-gradient(circle at 50% 58%, rgba(0,0,0,0.88) 0 3.8px, rgba(0,0,0,0.32) 5.5px, rgba(0,0,0,0) 7.4px),
+    radial-gradient(circle at 50% 52%, rgba(var(--e1,95,140,255), 0.98) 0 11.3px, rgba(var(--e1,95,140,255),0.18) 15.1px, rgba(var(--e1,95,140,255),0) 17.1px),
+    repeating-radial-gradient(circle at 35% 65%, rgba(var(--e2,95,140,255),0.55) 0 2.1px, rgba(var(--e2,95,140,255),0) 2.1px 5.7px);
+
+}
+
+/* Ring */
+#soApp .colorPillGlass.eyePill[data-mode="ring"] .eyeIcon .eye{
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.90) 0 3.4px, rgba(255,255,255,0) 5.1px),
+    radial-gradient(circle at 50% 58%, rgba(0,0,0,0.88) 0 3.8px, rgba(0,0,0,0.32) 5.5px, rgba(0,0,0,0) 7.4px),
+    radial-gradient(circle at 50% 52%,
+      rgba(var(--e1,95,140,255), 0.98) 0 7.9px,
+      rgba(var(--e2,95,140,255), 0.95) 9.3px 12.0px,
+      rgba(var(--e1,95,140,255), 0.15) 14.7px,
+      rgba(var(--e1,95,140,255), 0) 17.1px
+    );
+
+}
+#soApp .eyeTxt{ white-space: nowrap; }
+
+/* Tiny pulse highlight when jumping to a card */
+#soApp .pulseOutline{
+  outline: 2px solid rgba(34, 211, 238, .55);
+  box-shadow: 0 0 0 6px rgba(34, 211, 238, .10);
+  transition: outline-color .2s ease, box-shadow .2s ease;
+}
+
+
+/* ==============================
+   QUICK WIDGET (compact, non-intrusive)
+   - Hidden by default (popover)
+   - Shows quick, clickable counters
+   ============================== */
+#soApp .hdrRight{ position: relative; }
+#soApp .hdrTitle{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+}
+#soApp .quickBtn{
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(16,185,129,.28);
+  background: rgba(16,185,129,.10);
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,.24);
+  transition: transform .14s ease, filter .14s ease, background .14s ease, border-color .14s ease;
+}
+#soApp .quickBtn:hover{ transform: translateY(-1px); filter: brightness(1.06); border-color: rgba(16,185,129,.40); }
+#soApp .quickBtn:active{ transform: translateY(0px) scale(.99); }
+
+#soApp .quickPopover{
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: min(360px, 92vw);
+  padding: 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(20,26,44,.92), rgba(12,16,28,.92));
+  box-shadow: var(--shadowLift);
+  display: none;
+  z-index: 60;
+  backdrop-filter: blur(10px);
+}
+#soApp .quickPopover.open{ display:block; }
+#soApp .quickChips{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  align-items:stretch;
+}
+#soApp .quickStack{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:center;
+}
+#soApp .quickStack .qchip{
+  width:100%;
+  justify-content:center;
+  text-align:center;
+}
+#soApp .quickShortcuts{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:center;
+}
+#soApp .qchip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: transform .14s ease, filter .14s ease, background .14s ease, border-color .14s ease;
+}
+#soApp .qchip:hover{ transform: translateY(-1px); filter: brightness(1.06); border-color: rgba(16,185,129,.18); }
+#soApp .qchip:active{ transform: translateY(0px) scale(.99); }
+#soApp .quickEmpty{
+  color: var(--muted);
+  font-size: 12px;
+  padding: 2px 2px 4px;
+}
+
+/* ==============================
+   VISUAL POLISH PACK (Card depth + micro motion + badges)
+   ============================== */
+
+/* Card depth (slightly more premium) */
+#soApp .card{
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: var(--shadowSoft), 0 0 0 1px rgba(80,255,190,.10) inset;
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+@media (hover:hover){
+  #soApp .card:hover{
+    transform: translateY(-1px);
+    border-color: rgba(255,255,255,.16);
+    box-shadow: var(--shadowLift), 0 0 0 1px rgba(80,255,190,.14) inset;
+  }
+}
+
+/* Micro animations for common interactive elements */
+#soApp .btn, 
+#soApp .btn2, 
+#soApp .fChip,
+#soApp .chip,
+#soApp .pill,
+#soApp .starBtn{
+  transition: transform .14s ease, filter .14s ease, background .14s ease, border-color .14s ease, box-shadow .14s ease;
+  will-change: transform;
+}
+@media (hover:hover){
+  #soApp .btn:hover, 
+  #soApp .btn2:hover, 
+  #soApp .fChip:hover,
+  #soApp .chip:hover,
+  #soApp .pill:hover,
+  #soApp .starBtn:hover{
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+  }
+}
+#soApp .btn:active, 
+#soApp .btn2:active, 
+#soApp .fChip:active,
+#soApp .chip:active,
+#soApp .pill:active,
+#soApp .starBtn:active{
+  transform: translateY(0px) scale(.99);
+}
+
+@media (prefers-reduced-motion: reduce){
+  #soApp .btn, #soApp .btn2, #soApp .fChip, #soApp .chip, #soApp .pill, #soApp .starBtn,
+  #soApp .card, #soApp .quickBtn, #soApp .qchip{
+    transition: none !important;
+  }
+}
+
+/* Badge refinement (cleaner + consistent) */
+#soApp .badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  height:24px;
+  padding: 0 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  font-size:12px;
+  color: var(--text);
+  white-space:nowrap;
+  margin-left:8px;
+}
+#soApp .badge b{ color: var(--text); font-weight:800; }
+
+
+
+/* ==============================
+   SAVE STATE PILL (Saved ✓ / Unsaved…)
+   ============================== */
+#soApp .saveStateRow{ display:flex; align-items:center; justify-content:flex-end; gap:10px; margin-top:10px; margin-bottom:6px; }
+#soApp .saveStatePill{
+  display:inline-flex;
+  align-items:center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  box-shadow: 0 10px 24px rgba(0,0,0,.22);
+  user-select:none;
+}
+#soApp .saveStatePill.saved{ border-color: rgba(16,185,129,.26); background: rgba(16,185,129,.10); }
+#soApp .saveStatePill.dirty{ border-color: rgba(251,191,36,.30); background: rgba(251,191,36,.10); }
+
+/* ==============================
+   PROFILE: click card titles to jump into Edit
+   ============================== */
+#soApp .jumpK{ cursor:pointer; }
+@media (hover:hover){
+  #soApp .jumpK:hover{ text-decoration: underline; filter: brightness(1.07); }
+}
+#soApp .flashField{ animation: flashField 900ms ease-out 1; }
+@keyframes flashField{
+  0%{ box-shadow: 0 0 0 0 rgba(16,185,129,.0); }
+  30%{ box-shadow: 0 0 0 6px rgba(16,185,129,.18); }
+  100%{ box-shadow: 0 0 0 0 rgba(16,185,129,.0); }
+}
+
+/* ==============================
+   CLUSTER PINS: a bit more "premium"
+   ============================== */
+#soApp .clusterPin{ transition: transform .14s ease, filter .14s ease, box-shadow .14s ease; animation: clusterPop .22s ease-out; }
+@keyframes clusterPop{ 0%{ transform: scale(.86); opacity:.0; } 100%{ transform: scale(1); opacity:1; } }
+@media (hover:hover){
+  #soApp .clusterPin:hover{ transform: translateY(-1px) scale(1.04); filter: brightness(1.06); box-shadow: 0 16px 36px rgba(0,0,0,.42), 0 0 0 8px rgba(122,167,255,.12); }
+}
+
+
+/* --- Field validation messages --- */
+.fieldMsg{
+  margin-top:6px;
+  font-size:12px;
+  line-height:1.2;
+  padding:6px 10px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+}
+.fieldMsg.error{
+  border-color: rgba(239,68,68,0.35);
+  background: rgba(239,68,68,0.10);
+}
+.fieldMsg.warn{
+  border-color: rgba(245,158,11,0.35);
+  background: rgba(245,158,11,0.10);
+}
+
+/* --- Mini icon button --- */
+.miniIconBtn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  min-width:28px;
+  padding:0 8px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.06);
+  cursor:pointer;
+  transition: transform 140ms ease, filter 140ms ease, border-color 140ms ease;
+}
+.miniIconBtn:hover{ transform: translateY(-1px); border-color: rgba(16,185,129,0.25); }
+.miniIconBtn:active{ transform: translateY(0px) scale(0.99); }
+
+/* --- Unsaved guard modal --- */
+.unsavedModal{
+  position:fixed; inset:0;
+  display:none;
+  align-items:center; justify-content:center;
+  background: rgba(0,0,0,0.55);
+  z-index: 9999;
+}
+.unsavedModal.open{ display:flex; }
+.unsavedInner{
+  width:min(520px, calc(100vw - 28px));
+  background: rgba(15,23,42,0.92);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  padding:16px;
+}
+.unsavedTitle{ font-weight:800; font-size:16px; margin-bottom:6px; }
+.unsavedText{ opacity:0.92; margin-bottom:14px; }
+.unsavedBtns{ display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; }
+
+/* --- Time compare modal --- */
+.timeCompareModal{
+  position:fixed; inset:0;
+  display:none;
+  align-items:center; justify-content:center;
+  background: rgba(0,0,0,0.55);
+  z-index: 9998;
+}
+.timeCompareModal.open{ display:flex; }
+.timeCompareInner{
+  width:min(560px, calc(100vw - 28px));
+  background: rgba(15,23,42,0.92);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  padding:14px 14px 16px;
+}
+.timeCompareTop{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.timeCompareTitle{ font-weight:800; font-size:16px; }
+.timeCompareBody{
+  display:flex; flex-direction:column; gap:10px;
+  font-size:14px;
+}
+.timeCompareGrid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+.timeCompareCard{
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:10px 12px;
+}
+.timeCompareK{ opacity:0.8; font-size:12px; margin-bottom:4px; }
+.timeCompareV{ font-weight:700; font-size:16px; }
+.timeCompareSmall{ opacity:0.78; font-size:12px; margin-top:4px; }
+
+/* --- Context menu --- */
+.ctxMenu{
+  position:fixed;
+  display:none;
+  z-index: 10000;
+  min-width: 220px;
+  background: rgba(15,23,42,0.95);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.50);
+  padding:6px;
+}
+.ctxMenu.open{ display:block; }
+.ctxItem{
+  width:100%;
+  text-align:left;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  padding:10px 10px;
+  border-radius: 10px;
+  cursor:pointer;
+}
+.ctxItem:hover{
+  background: rgba(255,255,255,0.06);
+}
+.ctxSep{
+  height:1px;
+  margin:6px 6px;
+  background: rgba(255,255,255,0.10);
+}
+
+/* Make profileSub buttons align nicely */
+#profileSub{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+
+
+/* =========================================================
+   v19 FIXES:
+   - Visit Card: Local Time card compact + left aligned
+   ========================================================= */
+#soApp #profileView .localTimeRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+#soApp #profileView .localTimeStack{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:2px;
+  min-width:0;
+}
+#soApp #profileView .localTimeValLine{min-width:0;}
+#soApp #profileView .localTimeMeta{
+  font-size:12px;
+  color:var(--muted);
+  opacity:.92;
+  line-height:1.2;
+  word-break: break-word;
+}
+
+
+#soApp #profileView .localTimeDateLine{
+  font-size:12px;
+  line-height:1.15;
+  opacity:.92;
+}
+#soApp #profileView .localTimeClockRow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:2px;
+}
+#soApp #profileView .localTimeDate{ font-weight:700; }
+
+
+/* =========================================================
+   Visit Card: Profile top column sizing + Local Time header
+   ========================================================= */
+#soApp #profileView .profileTopCol{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  min-width:0;
+  flex:1;
+  width:min(460px, 100%);
+}
+#soApp #profileView .profileTopCol .profileCard{
+  width:100%;
+}
+#soApp #profileView .localTimeHead{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+
+
+/* ==============================
+   v22: Local Time card alignment
+   - Prevent weird indentation from preserved whitespace
+   - Keep the classic "one-line" look like before
+   ============================== */
+#soApp #profileView .profileCard .v{
+  white-space: normal;
+}
+#soApp #profileView .profileCardLocalTime .v{
+  text-align: left;
+}
+#soApp #profileView .localTz{
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+}
+#soApp #profileView .miniIconBtn-sm{
+  height: 22px;
+  min-width: 22px;
+  padding: 0 6px;
+  font-size: 12px;
+}
+#soApp #profileView .localTimeHead{
+  gap: 8px;
+}
+
+
+/* ==============================
+   Weather card (Open-Meteo)
+   ============================== */
+#soApp #profileView .profileCardWeather .k{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+#soApp #profileView .profileCardWeather .weatherMeta{
+  font-size:12px;
+  color:var(--muted);
+  opacity:.95;
+  white-space:nowrap;
+}
+#soApp #profileView .profileCardWeather .v{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+#soApp #profileView .weatherTopLine{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  line-height:1.15;
+}
+#soApp #profileView .weatherEmoji{ font-size:18px; margin-right:2px; }
+#soApp #profileView .weatherDesc{ font-weight:800; }
+#soApp #profileView .weatherNums{
+  color:var(--muted);
+  font-weight:700;
+  font-size:12px;
+  opacity:.95;
+}
+#soApp #profileView .weatherBadges{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:2px;
+}
+#soApp #profileView .weatherBadge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 8px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  font-size:12px;
+  color:var(--text);
+  opacity:.95;
+}
+#soApp #profileView .weatherMuted{
+  color:var(--muted);
+  font-size:12px;
+  opacity:.95;
+}
+#soApp #profileView .weatherLoading{
+  color:var(--muted);
+  font-size:12px;
+  opacity:.92;
+}
+
+/* ==============================
+   Weather forecast (7-day) + Unit toggle
+   ============================== */
+#soApp #profileView .weatherHeadLeft{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+#soApp #profileView .weatherHeadRight{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:0 0 auto;
+}
+#soApp #profileView .weatherUnitToggle{
+  display:inline-flex;
+  align-items:center;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  border-radius:999px;
+  overflow:hidden;
+}
+#soApp #profileView .weatherUnitToggle .wUnitBtn{
+  appearance:none;
+  border:0;
+  margin:0;
+  padding:4px 8px;
+  font-size:12px;
+  line-height:1;
+  background: transparent;
+  color: var(--muted);
+  cursor:pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+#soApp #profileView .weatherUnitToggle .wUnitBtn:hover{
+  background: rgba(255,255,255,.08);
+  color: var(--text);
+}
+#soApp #profileView .weatherUnitToggle .wUnitBtn.active{
+  background: rgba(16,185,129,.18);
+  color: var(--text);
+}
+#soApp #profileView .weatherForecast{
+  margin-top:8px;
+  padding-top:8px;
+  border-top:1px solid rgba(255,255,255,.10);
+}
+#soApp #profileView .weatherForecastList{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+#soApp #profileView .weatherDayRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:6px 8px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.05);
+}
+#soApp #profileView .wdLeft{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+#soApp #profileView .wdEmoji{ font-size:16px; flex:0 0 auto; }
+#soApp #profileView .wdText{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  line-height:1.15;
+}
+#soApp #profileView .wdDay{
+  font-weight:800;
+  font-size:12px;
+  color: var(--text);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#soApp #profileView .wdDesc{
+  font-size:12px;
+  color: var(--muted);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#soApp #profileView .wdRight{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:0 0 auto;
+  white-space:nowrap;
+  font-size:12px;
+  color: var(--muted);
+  font-weight:700;
+}
+#soApp #profileView .wdTemp{
+  color: var(--text);
+  font-weight:800;
+}
+
+#soApp #profileView .weatherDayRow[data-day-index]{
+  cursor:pointer;
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+}
+#soApp #profileView .weatherDayRow[data-day-index]:hover{
+  border-color: rgba(16,185,129,.30);
+  background: rgba(16,185,129,.08);
+  transform: translateY(-1px);
+}
+#soApp #profileView .weatherDayRow.active{
+  border-color: rgba(16,185,129,.46);
+  background: rgba(16,185,129,.12);
+  box-shadow: 0 12px 30px rgba(16,185,129,.12);
+}
+#soApp #profileView .weatherHourlyWrap{
+  margin-top:8px;
+  padding:10px;
+  border-radius:14px;
+  border:1px solid rgba(16,185,129,.18);
+  background: rgba(8,18,16,.42);
+}
+#soApp #profileView .weatherHourlyHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+#soApp #profileView .weatherHourlyTitle{
+  font-weight:800;
+  font-size:12px;
+  color: var(--text);
+}
+#soApp #profileView .weatherHourlyList{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap:8px;
+}
+#soApp #profileView .weatherHourCard{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  padding:8px 9px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.05);
+}
+#soApp #profileView .weatherHourTime{
+  font-size:12px;
+  font-weight:800;
+  color: var(--text);
+}
+#soApp #profileView .weatherHourMain{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+}
+#soApp #profileView .weatherHourTemp{
+  font-weight:800;
+  color: var(--text);
+}
+#soApp #profileView .weatherHourMeta{
+  font-size:11px;
+  color: var(--muted);
+  line-height:1.25;
+}
+#soApp #profileView .weatherHourDesc{
+  font-size:11px;
+  color: var(--muted);
+  font-weight:700;
+}
+#soApp #profileView .weatherAlertBtn{
+  position:relative;
+  transition: border-color 140ms ease, background 140ms ease, color 140ms ease, box-shadow 140ms ease;
+}
+#soApp #profileView .weatherAlertBtn:hover{
+  border-color: rgba(245,158,11,.35);
+  background: rgba(245,158,11,.10);
+  color: #ffd27d;
+}
+#soApp #profileView .weatherAlertBtn.hasAlerts{
+  border-color: rgba(245,158,11,.38);
+  background: rgba(245,158,11,.10);
+  color: #ffd27d;
+  box-shadow: 0 8px 24px rgba(245,158,11,.14);
+}
+#soApp #profileView .weatherAlertBtn.hasAlerts::after{
+  content: attr(data-count);
+  position:absolute;
+  top:-5px;
+  right:-5px;
+  min-width:16px;
+  height:16px;
+  padding:0 4px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+  font-weight:900;
+  background: #ef4444;
+  color:#fff;
+  box-shadow: 0 6px 18px rgba(239,68,68,.30);
+}
+.weatherAlertNote{
+  font-size:12px;
+  color: var(--muted);
+  line-height:1.35;
+  margin-bottom:10px;
+}
+.weatherAlertList{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.weatherAlertItem{
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  border-radius:14px;
+  padding:10px 12px;
+}
+.weatherAlertItem[data-level="yellow"]{
+  border-color: rgba(250,204,21,.28);
+  background: rgba(250,204,21,.08);
+}
+.weatherAlertItem[data-level="orange"]{
+  border-color: rgba(249,115,22,.30);
+  background: rgba(249,115,22,.09);
+}
+.weatherAlertItem[data-level="red"]{
+  border-color: rgba(239,68,68,.32);
+  background: rgba(239,68,68,.10);
+}
+.weatherAlertTitle{
+  font-weight:900;
+  font-size:13px;
+  color: var(--text);
+}
+.weatherAlertDetail{
+  margin-top:4px;
+  font-size:12px;
+  color: var(--muted);
+  line-height:1.35;
+}
+.weatherAlertEmpty{
+  font-size:13px;
+  color: var(--text);
+  font-weight:700;
+}
+
+
+/* =========================================================
+   UI UPGRADE (2026-03-02)
+   - Dashboard row
+   - Right view tabs (Map | Card)
+   - Advanced filters popover
+   - Tags + check-in reminders
+   - Command menu (Ctrl/Cmd + K)
+   ========================================================= */
+
+#soApp .dash{
+  padding:10px 12px 6px;
+  border-top:1px solid rgba(255,255,255,.06);
+  background: rgba(0,0,0,.08);
+}
+#soApp .dashRow{
+  display:flex;
+  gap:10px;
+  overflow:auto;
+  padding-bottom:6px;
+  scrollbar-width: thin;
+}
+#soApp .dashCard{
+  flex:0 0 auto;
+  min-width: 210px;
+  max-width: 260px;
+  padding:10px 10px;
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(10,14,24,.58);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  cursor:pointer;
+  user-select:none;
+  transition: transform .12s ease, border-color .12s ease, background .12s ease;
+}
+#soApp .dashCard:hover{ transform: translateY(-1px); border-color: rgba(64,224,208,.35); background: rgba(12,18,30,.68); }
+#soApp .dashK{
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color: var(--muted);
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+#soApp .dashV{
+  margin-top:6px;
+  font-size:13px;
+  color: var(--text);
+  font-weight:800;
+  line-height:1.25;
+}
+#soApp .dashSub{
+  margin-top:4px;
+  font-size:12px;
+  color: var(--muted);
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#soApp .dashBadge{
+  font-size:12px;
+  font-weight:900;
+  padding:2px 8px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
+  color: var(--text);
+}
+
+#soApp .filterWrap{
+  position: relative;
+}
+#soApp .filterPopover{
+  position:absolute;
+  top: calc(100% + 8px);
+  right: 12px;
+  width: min(520px, calc(100vw - 24px));
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(8,12,20,.92);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 60px rgba(0,0,0,.55);
+  padding: 12px;
+  z-index: 20;
+  display:none;
+}
+#soApp .filterPopover.open{ display:block; }
+#soApp .fpGrid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 700px){
+  #soApp .fpGrid{ grid-template-columns: 1fr; }
+}
+#soApp .fpTitle{
+  font-weight:900;
+  color: var(--text);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+#soApp .fpGroup{
+  padding:10px;
+  border-radius: 12px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.18);
+}
+#soApp .fpGroup label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin: 8px 0;
+  cursor:pointer;
+  font-size: 13px;
+  color: var(--text);
+}
+
+#soApp .fpChecks{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 4px 10px;
+}
+#soApp .fpChecks label{ margin: 4px 0; }
+@media (min-width: 560px){
+  #soApp .fpChecks{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+#soApp .fpActions{
+  display:flex;
+  justify-content:flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+#soApp .fpGroup input[type="text"]{
+  width:100%;
+  margin-top:6px;
+  padding: 10px 10px;
+  border-radius: 12px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.22);
+  color: var(--text);
+  outline:none;
+}
+#soApp .fpTags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top: 10px;
+}
+#soApp .tagPill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
+  color: var(--text);
+  font-weight:800;
+  font-size:12px;
+  cursor:pointer;
+  user-select:none;
+}
+#soApp .tagPill.on{
+  border-color: rgba(64,224,208,.45);
+  box-shadow: 0 0 0 3px rgba(64,224,208,.12);
+}
+#soApp .tagPill .x{ opacity:.75; font-weight:900; }
+
+#soApp .tagRow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top: 6px;
+}
+#soApp .tagMini{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.14);
+  color: var(--muted);
+  font-weight:800;
+  font-size: 11px;
+  white-space:nowrap;
+  cursor:pointer;
+}
+
+#soApp .card.rightView{
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+#soApp #mapView, #soApp #profileView, #soApp #calendarView{
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+#soApp .rightTabs{
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display:flex;
+  gap:8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  background: rgba(8,12,20,.80);
+  backdrop-filter: blur(12px);
+}
+#soApp .rtTab{
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor:pointer;
+  font-weight:900;
+  font-size: 13px;
+}
+#soApp .rtTab.active{
+  border-color: rgba(64,224,208,.45);
+  box-shadow: 0 0 0 3px rgba(64,224,208,.12);
+}
+
+/* Calendar (Holidays) */
+#soApp #calTypeFilters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:center;
+}
+#soApp #calTypeFilters label{ white-space:nowrap; }
+#soApp .calChk{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+#soApp .calHolidayLine{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+#soApp .calHolidayDate{ min-width:160px; }
+
+#soApp .calHolidayDate .pill{
+  font-weight: 900;
+}
+#soApp .calHolidayDate .pill .calWd{
+  color: var(--emerald);
+  font-weight: 900;
+}
+#soApp .calEntryTitle{
+  color: var(--emerald);
+  font-weight: 900;
+  font-size: 14px;
+}
+#soApp .calEntryTitle .hint{
+  color: var(--text);
+  opacity: .78;
+  font-weight: 800;
+}
+#soApp .calEntryMeta{
+  width:100%;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:6px;
+}
+#soApp .calEntry .calEntryBody{
+  padding-top:8px;
+}
+
+
+#soApp .calGroup{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  background: rgba(0,0,0,.10);
+  padding:10px 12px;
+  margin:8px 0;
+}
+#soApp .calGroup summary{
+  list-style:none;
+  cursor:pointer;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+}
+#soApp .calGroup summary::-webkit-details-marker{ display:none; }
+#soApp .calGroupTitle{
+  flex:1 1 240px;
+  min-width: 240px;
+}
+#soApp .calGroupMeta{
+  width:100%;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:4px;
+}
+#soApp .calGroupItems{
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+#soApp .calItemRow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:flex-start;
+}
+#soApp .calItemRow .calItemLeft{
+  min-width:160px;
+}
+#soApp .calBadge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  background: rgba(16,185,129,.10);
+  border:1px solid rgba(16,185,129,.20);
+  color: var(--text);
+  font-size:12px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+/* ===== Calendar compact day grouping ===== */
+#soApp .calDayGroup{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  background: rgba(0,0,0,.10);
+  padding:10px 12px;
+  margin:8px 0;
+}
+#soApp .calDayHead{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:10px;
+  margin-bottom:8px;
+}
+#soApp .calDayHead .pill{
+  font-weight: 900;
+}
+#soApp .calDayItems{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+#soApp details.calHolidayRow{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  background: rgba(255,255,255,.03);
+  padding:7px 10px;
+}
+#soApp details.calHolidayRow.hlFlash{
+  outline: 2px solid rgba(16,185,129,.70);
+  box-shadow: 0 0 0 4px rgba(16,185,129,.12);
+}
+#soApp details.calHolidayRow.hlFlash summary{
+  background: rgba(16,185,129,.08);
+  border-radius: 10px;
+}
+#soApp details.calHolidayRow summary{
+  list-style:none;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+#soApp details.calHolidayRow summary::-webkit-details-marker{ display:none; }
+#soApp .calHolidayLine{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+#soApp .calHolidayFlag{
+  font-size: 16px;
+  line-height: 1;
+}
+#soApp .calHolidayCode{
+  display:inline-flex;
+  align-items:center;
+  padding:3px 8px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.10);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.2px;
+  opacity:.95;
+}
+#soApp .calHolidayLocal{
+  color: var(--emerald);
+  font-weight: 900;
+  font-size: 15px;
+}
+#soApp .calHolidayDash{
+  opacity:.65;
+  font-weight:900;
+}
+#soApp .calHolidayEn{
+  color: var(--text);
+  opacity:.78;
+  font-weight: 800;
+  font-size: 13px;
+}
+#soApp .calHolidayMetaLine{
+  margin-top:6px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+#soApp .calHolidayBody{
+  padding-top:8px;
+}
+/* Make weekday in date pill very visible */
+#soApp .pill .calWd{
+  color: var(--emerald);
+  font-weight: 900;
+}
+
+
+
+#soApp .cmdk{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display:none;
+}
+#soApp .cmdk.open{ display:block; }
+#soApp .cmdkOverlay{
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,.55);
+}
+#soApp .cmdkPanel{
+  position:absolute;
+  left: 50%;
+  top: 12%;
+  transform: translateX(-50%);
+  width: min(720px, calc(100vw - 28px));
+  border-radius: 16px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(8,12,20,.92);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 90px rgba(0,0,0,.65);
+  overflow:hidden;
+}
+#soApp .cmdkHeader{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+#soApp .cmdkHeader input{
+  flex: 1 1 auto;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.22);
+  color: var(--text);
+  outline:none;
+  font-weight:800;
+}
+#soApp .cmdkHint{
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight:800;
+}
+#soApp .cmdkList{
+  max-height: 56vh;
+  overflow:auto;
+  padding: 8px;
+}
+#soApp .cmdkItem{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 10px 10px;
+  border-radius: 12px;
+  cursor:pointer;
+  border:1px solid transparent;
+}
+#soApp .cmdkItem:hover{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.08);
+}
+#soApp .cmdkLeft{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+#soApp .cmdkTitle{
+  font-weight:900;
+  color: var(--text);
+  font-size: 13px;
+}
+#soApp .cmdkSub{
+  font-weight:800;
+  color: var(--muted);
+  font-size: 12px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#soApp .cmdkKbd{
+  font-size: 12px;
+  font-weight:900;
+  color: var(--text);
+  padding: 4px 8px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+}
+
+
+
+/* ==============================
+   Editor Accordion (collapsed sections)
+   Keeps first-time users from being overwhelmed.
+============================== */
+#soApp .editorAccordion{ display:flex; flex-direction:column; gap:10px; margin-top:2px; }
+#soApp .editorAccordion details{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  background: rgba(255,255,255,.03);
+  overflow:hidden;
+}
+#soApp .editorAccordion details[open]{
+  box-shadow: 0 0 0 1px rgba(57,255,180,.22), 0 10px 36px rgba(0,0,0,.35);
+}
+#soApp .editorAccordion summary{
+  list-style:none;
+  cursor:pointer;
+  user-select:none;
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:800;
+  letter-spacing:.2px;
+  color: #39ffb4; /* mint-green headings */
+  background: rgba(255,255,255,.02);
+}
+#soApp .editorAccordion summary::-webkit-details-marker{ display:none; }
+#soApp .editorAccordion summary::after{
+  content:"▸";
+  margin-left:auto;
+  color: rgba(255,255,255,.55);
+  transform: translateY(-1px);
+  transition: transform .16s ease, opacity .16s ease;
+  opacity:.9;
+}
+#soApp .editorAccordion details[open] summary{
+  background: rgba(57,255,180,.06);
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+#soApp .editorAccordion details[open] summary::after{
+  transform: rotate(90deg) translateX(1px);
+  opacity:1;
+}
+#soApp .editorAccordion .accBadge{
+  margin-left:8px;
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+  color: rgba(255,255,255,.9);
+  background: rgba(255,120,120,.20);
+  border: 1px solid rgba(255,120,120,.28);
+}
+#soApp .editorAccordion .accSub{
+  font-weight:700;
+  font-size:12px;
+  color: rgba(255,255,255,.62);
+}
+#soApp .editorAccordion .accBody{
+  padding: 12px 14px 16px;
+}
+#soApp .editorAccordion .accBody .row{ margin-top:0; }
+#soApp .editorAccordion .accBody .row + .row{ margin-top:12px; }
+
+/* Make accordion summaries feel tappable on mobile */
+@media (max-width: 720px){
+  #soApp .editorAccordion summary{ padding: 12px 12px; }
+  #soApp .editorAccordion .accBody{ padding: 12px; }
+}
+
+
+
+/* Quick chip: multi-line (used for Holiday quick) */
+#soApp .qchip.qchipMulti{
+  height: auto;
+  padding: 8px 10px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  text-align: left;
+  white-space: normal;
+  line-height: 1.25;
+}
+#soApp .qchip.qchipMulti .qcTop{
+  font-weight: 900;
+}
+#soApp .qchip.qchipMulti .qcCountries{
+  font-size: 12px;
+  opacity: .9;
+}
+#soApp .qchip.qchipMulti .qcCountries div{
+  margin-top: 2px;
+}
+
+/* Map: Legend window (matches Holidays window, but wide like before) */
+#soApp .soMapLegendCtrl{
+  min-width: auto;
+  padding-right: 12px;
+}
+#soApp .soMapLegendCtrl .sub{
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.10);
+  font-size: 12.5px;
+  line-height: 1.25;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  white-space: nowrap;
+}
+#soApp .soMapLegendCtrl .sub .line{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin-top: 0;
+}
+#soApp .soMapLegendCtrl .legHeart{
+  width: 18px;
+  text-align:center;
+  font-size: 14px;
+}
+#soApp .soHolidayMapCtrl .qiNext{
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  font-size: 12px;
+  line-height: 1.3;
+  opacity: .95;
+}
+/* Map: Holidays toggle + quick panel */
+#soApp .soHolidayMapCtrl{
+  background: rgba(0,0,0,.52);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 10px 10px 8px 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  backdrop-filter: blur(8px);
+  color: var(--text);
+  min-width: 180px;
+}
+#soApp .soHolidayMapCtrl .row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+#soApp .soHolidayMapCtrl .ttl{
+  font-weight: 900;
+  letter-spacing: .2px;
+}
+#soApp .soHolidayMapCtrl .sub{
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.10);
+  font-size: 12.5px;
+  line-height: 1.25;
+}
+#soApp .soHolidayMapCtrl .qiTop{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-weight: 900;
+}
+#soApp .soHolidayMapCtrl .qiTop .pill{
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+#soApp .soHolidayMapCtrl .qiCountries{
+  margin-top: 6px;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  opacity: .92;
+}
+#soApp .soHolidayMapCtrl .hint{
+  opacity: .75;
+  font-weight: 800;
+}
+#soApp .soHolidayMapCtrl .tog{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  user-select:none;
+}
+#soApp .soHolidayMapCtrl input[type="checkbox"]{
+  width: 16px;
+  height: 16px;
+  accent-color: rgb(16,185,129);
+}
+
+/* Map: small holiday marker badge */
+#soApp .holidayBadgeIcon{
+  width:20px; height:20px;
+  display:grid; place-items:center;
+  border-radius:999px;
+  background:rgba(15,23,42,.94);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 8px 20px rgba(0,0,0,.28), 0 0 0 1px rgba(255,255,255,.04) inset;
+  font-size:12px;
+  line-height:1;
+  transform:translate(10px,-8px);
+  pointer-events:none;
+}
+
+
+/* Fix: map holiday UI labels and popup hint chips must stay transparent */
+#soApp .soHolidayMapCtrl .hint,
+#soApp .soHolidayMapCtrl .ttl,
+#soApp .leaflet-popup .hint{
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+
+
+
+/* === Socials + active filter pills + mobile sheet === */
+#soApp .socialGrid{display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap:10px;}
+#soApp .socialMainRow{display:grid; grid-template-columns: 180px 1fr; gap:10px;}
+#soApp .socialHint{margin-top:6px;}
+#soApp .activeFiltersBar{
+  display:none;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:10px 14px 0;
+}
+#soApp .activeFiltersBar.show{display:flex;}
+#soApp .afPill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 11px;
+  border-radius:999px;
+  border:1px solid rgba(16,185,129,.22);
+  background: linear-gradient(180deg, rgba(16,185,129,.14), rgba(122,167,255,.10));
+  box-shadow: 0 0 18px rgba(16,185,129,.12);
+  font-size:12px;
+  color:var(--text);
+}
+#soApp .afPill button{
+  padding:0;
+  margin:0;
+  min-width:16px;
+  height:16px;
+  line-height:16px;
+  border:none;
+  background:transparent;
+  color:var(--muted);
+  cursor:pointer;
+}
+#soApp .afPill button:hover{transform:none; color:var(--text); background:transparent;}
+#soApp .socialLinksRow{display:flex; flex-wrap:wrap; gap:10px; align-items:center;}
+#soApp .socialIconLink{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:var(--text);
+  border:1px solid rgba(255,255,255,.14);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+  box-shadow: 0 8px 20px rgba(0,0,0,.18), 0 0 18px rgba(122,167,255,.10);
+  transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease, background .14s ease;
+  position:relative;
+}
+#soApp .socialIconLink:hover{
+  transform: translateY(-1px);
+  border-color: rgba(16,185,129,.34);
+  box-shadow: 0 12px 28px rgba(0,0,0,.24), 0 0 20px rgba(16,185,129,.16);
+}
+#soApp .socialIconLink.isMain{
+  border-color: rgba(16,185,129,.50);
+  box-shadow: 0 12px 28px rgba(0,0,0,.24), 0 0 24px rgba(16,185,129,.18);
+}
+#soApp .socialIconLink.isMain::after{
+  content:"Main";
+  position:absolute;
+  bottom:-7px;
+  right:-3px;
+  font-size:9px;
+  line-height:1;
+  padding:3px 5px;
+  border-radius:999px;
+  color:#dffcf2;
+  background: rgba(16,185,129,.78);
+  border:1px solid rgba(255,255,255,.20);
+}
+#soApp .socialSvg{
+  width:18px;
+  height:18px;
+  display:block;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.85;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter: drop-shadow(0 0 10px rgba(122,167,255,.14));
+}
+#soApp .socialSvgFill{fill:currentColor; stroke:none;}
+#soApp .socialSvgMixed{fill:currentColor; stroke:currentColor;}
+#soApp .socialIconLink[data-social="tiktok"]{color:#f3fbff;}
+#soApp .socialIconLink[data-social="instagram"]{color:#f7ecff;}
+#soApp .socialIconLink[data-social="discord"]{color:#eef2ff;}
+#soApp .socialIconLink[data-social="telegram"]{color:#e8f7ff;}
+#soApp .socialIconLink[data-social="whatsapp"]{color:#ebfff4;}
+#soApp .socialIconLink[data-social="youtube"]{color:#fff0f0;}
+#soApp .socialIconLink[data-social="website"]{color:#eefcff;}
+#soApp .socialIconLink[data-social="email"]{color:#fff7ec;}
+#soApp .socialPreviewRow{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
+#soApp .socialPreviewChip{
+  display:inline-flex; align-items:center; gap:7px;
+  padding:7px 10px; border-radius:999px;
+  background: rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.10);
+  color:var(--muted); font-size:12px;
+}
+#soApp .socialPreviewChip .socialSvg{width:14px; height:14px; filter:none; opacity:.95;}
+@media (max-width: 980px){
+  #soApp .socialGrid, #soApp .socialMainRow{grid-template-columns:1fr;}
+  #soApp #profileView.mobileSheet,
+  #soApp #calendarView.mobileSheet{
+    position:fixed !important;
+    left:10px;
+    right:10px;
+    top:max(10px, env(safe-area-inset-top));
+    bottom:max(10px, env(safe-area-inset-bottom));
+    z-index:70;
+    border-radius:22px;
+    overflow:auto;
+    border:1px solid rgba(255,255,255,.12);
+    background: linear-gradient(180deg, rgba(7,10,18,.98), rgba(11,15,26,.97));
+    box-shadow: 0 28px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.04) inset;
+  }
+  #soApp #profileView.mobileSheet .profileHead,
+  #soApp #calendarView.mobileSheet .profileHead{
+    position:sticky;
+    top:0;
+    z-index:2;
+    backdrop-filter: blur(10px) saturate(125%);
+    -webkit-backdrop-filter: blur(10px) saturate(125%);
+    background: linear-gradient(180deg, rgba(7,10,18,.95), rgba(11,15,26,.84));
+  }
+}
+
+
+/* === Safety fallback: keep right panel opening stable on mobile === */
+@media (max-width: 980px){
+  #soApp #profileView.mobileSheet,
+  #soApp #calendarView.mobileSheet{
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    z-index: auto !important;
+    border-radius: 18px !important;
+    overflow: auto !important;
+    box-shadow: none !important;
+  }
+}
+
+/* --- Keep map below dialogs / popups / sheets --- */
+#soApp #mapView{ z-index: 1; }
+#soApp #profileView,
+#soApp #calendarView{
+  position: relative;
+  z-index: 3;
+}
+#soApp .cmdk,
+#soApp .imgModal,
+#soApp .netModal,
+#soApp .unsavedModal,
+#soApp .timeCompareModal,
+#soApp .ctxMenu{
+  z-index: 12000 !important;
+}
+#soApp.soOverlayActive .leaflet-pane,
+#soApp.soOverlayActive .leaflet-control-container,
+#soApp.soOverlayActive #distanceFloatingBtn,
+#soApp.soOverlayActive #distanceHint{
+  pointer-events: none !important;
+}
+#soApp.soOverlayActive .mapOverlayTools{
+  opacity: 0.18;
+}
+
+</style>
