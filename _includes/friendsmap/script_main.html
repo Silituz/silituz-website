@@ -10263,58 +10263,13 @@ try{
 }catch{}
 
 
-// Mount the distance tool into Leaflet (bottom-left) and wire the button
-let __distanceControlMounted = false;
-function mountDistanceControl(){
-  if(__distanceControlMounted || !window.L || !map) return;
-  const btn = document.getElementById("distanceFloatingBtn");
-  const hint = document.getElementById("distanceHint");
-  if(!btn) return;
-
-  const ctrl = L.control({ position: "bottomleft" });
-  ctrl.onAdd = function(){
-    const wrap = L.DomUtil.create("div", "leaflet-control leaflet-control-distance");
-    try{ L.DomEvent.disableClickPropagation(wrap); L.DomEvent.disableScrollPropagation(wrap); }catch{}
-    wrap.appendChild(btn);
-    if(hint) wrap.appendChild(hint);
-    return wrap;
-  };
-  ctrl.addTo(map);
-  __distanceControlMounted = true;
-
-  if(!btn.dataset.distanceBound){
-    btn.addEventListener("click", (ev)=>{ ev.preventDefault(); ev.stopPropagation(); distToggle(); });
-    btn.dataset.distanceBound = "1";
-  }
-}
-
-function syncModalMapLock(){
-  const app = document.getElementById("soApp");
-  if(!app) return;
-  const selectors = [
-    ".unsavedModal.open",
-    ".timeCompareModal.open",
-    ".imgModal.show",
-    ".netModal.show",
-    ".cmdk.open",
-    ".ctxMenu[style*='display: block']"
-  ];
-  const locked = selectors.some(sel => document.querySelector(sel));
-  app.classList.toggle("modalLock", locked);
-  if(locked){
-    try{ map.closePopup(); }catch{}
-  }
-}
-
+// Wire the button
 document.addEventListener("DOMContentLoaded", ()=>{
-  mountDistanceControl();
-  syncModalMapLock();
-  const mo = new MutationObserver(()=> syncModalMapLock());
-  mo.observe(document.body, { attributes:true, subtree:true, attributeFilter:["class", "style"] });
+  const btn = document.getElementById("distanceFloatingBtn");
+  if(btn){
+    btn.addEventListener("click", (ev)=>{ ev.preventDefault(); ev.stopPropagation(); distToggle(); });
+  }
 });
-
-setTimeout(mountDistanceControl, 0);
-setTimeout(syncModalMapLock, 0);
 
 
   // ==============================
@@ -10445,5 +10400,132 @@ setTimeout(syncModalMapLock, 0);
     return out;
   }
 
+
+
+  // ==============================
+  // Bottom quick bar (liquid actions)
+  // ==============================
+  function quickBarPress(btn){
+    try{
+      if(!btn) return;
+      btn.classList.remove('isPressed');
+      void btn.offsetWidth;
+      btn.classList.add('isPressed');
+      clearTimeout(btn.__pressTimer);
+      btn.__pressTimer = setTimeout(()=> btn.classList.remove('isPressed'), 520);
+    }catch{}
+  }
+
+  function setQuickBarActive(which){
+    try{
+      const root = $('mobileQuickBar');
+      if(!root) return;
+      root.querySelectorAll('button[data-mqa]').forEach(btn=>{
+        const on = (btn.getAttribute('data-mqa') === which);
+        btn.classList.toggle('isActive', on);
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    }catch{}
+  }
+
+  function showMapForCurrentSelection(){
+    try{
+      if(selectedId) focusEntryOnMap(selectedId);
+      else showMapView();
+      setQuickBarActive('map');
+    }catch{
+      try{ $('tabMap')?.click(); }catch{}
+      setQuickBarActive('map');
+    }
+  }
+
+  function openCurrentCardAtTop(){
+    try{
+      if(selectedId) openProfileAndScrollTop(selectedId);
+      else{
+        showProfileView();
+        scrollProfileTopIntoView();
+      }
+      setQuickBarActive('card');
+    }catch{
+      try{ $('tabCard')?.click(); }catch{}
+      setQuickBarActive('card');
+    }
+  }
+
+  function runQuickBarAction(act, btn){
+    quickBarPress(btn);
+    setQuickBarActive(act);
+    try{
+      if(act === 'new'){
+        $('newBtn')?.click();
+        setTimeout(()=>{ try{ scrollEditorIntoView({ focus:true }); }catch{} }, 30);
+        return;
+      }
+      if(act === 'save'){
+        $('saveBtn')?.click();
+        return;
+      }
+      if(act === 'search'){
+        const s = $('search');
+        if(s){
+          try{ scrollWindowToElementTop(s, 12); }catch{}
+          try{ s.focus({ preventScroll:true }); }catch{ try{ s.focus(); }catch{} }
+          try{ s.select?.(); }catch{}
+        }
+        return;
+      }
+      if(act === 'import'){
+        try{ openImportPicker(); }catch{ $('importFile')?.click(); }
+        return;
+      }
+      if(act === 'export'){
+        $('exportBtn')?.click();
+        return;
+      }
+      if(act === 'map'){
+        showMapForCurrentSelection();
+        return;
+      }
+      if(act === 'card'){
+        openCurrentCardAtTop();
+        return;
+      }
+    }catch(err){
+      try{ console.error('quick bar action failed:', act, err); }catch{}
+    }
+  }
+
+  (function initBottomQuickBar(){
+    const root = $('mobileQuickBar');
+    if(!root || root.__quickReady) return;
+    root.__quickReady = true;
+
+    root.addEventListener('click', (ev)=>{
+      const btn = ev.target.closest('#mobileQuickBar button[data-mqa]');
+      if(!btn) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      runQuickBarAction(btn.getAttribute('data-mqa'), btn);
+    });
+
+    const tMap = $('tabMap');
+    const tCard = $('tabCard');
+    if(tMap && !tMap.__quickBound){
+      tMap.__quickBound = true;
+      tMap.addEventListener('click', ()=> setQuickBarActive('map'));
+    }
+    if(tCard && !tCard.__quickBound){
+      tCard.__quickBound = true;
+      tCard.addEventListener('click', ()=> setQuickBarActive('card'));
+    }
+
+    try{
+      const profileVisible = $('profileView') && getComputedStyle($('profileView')).display !== 'none';
+      setQuickBarActive(profileVisible ? 'card' : 'map');
+    }catch{
+      setQuickBarActive('map');
+    }
+  })();
 
 </script>
