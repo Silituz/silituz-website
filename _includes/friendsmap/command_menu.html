@@ -48,6 +48,8 @@
 
 <script>
 (function(){
+  function byId(id){ return document.getElementById(id); }
+
   function glow(btn){
     if(!btn) return;
     try{
@@ -61,26 +63,145 @@
     }, 950);
   }
 
+  function proxyClick(el){
+    if(!el) return false;
+    try{ el.focus && el.focus({ preventScroll:true }); }catch(e){}
+    try{ el.click(); return true; }catch(e){}
+    try{
+      el.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true, view:window }));
+      return true;
+    }catch(e){}
+    return false;
+  }
+
+  function smoothBehavior(){
+    try{
+      if(typeof window.prefersReducedMotion === 'function' && window.prefersReducedMotion()) return 'auto';
+    }catch(e){}
+    return 'smooth';
+  }
+
+  function activateView(view){
+    document.querySelectorAll('#mobileQuickBar .quickActionBtn[data-view]').forEach(function(el){
+      el.classList.toggle('isActive', (el.getAttribute('data-view')||'') === String(view||''));
+    });
+  }
+
+  function runAction(act, btn){
+    var action = String(act || '').toLowerCase();
+
+    if(action === 'new'){
+      var ok = proxyClick(byId('newBtn'));
+      setTimeout(function(){
+        try{
+          if(typeof window.scrollEditorIntoView === 'function'){
+            window.scrollEditorIntoView({ focus:true });
+            return;
+          }
+        }catch(e){}
+        var leftScroll = document.querySelector('#soApp .leftCol, #soApp .leftPanel, #soApp .left.card, #soApp .left');
+        try{ leftScroll && leftScroll.scrollTo({ top:0, behavior:smoothBehavior() }); }catch(e){}
+        try{ window.scrollTo({ top:0, behavior:smoothBehavior() }); }catch(e){}
+      }, 20);
+      return ok;
+    }
+
+    if(action === 'save') return proxyClick(byId('saveBtn'));
+
+    if(action === 'search'){
+      var s = byId('search');
+      if(!s) return false;
+      try{ s.scrollIntoView({ behavior:smoothBehavior(), block:'center' }); }catch(e){}
+      try{ s.focus(); }catch(e){}
+      try{ s.select && s.select(); }catch(e){}
+      return true;
+    }
+
+    if(action === 'import'){
+      var label = byId('importBtn');
+      var input = byId('importFile');
+      try{ if(input) input.value = ''; }catch(e){}
+
+      var opened = false;
+      if(label) opened = proxyClick(label) || opened;
+
+      setTimeout(function(){
+        try{
+          if(input && !(input.files && input.files.length)){
+            if(typeof input.showPicker === 'function') input.showPicker();
+            else proxyClick(input);
+          }
+        }catch(e){
+          try{ input && proxyClick(input); }catch(_e){}
+        }
+      }, 30);
+
+      return opened || !!input;
+    }
+
+    if(action === 'export') return proxyClick(byId('exportBtn'));
+
+    if(action === 'map'){
+      var okMap = proxyClick(byId('tabMap'));
+      activateView('map');
+      setTimeout(function(){
+        try{
+          if(typeof window.showMapForCurrentSelection === 'function'){
+            window.showMapForCurrentSelection();
+            return;
+          }
+        }catch(e){}
+        try{ byId('mapView') && byId('mapView').scrollIntoView({ behavior:smoothBehavior(), block:'start' }); }catch(e){}
+      }, 40);
+      return okMap;
+    }
+
+    if(action === 'card'){
+      var okCard = proxyClick(byId('tabCard'));
+      activateView('card');
+      setTimeout(function(){
+        var pv = byId('profileView');
+        try{ if(pv) pv.scrollTop = 0; }catch(e){}
+        try{ pv && pv.scrollTo({ top:0, behavior:smoothBehavior() }); }catch(e){}
+      }, 40);
+      return okCard;
+    }
+
+    return false;
+  }
+
   window.__soQuickPress = function(btn){
     glow(btn);
     return true;
+  };
+
+  window.__soQuickProxyAction = function(act, btn){
+    return runAction(act, btn);
   };
 
   window.__soQuickDirectRun = function(ev, act, btn){
     try{ ev && ev.preventDefault && ev.preventDefault(); }catch(e){}
     try{ ev && ev.stopPropagation && ev.stopPropagation(); }catch(e){}
     glow(btn);
-    try{
-      if(typeof window.__soQuickProxyAction === 'function'){
-        window.__soQuickProxyAction(act, btn);
-      }
-    }catch(e){
-      try{ console.error('Quick action failed:', act, e); }catch(_){}
+    try{ runAction(act, btn); }catch(e){
+      try{ console.error('Quick action failed:', act, e); }catch(_e){}
     }
     return false;
   };
 
   window.__soQuickRun = window.__soQuickDirectRun;
+
+  document.addEventListener('click', function(ev){
+    var b = ev.target.closest('#tabMap');
+    if(b) activateView('map');
+    b = ev.target.closest('#tabCard');
+    if(b) activateView('card');
+  }, true);
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ activateView('map'); }, { once:true });
+  }else{
+    activateView('map');
+  }
 })();
 </script>
-
