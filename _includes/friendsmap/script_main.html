@@ -6768,7 +6768,7 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
     const q = String(query||"").trim().toLowerCase();
 
     const cmds = [
-      { key:"map", title:"🗺️ Show Map", sub:"Switch right panel to Map", run: ()=>{ showMapForCurrentSelection(); scrollRightCardIntoView(); } },
+      { key:"map", title:"🗺️ Show Map", sub:"Switch right panel to Map", run: ()=>{ showMapForCurrentSelectionWithScroll(); } },
       { key:"card", title:"🪪 Show Card", sub:"Switch right panel to Card (selected person)", run: ()=>{ openCurrentCardAtTop(); } },
       { key:"privacy", title:"🔒 Toggle Privacy mode", sub:"Hide / show notes + private fields", run: async ()=>{ const nl = $("notesLock"); if(nl){ nl.checked = !nl.checked; nl.dispatchEvent(new Event("change")); } } },
       { key:"filters", title:"⋯ Open Advanced Filters", sub:"Smart filters + tags", run: ()=>{ openAdvancedFilters(true); } },
@@ -6905,6 +6905,28 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
         target.scrollIntoView({ behavior: beh, block: "start" });
       }
     }catch{}
+  }
+
+  function scrollMapTopIntoView(){
+    try{
+      const target = document.getElementById("mapView")
+        || document.getElementById("map")
+        || document.querySelector("#soApp .rightView")
+        || document.querySelector("#soApp .rightCol");
+      scrollWindowToElementTop(target, 8);
+      try{ document.getElementById("mapView")?.scrollTo?.({ top:0, behavior: prefersReducedMotion() ? "auto" : "smooth" }); }catch{}
+      try{ document.getElementById("mapView").scrollTop = 0; }catch{}
+    }catch{}
+  }
+
+  function showMapForCurrentSelectionWithScroll(){
+    showMapView();
+    scrollMapTopIntoView();
+    if(selectedId && entries.some(x=>x.id===selectedId)){
+      const delay = prefersReducedMotion() ? 0 : 360;
+      setTimeout(()=>{ try{ focusEntryOnMap(selectedId); }catch{} }, delay);
+      return;
+    }
   }
 
   function scrollProfileTopIntoView(){
@@ -10086,8 +10108,7 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
   const _tabCard = $("tabCard");
     const _tabCal = $("tabCal");
 if(_tabMap) _tabMap.addEventListener("click", ()=>{
-    showMapForCurrentSelection();
-    scrollRightCardIntoView();
+    showMapForCurrentSelectionWithScroll();
   });
   if(_tabCard) _tabCard.addEventListener("click", ()=>{
     if(selectedId){
@@ -10737,7 +10758,7 @@ function mountDistanceButtonIntoMap(attempt=0){
     }
     if(act === "import") return openImportPicker();
     if(act === "export") return exportJSON();
-    if(act === "map") return showMapForCurrentSelection();
+    if(act === "map") return showMapForCurrentSelectionWithScroll();
     if(act === "card") return openCurrentCardAtTop();
   }
 
