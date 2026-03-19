@@ -5453,6 +5453,37 @@ async function geocodeAddress(addr){
   }
 
 
+  function scrollMapIntoView(){
+    try{
+      const beh = prefersReducedMotion() ? "auto" : "smooth";
+      const target = document.getElementById("mapView")
+        || document.querySelector("#soApp .rightView")
+        || document.querySelector("#soApp .rightCol");
+      if(target && target.scrollIntoView){
+        target.scrollIntoView({ behavior: beh, block: "start" });
+      }
+    }catch{}
+  }
+
+  function showMapForCurrentSelection(){
+    showMapView();
+    scrollMapIntoView();
+    if(selectedId && entries.some(x=>x.id===selectedId)){
+      const wait = prefersReducedMotion() ? 80 : 340;
+      setTimeout(()=>{ try{ focusEntryOnMap(selectedId); }catch{} }, wait);
+      return;
+    }
+  }
+
+  function openCurrentCardAtTop(){
+    if(selectedId && entries.some(x=>x.id===selectedId)){
+      openProfileAndScrollTop(selectedId);
+      return;
+    }
+    toast("Select a person first");
+  }
+
+
   // ==============================
   // Calendar view: holidays (Nager.Date)
   // ==============================
@@ -9860,12 +9891,11 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
   const _tabCard = $("tabCard");
     const _tabCal = $("tabCal");
 if(_tabMap) _tabMap.addEventListener("click", ()=>{
-    showMapView();
-    scrollRightCardIntoView();
+    showMapForCurrentSelection();
   });
   if(_tabCard) _tabCard.addEventListener("click", ()=>{
     if(selectedId){
-      openProfile(selectedId);
+      openProfileAndScrollTop(selectedId);
       scrollRightCardIntoView();
     }else{
       toast("Select a person first");
