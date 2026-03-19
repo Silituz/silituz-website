@@ -6776,30 +6776,27 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
     }catch{}
   }
 
-  function scrollRightCardIntoView(){
+  function scrollRightCardIntoView(which="auto"){
     try{
-      const beh = prefersReducedMotion() ? "auto" : "smooth";
-      const target = document.getElementById("profileView")
-        || document.querySelector("#soApp .rightView")
-        || document.querySelector("#soApp .rightCol");
-      if(target && target.scrollIntoView){
-        target.scrollIntoView({ behavior: beh, block: "start" });
-      }
+      const wrap = document.querySelector("#soApp .rightView")
+        || document.querySelector("#soApp .rightCol")
+        || document.getElementById("mapView")
+        || document.getElementById("profileView");
+      const mapView = document.getElementById("mapView");
+      const profileView = document.getElementById("profileView");
+      const calView = document.getElementById("calendarView");
+      const wantsMap = which === "map";
+      const wantsCard = which === "card";
+      const wantsCal = which === "cal";
+      const target = wrap || (wantsMap ? mapView : wantsCard ? profileView : wantsCal ? calView : (mapView || profileView || calView));
+      scrollWindowToElementTop(target, 10);
     }catch{}
   }
 
   function scrollProfileTopIntoView(){
     try{
+      scrollRightCardIntoView("card");
       const beh = prefersReducedMotion() ? "auto" : "smooth";
-      const target = document.querySelector("#profileView .profileTop")
-        || document.querySelector("#profileView .profileCard")
-        || document.getElementById("profileBody")
-        || document.getElementById("profileView")
-        || document.querySelector("#soApp .rightView")
-        || document.querySelector("#soApp .rightCol");
-      if(target && target.scrollIntoView){
-        target.scrollIntoView({ behavior: beh, block: "start" });
-      }
       try{ document.getElementById("profileView")?.scrollTo?.({ top:0, behavior: beh }); }catch{}
       try{ document.getElementById("profileView").scrollTop = 0; }catch{}
       try{ document.getElementById("profileBody").scrollTop = 0; }catch{}
@@ -9836,15 +9833,15 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
     const _tabCal = $("tabCal");
 if(_tabMap) _tabMap.addEventListener("click", ()=>{
     showMapView();
-    scrollRightCardIntoView();
+    scrollRightCardIntoView("map");
     if(selectedId){
-      setTimeout(()=>{ try{ focusEntryOnMap(selectedId); }catch{} }, 80);
+      setTimeout(()=>{ try{ focusEntryOnMap(selectedId); }catch{} }, 220);
     }
   });
   if(_tabCard) _tabCard.addEventListener("click", ()=>{
     if(selectedId){
-      openProfile(selectedId);
-      scrollRightCardIntoView();
+      openProfileAndScrollTop(selectedId);
+      scrollRightCardIntoView("card");
     }else{
       toast("Select a person first");
     }
@@ -9852,7 +9849,7 @@ if(_tabMap) _tabMap.addEventListener("click", ()=>{
 
   if(_tabCal) _tabCal.addEventListener("click", ()=>{
     showCalendarView();
-    scrollRightCardIntoView();
+    scrollRightCardIntoView("cal");
   });
   // Advanced filters (popover)
   const _pop = document.getElementById("filterPopover");
