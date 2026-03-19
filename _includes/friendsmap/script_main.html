@@ -5504,11 +5504,13 @@ async function geocodeAddress(addr){
   }
 
   function showMapForCurrentSelection(){
+    showMapView();
+    scrollMapIntoView();
     if(selectedId && entries.some(x=>x.id===selectedId)){
-      focusEntryOnMap(selectedId);
+      const wait = prefersReducedMotion() ? 80 : 340;
+      setTimeout(()=>{ try{ focusEntryOnMap(selectedId); }catch{} }, wait);
       return;
     }
-    showMapView();
   }
 
   function openCurrentCardAtTop(){
@@ -6741,7 +6743,7 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
     const q = String(query||"").trim().toLowerCase();
 
     const cmds = [
-      { key:"map", title:"🗺️ Show Map", sub:"Switch right panel to Map", run: ()=>{ showMapForCurrentSelection(); scrollRightCardIntoView(); } },
+      { key:"map", title:"🗺️ Show Map", sub:"Switch right panel to Map", run: ()=>{ showMapForCurrentSelection(); } },
       { key:"card", title:"🪪 Show Card", sub:"Switch right panel to Card (selected person)", run: ()=>{ openCurrentCardAtTop(); } },
       { key:"privacy", title:"🔒 Toggle Privacy mode", sub:"Hide / show notes + private fields", run: async ()=>{ const nl = $("notesLock"); if(nl){ nl.checked = !nl.checked; nl.dispatchEvent(new Event("change")); } } },
       { key:"filters", title:"⋯ Open Advanced Filters", sub:"Smart filters + tags", run: ()=>{ openAdvancedFilters(true); } },
@@ -6871,7 +6873,29 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
   function scrollRightCardIntoView(){
     try{
       const beh = prefersReducedMotion() ? "auto" : "smooth";
-      const target = document.getElementById("profileView")
+      const mapView = document.getElementById("mapView");
+      const profileView = document.getElementById("profileView");
+      const calendarView = document.getElementById("calendarView");
+      const isVisible = (el)=>{
+        try{ return !!el && getComputedStyle(el).display !== "none"; }catch{ return !!el && el.style.display !== "none"; }
+      };
+      const target = (isVisible(mapView) && mapView)
+        || (isVisible(profileView) && (document.querySelector("#profileView .profileTop") || profileView))
+        || (isVisible(calendarView) && calendarView)
+        || mapView
+        || profileView
+        || document.querySelector("#soApp .rightView")
+        || document.querySelector("#soApp .rightCol");
+      if(target && target.scrollIntoView){
+        target.scrollIntoView({ behavior: beh, block: "start" });
+      }
+    }catch{}
+  }
+
+  function scrollMapIntoView(){
+    try{
+      const beh = prefersReducedMotion() ? "auto" : "smooth";
+      const target = document.getElementById("mapView")
         || document.querySelector("#soApp .rightView")
         || document.querySelector("#soApp .rightCol");
       if(target && target.scrollIntoView){
@@ -10061,7 +10085,6 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
 if(_tabMap) _tabMap.addEventListener("click", ()=>{
     try{ setMobileQuickActive("map"); }catch{}
     showMapForCurrentSelection();
-    scrollRightCardIntoView();
   });
   if(_tabCard) _tabCard.addEventListener("click", ()=>{
     try{ setMobileQuickActive("card"); }catch{}
