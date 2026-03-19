@@ -14,12 +14,93 @@
   </div>
 </div>
 
-<div class="mobileQuickBar" id="mobileQuickBar" aria-label="Quick actions">
-  <button type="button" data-mqa="new" aria-label="New entry"><span class="mqIcon" aria-hidden="true">✚</span><span class="mqLabel">New</span></button>
-  <button type="button" data-mqa="save" aria-label="Save"><span class="mqIcon" aria-hidden="true">💾</span><span class="mqLabel">Save</span></button>
-  <button type="button" data-mqa="search" aria-label="Search"><span class="mqIcon" aria-hidden="true">🔎</span><span class="mqLabel">Search</span></button>
-  <button type="button" data-mqa="import" aria-label="Import JSON"><span class="mqIcon" aria-hidden="true">📥</span><span class="mqLabel">Import</span></button>
-  <button type="button" data-mqa="export" aria-label="Export JSON"><span class="mqIcon" aria-hidden="true">📤</span><span class="mqLabel">Export</span></button>
-  <button type="button" data-mqa="map" aria-label="Map"><span class="mqIcon" aria-hidden="true">🗺️</span><span class="mqLabel">Map</span></button>
-  <button type="button" data-mqa="card" aria-label="Card"><span class="mqIcon" aria-hidden="true">🪪</span><span class="mqLabel">Card</span></button>
+
+<div class="mobileQuickBar" id="mobileQuickBar" aria-label="Mobile quick actions">
+  <button type="button" data-mqa="new" onclick="window.soQuickBarRun&&window.soQuickBarRun('new', this); return false;">➕<span>New</span></button>
+  <button type="button" data-mqa="save" onclick="window.soQuickBarRun&&window.soQuickBarRun('save', this); return false;">💾<span>Save</span></button>
+  <button type="button" data-mqa="search" onclick="window.soQuickBarRun&&window.soQuickBarRun('search', this); return false;">🔎<span>Search</span></button>
+  <button type="button" data-mqa="import" onclick="window.soQuickBarRun&&window.soQuickBarRun('import', this); return false;">📥<span>Import</span></button>
+  <button type="button" data-mqa="export" onclick="window.soQuickBarRun&&window.soQuickBarRun('export', this); return false;">📤<span>Export</span></button>
+  <button type="button" data-mqa="map" onclick="window.soQuickBarRun&&window.soQuickBarRun('map', this); return false;">🗺️<span>Map</span></button>
+  <button type="button" data-mqa="card" onclick="window.soQuickBarRun&&window.soQuickBarRun('card', this); return false;">🪪<span>Card</span></button>
 </div>
+
+<script>
+(function(){
+  const $ = (id) => document.getElementById(id);
+  function clearState(){
+    document.querySelectorAll('#mobileQuickBar button').forEach((b)=>{
+      b.classList.remove('isActive','isPressed');
+    });
+  }
+  function mark(btn, sticky){
+    if(!btn) return;
+    clearState();
+    btn.classList.add(sticky ? 'isActive' : 'isPressed');
+    if(!sticky){
+      window.setTimeout(()=> btn.classList.remove('isPressed'), 900);
+    }
+  }
+  function syncFromTabs(){
+    const mapBtn = document.querySelector('#mobileQuickBar button[data-mqa="map"]');
+    const cardBtn = document.querySelector('#mobileQuickBar button[data-mqa="card"]');
+    const tabMap = $('tabMap');
+    const tabCard = $('tabCard');
+    const mapOn = !!(tabMap && (tabMap.classList.contains('active') || tabMap.getAttribute('aria-selected') === 'true'));
+    const cardOn = !!(tabCard && (tabCard.classList.contains('active') || tabCard.getAttribute('aria-selected') === 'true'));
+    if(mapOn){ clearState(); mapBtn?.classList.add('isActive'); return; }
+    if(cardOn){ clearState(); cardBtn?.classList.add('isActive'); return; }
+  }
+  window.soQuickBarRun = function(act, btn){
+    try{
+      switch(String(act||'')){
+        case 'new':
+          $('newBtn')?.click();
+          try{ $('editorAccordion')?.scrollIntoView({ behavior:'smooth', block:'start' }); }catch{}
+          mark(btn, false);
+          break;
+        case 'save':
+          $('saveBtn')?.click();
+          mark(btn, false);
+          break;
+        case 'search': {
+          const s = $('search');
+          if(s){
+            try{ s.focus(); }catch{}
+            try{ s.select?.(); }catch{}
+            try{ s.scrollIntoView({ behavior:'smooth', block:'center' }); }catch{}
+          }
+          mark(btn, false);
+          break;
+        }
+        case 'import':
+          $('importBtn')?.click();
+          mark(btn, false);
+          break;
+        case 'export':
+          $('exportBtn')?.click();
+          mark(btn, false);
+          break;
+        case 'map':
+          $('tabMap')?.click();
+          mark(btn, true);
+          break;
+        case 'card':
+          $('tabCard')?.click();
+          mark(btn, true);
+          break;
+      }
+    }catch(err){
+      console.error('Quick bar action failed:', act, err);
+    }
+    window.setTimeout(syncFromTabs, 120);
+    return false;
+  };
+  document.addEventListener('click', function(ev){
+    const tab = ev.target.closest('#tabMap, #tabCard');
+    if(tab) window.setTimeout(syncFromTabs, 0);
+  }, true);
+  document.addEventListener('DOMContentLoaded', syncFromTabs);
+  window.setTimeout(syncFromTabs, 250);
+})();
+</script>
