@@ -5772,12 +5772,10 @@
   #soApp .hdrStatsGrid{ grid-template-columns: 1fr; }
 }
 
-</style>
+
 
 /* === Cursor visibility polish: quick bar + import preview === */
-#soApp .mobileQuickBar{
-  cursor: pointer;
-}
+#soApp .mobileQuickBar,
 #soApp .mobileQuickBar button,
 #soApp .mobileQuickBar button *,
 #soApp .mobileQuickBar [data-mqa],
@@ -5796,7 +5794,7 @@
 #soApp .importPreviewLine *,
 #soApp .importPreviewMeta b,
 #soApp .importPreviewSummary b{
-  cursor: pointer !important;
+  cursor: default !important;
 }
 #soApp .importPreviewLine{
   border-radius: 12px;
@@ -5806,3 +5804,5 @@
   background: rgba(255,255,255,.045);
   box-shadow: inset 0 0 0 1px rgba(16,185,129,.18);
 }
+
+</style>
