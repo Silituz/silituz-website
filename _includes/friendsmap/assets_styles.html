@@ -5814,4 +5814,28 @@
 }
 #soApp .mobileQuickBar button:active{ transform: translateY(1px) !important; }
 
+
+
+/* === Fixes: map button flow, toast above quick bar, hide standalone distance button === */
+#soApp > #distanceFloatingBtn,
+#soApp > #distanceHint{
+  display:none !important;
+}
+#soApp .leaflet-control-distance #distanceFloatingBtn{
+  display:flex !important;
+}
+#soApp .leaflet-control-distance #distanceHint{
+  display:block !important;
+}
+#soApp .toast{
+  bottom: calc(max(10px, env(safe-area-inset-bottom)) + 92px) !important;
+  z-index: 10030 !important;
+}
+@media (max-width: 640px){
+  #soApp .toast{
+    bottom: calc(max(8px, env(safe-area-inset-bottom)) + 88px) !important;
+    max-width: min(92vw, 560px);
+  }
+}
+
 </style>
