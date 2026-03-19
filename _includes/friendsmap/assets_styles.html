@@ -4504,10 +4504,34 @@
   border:1px solid rgba(255,255,255,.10);
   background: rgba(255,255,255,.05);
 }
+#soApp #profileView .weatherHourCard.is-current{
+  border-color: rgba(16,185,129,.62);
+  background: linear-gradient(180deg, rgba(16,185,129,.18), rgba(16,185,129,.10));
+  box-shadow: 0 10px 24px rgba(16,185,129,.16), inset 0 0 0 1px rgba(16,185,129,.18);
+}
 #soApp #profileView .weatherHourTime{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
   font-size:12px;
   font-weight:800;
   color: var(--text);
+}
+#soApp #profileView .weatherHourNow{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:36px;
+  padding:2px 8px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.02em;
+  color:#cffff0;
+  border:1px solid rgba(16,185,129,.56);
+  background: rgba(16,185,129,.16);
+  box-shadow: inset 0 0 0 1px rgba(16,185,129,.10), 0 4px 14px rgba(16,185,129,.14);
 }
 #soApp #profileView .weatherHourMain{
   display:flex;
@@ -5835,123 +5859,6 @@
   #soApp .toast{
     bottom: calc(max(8px, env(safe-area-inset-bottom)) + 88px) !important;
     max-width: min(92vw, 560px);
-  }
-}
-
-
-/* === Precise overrides: quick bar glass/neon + map-only distance control + toast placement === */
-#soApp .mobileQuickBar{
-  background: transparent !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-#soApp .mobileQuickBar button{
-  background: linear-gradient(180deg, rgba(16,23,34,.56), rgba(10,16,26,.42)) !important;
-  border: 1px solid rgba(255,255,255,.14) !important;
-  box-shadow:
-    0 10px 26px rgba(0,0,0,.24),
-    inset 0 1px 0 rgba(255,255,255,.08),
-    inset 0 0 0 1px rgba(255,255,255,.02) !important;
-  backdrop-filter: blur(16px) saturate(1.16) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(1.16) !important;
-}
-#soApp .mobileQuickBar button:hover,
-#soApp .mobileQuickBar button:focus-visible{
-  border-color: rgba(22,185,129,.92) !important;
-  box-shadow:
-    0 0 0 1px rgba(22,185,129,.32),
-    0 0 18px rgba(22,185,129,.34),
-    0 10px 26px rgba(0,0,0,.24),
-    inset 0 1px 0 rgba(255,255,255,.08) !important;
-  transform: translateY(-1px);
-}
-#soApp .mobileQuickBar button.active,
-#soApp .mobileQuickBar button[data-mqa="map"].active,
-#soApp .mobileQuickBar button[data-mqa="card"].active{
-  border-color: rgba(16,185,129,.96) !important;
-  background: linear-gradient(180deg, rgba(15,28,30,.68), rgba(8,17,20,.54)) !important;
-  box-shadow:
-    0 0 0 1px rgba(16,185,129,.34),
-    0 0 20px rgba(16,185,129,.32),
-    0 12px 28px rgba(0,0,0,.28),
-    inset 0 1px 0 rgba(255,255,255,.08) !important;
-}
-#soApp .mobileQuickBar button:active{ transform: translateY(1px) !important; }
-
-/* Standalone distance button must never sit on the page outside the map */
-#soApp > #distanceFloatingBtn,
-#soApp > #distanceHint{
-  display: none !important;
-}
-
-/* Only the map-integrated distance control gets the glass look */
-#soApp .leaflet-control-distance{
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px !important;
-  margin: 0 0 12px 12px !important;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: linear-gradient(180deg, rgba(16,22,34,.46), rgba(10,14,24,.30)) !important;
-  backdrop-filter: blur(16px) saturate(1.18) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(1.18) !important;
-  box-shadow: 0 12px 30px rgba(0,0,0,.30), 0 0 1px rgba(255,255,255,.05) inset !important;
-}
-#soApp .leaflet-control-distance #distanceFloatingBtn{
-  position: static !important;
-  left: auto !important;
-  right: auto !important;
-  top: auto !important;
-  bottom: auto !important;
-  z-index: auto !important;
-  width: 38px !important;
-  height: 38px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border-radius: 12px !important;
-  border: 1px solid rgba(255,255,255,.10) !important;
-  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04)) !important;
-  color: rgba(235,120,120,.98) !important;
-  box-shadow: 0 8px 20px rgba(0,0,0,.22), 0 0 1px rgba(255,255,255,.05) inset !important;
-  backdrop-filter: blur(16px) saturate(1.18) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(1.18) !important;
-}
-#soApp .leaflet-control-distance #distanceFloatingBtn.active{
-  background: linear-gradient(180deg, rgba(220,90,90,.24), rgba(220,90,90,.12)) !important;
-  box-shadow: 0 0 18px rgba(220,90,90,.26), 0 8px 20px rgba(0,0,0,.22) !important;
-}
-#soApp .leaflet-control-distance #distanceHint{
-  position: absolute !important;
-  left: 52px !important;
-  right: auto !important;
-  bottom: 0 !important;
-  top: auto !important;
-  max-width: min(280px, calc(100vw - 110px)) !important;
-  padding: 8px 10px !important;
-  border-radius: 14px !important;
-  border: 1px solid rgba(255,255,255,.12) !important;
-  background: linear-gradient(180deg, rgba(16,22,34,.46), rgba(10,14,24,.30)) !important;
-  color: rgb(235,235,245) !important;
-  backdrop-filter: blur(16px) saturate(1.18) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(1.18) !important;
-  box-shadow: 0 12px 30px rgba(0,0,0,.30), 0 0 1px rgba(255,255,255,.05) inset !important;
-}
-#soApp .leaflet-control-distance #distanceHint:empty{
-  display: none !important;
-}
-
-/* Toasts should float above the quick bar */
-#soApp .toast{
-  bottom: calc(env(safe-area-inset-bottom) + 92px) !important;
-  z-index: 10020 !important;
-}
-@media (max-width: 980px){
-  #soApp .toast{
-    bottom: calc(env(safe-area-inset-bottom) + 92px) !important;
   }
 }
 
