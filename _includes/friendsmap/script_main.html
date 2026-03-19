@@ -5479,6 +5479,19 @@ async function geocodeAddress(addr){
     tMap.setAttribute("aria-selected", isMap ? "true" : "false");
     tCard.setAttribute("aria-selected", isCard ? "true" : "false");
     if(tCal) tCal.setAttribute("aria-selected", isCal ? "true" : "false");
+
+    try{
+      const mq = document.getElementById("mobileQuickBar");
+      if(mq){
+        mq.querySelectorAll("button[data-mqa]").forEach(btn=>{
+          const act = String(btn.getAttribute("data-mqa") || "").toLowerCase();
+          const on = (act === "map" && isMap) || (act === "card" && isCard) || (act === "cal" && isCal);
+          btn.classList.toggle("active", !!on);
+          if(on) btn.setAttribute("aria-pressed", "true");
+          else btn.removeAttribute("aria-pressed");
+        });
+      }
+    }catch{}
   }
 
   function showMapView(){
