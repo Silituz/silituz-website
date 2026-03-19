@@ -4504,34 +4504,10 @@
   border:1px solid rgba(255,255,255,.10);
   background: rgba(255,255,255,.05);
 }
-#soApp #profileView .weatherHourCard.is-current{
-  border-color: rgba(16,185,129,.62);
-  background: linear-gradient(180deg, rgba(16,185,129,.18), rgba(16,185,129,.10));
-  box-shadow: 0 10px 24px rgba(16,185,129,.16), inset 0 0 0 1px rgba(16,185,129,.18);
-}
 #soApp #profileView .weatherHourTime{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
   font-size:12px;
   font-weight:800;
   color: var(--text);
-}
-#soApp #profileView .weatherHourNow{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-width:36px;
-  padding:2px 8px;
-  border-radius:999px;
-  font-size:10px;
-  font-weight:900;
-  letter-spacing:.02em;
-  color:#cffff0;
-  border:1px solid rgba(16,185,129,.56);
-  background: rgba(16,185,129,.16);
-  box-shadow: inset 0 0 0 1px rgba(16,185,129,.10), 0 4px 14px rgba(16,185,129,.14);
 }
 #soApp #profileView .weatherHourMain{
   display:flex;
@@ -5797,59 +5773,10 @@
 }
 
 
-
-/* === Quick bar glass buttons + neon hover/active === */
-#soApp .mobileQuickBar{
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  padding: 8px 10px !important;
-}
-#soApp .mobileQuickBar button{
-  background: linear-gradient(180deg, rgba(16,22,34,.42), rgba(10,14,24,.28)) !important;
-  border: 1px solid rgba(255,255,255,.14) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 24px rgba(0,0,0,.24) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(1.15) !important;
-  backdrop-filter: blur(16px) saturate(1.15) !important;
-  transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease, background .16s ease !important;
-}
-#soApp .mobileQuickBar button:hover,
-#soApp .mobileQuickBar button:focus-visible{
-  border-color: rgba(16,185,129,.92) !important;
-  box-shadow:
-    inset 0 0 0 1px rgba(16,185,129,.32),
-    0 0 0 1px rgba(16,185,129,.28),
-    0 0 18px rgba(16,185,129,.34),
-    0 10px 24px rgba(0,0,0,.24) !important;
-  background: linear-gradient(180deg, rgba(18,28,39,.52), rgba(10,16,24,.34)) !important;
-}
-#soApp .mobileQuickBar button.active,
-#soApp .mobileQuickBar button[data-mqa="map"].active,
-#soApp .mobileQuickBar button[data-mqa="card"].active{
-  border-color: rgba(16,185,129,.96) !important;
-  box-shadow:
-    inset 0 0 0 1px rgba(16,185,129,.38),
-    0 0 0 1px rgba(16,185,129,.30),
-    0 0 22px rgba(16,185,129,.38),
-    0 10px 24px rgba(0,0,0,.26) !important;
-  background: linear-gradient(180deg, rgba(16,36,34,.40), rgba(9,18,20,.28)) !important;
-}
-#soApp .mobileQuickBar button:active{ transform: translateY(1px) !important; }
-
-
-
-/* === Fixes: map button flow, toast above quick bar, hide standalone distance button === */
+/* === Merge restore fixes (inside style tag only) === */
 #soApp > #distanceFloatingBtn,
 #soApp > #distanceHint{
   display:none !important;
-}
-#soApp .leaflet-control-distance #distanceFloatingBtn{
-  display:flex !important;
-}
-#soApp .leaflet-control-distance #distanceHint{
-  display:block !important;
 }
 #soApp .toast{
   bottom: calc(max(10px, env(safe-area-inset-bottom)) + 92px) !important;
@@ -5861,90 +5788,8 @@
     max-width: min(92vw, 560px);
   }
 }
-
-</style>
-
-
-/* === Merge fix: keep weather current-hour highlight + restore map/card scroll + hide legacy page distance button === */
-#soApp > #distanceFloatingBtn,
-#soApp > #distanceHint{
-  display:none !important;
-}
-
-#soApp .leaflet-control-distance{
-  position:relative;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin:0 0 12px 12px !important;
-  padding:6px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.12);
-  background: linear-gradient(180deg, rgba(16,22,34,.46), rgba(10,14,24,.30)) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(1.18);
-  backdrop-filter: blur(16px) saturate(1.18);
-  box-shadow: 0 12px 30px rgba(0,0,0,.30), 0 0 1px rgba(255,255,255,.05) inset;
-}
-#soApp .leaflet-control-distance #distanceFloatingBtn{
-  position:static !important;
-  left:auto !important;
-  right:auto !important;
-  top:auto !important;
-  bottom:auto !important;
-  z-index:auto !important;
-  display:flex !important;
-  align-items:center;
-  justify-content:center;
-  width:38px !important;
-  height:38px !important;
-  margin:0 !important;
-  padding:0 !important;
-  border-radius:12px !important;
-  border:1px solid rgba(255,255,255,.10) !important;
-  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03)) !important;
-  color: rgba(235,140,140,.98) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(1.18);
-  backdrop-filter: blur(16px) saturate(1.18);
-  box-shadow: 0 8px 20px rgba(0,0,0,.22), 0 0 1px rgba(255,255,255,.08) inset !important;
-}
-#soApp .leaflet-control-distance #distanceFloatingBtn:hover{
-  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06)) !important;
-}
-#soApp .leaflet-control-distance #distanceFloatingBtn.active{
-  background: linear-gradient(180deg, rgba(220,90,90,.24), rgba(220,90,90,.12)) !important;
-  border-color: rgba(255,160,160,.34) !important;
-  box-shadow: 0 0 18px rgba(220,90,90,.22), 0 8px 20px rgba(0,0,0,.22), 0 0 1px rgba(255,255,255,.08) inset !important;
-}
-#soApp .leaflet-control-distance #distanceHint{
-  position:absolute !important;
-  left:52px !important;
-  right:auto !important;
-  bottom:0 !important;
-  top:auto !important;
-  z-index:721 !important;
-  max-width:min(280px, calc(100vw - 110px));
-  padding:8px 10px !important;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.12);
-  background: linear-gradient(180deg, rgba(16,22,34,.72), rgba(10,14,24,.54)) !important;
-  color: rgba(235,235,255,.96);
-  -webkit-backdrop-filter: blur(16px) saturate(1.18);
-  backdrop-filter: blur(16px) saturate(1.18);
-  box-shadow: 0 12px 30px rgba(0,0,0,.32), 0 0 1px rgba(255,255,255,.05) inset !important;
-}
 #soApp .leaflet-control-distance #distanceHint:empty{
   display:none !important;
 }
 
-@media (max-width:680px){
-  #soApp .leaflet-control-distance{
-    margin:0 0 10px 10px !important;
-    padding:5px;
-  }
-  #soApp .leaflet-control-distance #distanceHint{
-    left:46px !important;
-    max-width:min(220px, calc(100vw - 90px));
-    font-size:11px;
-  }
-}
-
+</style>
