@@ -5524,79 +5524,185 @@
   }
 }
 
-</style>
 
-/* === Quick bar finish + cursor visibility + hide loose distance button === */
+
+/* === Final polish: quick bar + distance button + cursor visibility === */
+/* Remove the loose page-level distance button; only show it if it is mounted inside a Leaflet control */
 #soApp > #distanceFloatingBtn,
 #soApp > #distanceHint{
   display:none !important;
 }
-
-#soApp .mobileQuickBar{
-  background:
-    linear-gradient(180deg, rgba(20,30,48,.40), rgba(8,13,24,.20)) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(1.2) !important;
-  backdrop-filter: blur(18px) saturate(1.2) !important;
-  border:1px solid rgba(255,255,255,.12) !important;
-  box-shadow:
-    0 14px 36px rgba(0,0,0,.34),
-    inset 0 1px 0 rgba(255,255,255,.08),
-    inset 0 0 0 1px rgba(255,255,255,.03) !important;
-  justify-content:center !important;
-  align-items:center !important;
+#soApp #distanceFloatingBtn{
+  position:fixed;
+  left:16px;
+  bottom:16px;
+}
+#soApp .leaflet-control-distance{
+  display:flex !important;
+  align-items:center;
+  gap:8px;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  margin:0 0 12px 12px !important;
+}
+#soApp .leaflet-control-distance #distanceFloatingBtn{
+  display:flex !important;
+  position:static !important;
+  left:auto !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:auto !important;
+  width:38px !important;
+  height:38px !important;
+  padding:0 !important;
+  margin:0 !important;
+  border-radius:14px !important;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05)), rgba(8,12,22,.42) !important;
+  border:1px solid rgba(255,255,255,.16) !important;
+  color:rgba(230,120,120,.98) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.22) !important;
+  backdrop-filter: blur(18px) saturate(1.22) !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+#soApp .leaflet-control-distance #distanceFloatingBtn:hover{
+  transform:translateY(-1px);
+}
+#soApp .leaflet-control-distance #distanceFloatingBtn.active{
+  background:linear-gradient(180deg, rgba(220,90,90,.24), rgba(220,90,90,.10)), rgba(8,12,22,.42) !important;
+  box-shadow:0 0 0 1px rgba(220,90,90,.30), 0 0 18px rgba(220,90,90,.24), 0 12px 28px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+#soApp .leaflet-control-distance #distanceHint{
+  display:none;
+  position:absolute !important;
+  left:46px !important;
+  bottom:0 !important;
+  top:auto !important;
+  right:auto !important;
+  max-width:min(280px, calc(100vw - 110px)) !important;
+  padding:8px 10px !important;
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  background:linear-gradient(180deg, rgba(16,22,34,.74), rgba(10,14,24,.56)) !important;
+  color:rgba(255,235,235,.96) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.18) !important;
+  backdrop-filter: blur(16px) saturate(1.18) !important;
+  box-shadow:0 12px 30px rgba(0,0,0,.32), inset 0 0 0 1px rgba(255,255,255,.05) !important;
+  z-index:721 !important;
 }
 
+/* Bottom quick bar: keep floating, centered, liquid glass, green neon hover + sticky active state */
+#soApp .mobileQuickBar{
+  position:fixed !important;
+  left:50% !important;
+  right:auto !important;
+  bottom:max(14px, env(safe-area-inset-bottom)) !important;
+  transform:translateX(-50%) !important;
+  width:min(820px, calc(100vw - 22px)) !important;
+  max-width:calc(100vw - 22px) !important;
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:10px !important;
+  padding:10px !important;
+  border-radius:22px !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04)), rgba(8,12,22,.34) !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.25) !important;
+  backdrop-filter: blur(20px) saturate(1.25) !important;
+  box-shadow:0 18px 44px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.12) !important;
+  z-index:10020 !important;
+  cursor:pointer !important;
+}
 #soApp .mobileQuickBar::before{
   content:"";
   position:absolute;
-  inset:0;
+  inset:1px;
   border-radius:inherit;
   pointer-events:none;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0) 42%),
-    radial-gradient(120% 90% at 50% 0%, rgba(16,185,129,.08), transparent 58%);
+  background:linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.02) 46%, rgba(16,185,129,.04) 100%);
+  opacity:.95;
 }
-
+#soApp .mobileQuickBar,
+#soApp .mobileQuickBar *,
+#soApp .mobileQuickBar button,
+#soApp .mobileQuickBar button *{
+  cursor:pointer !important;
+}
 #soApp .mobileQuickBar button{
   position:relative;
   z-index:1;
+  min-width:72px !important;
+  padding:10px 12px !important;
+  border-radius:16px !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05)), rgba(255,255,255,.04) !important;
+  border:1px solid rgba(255,255,255,.16) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 10px 24px rgba(0,0,0,.16) !important;
+  transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease, background .18s ease !important;
+}
+#soApp .mobileQuickBar button:hover,
+#soApp .mobileQuickBar button:focus-visible{
+  transform:translateY(-1px) !important;
+  border-color:rgba(16,185,129,.90) !important;
+  box-shadow:0 0 0 1px rgba(16,185,129,.52), 0 0 18px rgba(16,185,129,.30), inset 0 1px 0 rgba(255,255,255,.16), 0 12px 28px rgba(0,0,0,.20) !important;
+}
+#soApp .mobileQuickBar button.isActive,
+#soApp .mobileQuickBar button[data-mqa="map"].isActive,
+#soApp .mobileQuickBar button[data-mqa="card"].isActive,
+#soApp .mobileQuickBar button.isPressed{
+  border-color:rgba(16,185,129,.95) !important;
+  background:linear-gradient(180deg, rgba(16,185,129,.18), rgba(16,185,129,.08)), rgba(255,255,255,.05) !important;
+  box-shadow:0 0 0 1px rgba(16,185,129,.56), 0 0 20px rgba(16,185,129,.32), inset 0 1px 0 rgba(255,255,255,.18), 0 12px 28px rgba(0,0,0,.22) !important;
+}
+#soApp .mobileQuickBar button:active{
+  transform:translateY(0) scale(.985) !important;
 }
 
-#soApp .mobileQuickBar,
-#soApp .mobileQuickBar *,
+/* Keep mouse cursor visible over the import preview rows and quick bar */
 #soApp .importPreviewModal,
-#soApp .importPreviewModal *,
 #soApp .importPreviewInner,
-#soApp .importPreviewMeta,
-#soApp .importPreviewSummary,
-#soApp .importPreviewList{
-  cursor:auto !important;
-}
-
-#soApp .mobileQuickBar button,
-#soApp .mobileQuickBar button *,
-#soApp .importPreviewModal button,
-#soApp .importPreviewModal button *,
-#soApp .importPreviewSummary button,
-#soApp .importPreviewSummary button *{
-  cursor:pointer !important;
-}
-
+#soApp .importPreviewHead,
+#soApp .importPreviewGrid,
+#soApp .importPreviewList,
+#soApp .importPreviewList *,
 #soApp .importPreviewLine,
 #soApp .importPreviewLine *,
-#soApp .importPreviewList,
-#soApp .importPreviewList *{
+#soApp .importPreviewMeta,
+#soApp .importPreviewSummary,
+#soApp .importPreviewSummary *,
+#soApp .importPreviewSub,
+#soApp .importPreviewTitle{
   cursor:default !important;
 }
-
+#soApp .importPreviewLine,
+#soApp .importPreviewLine *,
+#soApp .importPreviewList > *,
+#soApp .importPreviewList .pill,
+#soApp .importPreviewList .chip,
+#soApp .importPreviewList button,
+#soApp .importPreviewModal button,
+#soApp .importPreviewModal [role="button"]{
+  cursor:pointer !important;
+}
+#soApp .importPreviewLine{
+  border-radius:12px;
+  transition:background-color .16s ease, box-shadow .16s ease;
+}
 #soApp .importPreviewLine:hover{
-  background: rgba(255,255,255,.045);
-  box-shadow: inset 0 0 0 1px rgba(16,185,129,.18);
+  background:rgba(255,255,255,.045);
+  box-shadow:inset 0 0 0 1px rgba(16,185,129,.18);
 }
 
-#soApp .leaflet-control-distance #distanceFloatingBtn{
-  display:flex !important;
+@media (max-width: 860px){
+  #soApp .mobileQuickBar{
+    width:calc(100vw - 14px) !important;
+    gap:8px !important;
+  }
+  #soApp .mobileQuickBar button{
+    min-width:68px !important;
+    padding:8px 10px !important;
+  }
 }
-#soApp .leaflet-control-distance #distanceHint{
-  display:block !important;
-}
+</style>
