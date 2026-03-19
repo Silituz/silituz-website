@@ -265,10 +265,11 @@ function _hourLabel(isoStr){
   if(m) return m[1] + ":" + m[2];
   return s.slice(-5) || "—";
 }
+
 function _weatherNowPartsInTZ(tz){
   try{
     const now = new Date();
-    if(!tz){
+    if(!tz || tz === "auto"){
       return {
         day: [String(now.getFullYear()).padStart(4,'0'), String(now.getMonth()+1).padStart(2,'0'), String(now.getDate()).padStart(2,'0')].join('-'),
         hour: now.getHours(),
@@ -299,6 +300,7 @@ function _weatherNowPartsInTZ(tz){
     };
   }
 }
+
 function _resetWeatherAlertButton(titleText){
   const btn = document.querySelector("#profileWeatherCard .js-weather-alerts");
   if(!btn) return;
@@ -577,6 +579,7 @@ function _renderHourlyHTML(dayStr, rows, tz=""){
   const isCurrentDay = String(nowParts?.day || "") === String(dayStr || "");
   const currentHour = Number(nowParts?.hour);
   const progressPct = Math.max(0, Math.min(100, ((((Number(nowParts?.minute) || 0) * 60) + (Number(nowParts?.second) || 0)) / 3600) * 100));
+
   return rows.map(r=>{
     const desc = describeWeatherCode(r.code, 1);
     const feelsPart = (isFinite(Number(r.feels_c)) && Math.abs(Number(r.feels_c) - Number(r.t_c)) >= 1)
@@ -819,7 +822,7 @@ async function renderProfileWeatherHourly(entry, dayStr){
   const cached = _getWeatherHourlyCache(lat, lon);
   if(cached){
     const rows = _hourlyRowsForDay(cached, dayStr);
-    list.innerHTML = _renderHourlyHTML(dayStr, rows, entry.tz || "");
+    list.innerHTML = _renderHourlyHTML(dayStr, rows, entry.tz || "auto");
     _setWeatherAlertButton(entry, _getWeatherCurCache(lat, lon), _getWeatherDailyCache(lat, lon), cached);
     return;
   }
@@ -834,7 +837,7 @@ async function renderProfileWeatherHourly(entry, dayStr){
 
     _setWeatherHourlyCache(lat, lon, hd);
     const rows = _hourlyRowsForDay(hd, dayStr);
-    list.innerHTML = _renderHourlyHTML(dayStr, rows, entry.tz || "");
+    list.innerHTML = _renderHourlyHTML(dayStr, rows, entry.tz || "auto");
     _setWeatherAlertButton(entry, _getWeatherCurCache(lat, lon), _getWeatherDailyCache(lat, lon), hd);
   }catch(err){
     console.warn("Hourly forecast failed:", err);
