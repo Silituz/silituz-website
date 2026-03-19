@@ -9837,6 +9837,9 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
 if(_tabMap) _tabMap.addEventListener("click", ()=>{
     showMapView();
     scrollRightCardIntoView();
+    if(selectedId){
+      setTimeout(()=>{ try{ focusEntryOnMap(selectedId); }catch{} }, 80);
+    }
   });
   if(_tabCard) _tabCard.addEventListener("click", ()=>{
     if(selectedId){
