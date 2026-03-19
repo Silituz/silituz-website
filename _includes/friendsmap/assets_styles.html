@@ -5729,64 +5729,31 @@
 }
 
 #soApp .leaflet-control-distance{
-  position: relative;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin:0 0 12px 12px;
-  padding:6px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.12);
-  background: linear-gradient(180deg, rgba(16,22,34,.46), rgba(10,14,24,.34));
-  box-shadow: 0 12px 30px rgba(0,0,0,.30), 0 0 1px rgba(255,255,255,.05) inset;
-  -webkit-backdrop-filter: blur(16px) saturate(1.18);
-  backdrop-filter: blur(16px) saturate(1.18);
+  background:transparent;
+  border:0;
+  box-shadow:none;
 }
 #soApp .leaflet-control-distance #distanceFloatingBtn{
   position:static !important;
   left:auto !important;
   bottom:auto !important;
   z-index:auto !important;
-  display:flex !important;
-  align-items:center;
-  justify-content:center;
-  width:38px !important;
-  height:38px !important;
-  margin:0 !important;
+  width:36px !important;
+  height:36px !important;
+  margin:0;
   padding:0 !important;
-  border-radius:12px !important;
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05)) !important;
-  color: rgba(255,215,215,.98) !important;
-  border: 1px solid rgba(255,255,255,.12) !important;
-  box-shadow: 0 8px 20px rgba(0,0,0,.24), 0 0 0 1px rgba(255,255,255,.03) inset !important;
-  -webkit-backdrop-filter: blur(14px) saturate(1.16);
-  backdrop-filter: blur(14px) saturate(1.16);
-}
-#soApp .leaflet-control-distance #distanceFloatingBtn:hover{
-  background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.07)) !important;
-  border-color: rgba(255,255,255,.18) !important;
-}
-#soApp .leaflet-control-distance #distanceFloatingBtn.active{
-  background: linear-gradient(180deg, rgba(220,90,90,.24), rgba(220,90,90,.12)) !important;
-  border-color: rgba(255,150,150,.34) !important;
-  box-shadow: 0 10px 24px rgba(0,0,0,.28), 0 0 22px rgba(220,90,90,.22), 0 0 0 1px rgba(255,255,255,.04) inset !important;
+  border-radius:10px;
+  background: rgba(20,24,35,.95);
+  color: rgba(230,120,120,.95);
+  border: 1px solid rgba(220,90,90,.6);
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
 }
 #soApp .leaflet-control-distance #distanceHint{
   position:absolute;
   left:0;
-  bottom: calc(100% + 8px);
+  bottom:44px;
   z-index:700;
   max-width:260px;
-  padding:8px 10px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.12);
-  background: linear-gradient(180deg, rgba(16,22,34,.52), rgba(10,14,24,.40));
-  box-shadow: 0 12px 30px rgba(0,0,0,.30), 0 0 1px rgba(255,255,255,.05) inset;
-  -webkit-backdrop-filter: blur(16px) saturate(1.18);
-  backdrop-filter: blur(16px) saturate(1.18);
-}
-#soApp .leaflet-control-distance #distanceHint:empty{
-  display:none !important;
 }
 
 @media (max-width: 1200px){
@@ -5803,6 +5770,71 @@
 }
 @media (max-width: 360px){
   #soApp .hdrStatsGrid{ grid-template-columns: 1fr; }
+}
+
+
+
+/* === Map-only distance control tune (precise) === */
+#soApp .leaflet-control-distance{
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px 12px !important;
+  padding: 6px !important;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: linear-gradient(180deg, rgba(16,22,34,.46), rgba(10,14,24,.30)) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.18);
+  backdrop-filter: blur(16px) saturate(1.18);
+  box-shadow: 0 12px 30px rgba(0,0,0,.30), 0 0 1px rgba(255,255,255,.05) inset;
+}
+#soApp .leaflet-control-distance #distanceFloatingBtn{
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  z-index: auto !important;
+  width: 38px !important;
+  height: 38px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  background: linear-gradient(180deg, rgba(16,22,34,.46), rgba(10,14,24,.30)) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.18);
+  backdrop-filter: blur(16px) saturate(1.18);
+  color: rgba(230,120,120,.95) !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,.30), 0 0 1px rgba(255,255,255,.05) inset !important;
+}
+#soApp .leaflet-control-distance #distanceFloatingBtn:hover{
+  background: linear-gradient(180deg, rgba(20,28,42,.54), rgba(12,18,30,.38)) !important;
+}
+#soApp .leaflet-control-distance #distanceFloatingBtn.active{
+  background: linear-gradient(180deg, rgba(220,90,90,.24), rgba(220,90,90,.12)) !important;
+  border-color: rgba(255,150,150,.34) !important;
+  box-shadow: 0 0 0 1px rgba(255,150,150,.10) inset, 0 12px 30px rgba(0,0,0,.30), 0 0 18px rgba(220,90,90,.18) !important;
+}
+#soApp .leaflet-control-distance #distanceHint{
+  position: absolute;
+  left: 0;
+  bottom: 46px;
+  z-index: 700;
+  max-width: 260px;
+  padding: 8px 10px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  background: linear-gradient(180deg, rgba(16,22,34,.46), rgba(10,14,24,.30)) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.18);
+  backdrop-filter: blur(16px) saturate(1.18);
+  box-shadow: 0 12px 30px rgba(0,0,0,.30), 0 0 1px rgba(255,255,255,.05) inset !important;
+}
+#soApp .leaflet-control-distance #distanceHint:empty{
+  display: none !important;
 }
 
 </style>
