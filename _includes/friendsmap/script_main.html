@@ -15,6 +15,8 @@
     }catch{ return true; }
   })();
   const WEATHER_TOGGLE_KEY = LS_KEY + "__weather_on";
+  const IMPORT_BACKUP_KEY = LS_KEY + "__import_backup_v1";
+  const IMPORT_SCHEMA_VERSION = 3;
   let weatherOn = (()=>{ 
     try{
       const v = localStorage.getItem(WEATHER_TOGGLE_KEY);
@@ -23,6 +25,26 @@
   })();
 
   const $ = (id) => document.getElementById(id);
+
+
+  function __isAnyOverlayOpen(){
+    return !!document.querySelector('#soApp .imgModal.show, #soApp .netModal.show, #soApp .timeCompareModal.open, #soApp .unsavedModal.open, #soApp .importPreviewModal.show, #soApp .ctxMenu.open');
+  }
+
+  function syncOverlayLock(){
+    const root = $("soApp");
+    if(root) root.classList.toggle("overlayLock", __isAnyOverlayOpen());
+
+    if(typeof map === "undefined" || !map) return;
+    const locked = __isAnyOverlayOpen();
+    try{ locked ? map.dragging.disable() : map.dragging.enable(); }catch{}
+    try{ locked ? map.scrollWheelZoom.disable() : map.scrollWheelZoom.enable(); }catch{}
+    try{ locked ? map.doubleClickZoom.disable() : map.doubleClickZoom.enable(); }catch{}
+    try{ locked ? map.touchZoom.disable() : map.touchZoom.enable(); }catch{}
+    try{ locked ? map.boxZoom.disable() : map.boxZoom.enable(); }catch{}
+    try{ locked ? map.keyboard.disable() : map.keyboard.enable(); }catch{}
+  }
+
 
   function cmToFeetInchesStr(cm){
     const n = Number(cm);
@@ -1492,6 +1514,7 @@ function updateBirthdayCountdownUI(){
     img.src = src;
     m.classList.add("show");
     m.setAttribute("aria-hidden", "false");
+    syncOverlayLock();
     try{ const w = $("netCanvasWrap"); if(w) delete w.dataset._netCentered; }catch{}
   }
   function closeImageModal(){
@@ -1500,6 +1523,7 @@ function updateBirthdayCountdownUI(){
     img.src = "";
     m.classList.remove("show");
     m.setAttribute("aria-hidden", "true");
+    syncOverlayLock();
   }
   $("imgModal").addEventListener("click", (e)=>{
     if(e.target.id === "imgModal" ) closeImageModal();
@@ -1526,6 +1550,7 @@ function updateBirthdayCountdownUI(){
     const m = $("netModal");
     m.classList.add("show");
     m.setAttribute("aria-hidden", "false");
+    syncOverlayLock();
 
     // Ensure controls are reset only if empty
     if($("netSearch").value.trim() === "") $("netSearch").value = "";
@@ -1559,6 +1584,7 @@ function updateBirthdayCountdownUI(){
     const m = $("netModal");
     m.classList.remove("show");
     m.setAttribute("aria-hidden", "true");
+    syncOverlayLock();
     netHoverId = null;
     netPinnedId = null;
   }
@@ -1634,12 +1660,13 @@ function updateBirthdayCountdownUI(){
         const t = String(c?.type || "").trim() || "Know each other";
         const key = a + "|" + b;
         if(!edgeSeen.has(key)){
-          edgeSeen.set(key, { a, b, type: t, enemy: UNDERGROUND_REL.has(t) });
+          edgeSeen.set(key, { a, b, type: t, enemy: UNDERGROUND_REL.has(t), mutual:false, count:1 });
         }else{
-          // if other direction exists with different type, mark as mixed (but keep enemy if any)
           const ex = edgeSeen.get(key);
-          if(ex.type !== t) ex.type = ex.type; // keep first type as label
+          if(ex.type !== t) ex.type = ex.type;
           ex.enemy = ex.enemy || UNDERGROUND_REL.has(t);
+          ex.mutual = true;
+          ex.count = Math.max(2, Number(ex.count||1) + 1);
         }
       }
     }
@@ -1754,7 +1781,8 @@ function updateBirthdayCountdownUI(){
 
     const focusNode = nodeMap.get(focusId);
     const focusName = focusNode ? focusNode.name : "Focus";
-    $("netStats").textContent = `${nodes.length} people • ${edges.length} links • centered: ${focusName}`;
+    const mutualCount = edges.filter(e=> !!e.mutual).length;
+    $("netStats").textContent = `${nodes.length} people • ${edges.length} links • ${mutualCount} mutual • centered: ${focusName}`;
 
     // Split nodes into main + underground (underground shown on bottom arc)
     const mainNodes = nodes.filter(n=>!isUndergroundNode(n) || n.id===focusId);
@@ -1930,8 +1958,8 @@ function updateBirthdayCountdownUI(){
       t.setAttribute("x", String(mx));
       t.setAttribute("y", String(my));
       t.setAttribute("text-anchor","middle");
-      t.setAttribute("class", "netEdgeLabel" + (e.enemy ? " enemy" : ""));
-      t.textContent = String(e.type || "Know each other");
+      t.setAttribute("class", "netEdgeLabel" + (e.enemy ? " enemy" : "") + (e.mutual ? " mutual" : ""));
+      t.textContent = `${e.mutual ? "↔ " : ""}${String(e.type || "Know each other")}`;
       t.dataset.a = e.a;
       t.dataset.b = e.b;
       gEdges.appendChild(t);
@@ -1947,7 +1975,7 @@ function updateBirthdayCountdownUI(){
       ln.setAttribute("y1", String(p1.y));
       ln.setAttribute("x2", String(p2.x));
       ln.setAttribute("y2", String(p2.y));
-      ln.setAttribute("class", "netEdge" + (e.enemy ? " enemy" : ""));
+      ln.setAttribute("class", "netEdge" + (e.enemy ? " enemy" : "") + (e.mutual ? " mutual" : ""));
       ln.dataset.a = e.a;
       ln.dataset.b = e.b;
       gEdges.appendChild(ln);
@@ -2703,6 +2731,7 @@ e.fav = !!e.fav;
     try{ if(tempPin){ tempLayer.removeLayer(tempPin); tempPin = null; } }catch{}
     renderMarkers();
     updateCount();
+    try{ updateStats(); }catch{}
   }
 
   // ==============================
@@ -4616,6 +4645,53 @@ function refreshMarkerPopups(){
     return String(cc||"").toUpperCase();
   }
 
+
+  async function renderProfileHoliday(entry){
+    const body = $("profileHolidayBody");
+    if(!body) return;
+
+    const settings = loadHolidaySettings();
+    const selected = Array.isArray(settings.countries) ? settings.countries : [];
+    if(!selected.length){
+      body.innerHTML = '<span class="weatherMuted">Select countries in the Holidays tab to show personal holiday reminders.</span>';
+      return;
+    }
+
+    body.innerHTML = '<span class="weatherLoading">Loading holiday reminder…</span>';
+
+    try{
+      if(!__mapHolidayQuickCache) await refreshMapHolidayQuick();
+    }catch{}
+
+    const q = __mapHolidayQuickCache;
+    const items = Array.isArray(q?.items) ? q.items : [];
+    const match = items.find(h=> entryMatchesNextHolidayItem(entry, h));
+    if(!match){
+      body.innerHTML = '<span class="weatherMuted">No matching holiday found for the current country/region filters.</span>';
+      return;
+    }
+
+    const cc = String(match.__cc || '').toUpperCase();
+    const scope = String(match.__scope || cc || '').toUpperCase();
+    const tp = holidayTitleParts(match);
+    const name = tp.en || tp.local || match.name || match.localName || 'Holiday';
+    const inD = Number.isFinite(q?.inDays) ? q.inDays : null;
+    const when = (inD === 0) ? 'Today' : (inD === 1 ? 'In 1 day' : `In ${inD} days`);
+    const regionText = (scope && scope !== cc) ? regionLabel(scope) : countryLabel(cc);
+    const exactDate = q?.date ? fmtDate(q.date) : '—';
+
+    body.innerHTML = `
+      <div class="profileHolidayWrap">
+        <div><b>🎉 ${escapeHTML(name)}</b></div>
+        <div style="margin-top:4px;">${escapeHTML(when)} · ${escapeHTML(exactDate)}</div>
+        <div class="holidayMeta">
+          <span class="tagMini">${escapeHTML(scope || cc)}</span>
+          <span class="tagMini">${escapeHTML(regionText || countryLabel(cc))}</span>
+        </div>
+      </div>
+    `;
+  }
+
   function updateMapHolidayControlUI(){
     const box = document.getElementById("soMapHolidayCtrlBox");
     if(!box) return;
@@ -5425,6 +5501,22 @@ async function geocodeAddress(addr){
     $("profileView").style.display = "block";
     setRightTab("card");
     updateMobileSheets();
+  }
+
+  function showMapForCurrentSelection(){
+    if(selectedId && entries.some(x=>x.id===selectedId)){
+      focusEntryOnMap(selectedId);
+      return;
+    }
+    showMapView();
+  }
+
+  function openCurrentCardAtTop(){
+    if(selectedId && entries.some(x=>x.id===selectedId)){
+      openProfileAndScrollTop(selectedId);
+      return;
+    }
+    toast("Select a person first");
   }
 
 
@@ -6649,14 +6741,14 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
     const q = String(query||"").trim().toLowerCase();
 
     const cmds = [
-      { key:"map", title:"🗺️ Show Map", sub:"Switch right panel to Map", run: ()=>{ showMapView(); scrollRightCardIntoView(); } },
-      { key:"card", title:"🪪 Show Card", sub:"Switch right panel to Card (selected person)", run: ()=>{ if(selectedId){ openProfileAndScrollTop(selectedId); } else { toast("Select a person first"); } } },
+      { key:"map", title:"🗺️ Show Map", sub:"Switch right panel to Map", run: ()=>{ showMapForCurrentSelection(); scrollRightCardIntoView(); } },
+      { key:"card", title:"🪪 Show Card", sub:"Switch right panel to Card (selected person)", run: ()=>{ openCurrentCardAtTop(); } },
       { key:"privacy", title:"🔒 Toggle Privacy mode", sub:"Hide / show notes + private fields", run: async ()=>{ const nl = $("notesLock"); if(nl){ nl.checked = !nl.checked; nl.dispatchEvent(new Event("change")); } } },
       { key:"filters", title:"⋯ Open Advanced Filters", sub:"Smart filters + tags", run: ()=>{ openAdvancedFilters(true); } },
       { key:"clear", title:"🧹 Clear filters", sub:"Reset chips + advanced filters", run: ()=>{ syncFilterChipsToAll(); clearAdvancedFilters(); renderList(); renderDashboard(); } },
       { key:"export", title:"Export JSON", sub:"Download your data", run: ()=>{ exportJSON(); } },
       { key:"import", title:"Import JSON", sub:"Load data from a file", run: ()=>{ try{ openImportPicker(); }catch{ $("importFile")?.click(); } } },
-      { key:"new", title:"New entry", sub:"Clear editor for a new person", run: ()=>{ guardedAction(clearForm); } },
+      { key:"new", title:"New entry", sub:"Clear editor for a new person", run: ()=>{ guardedAction(()=>{ clearForm(); scrollEditorIntoView({ focus:true }); }); } },
     ];
 
     // Special parsing: "tag xxx"
@@ -6987,6 +7079,7 @@ const birthdayCard = entry.birthdate ? (()=>{
       entry.nativeLang ? `<div class="profileCard"><div class="k">Native language</div><div class="v">${escapeHTML(entry.nativeLang)}</div></div>` : "",
       entry.otherLangs ? `<div class="profileCard"><div class="k">Other languages</div><div class="v">${escapeHTML(entry.otherLangs)}</div></div>` : "",
       socialsCardHTML(entry),
+      `<div class="profileCard"><div class="k">Holiday reminder</div><div class="v" id="profileHolidayBody"><span class="weatherLoading">Loading holiday reminder…</span></div></div>`,
       entry.bloodType ? `<div class="profileCard"><div class="k">🩸 Blood type</div><div class="v">${notesHidden ? "🔒 Hidden" : escapeHTML(entry.bloodType)}</div></div>` : "",
       (entry.heightCm && Number(entry.heightCm)>0) ? `<div class="profileCard"><div class="k">Height</div><div class="v">${notesHidden ? "🔒 Hidden" : escapeHTML(String(entry.heightCm) + " cm (" + (cmToFeetInchesStr(entry.heightCm)||"") + ")")}</div></div>` : "",
       entry.allergies ? `<div class="profileCard"><div class="k">Allergies / Intolerances</div><div class="v" style="white-space:pre-wrap;">${notesHidden ? "🔒 Hidden" : escapeHTML(entry.allergies)}</div></div>` : "",
@@ -7012,6 +7105,7 @@ const birthdayCard = entry.birthdate ? (()=>{
     try{ bindProfileJumpLinks(); }catch{}
     try{ applyWeatherUnitUI(); hideWeatherForecast(true); }catch{}
     try{ renderProfileWeather(entry); }catch{}
+    try{ renderProfileHoliday(entry); }catch{}
   }
 
   function profileSkeletonHTML(){
@@ -7821,34 +7915,9 @@ Continue saving anyway?`);
 
   function renderAlphabet(sorted){
     const alpha = $("alpha");
+    if(!alpha) return;
     alpha.innerHTML = "";
-
-    const firstIdByLetter = new Map();
-    for(const e of sorted){
-      const L = firstLetter(e.nickname);
-      if(!firstIdByLetter.has(L)) firstIdByLetter.set(L, e.id);
-    }
-
-    const letters = [];
-    for(let i=0;i<26;i++) letters.push(String.fromCharCode(65+i));
-    letters.push("#");
-
-    for(const L of letters){
-      const btn = document.createElement("button");
-      btn.className = "aBtn";
-      btn.textContent = L;
-      btn.disabled = !firstIdByLetter.has(L);
-      btn.addEventListener("click", ()=>{
-        const id = firstIdByLetter.get(L);
-        if(!id) return;
-        const ul = $("list");
-        const li = ul.querySelector(`li[data-id="${CSS.escape(id)}"]`);
-        if(li){
-          li.scrollIntoView({ behavior:"smooth", block:"start", inline:"nearest" });
-        }
-      });
-      alpha.appendChild(btn);
-    }
+    try{ alpha.style.display = "none"; }catch{}
   }
 
   // ==============================
@@ -7889,11 +7958,40 @@ Continue saving anyway?`);
       if(!ymd) continue;
       const score = (ymd.years||0)*1000 + (ymd.months||0)*10 + (ymd.days||0);
       if(!longest || score > longest.score){
-        longest = { score, ymd };
+        longest = { score, ymd, e };
       }
     }
 
+    const nextBirthday = entries
+      .map(e=>({ e, d: daysUntilNextBirthday(e.birthdate) }))
+      .filter(x=>x.d !== null)
+      .sort((a,b)=> (a.d - b.d) || String(displayNames(a.e)?.main || a.e.nickname || "").localeCompare(String(displayNames(b.e)?.main || b.e.nickname || ""), undefined, {sensitivity:"base"}))[0] || null;
+
+    const overdue = entries
+      .map(e=>({ e, od: calcOverdueDays(e.lastContact, e.remindEveryDays) }))
+      .filter(x=>x.od > 0)
+      .sort((a,b)=> (b.od - a.od))[0] || null;
+
+    const noContactLongest = entries
+      .map(e=>({ e, ts: (()=>{ const p = parseDateYMD(e.lastContact); return (p && p.hasYear) ? Date.UTC(p.year, p.month-1, p.day) : null; })() }))
+      .filter(x=> x.ts !== null)
+      .sort((a,b)=> a.ts - b.ts)[0] || null;
+
+    const now = new Date();
+    const thisMonthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+    const newThisMonth = entries.filter(e=> String(e.createdAt||"").slice(0,7) === thisMonthKey).length;
+
+    const recentlyEdited = [...entries]
+      .filter(e=> !!String(e.updatedAt||"").trim())
+      .sort((a,b)=> String(b.updatedAt||"").localeCompare(String(a.updatedAt||"")))[0] || null;
+
     el.textContent = `Friends: ${friends} · Countries: ${countries.size} · Longest friendship: ${longest ? formatYMDShort(longest.ymd) : "—"}`;
+
+    const grid = document.getElementById("hdrStatsGrid");
+    if(grid){
+      grid.innerHTML = "";
+      try{ grid.style.display = "none"; }catch{}
+    }
     try{ updateQuickWidgets(); }catch{}
   }
 
@@ -8784,10 +8882,128 @@ function applyHolidaySettingsFromImport(raw){
   }catch{}
 }
 
+function saveCurrentStateAsImportBackup(){
+  try{
+    const payload = {
+      savedAt: new Date().toISOString(),
+      specialId: specialId || "",
+      holidaySettings: getHolidaySettingsForExport(),
+      entries: entries
+    };
+    localStorage.setItem(IMPORT_BACKUP_KEY, JSON.stringify(payload));
+    const hint = $("importStatusHint");
+    if(hint) hint.textContent = `Backup ready · ${fmtDateTime(payload.savedAt)}`;
+  }catch{}
+}
+
+function loadImportBackup(){
+  try{
+    const raw = localStorage.getItem(IMPORT_BACKUP_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch{ return null; }
+}
+
+function refreshImportBackupUI(){
+  const btn = $("restoreImportBackupBtn");
+  const hint = $("importStatusHint");
+  const backup = loadImportBackup();
+  if(btn) btn.disabled = !backup;
+  if(hint && backup?.savedAt){
+    hint.textContent = `Last backup: ${fmtDateTime(backup.savedAt)} · Imports are previewed before applying.`;
+  }
+}
+
+function describeImportError(err){
+  const msg = String(err?.message || err || "Unknown error");
+  if(msg.includes("Unexpected token")) return "The file is not valid JSON.";
+  if(msg.includes("valid entries")) return msg;
+  return msg;
+}
+
+let __pendingImport = null;
+
+function closeImportPreview(){
+  const m = $("importPreviewModal");
+  if(!m) return;
+  m.classList.remove("show");
+  m.setAttribute("aria-hidden", "true");
+  __pendingImport = null;
+  syncOverlayLock();
+}
+
+function openImportPreview(meta){
+  const m = $("importPreviewModal");
+  const metaBox = $("importPreviewMeta");
+  const sum = $("importPreviewSummary");
+  const list = $("importPreviewList");
+  const err = $("importPreviewError");
+  if(!m || !metaBox || !sum || !list || !err) return;
+
+  __pendingImport = meta;
+  err.hidden = true;
+  err.textContent = "";
+
+  const backup = loadImportBackup();
+  metaBox.innerHTML = `
+    <div class="importPreviewLine"><span class="k">File</span><b>${escapeHTML(meta.fileName || "—")}</b></div>
+    <div class="importPreviewLine"><span class="k">Schema</span><b>v${escapeHTML(String(meta.schemaVersion || "legacy"))}</b></div>
+    <div class="importPreviewLine"><span class="k">Current entries</span><b>${entries.length}</b></div>
+    <div class="importPreviewLine"><span class="k">Backup</span><b>${backup?.savedAt ? escapeHTML(fmtDateTime(backup.savedAt)) : "Will be created on apply"}</b></div>
+  `;
+
+  sum.innerHTML = `
+    <div class="importPreviewLine"><span class="k">Incoming valid entries</span><b>${meta.cleaned.length}</b></div>
+    <div class="importPreviewLine"><span class="k">Same IDs</span><b>${meta.sameIdCount}</b></div>
+    <div class="importPreviewLine"><span class="k">Same nicknames</span><b>${meta.sameNicknameCount}</b></div>
+    <div class="importPreviewLine"><span class="k">Holiday settings</span><b>${meta.incomingHolidaySettings ? "Included" : "Not included"}</b></div>
+    <div class="importPreviewLine"><span class="k">Special profile</span><b>${meta.incomingSpecialId ? "Included" : "Not included"}</b></div>
+  `;
+
+  const names = meta.cleaned.slice(0, 10).map(e=> displayNames(e)?.main || e.nickname || e.realName || "—");
+  list.innerHTML = names.length
+    ? names.map((nm, idx)=> `<div class="importPreviewLine"><span class="k">${idx+1}.</span><span>${escapeHTML(String(nm))}</span></div>`).join("") + (meta.cleaned.length > names.length ? `<div class="hint">+ ${meta.cleaned.length - names.length} more entries</div>` : "")
+    : '<div class="hint">No entries found.</div>';
+
+  m.classList.add("show");
+  m.setAttribute("aria-hidden", "false");
+  syncOverlayLock();
+}
+
+function applyPendingImport(mode){
+  const meta = __pendingImport;
+  if(!meta) return;
+
+  saveCurrentStateAsImportBackup();
+
+  if(mode === "replace"){
+    entries = meta.cleaned;
+  }else{
+    entries = mergeImported(entries, meta.cleaned);
+  }
+
+  if(meta.incomingSpecialId){
+    const exists = entries.some(e=> e && e.id === meta.incomingSpecialId);
+    if(exists){
+      specialId = meta.incomingSpecialId;
+      try{ localStorage.setItem(SPECIAL_STORAGE_KEY, specialId); }catch{}
+    }
+  }
+  if(meta.incomingHolidaySettings){
+    try{ applyHolidaySettingsFromImport(meta.incomingHolidaySettings); }catch{}
+  }
+
+  selectedId = null;
+  save();
+  clearForm();
+  closeImportPreview();
+  refreshImportBackupUI();
+  toast(mode === "replace" ? "Imported (replaced) ✅" : "Imported (merged) ✅");
+}
+
 function exportJSON(){
   // v2 export format keeps metadata like "specialId"
   const payload = {
-    version: 2,
+    version: IMPORT_SCHEMA_VERSION,
     exportedAt: new Date().toISOString(),
     specialId: specialId || "",
     holidaySettings: getHolidaySettingsForExport(),
@@ -8896,6 +9112,7 @@ function exportJSON(){
     let incomingEntries = parsed;
     let incomingSpecialId = "";
     let incomingHolidaySettings = null;
+    let schemaVersion = "legacy";
 
     if(parsed && typeof parsed === "object" && !Array.isArray(parsed)){
       if(Array.isArray(parsed.entries)) incomingEntries = parsed.entries;
@@ -8904,6 +9121,7 @@ function exportJSON(){
       else if(parsed.data && Array.isArray(parsed.data.entries)) incomingEntries = parsed.data.entries;
       else if(parsed.data && Array.isArray(parsed.data.people)) incomingEntries = parsed.data.people;
 
+      if(parsed.version != null) schemaVersion = String(parsed.version);
       if(typeof parsed.specialId === "string") incomingSpecialId = parsed.specialId;
 
       // Holiday settings (Calendar) — optional
@@ -8922,7 +9140,7 @@ function exportJSON(){
     }
 
     const cleaned = sanitizeEntriesArray(incomingEntries);
-    return { cleaned, incomingSpecialId, incomingHolidaySettings };
+    return { cleaned, incomingSpecialId, incomingHolidaySettings, schemaVersion };
   }
 
   function sanitizeEntries(data){
@@ -8980,45 +9198,47 @@ function exportJSON(){
     try{
       const text = await file.text();
       const parsed = parseJSONLoose(text) ?? JSON.parse(text);
-      const { cleaned, incomingSpecialId, incomingHolidaySettings } = parseImportPayload(parsed);
+      const { cleaned, incomingSpecialId, incomingHolidaySettings, schemaVersion } = parseImportPayload(parsed);
 
       if(cleaned.length === 0){
-        toast("Import failed: JSON has no valid entries");
-        return;
+        throw new Error("Import failed: JSON has no valid entries");
       }
 
-      const doMerge = $("mergeImport").checked;
+      const existingIds = new Set(entries.map(x=> String(x.id||"")));
+      const existingNicks = new Set(entries.map(x=> String((x.nickname||"")).trim().toLowerCase()).filter(Boolean));
+      const sameIdCount = cleaned.filter(x=> existingIds.has(String(x.id||""))).length;
+      const sameNicknameCount = cleaned.filter(x=> existingNicks.has(String((x.nickname||"")).trim().toLowerCase())).length;
 
-      if(doMerge){
-        entries = mergeImported(entries, cleaned);
-        toast("Imported (merged) ✅");
-      }else{
-        entries = cleaned;
-        toast("Imported (replaced) ✅");
-      }
-
-      // Apply imported specialId if present and valid
-      if(incomingSpecialId){
-        const exists = entries.some(e=>e && e.id === incomingSpecialId);
-        if(exists){
-          specialId = incomingSpecialId;
-          try{ localStorage.setItem(SPECIAL_STORAGE_KEY, specialId); }catch{}
-        }
-      }
-
-      // Apply imported holiday settings (Calendar) if present
-      if(incomingHolidaySettings){
-        try{ applyHolidaySettingsFromImport(incomingHolidaySettings); }catch{}
-      }
-
-      selectedId = null;
-      save();
-      clearForm();
+      openImportPreview({
+        fileName: file.name,
+        text,
+        cleaned,
+        incomingSpecialId,
+        incomingHolidaySettings,
+        schemaVersion,
+        sameIdCount,
+        sameNicknameCount
+      });
     }catch(err){
+      const msg = describeImportError(err);
+      const modal = $("importPreviewModal");
+      const errBox = $("importPreviewError");
+      const metaBox = $("importPreviewMeta");
+      const sum = $("importPreviewSummary");
+      const list = $("importPreviewList");
+      if(modal && errBox && metaBox && sum && list){
+        metaBox.innerHTML = `<div class="importPreviewLine"><span class="k">File</span><b>${escapeHTML(file.name || "—")}</b></div>`;
+        sum.innerHTML = '<div class="hint">The import could not be prepared.</div>';
+        list.innerHTML = '<div class="hint">Please check the file structure or export a fresh JSON file first.</div>';
+        errBox.hidden = false;
+        errBox.textContent = msg;
+        modal.classList.add("show");
+        modal.setAttribute("aria-hidden", "false");
+        syncOverlayLock();
+      }
       toast("Could not import file");
       try{ console.error("Import failed:", err); }catch{}
     }finally{
-      // allow importing same file again
       e.target.value = "";
     }
   });
@@ -9117,6 +9337,7 @@ function exportJSON(){
     if(!m) return Promise.resolve("discard");
     m.classList.add("open");
     m.setAttribute("aria-hidden","false");
+    syncOverlayLock();
     setTimeout(()=>{ try{ $("unsavedSave")?.focus(); }catch{} }, 0);
     return new Promise((resolve)=>{ __unsavedResolve = resolve; });
   }
@@ -9126,6 +9347,7 @@ function exportJSON(){
     if(!m) return;
     m.classList.remove("open");
     m.setAttribute("aria-hidden","true");
+    syncOverlayLock();
   }
 
   function resolveUnsavedModal(choice){
@@ -9484,6 +9706,7 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
     menu.style.top = top + "px";
     menu.classList.add("open");
     menu.setAttribute("aria-hidden","false");
+    syncOverlayLock();
   }
 
   function closeCtxMenu(){
@@ -9492,6 +9715,7 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
     menu.classList.remove("open");
     menu.setAttribute("aria-hidden","true");
     __ctxOpenForId = "";
+    syncOverlayLock();
   }
 
   async function ctxAction(act){
@@ -9835,12 +10059,12 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
   const _tabCard = $("tabCard");
     const _tabCal = $("tabCal");
 if(_tabMap) _tabMap.addEventListener("click", ()=>{
-    showMapView();
+    showMapForCurrentSelection();
     scrollRightCardIntoView();
   });
   if(_tabCard) _tabCard.addEventListener("click", ()=>{
     if(selectedId){
-      openProfile(selectedId);
+      openProfileAndScrollTop(selectedId);
       scrollRightCardIntoView();
     }else{
       toast("Select a person first");
@@ -9958,6 +10182,7 @@ if(_tabMap) _tabMap.addEventListener("click", ()=>{
   renderList();
   renderMarkers();
   updateCount();
+  try{ updateStats(); }catch{}
   updateZodiacUI();
   tick();
   setInterval(tick, 1000);
@@ -10263,13 +10488,50 @@ try{
 }catch{}
 
 
-// Wire the button
-document.addEventListener("DOMContentLoaded", ()=>{
+// Wire the button + mount it into the map controls so it is not floating over the page
+function bindDistanceButtonOnce(){
+  if(document.__distanceBtnBound) return true;
+  document.__distanceBtnBound = true;
+  document.addEventListener("click", (ev)=>{
+    const btn = ev.target.closest("#distanceFloatingBtn");
+    if(!btn) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    distToggle();
+  });
+  return true;
+}
+
+function mountDistanceButtonIntoMap(attempt=0){
   const btn = document.getElementById("distanceFloatingBtn");
-  if(btn){
-    btn.addEventListener("click", (ev)=>{ ev.preventDefault(); ev.stopPropagation(); distToggle(); });
+  if(!btn || typeof L === "undefined" || typeof map === "undefined" || !map){
+    if(attempt < 40) setTimeout(()=> mountDistanceButtonIntoMap(attempt+1), 150);
+    return;
   }
-});
+  if(btn.__mountedIntoMap) return;
+
+  const control = L.control({ position: "bottomleft" });
+  control.onAdd = function(){
+    const wrap = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-distance");
+    wrap.appendChild(btn);
+    const hint = document.getElementById("distanceHint");
+    if(hint) wrap.appendChild(hint);
+    L.DomEvent.disableClickPropagation(wrap);
+    L.DomEvent.disableScrollPropagation(wrap);
+    return wrap;
+  };
+  control.addTo(map);
+  btn.__mountedIntoMap = true;
+}
+
+(function initDistanceToolUi(){
+  bindDistanceButtonOnce();
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", ()=> mountDistanceButtonIntoMap(), { once:true });
+  }else{
+    mountDistanceButtonIntoMap();
+  }
+})();
 
 
   // ==============================
@@ -10402,25 +10664,55 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 
-  // ==============================
-  // Bottom quick bar (liquid actions)
-  // ==============================
+  $("restoreImportBackupBtn")?.addEventListener("click", ()=>{
+    const backup = loadImportBackup();
+    if(!backup || !Array.isArray(backup.entries)){
+      toast("No backup available");
+      refreshImportBackupUI();
+      return;
+    }
+    entries = sanitizeEntriesArray(backup.entries);
+    specialId = String(backup.specialId || "");
+    try{ if(specialId) localStorage.setItem(SPECIAL_STORAGE_KEY, specialId); else localStorage.removeItem(SPECIAL_STORAGE_KEY); }catch{}
+    if(backup.holidaySettings){
+      try{ applyHolidaySettingsFromImport(backup.holidaySettings); }catch{}
+    }
+    selectedId = null;
+    save();
+    clearForm();
+    toast("Backup restored ✅");
+    refreshImportBackupUI();
+  });
+
+  (function initImportPreview(){
+    const modal = $("importPreviewModal");
+    if(!modal) return;
+    $("importPreviewCancel")?.addEventListener("click", closeImportPreview);
+    $("importPreviewMerge")?.addEventListener("click", ()=> applyPendingImport("merge"));
+    $("importPreviewReplace")?.addEventListener("click", ()=> applyPendingImport("replace"));
+    modal.addEventListener("click", (ev)=>{ if(ev.target === modal) closeImportPreview(); });
+    document.addEventListener("keydown", (ev)=>{
+      if(ev.key === "Escape" && modal.classList.contains("show")) closeImportPreview();
+    });
+    refreshImportBackupUI();
+  })();
+
   function quickBarPress(btn){
     try{
       if(!btn) return;
-      btn.classList.remove('isPressed');
+      btn.classList.remove("isPressed");
       void btn.offsetWidth;
-      btn.classList.add('isPressed');
+      btn.classList.add("isPressed");
       clearTimeout(btn.__pressTimer);
-      btn.__pressTimer = setTimeout(()=> btn.classList.remove('isPressed'), 520);
+      btn.__pressTimer = setTimeout(()=> btn.classList.remove("isPressed"), 520);
     }catch{}
   }
 
   function setQuickBarActive(which){
     try{
-      const root = $('mobileQuickBar');
+      const root = $("mobileQuickBar");
       if(!root) return;
-      root.querySelectorAll('button[data-mqa]').forEach(btn=>{
+      root.querySelectorAll('button[data-mqa]').forEach((btn)=>{
         const on = (btn.getAttribute('data-mqa') === which);
         btn.classList.toggle('isActive', on);
         btn.setAttribute('aria-pressed', on ? 'true' : 'false');
@@ -10428,104 +10720,60 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }catch{}
   }
 
-  function showMapForCurrentSelection(){
-    try{
-      if(selectedId) focusEntryOnMap(selectedId);
-      else showMapView();
-      setQuickBarActive('map');
-    }catch{
-      try{ $('tabMap')?.click(); }catch{}
-      setQuickBarActive('map');
-    }
-  }
-
-  function openCurrentCardAtTop(){
-    try{
-      if(selectedId) openProfileAndScrollTop(selectedId);
-      else{
-        showProfileView();
-        scrollProfileTopIntoView();
-      }
-      setQuickBarActive('card');
-    }catch{
-      try{ $('tabCard')?.click(); }catch{}
-      setQuickBarActive('card');
-    }
-  }
-
-  function runQuickBarAction(act, btn){
+  function runQuickAction(act, btn){
     quickBarPress(btn);
     setQuickBarActive(act);
-    try{
-      if(act === 'new'){
-        $('newBtn')?.click();
-        setTimeout(()=>{ try{ scrollEditorIntoView({ focus:true }); }catch{} }, 30);
-        return;
+
+    if(act === "new") return guardedAction(()=>{ clearForm(); scrollEditorIntoView({ focus:true }); });
+    if(act === "save") return handleSave();
+    if(act === "search"){
+      const s = $("search");
+      if(s){
+        try{ s.focus({ preventScroll:true }); }catch{ try{ s.focus(); }catch{} }
+        try{ s.select?.(); }catch{}
+        try{ s.scrollIntoView({behavior:"smooth", block:"center"}); }catch{}
       }
-      if(act === 'save'){
-        $('saveBtn')?.click();
-        return;
-      }
-      if(act === 'search'){
-        const s = $('search');
-        if(s){
-          try{ scrollWindowToElementTop(s, 12); }catch{}
-          try{ s.focus({ preventScroll:true }); }catch{ try{ s.focus(); }catch{} }
-          try{ s.select?.(); }catch{}
-        }
-        return;
-      }
-      if(act === 'import'){
-        try{ openImportPicker(); }catch{ $('importFile')?.click(); }
-        return;
-      }
-      if(act === 'export'){
-        $('exportBtn')?.click();
-        return;
-      }
-      if(act === 'map'){
-        showMapForCurrentSelection();
-        return;
-      }
-      if(act === 'card'){
-        openCurrentCardAtTop();
-        return;
-      }
-    }catch(err){
-      try{ console.error('quick bar action failed:', act, err); }catch{}
+      return;
     }
+    if(act === "import") return openImportPicker();
+    if(act === "export") return exportJSON();
+    if(act === "map") return showMapForCurrentSelection();
+    if(act === "card") return openCurrentCardAtTop();
   }
 
-  (function initBottomQuickBar(){
-    const root = $('mobileQuickBar');
-    if(!root || root.__quickReady) return;
-    root.__quickReady = true;
+  (function initMobileQuickBar(){
+    const root = $("mobileQuickBar");
+    if(!root || root.__mobileQuickBound) return;
+    root.__mobileQuickBound = true;
 
-    root.addEventListener('click', (ev)=>{
-      const btn = ev.target.closest('#mobileQuickBar button[data-mqa]');
+    document.addEventListener("click", (ev)=>{
+      const btn = ev.target.closest("#mobileQuickBar button[data-mqa]");
       if(!btn) return;
       ev.preventDefault();
       ev.stopPropagation();
-      runQuickBarAction(btn.getAttribute('data-mqa'), btn);
+      runQuickAction(btn.getAttribute("data-mqa"), btn);
     });
 
-    const tMap = $('tabMap');
-    const tCard = $('tabCard');
+    const tMap = $("tabMap");
+    const tCard = $("tabCard");
     if(tMap && !tMap.__quickBound){
       tMap.__quickBound = true;
-      tMap.addEventListener('click', ()=> setQuickBarActive('map'));
+      tMap.addEventListener("click", ()=> setQuickBarActive("map"));
     }
     if(tCard && !tCard.__quickBound){
       tCard.__quickBound = true;
-      tCard.addEventListener('click', ()=> setQuickBarActive('card'));
+      tCard.addEventListener("click", ()=> setQuickBarActive("card"));
     }
 
     try{
-      const profileVisible = $('profileView') && getComputedStyle($('profileView')).display !== 'none';
-      setQuickBarActive(profileVisible ? 'card' : 'map');
+      const profileVisible = $("profileView") && getComputedStyle($("profileView")).display !== "none";
+      setQuickBarActive(profileVisible ? "card" : "map");
     }catch{
-      setQuickBarActive('map');
+      setQuickBarActive("map");
     }
   })();
 
+try{ syncOverlayLock(); }catch{}
+
 </script>
+
