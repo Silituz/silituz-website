@@ -5525,73 +5525,329 @@
 }
 
 
-/* ==============================
-   Bottom quick bar — liquid glass
-   ============================== */
+
+/* === Header stats upgrade === */
+#soApp .hdrRight{ position:relative; }
+#soApp .hdrStatsGrid{
+  display:grid;
+  grid-template-columns: repeat(5, minmax(0,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+#soApp .hdrStatPill{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  padding:8px 10px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+}
+#soApp .hdrStatPill .k{ font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#soApp .hdrStatPill .v{ font-size:12px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* === Overlay lock so Leaflet never sits above dialogs === */
+#soApp.overlayLock #map,
+#soApp.overlayLock .leaflet-control-container,
+#soApp.overlayLock .leaflet-popup-pane,
+#soApp.overlayLock #distanceFloatingBtn,
+#soApp.overlayLock #distanceHint{
+  pointer-events:none !important;
+}
+#soApp.overlayLock #mapView{ isolation:isolate; }
+
+/* === Import preview modal === */
+#soApp .importPreviewModal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+  background: rgba(0,0,0,.62);
+  backdrop-filter: blur(8px);
+  z-index:10001;
+}
+#soApp .importPreviewModal.show{ display:flex; }
+#soApp .importPreviewInner{
+  width:min(760px, 96vw);
+  max-height:88vh;
+  overflow:auto;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(15,23,42,.97), rgba(10,14,24,.96));
+  box-shadow: 0 28px 80px rgba(0,0,0,.55);
+  padding:14px;
+}
+#soApp .importPreviewTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+#soApp .importPreviewTitle{ font-size:17px; font-weight:900; }
+#soApp .importPreviewBtns{ display:flex; gap:8px; flex-wrap:wrap; }
+#soApp .importPreviewMeta,
+#soApp .importPreviewSummary,
+#soApp .importPreviewList,
+#soApp .importPreviewError{
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  border-radius:14px;
+  padding:12px;
+}
+#soApp .importPreviewMeta,
+#soApp .importPreviewSummary{ margin-bottom:10px; }
+#soApp .importPreviewList{ display:flex; flex-direction:column; gap:8px; }
+#soApp .importPreviewLine{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+#soApp .importPreviewLine .k{ color:var(--muted); }
+#soApp .importPreviewError{
+  margin-top:10px;
+  color:#ffd1d1;
+  border-color: rgba(255,107,107,.28);
+  background: rgba(255,107,107,.12);
+}
+#soApp .importStatusHint{ margin-top:-2px; }
+
+/* === Network legend extras === */
+#soApp .netLegendTags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+#soApp .netLegendTag{
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.05);
+  font-size:12px;
+}
+#soApp .netLegendTag.danger{
+  border-color: rgba(255,107,107,.24);
+  background: rgba(255,107,107,.10);
+}
+#soApp .netEdge.mutual{ stroke-width: 2.8px; }
+#soApp .netEdgeLabel.mutual{ font-weight:800; }
+
+/* === Profile holiday card === */
+#soApp .profileHolidayWrap .holidayMeta{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:6px;
+}
+#soApp .profileHolidayWrap .holidayMeta .tagMini{ cursor:default; }
+
+/* === Mobile quick bar === */
 #soApp .mobileQuickBar{
   position:fixed;
-  left:50%;
-  bottom:14px;
-  transform:translateX(-50%);
-  z-index:1205;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  width:min(calc(100vw - 18px), 760px);
-  padding:12px 14px;
-  border-radius:24px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03)),
-    radial-gradient(120% 140% at 10% 0%, rgba(90,255,190,.08), transparent 45%),
-    radial-gradient(120% 140% at 100% 100%, rgba(90,160,255,.06), transparent 42%),
-    rgba(10,14,24,.28);
-  -webkit-backdrop-filter: blur(22px) saturate(1.28);
-  backdrop-filter: blur(22px) saturate(1.28);
-  box-shadow:
-    0 18px 44px rgba(0,0,0,.28),
-    inset 0 1px 0 rgba(255,255,255,.12),
-    inset 0 -1px 0 rgba(255,255,255,.05);
+  left:max(10px, env(safe-area-inset-left));
+  right:max(10px, env(safe-area-inset-right));
+  bottom:max(10px, env(safe-area-inset-bottom));
+  z-index:9997;
+  display:none;
+  gap:8px;
+  padding:8px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(8,12,20,.90);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 48px rgba(0,0,0,.40);
   overflow-x:auto;
-  overflow-y:hidden;
-  scrollbar-width:none;
 }
-#soApp .mobileQuickBar::-webkit-scrollbar{ display:none; }
+#soApp .mobileQuickBar button{
+  min-width:68px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  padding:8px 10px;
+  border-radius:14px;
+  font-size:12px;
+  white-space:nowrap;
+}
+#soApp .mobileQuickBar button span{ font-size:11px; }
+
+@media (max-width: 1200px){
+  #soApp .hdrStatsGrid{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+@media (max-width: 980px){
+  #soApp .hdrStatsGrid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  #soApp .mobileQuickBar{ display:flex; }
+  #soApp .wrap{ padding-bottom:84px; }
+}
+@media (max-width: 580px){
+  #soApp .hdrStatsGrid{ grid-template-columns: 1fr; }
+}
+
+
+
+/* === Patch: compact header, always-visible quick bar, map-integrated distance button === */
+#soApp .hdrRight{ width:min(560px, 100%); margin-left:auto; }
+#soApp .hdrSub{ max-width:none; }
+#soApp .hdrStatsGrid{
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap:6px;
+  margin-top:8px;
+}
+#soApp .hdrStatPill{
+  padding:7px 9px;
+  min-height:58px;
+  justify-content:center;
+}
+#soApp .hdrStatPill .k{
+  font-size:10px;
+  line-height:1.1;
+}
+#soApp .hdrStatPill .v{
+  font-size:11px;
+  line-height:1.15;
+  white-space:normal;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+}
+
+#soApp .mobileQuickBar{
+  display:flex;
+  left:50%;
+  right:auto;
+  transform:translateX(-50%);
+  width:min(760px, calc(100vw - 20px));
+  justify-content:center;
+  overflow-x:auto;
+}
+#soApp .mobileQuickBar button{
+  min-width:70px;
+  flex:0 0 auto;
+}
+
+#soApp .leaflet-control-distance{
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+#soApp .leaflet-control-distance #distanceFloatingBtn{
+  position:static !important;
+  left:auto !important;
+  bottom:auto !important;
+  z-index:auto !important;
+  width:36px !important;
+  height:36px !important;
+  margin:0;
+  padding:0 !important;
+  border-radius:10px;
+  background: rgba(20,24,35,.95);
+  color: rgba(230,120,120,.95);
+  border: 1px solid rgba(220,90,90,.6);
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+}
+#soApp .leaflet-control-distance #distanceHint{
+  position:absolute;
+  left:0;
+  bottom:44px;
+  z-index:700;
+  max-width:260px;
+}
+
+@media (max-width: 1200px){
+  #soApp .hdrStatsGrid{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+@media (max-width: 860px){
+  #soApp .hdrRight{ width:100%; }
+  #soApp .hdrStatsGrid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  #soApp .mobileQuickBar{ width:calc(100vw - 16px); }
+}
+@media (max-width: 520px){
+  #soApp .hdrStatsGrid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  #soApp .hdrStatPill{ min-height:54px; }
+}
+@media (max-width: 360px){
+  #soApp .hdrStatsGrid{ grid-template-columns: 1fr; }
+}
+
+
+
+/* ==============================
+   Bottom quick bar — centered liquid glass (final)
+   ============================== */
+#soApp .mobileQuickBar{
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: max(12px, env(safe-area-inset-bottom)) !important;
+  transform: translateX(-50%) !important;
+  z-index: 1205 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  width: auto !important;
+  max-width: min(calc(100vw - 18px), 860px) !important;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom)) !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04)),
+    radial-gradient(130% 140% at 6% 0%, rgba(60,255,190,.09), transparent 42%),
+    radial-gradient(130% 140% at 100% 100%, rgba(90,160,255,.08), transparent 42%),
+    rgba(10,14,24,.24) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.3) !important;
+  backdrop-filter: blur(24px) saturate(1.3) !important;
+  box-shadow:
+    0 18px 48px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -1px 0 rgba(255,255,255,.05) !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+}
+#soApp .mobileQuickBar::-webkit-scrollbar{ display:none !important; }
 #soApp .mobileQuickBar::before{
   content:"";
   position:absolute;
   inset:0;
   border-radius:inherit;
   pointer-events:none;
-  background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,0) 42%);
+  background: linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,0) 42%);
   opacity:.9;
 }
 #soApp .mobileQuickBar button{
-  position:relative;
-  isolation:isolate;
-  flex:0 0 auto;
-  min-width:74px;
-  padding:11px 10px 10px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.12);
+  appearance:none !important;
+  -webkit-appearance:none !important;
+  position: relative !important;
+  isolation: isolate !important;
+  margin: 0 !important;
+  flex: 0 0 auto !important;
+  min-width: 74px !important;
+  min-height: 58px !important;
+  padding: 11px 10px 10px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,255,255,.13) !important;
   background:
-    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05)),
-    rgba(255,255,255,.04);
-  color:rgba(245,250,255,.96);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:4px;
+    linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05)),
+    rgba(255,255,255,.035) !important;
+  color: rgba(245,250,255,.96) !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:4px !important;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.12),
-    0 10px 24px rgba(0,0,0,.16);
+    inset 0 1px 0 rgba(255,255,255,.13),
+    0 10px 26px rgba(0,0,0,.16) !important;
   transition:
     transform .16s ease,
     border-color .18s ease,
     box-shadow .18s ease,
     background .18s ease,
-    color .18s ease;
+    color .18s ease !important;
 }
 #soApp .mobileQuickBar button::after{
   content:"";
@@ -5601,74 +5857,154 @@
   pointer-events:none;
   opacity:0;
   box-shadow:
-    0 0 0 1px rgba(16,255,159,.55),
-    0 0 20px rgba(16,255,159,.22),
-    0 0 36px rgba(16,255,159,.12);
-  transition:opacity .18s ease;
+    0 0 0 1px rgba(16,255,159,.58),
+    0 0 22px rgba(16,255,159,.20),
+    0 0 42px rgba(16,255,159,.12);
+  transition: opacity .18s ease;
 }
 #soApp .mobileQuickBar button:hover,
 #soApp .mobileQuickBar button:focus-visible{
-  transform:translateY(-1px);
-  border-color:rgba(16,255,159,.52);
+  transform: translateY(-1px) !important;
+  border-color: rgba(16,255,159,.58) !important;
   background:
-    linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,.06)),
-    rgba(255,255,255,.05);
+    linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)),
+    rgba(255,255,255,.05) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 1px 0 rgba(255,255,255,.16),
     0 0 0 1px rgba(16,255,159,.18),
-    0 12px 28px rgba(0,0,0,.18),
-    0 0 24px rgba(16,255,159,.16);
+    0 12px 30px rgba(0,0,0,.18),
+    0 0 24px rgba(16,255,159,.18) !important;
 }
 #soApp .mobileQuickBar button:hover::after,
 #soApp .mobileQuickBar button:focus-visible::after,
 #soApp .mobileQuickBar button.isPressed::after,
 #soApp .mobileQuickBar button.isActive::after{
-  opacity:1;
+  opacity:1 !important;
 }
-#soApp .mobileQuickBar button:active{
-  transform:translateY(0) scale(.985);
-}
+#soApp .mobileQuickBar button:active{ transform: translateY(0) scale(.985) !important; }
 #soApp .mobileQuickBar button.isPressed,
 #soApp .mobileQuickBar button.isActive{
-  border-color:rgba(16,255,159,.68);
-  color:rgba(230,255,243,.98);
+  border-color: rgba(16,255,159,.70) !important;
+  color: rgba(232,255,243,.99) !important;
   background:
     linear-gradient(180deg, rgba(21,255,163,.18), rgba(14,88,61,.12)),
-    rgba(255,255,255,.06);
+    rgba(255,255,255,.06) !important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.18),
     0 0 0 1px rgba(16,255,159,.24),
     0 14px 30px rgba(0,0,0,.20),
-    0 0 28px rgba(16,255,159,.18);
-}
-#soApp .mobileQuickBar button.isPressed{ animation: soQuickFlash .48s ease-out 1; }
-@keyframes soQuickFlash{
-  0%{ box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 0 0 1px rgba(16,255,159,.34), 0 0 0 rgba(16,255,159,0), 0 0 0 rgba(16,255,159,0); }
-  45%{ box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 0 0 1px rgba(16,255,159,.42), 0 0 22px rgba(16,255,159,.24), 0 0 44px rgba(16,255,159,.14); }
-  100%{ box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 0 0 1px rgba(16,255,159,.24), 0 14px 30px rgba(0,0,0,.20), 0 0 28px rgba(16,255,159,.18); }
+    0 0 28px rgba(16,255,159,.18) !important;
 }
 #soApp .mobileQuickBar .mqIcon{
-  font-size:13px;
-  line-height:1;
+  font-size:13px !important;
+  line-height:1 !important;
   filter: drop-shadow(0 1px 0 rgba(255,255,255,.15));
 }
 #soApp .mobileQuickBar .mqLabel{
-  font-size:12px;
-  line-height:1.1;
-  letter-spacing:.01em;
+  font-size:12px !important;
+  line-height:1.1 !important;
+  letter-spacing:.01em !important;
 }
+#soApp .wrap{ padding-bottom: 96px !important; }
 @media (max-width: 740px){
   #soApp .mobileQuickBar{
-    width:calc(100vw - 14px);
-    gap:8px;
-    bottom:max(10px, env(safe-area-inset-bottom));
-    padding:10px 10px calc(10px + env(safe-area-inset-bottom));
-    border-radius:22px;
+    max-width: calc(100vw - 14px) !important;
+    gap: 8px !important;
+    padding: 10px 10px calc(10px + env(safe-area-inset-bottom)) !important;
+    border-radius: 22px !important;
   }
   #soApp .mobileQuickBar button{
-    min-width:68px;
-    padding:10px 9px 9px;
-    border-radius:16px;
+    min-width: 68px !important;
+    min-height: 54px !important;
+    padding: 10px 9px 9px !important;
+    border-radius: 16px !important;
+  }
+}
+
+/* ==============================
+   Distance tool — hidden until mounted in map, glass bottom-left
+   ============================== */
+#soApp #distanceFloatingBtn,
+#soApp #distanceHint{
+  display: none;
+}
+#soApp .leaflet-control-distance{
+  position: relative !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  gap: 8px !important;
+  margin: 0 0 12px 12px !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+#soApp .leaflet-control-distance #distanceFloatingBtn{
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  z-index: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 38px !important;
+  height: 38px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04)),
+    radial-gradient(130% 130% at 0% 0%, rgba(70,255,200,.08), transparent 48%),
+    rgba(12,18,28,.38) !important;
+  color: rgba(255,205,205,.96) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.18) !important;
+  backdrop-filter: blur(18px) saturate(1.18) !important;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.30),
+    0 0 0 1px rgba(255,255,255,.05) inset !important;
+}
+#soApp .leaflet-control-distance #distanceFloatingBtn:hover{
+  transform: translateY(-1px);
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.32),
+    0 0 0 1px rgba(255,255,255,.08) inset,
+    0 0 20px rgba(255,120,120,.10) !important;
+}
+#soApp .leaflet-control-distance #distanceFloatingBtn.active{
+  color: rgba(255,150,150,.98) !important;
+  border-color: rgba(255,160,160,.46) !important;
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.32),
+    0 0 22px rgba(255,120,120,.16),
+    0 0 0 1px rgba(255,140,140,.18) !important;
+}
+#soApp .leaflet-control-distance #distanceHint{
+  position: absolute !important;
+  left: 48px !important;
+  right: auto !important;
+  bottom: 0 !important;
+  top: auto !important;
+  z-index: 721 !important;
+  max-width: min(280px, calc(100vw - 120px)) !important;
+  padding: 8px 10px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04)),
+    rgba(12,18,28,.42) !important;
+  color: rgba(235,245,250,.96) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.18) !important;
+  backdrop-filter: blur(18px) saturate(1.18) !important;
+  box-shadow: 0 12px 28px rgba(0,0,0,.30) !important;
+}
+@media (max-width: 680px){
+  #soApp .leaflet-control-distance{ margin: 0 0 10px 10px !important; }
+  #soApp .leaflet-control-distance #distanceHint{
+    left: 46px !important;
+    max-width: min(220px, calc(100vw - 96px)) !important;
+    font-size: 11px !important;
   }
 }
 
