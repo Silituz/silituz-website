@@ -5794,4 +5794,72 @@
   #soApp .hdrStatsGrid{ grid-template-columns: 1fr; }
 }
 
+
+
+/* === Final polish: map distance tool only inside map + liquid glass styling === */
+#soApp > #distanceFloatingBtn,
+#soApp > #distanceHint{
+  display:none !important;
+  pointer-events:none !important;
+}
+
+#soApp .leaflet-control-distance{
+  position: relative;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+#soApp .leaflet-bottom.leaflet-left .leaflet-control-distance{
+  margin-left: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+#soApp .leaflet-control-distance #distanceFloatingBtn{
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  z-index: auto !important;
+  width: 38px !important;
+  height: 38px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+  color: rgba(255,235,235,.96) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.07)) !important;
+  border: 1px solid rgba(255,255,255,.20) !important;
+  backdrop-filter: blur(12px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.20) !important;
+}
+
+#soApp .leaflet-control-distance #distanceFloatingBtn:hover{
+  border-color: rgba(120,255,190,.70) !important;
+  box-shadow: 0 0 0 1px rgba(120,255,190,.26), 0 0 18px rgba(55,255,165,.28), 0 10px 26px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.22) !important;
+}
+
+#soApp .leaflet-control-distance #distanceFloatingBtn.active{
+  border-color: rgba(120,255,190,.92) !important;
+  box-shadow: 0 0 0 1px rgba(120,255,190,.34), 0 0 22px rgba(55,255,165,.38), 0 12px 28px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.22) !important;
+}
+
+#soApp .leaflet-control-distance #distanceHint{
+  position: absolute !important;
+  left: 0 !important;
+  bottom: 46px !important;
+  max-width: 270px;
+  z-index: 700 !important;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(18,24,36,.82), rgba(12,16,26,.76)) !important;
+  border: 1px solid rgba(255,255,255,.14) !important;
+  backdrop-filter: blur(12px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+  box-shadow: 0 14px 30px rgba(0,0,0,.26) !important;
+}
+
 </style>
