@@ -539,16 +539,34 @@ function _hourlyRowsForDay(hd, dayStr){
 }
 function _renderHourlyHTML(dayStr, rows){
   if(!rows.length) return '<span class="weatherMuted">No hourly data available for this day.</span>';
+
+  const now = new Date();
+  const curHour = now.getHours();
+  const curMinute = now.getMinutes();
+  const curSecond = now.getSeconds();
+  const curProgress = (((curMinute * 60) + curSecond) / 3600) * 100;
+
   return rows.map(r=>{
     const desc = describeWeatherCode(r.code, 1);
     const feelsPart = (isFinite(Number(r.feels_c)) && Math.abs(Number(r.feels_c) - Number(r.t_c)) >= 1)
       ? (' · feels ' + _fmtTemp(r.feels_c) + _tempUnit())
       : '';
+
     const prMm = isFinite(Number(r.precip_mm)) ? Number(r.precip_mm).toFixed(1) : '—';
     const wK = isFinite(Number(r.wind_kmh)) ? Math.round(Number(r.wind_kmh)) : '—';
+
+    const dt = new Date(r.time);
+    const rowHour = dt.getHours();
+
+    const isNow = rowHour === curHour;
+    const progress = isNow ? curProgress : 0;
+
     return (
-      '<div class="weatherHourCard">' +
-        '<div class="weatherHourTime">' + escapeHTML(_hourLabel(r.time)) + '</div>' +
+      '<div class="weatherHourCard ' + (isNow ? 'is-now' : '') + '" style="--hour-progress:' + progress.toFixed(2) + ';">' +
+        '<div class="weatherHourTime">' +
+          escapeHTML(_hourLabel(r.time)) +
+          (isNow ? '<span class="nowBadge">Now</span>' : '') +
+        '</div>' +
         '<div class="weatherHourMain">' +
           '<span>' + desc.emoji + '</span>' +
           '<span class="weatherHourTemp">' + _fmtTemp(r.t_c) + _tempUnit() + '</span>' +
