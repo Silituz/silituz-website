@@ -5772,106 +5772,37 @@
   #soApp .hdrStatsGrid{ grid-template-columns: 1fr; }
 }
 
+</style>
 
-
-/* === Quick bar: reliable look + modal cursor layer === */
+/* === Cursor visibility polish: quick bar + import preview === */
 #soApp .mobileQuickBar{
-  z-index: 10020 !important;
-  width: min(820px, calc(100vw - 18px)) !important;
-  padding: 10px !important;
-  gap: 10px !important;
-  justify-content: center !important;
-  align-items: center !important;
-  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05)) , rgba(10,14,24,.36) !important;
-  border: 1px solid rgba(255,255,255,.18) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(1.3) !important;
-  backdrop-filter: blur(22px) saturate(1.3) !important;
-  box-shadow: 0 18px 44px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.16) !important;
+  cursor: pointer;
 }
-#soApp .mobileQuickBar::before{
-  content:"";
-  position:absolute;
-  inset:1px;
-  border-radius:inherit;
-  pointer-events:none;
-  background: linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.03) 42%, rgba(16,185,129,.05) 100%);
-  opacity:.9;
-}
-#soApp .mobileQuickBar button{
-  position:relative;
-  min-width:72px !important;
-  padding:10px 12px !important;
-  border-radius:16px !important;
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05)) , rgba(255,255,255,.05) !important;
-  border:1px solid rgba(255,255,255,.16) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.13), 0 10px 24px rgba(0,0,0,.16) !important;
-  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease, background .18s ease, color .18s ease !important;
-}
-#soApp .mobileQuickBar button:hover,
-#soApp .mobileQuickBar button:focus-visible{
-  transform: translateY(-1px);
-  border-color: rgba(16,185,129,.85) !important;
-  box-shadow: 0 0 0 1px rgba(16,185,129,.48), 0 0 18px rgba(16,185,129,.28), inset 0 1px 0 rgba(255,255,255,.16), 0 12px 28px rgba(0,0,0,.20) !important;
-}
-#soApp .mobileQuickBar button.isActive,
-#soApp .mobileQuickBar button.isPressed{
-  border-color: rgba(16,185,129,.92) !important;
-  background: linear-gradient(180deg, rgba(16,185,129,.18), rgba(16,185,129,.08)), rgba(255,255,255,.06) !important;
-  box-shadow: 0 0 0 1px rgba(16,185,129,.56), 0 0 20px rgba(16,185,129,.30), inset 0 1px 0 rgba(255,255,255,.18), 0 12px 28px rgba(0,0,0,.22) !important;
-}
-#soApp .mobileQuickBar button span{
-  font-size: 11px;
-  font-weight: 700;
-}
-#soApp .mobileQuickBar button:active{
-  transform: translateY(0) scale(.985);
-}
-@media (max-width: 860px){
-  #soApp .mobileQuickBar{ width: calc(100vw - 14px) !important; }
-}
-
-/* Make import / other popups stay visually above the map and keep the mouse cursor visible */
-#soApp .importPreviewModal,
-#soApp .unsavedModal,
-#soApp .timeCompareModal,
-#soApp .imgModal,
-#soApp .netModal,
-#soApp .ctxMenu{
-  z-index: 10040 !important;
-  isolation: isolate;
-  cursor: default !important;
-}
-#soApp .importPreviewInner,
-#soApp .unsavedInner,
-#soApp .timeCompareInner,
-#soApp .imgModalInner,
-#soApp .netModalInner,
-#soApp .ctxMenu{
-  position: relative;
-  z-index: 10041;
-  cursor: default !important;
-}
-#soApp .importPreviewModal *,
-#soApp .unsavedModal *,
-#soApp .timeCompareModal *,
-#soApp .imgModal *,
-#soApp .netModal *,
-#soApp .ctxMenu *{
-  cursor: inherit;
-}
-#soApp .importPreviewModal button,
-#soApp .unsavedModal button,
-#soApp .timeCompareModal button,
-#soApp .imgModal button,
-#soApp .netModal button,
-#soApp .ctxMenu button,
-#soApp .importPreviewModal [role="button"],
-#soApp .unsavedModal [role="button"],
-#soApp .timeCompareModal [role="button"],
-#soApp .imgModal [role="button"],
-#soApp .netModal [role="button"],
-#soApp .ctxMenu [role="button"]{
+#soApp .mobileQuickBar button,
+#soApp .mobileQuickBar button *,
+#soApp .mobileQuickBar [data-mqa],
+#soApp .mobileQuickBar [data-mqa] *{
   cursor: pointer !important;
 }
 
-</style>
+#soApp .importPreviewInner,
+#soApp .importPreviewMeta,
+#soApp .importPreviewSummary,
+#soApp .importPreviewList{
+  cursor: default;
+}
+#soApp .importPreviewList,
+#soApp .importPreviewLine,
+#soApp .importPreviewLine *,
+#soApp .importPreviewMeta b,
+#soApp .importPreviewSummary b{
+  cursor: pointer !important;
+}
+#soApp .importPreviewLine{
+  border-radius: 12px;
+  transition: background-color .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+#soApp .importPreviewLine:hover{
+  background: rgba(255,255,255,.045);
+  box-shadow: inset 0 0 0 1px rgba(16,185,129,.18);
+}
