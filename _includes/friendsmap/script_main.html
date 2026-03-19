@@ -265,30 +265,6 @@ function _hourLabel(isoStr){
   if(m) return m[1] + ":" + m[2];
   return s.slice(-5) || "—";
 }
-function _currentHourMarkerForTz(tz){
-  try{
-    const dtf = new Intl.DateTimeFormat("en-CA", {
-      timeZone: tz || undefined,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      hourCycle: "h23"
-    });
-    const parts = Object.fromEntries(dtf.formatToParts(new Date()).map(p=>[p.type, p.value]));
-    if(!parts.year || !parts.month || !parts.day || !parts.hour) throw new Error("Missing date parts");
-    return {
-      day: `${parts.year}-${parts.month}-${parts.day}`,
-      hour: String(parts.hour).padStart(2, "0")
-    };
-  }catch{
-    const now = new Date();
-    return {
-      day: `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`,
-      hour: String(now.getHours()).padStart(2, "0")
-    };
-  }
-}
 function _resetWeatherAlertButton(titleText){
   const btn = document.querySelector("#profileWeatherCard .js-weather-alerts");
   if(!btn) return;
@@ -561,9 +537,8 @@ function _hourlyRowsForDay(hd, dayStr){
   }
   return rows;
 }
-function _renderHourlyHTML(dayStr, rows, entry){
+function _renderHourlyHTML(dayStr, rows){
   if(!rows.length) return '<span class="weatherMuted">No hourly data available for this day.</span>';
-  const marker = _currentHourMarkerForTz(entry?.tz || "");
   return rows.map(r=>{
     const desc = describeWeatherCode(r.code, 1);
     const feelsPart = (isFinite(Number(r.feels_c)) && Math.abs(Number(r.feels_c) - Number(r.t_c)) >= 1)
@@ -571,11 +546,9 @@ function _renderHourlyHTML(dayStr, rows, entry){
       : '';
     const prMm = isFinite(Number(r.precip_mm)) ? Number(r.precip_mm).toFixed(1) : '—';
     const wK = isFinite(Number(r.wind_kmh)) ? Math.round(Number(r.wind_kmh)) : '—';
-    const rowHour = String(r.time || "").slice(11,13);
-    const isCurrentHour = !!marker && marker.day === String(dayStr || "") && rowHour === marker.hour;
     return (
-      '<div class="weatherHourCard' + (isCurrentHour ? ' isCurrentHour' : '') + '">' +
-        '<div class="weatherHourTime">' + escapeHTML(_hourLabel(r.time)) + (isCurrentHour ? '<span class="weatherHourNow">Now</span>' : '') + '</div>' +
+      '<div class="weatherHourCard">' +
+        '<div class="weatherHourTime">' + escapeHTML(_hourLabel(r.time)) + '</div>' +
         '<div class="weatherHourMain">' +
           '<span>' + desc.emoji + '</span>' +
           '<span class="weatherHourTemp">' + _fmtTemp(r.t_c) + _tempUnit() + '</span>' +
@@ -804,7 +777,7 @@ async function renderProfileWeatherHourly(entry, dayStr){
   const cached = _getWeatherHourlyCache(lat, lon);
   if(cached){
     const rows = _hourlyRowsForDay(cached, dayStr);
-    list.innerHTML = _renderHourlyHTML(dayStr, rows, entry);
+    list.innerHTML = _renderHourlyHTML(dayStr, rows);
     _setWeatherAlertButton(entry, _getWeatherCurCache(lat, lon), _getWeatherDailyCache(lat, lon), cached);
     return;
   }
@@ -819,7 +792,7 @@ async function renderProfileWeatherHourly(entry, dayStr){
 
     _setWeatherHourlyCache(lat, lon, hd);
     const rows = _hourlyRowsForDay(hd, dayStr);
-    list.innerHTML = _renderHourlyHTML(dayStr, rows, entry);
+    list.innerHTML = _renderHourlyHTML(dayStr, rows);
     _setWeatherAlertButton(entry, _getWeatherCurCache(lat, lon), _getWeatherDailyCache(lat, lon), hd);
   }catch(err){
     console.warn("Hourly forecast failed:", err);
@@ -6768,7 +6741,7 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
     const q = String(query||"").trim().toLowerCase();
 
     const cmds = [
-      { key:"map", title:"🗺️ Show Map", sub:"Switch right panel to Map", run: ()=>{ showMapForCurrentSelectionWithScroll(); } },
+      { key:"map", title:"🗺️ Show Map", sub:"Switch right panel to Map", run: ()=>{ showMapForCurrentSelection(); scrollRightCardIntoView(); } },
       { key:"card", title:"🪪 Show Card", sub:"Switch right panel to Card (selected person)", run: ()=>{ openCurrentCardAtTop(); } },
       { key:"privacy", title:"🔒 Toggle Privacy mode", sub:"Hide / show notes + private fields", run: async ()=>{ const nl = $("notesLock"); if(nl){ nl.checked = !nl.checked; nl.dispatchEvent(new Event("change")); } } },
       { key:"filters", title:"⋯ Open Advanced Filters", sub:"Smart filters + tags", run: ()=>{ openAdvancedFilters(true); } },
@@ -6905,28 +6878,6 @@ function renderHolidayItemHTML(h, open=false, shareCountries=null){
         target.scrollIntoView({ behavior: beh, block: "start" });
       }
     }catch{}
-  }
-
-  function scrollMapTopIntoView(){
-    try{
-      const target = document.getElementById("mapView")
-        || document.getElementById("map")
-        || document.querySelector("#soApp .rightView")
-        || document.querySelector("#soApp .rightCol");
-      scrollWindowToElementTop(target, 8);
-      try{ document.getElementById("mapView")?.scrollTo?.({ top:0, behavior: prefersReducedMotion() ? "auto" : "smooth" }); }catch{}
-      try{ document.getElementById("mapView").scrollTop = 0; }catch{}
-    }catch{}
-  }
-
-  function showMapForCurrentSelectionWithScroll(){
-    showMapView();
-    scrollMapTopIntoView();
-    if(selectedId && entries.some(x=>x.id===selectedId)){
-      const delay = prefersReducedMotion() ? 0 : 360;
-      setTimeout(()=>{ try{ focusEntryOnMap(selectedId); }catch{} }, delay);
-      return;
-    }
   }
 
   function scrollProfileTopIntoView(){
@@ -10108,9 +10059,12 @@ const fmtLabel = __timeFmt12 ? "12h" : "24h";
   const _tabCard = $("tabCard");
     const _tabCal = $("tabCal");
 if(_tabMap) _tabMap.addEventListener("click", ()=>{
-    showMapForCurrentSelectionWithScroll();
+    try{ setMobileQuickActive("map"); }catch{}
+    showMapForCurrentSelection();
+    scrollRightCardIntoView();
   });
   if(_tabCard) _tabCard.addEventListener("click", ()=>{
+    try{ setMobileQuickActive("card"); }catch{}
     if(selectedId){
       openProfileAndScrollTop(selectedId);
       scrollRightCardIntoView();
@@ -10120,6 +10074,7 @@ if(_tabMap) _tabMap.addEventListener("click", ()=>{
   });
 
   if(_tabCal) _tabCal.addEventListener("click", ()=>{
+    try{ setMobileQuickActive(""); }catch{}
     showCalendarView();
     scrollRightCardIntoView();
   });
@@ -10745,6 +10700,13 @@ function mountDistanceButtonIntoMap(attempt=0){
     refreshImportBackupUI();
   })();
 
+  function setMobileQuickActive(act){
+    document.querySelectorAll("#mobileQuickBar button[data-mqa]").forEach((b)=>{
+      const kind = b.getAttribute("data-mqa") || "";
+      b.classList.toggle("active", (act === "map" && kind === "map") || (act === "card" && kind === "card"));
+    });
+  }
+
   function runQuickAction(act){
     if(act === "new") return guardedAction(()=>{ clearForm(); scrollEditorIntoView({ focus:true }); });
     if(act === "save") return handleSave();
@@ -10758,13 +10720,14 @@ function mountDistanceButtonIntoMap(attempt=0){
     }
     if(act === "import") return openImportPicker();
     if(act === "export") return exportJSON();
-    if(act === "map") return showMapForCurrentSelectionWithScroll();
-    if(act === "card") return openCurrentCardAtTop();
+    if(act === "map"){ setMobileQuickActive("map"); return showMapForCurrentSelection(); }
+    if(act === "card"){ setMobileQuickActive("card"); return openCurrentCardAtTop(); }
   }
 
   (function initMobileQuickBar(){
     if(document.__mobileQuickBound) return;
     document.__mobileQuickBound = true;
+    setMobileQuickActive("map");
     document.addEventListener("click", (ev)=>{
       const btn = ev.target.closest("#mobileQuickBar button[data-mqa]");
       if(!btn) return;
