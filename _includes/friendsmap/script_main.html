@@ -540,12 +540,23 @@ function _hourlyRowsForDay(hd, dayStr){
 function _renderHourlyHTML(dayStr, rows){
   if(!rows.length) return '<span class="weatherMuted">No hourly data available for this day.</span>';
 
-  const now = new Date();
-  const curHour = now.getHours();
-  const curMinute = now.getMinutes();
-  const curSecond = now.getSeconds();
-  const curProgress = (((curMinute * 60) + curSecond) / 3600) * 100;
+const activeEntry = selectedId ? entries.find(x => x.id === selectedId) : null;
+const tz = activeEntry?.tz || Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+const nowParts = new Intl.DateTimeFormat("en-GB", {
+  timeZone: tz,
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hourCycle: "h23"
+}).formatToParts(new Date());
+
+const curHour = Number(nowParts.find(p => p.type === "hour")?.value || 0);
+const curMinute = Number(nowParts.find(p => p.type === "minute")?.value || 0);
+const curSecond = Number(nowParts.find(p => p.type === "second")?.value || 0);
+
+const curProgress = (((curMinute * 60) + curSecond) / 3600) * 100;
+  
   return rows.map(r=>{
     const desc = describeWeatherCode(r.code, 1);
     const feelsPart = (isFinite(Number(r.feels_c)) && Math.abs(Number(r.feels_c) - Number(r.t_c)) >= 1)
@@ -555,8 +566,8 @@ function _renderHourlyHTML(dayStr, rows){
     const prMm = isFinite(Number(r.precip_mm)) ? Number(r.precip_mm).toFixed(1) : '—';
     const wK = isFinite(Number(r.wind_kmh)) ? Math.round(Number(r.wind_kmh)) : '—';
 
-    const dt = new Date(r.time);
-    const rowHour = dt.getHours();
+    const hm = /(\d{2}):(\d{2})$/.exec(String(r.time || ""));
+const rowHour = hm ? Number(hm[1]) : null;
 
     const isNow = rowHour === curHour;
     const progress = isNow ? curProgress : 0;
