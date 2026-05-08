@@ -42,63 +42,63 @@
   preview: "/assets/audio/rosa-eterna.mp3"
 
   # Good Banana (NEW RELEASE)
-- date: 2026-05-22 20:00 +00:00
+- date: 2026-05-22 20:00 +02:00
   title_de: "Good Banana"
   title_en: "Good Banana"
   cover: "/assets/images/releases/good_banana.svg"
   preview: "/assets/audio/good_banana.mp3"
 
    # Basement Keys (NEW RELEASE)
-- date: 2026-05-29 20:00 +00:00
+- date: 2026-05-29 20:00 +02:00
   title_de: "Basement Keys"
   title_en: "Basement Keys"
   cover: "/assets/images/releases/basement_keys.svg"
   preview: "/assets/audio/basement_keys.mp3"
 
      # Still no Reply (NEW RELEASE)
-- date: 2026-06-12 20:00 +00:00
+- date: 2026-06-12 20:00 +02:00
   title_de: "Still no Reply"
   title_en: "Still no Reply"
   cover: "/assets/images/releases/no_reply.svg"
   preview: "/assets/audio/no_reply.mp3"
 
 # Cherry Blossom Waltz (NEW RELEASE)
-- date: 2026-06-19 20:00 +00:00
+- date: 2026-06-19 20:00 +02:00
   title_de: "Cherry Blossom Waltz"
   title_en: "Cherry Blossom Waltz"
   cover: "/assets/images/releases/cherry_blossom.svg"
   preview: "/assets/audio/cherry_blossom.mp3"
 
   # On a Rainy Day (NEW RELEASE)
-- date: 2026-06-26 20:00 +00:00
+- date: 2026-06-26 20:00 +02:00
   title_de: "On a Rainy Day"
   title_en: "On a Rainy Day"
   cover: "/assets/images/releases/rainy_day.svg"
   preview: "/assets/audio/rainy_day.mp3"
 
     # Pickle War (NEW RELEASE)
-- date: 2026-07-03 20:00 +00:00
+- date: 2026-07-03 20:00 +02:00
   title_de: "Pickle War"
   title_en: "Pickle War"
   cover: "/assets/images/releases/pickle_war.svg"
   preview: "/assets/audio/pickle_war.mp3"
 
    # When you´re not around (NEW RELEASE)
-- date: 2026-07-10 20:00 +00:00
+- date: 2026-07-10 20:00 +02:00
   title_de: "When you´re not around"
   title_en: "When you´re not around"
   cover: "/assets/images/releases/not_around_me.svg"
   preview: "/assets/audio/not_around_me.mp3"
 
    # Drifting on a Sunbeam (NEW RELEASE)
-- date: 2026-07-24 20:00 +00:00
+- date: 2026-07-24 20:00 +02:00
   title_de: "Drifting on a Sunbeam"
   title_en: "Drifting on a Sunbeam"
   cover: "/assets/images/releases/sunbeam.svg"
   preview: "/assets/audio/sunbeam.mp3"
 
    # Long Lost (NEW RELEASE)
-- date: 2026-07-31 20:00 +00:00
+- date: 2026-07-31 20:00 +02:00
   title_de: "Long Lost"
   title_en: "Long Lost"
   cover: "/assets/images/releases/long_lost.svg"
