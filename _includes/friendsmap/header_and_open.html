@@ -1,18 +1,27 @@
+{%- assign so_title = page.so_title | default: 'Social Organizer' -%}
+{%- assign so_sub = page.so_sub | default: 'by Silituz' -%}
+{%- assign so_stats_title = page.t_stats_title | default: '- Stats -' -%}
+{%- assign so_stats_initial = page.t_stats_initial | default: 'Friends: 0 · Countries: 0 · Longest friendship: —' -%}
+{%- assign so_quick = page.t_quick | default: 'Quick' -%}
+{%- if page.lang != 'en' and page.t_quick == nil -%}
+  {%- assign so_quick = 'Schnell' -%}
+{%- endif -%}
+
 <section id="soApp" class="soApp">
 <header>
   <div class="brand">
     <div>
-      <h1>Social Organizer</h1>
-      <div class="sub">by Silituz</div>
+      <h1>{{ so_title }}</h1>
+      <div class="sub">{{ so_sub }}</div>
     </div>
   </div>
 
   <div class="hdrRight">
     <div class="hdrTitle">
-      <span class="stats-title">- Stats -</span>
-      <button id="quickBtn" class="quickBtn" type="button" title="Quick insights" aria-label="Quick insights">⚡ Quick</button>
+      <span class="stats-title">{{ so_stats_title }}</span>
+      <button id="quickBtn" class="quickBtn" type="button" title="Quick insights" aria-label="Quick insights">{{ so_quick }}</button>
     </div>
-    <div class="hdrSub" id="statsText">Friends: 0 · Countries: 0 · Longest friendship: —</div>
+    <div class="hdrSub" id="statsText">{{ so_stats_initial }}</div>
     <div class="quickPopover" id="quickPopover" aria-hidden="true">
       <div class="quickChips" id="quickChips"></div>
     </div>
