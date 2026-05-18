@@ -1,0 +1,34 @@
+{
+  "name": "Social Organizer by Silituz",
+  "short_name": "Organizer",
+  "description": "A private local-first friends map and social organizer.",
+  "start_url": "/organizer/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#071018",
+  "theme_color": "#071018",
+  "categories": ["productivity", "social", "utilities"],
+  "icons": [
+    {
+      "src": "/assets/friendsmap/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Open Organizer",
+      "short_name": "Organizer",
+      "url": "/organizer/",
+      "description": "Open the Social Organizer app."
+    },
+    {
+      "name": "English Organizer",
+      "short_name": "English",
+      "url": "/en/organizer/",
+      "description": "Open the English Social Organizer."
+    }
+  ]
+}

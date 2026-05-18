@@ -1,28 +1,23 @@
-<button id="distanceFloatingBtn" title="Distance tool">📏</button>
-
-<div id="distanceHint"></div>
-
 <!-- Command Menu (Ctrl/Cmd + K) -->
 <div class="cmdk" id="cmdk" aria-hidden="true">
   <div class="cmdkOverlay" id="cmdkOverlay"></div>
   <div class="cmdkPanel" role="dialog" aria-modal="true" aria-label="Command menu">
     <div class="cmdkHeader">
-      <input id="cmdkInput" type="text" placeholder="Search or type a command… (e.g. export, privacy, tag juju)" autocomplete="off" />
+      <input id="cmdkInput" type="text" placeholder="Search or type a command... (e.g. export, privacy, tag juju)" autocomplete="off" />
       <div class="cmdkHint">Ctrl+K · Esc</div>
     </div>
     <div class="cmdkList" id="cmdkList"></div>
   </div>
 </div>
 
-
 <div class="mobileQuickBar" id="mobileQuickBar" aria-label="Mobile quick actions">
-  <button type="button" data-mqa="new" onclick="window.soQuickBarRun&&window.soQuickBarRun('new', this); return false;">➕<span>New</span></button>
-  <button type="button" data-mqa="save" onclick="window.soQuickBarRun&&window.soQuickBarRun('save', this); return false;">💾<span>Save</span></button>
-  <button type="button" data-mqa="search" onclick="window.soQuickBarRun&&window.soQuickBarRun('search', this); return false;">🔎<span>Search</span></button>
-  <button type="button" data-mqa="import" onclick="window.soQuickBarRun&&window.soQuickBarRun('import', this); return false;">📥<span>Import</span></button>
-  <button type="button" data-mqa="export" onclick="window.soQuickBarRun&&window.soQuickBarRun('export', this); return false;">📤<span>Export</span></button>
-  <button type="button" data-mqa="map" onclick="window.soQuickBarRun&&window.soQuickBarRun('map', this); return false;">🗺️<span>Map</span></button>
-  <button type="button" data-mqa="card" onclick="window.soQuickBarRun&&window.soQuickBarRun('card', this); return false;">🪪<span>Card</span></button>
+  <button type="button" data-mqa="new">➕<span>New</span></button>
+  <button type="button" data-mqa="save">💾<span>Save</span></button>
+  <button type="button" data-mqa="search">🔎<span>Search</span></button>
+  <button type="button" data-mqa="import">📥<span>Import</span></button>
+  <button type="button" data-mqa="export">📤<span>Export</span></button>
+  <button type="button" data-mqa="map">🗺️<span>Map</span></button>
+  <button type="button" data-mqa="card">🪪<span>Card</span></button>
 </div>
 
 <script>
@@ -30,7 +25,7 @@
   const $ = (id) => document.getElementById(id);
   function clearState(){
     document.querySelectorAll('#mobileQuickBar button').forEach((b)=>{
-      b.classList.remove('isActive','isPressed');
+      b.classList.remove('active','isActive','isPressed');
     });
   }
   function mark(btn, sticky){
@@ -74,7 +69,7 @@
           break;
         }
         case 'import':
-          $('importBtn')?.click();
+          ($('importFile') || $('importBtn'))?.click();
           mark(btn, false);
           break;
         case 'export':
@@ -96,6 +91,14 @@
     window.setTimeout(syncFromTabs, 120);
     return false;
   };
+  document.addEventListener('click', function(ev){
+    const btn = ev.target.closest('#mobileQuickBar button[data-mqa]');
+    if(!btn) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    ev.stopImmediatePropagation();
+    window.soQuickBarRun(btn.getAttribute('data-mqa'), btn);
+  }, true);
   document.addEventListener('click', function(ev){
     const tab = ev.target.closest('#tabMap, #tabCard');
     if(tab) window.setTimeout(syncFromTabs, 0);
