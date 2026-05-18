@@ -1,0 +1,40 @@
+<script>
+(function(){
+  const lang = (document.documentElement.getAttribute('lang') || '').toLowerCase();
+  if(!lang.startsWith('de')) return;
+
+  const labels = {
+    friends: 'Freunde',
+    countries: 'Länder',
+    longest: 'Längste Freundschaft'
+  };
+  let syncing = false;
+
+  function localizeStatsText(){
+    if(syncing) return;
+    const el = document.getElementById('statsText');
+    if(!el) return;
+    const text = String(el.textContent || '').trim();
+    const match = /^Friends:\s*(.*?)\s*·\s*Countries:\s*(.*?)\s*·\s*Longest friendship:\s*(.*)$/.exec(text);
+    if(!match) return;
+    syncing = true;
+    el.textContent = `${labels.friends}: ${match[1]} · ${labels.countries}: ${match[2]} · ${labels.longest}: ${match[3]}`;
+    syncing = false;
+  }
+
+  function bindStatsObserver(){
+    const el = document.getElementById('statsText');
+    if(!el || el.dataset.soStatsI18n === '1') return;
+    el.dataset.soStatsI18n = '1';
+    new MutationObserver(localizeStatsText).observe(el, { childList:true, characterData:true, subtree:true });
+    localizeStatsText();
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', bindStatsObserver, { once:true });
+  }else{
+    bindStatsObserver();
+  }
+  window.addEventListener('load', localizeStatsText);
+})();
+</script>
