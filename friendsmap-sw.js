@@ -19,7 +19,7 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
       .then((keys) => Promise.all(keys
-        .filter((key) => key !== SOCIAL_ORGANIZER_CACHE)
+        .filter((key) => key.startsWith('social-organizer-') && key !== SOCIAL_ORGANIZER_CACHE)
         .map((key) => caches.delete(key))))
       .then(() => self.clients.claim())
   );
