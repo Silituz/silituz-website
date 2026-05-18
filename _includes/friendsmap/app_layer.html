@@ -1,0 +1,396 @@
+<script>
+document.documentElement.classList.add('so-app-page-shell');
+</script>
+
+<style id="soAppLayerStyles">
+html.so-app-page-shell,
+html.so-app-page-shell body{
+  min-height:100%;
+  background:#071018 !important;
+}
+html.so-app-page-shell body{
+  color:#f4f7fb;
+}
+html.so-app-page-shell #content{
+  min-height:100svh;
+}
+html.so-app-page-shell .site-footer{
+  display:none;
+}
+html.so-app-page-shell #siteHeader{
+  border-bottom-color:rgba(148,163,184,.16) !important;
+  background:rgba(6,13,22,.82) !important;
+  -webkit-backdrop-filter:blur(16px) saturate(145%);
+  backdrop-filter:blur(16px) saturate(145%);
+}
+
+#soApp{
+  --special-band-height:1px;
+  --bg:#071018;
+  --text:#f4f7fb;
+  --muted:#9badbc;
+  --accent:#38bdf8;
+  --danger:#fb7185;
+  --emerald:#34d399;
+  --amber:#fbbf24;
+  --line:rgba(226,232,240,.13);
+  --panel:rgba(11,18,30,.82);
+  --panel-strong:rgba(15,23,42,.92);
+  --shadow:0 18px 44px rgba(0,0,0,.28);
+  --radius:8px;
+  min-height:calc(100svh - 89px);
+  color:var(--text);
+  background:
+    linear-gradient(135deg, rgba(7,16,24,.98) 0%, rgba(7,31,38,.98) 45%, rgba(17,24,39,.98) 100%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 1px, transparent 1px 96px);
+  overflow:hidden;
+  isolation:isolate;
+}
+#soApp *{letter-spacing:0;}
+#soApp header{
+  position:sticky;
+  top:0;
+  z-index:12;
+  padding:14px 16px 12px;
+  border-bottom:1px solid var(--line);
+  background:rgba(6,13,22,.84);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+  backdrop-filter:blur(18px) saturate(150%);
+}
+#soApp .brand{
+  gap:12px;
+}
+#soApp .brand::before{
+  content:"";
+  width:36px;
+  height:36px;
+  flex:0 0 36px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,.16);
+  background:
+    linear-gradient(135deg, rgba(52,211,153,.95), rgba(56,189,248,.88)),
+    linear-gradient(45deg, transparent 42%, rgba(255,255,255,.38) 42% 48%, transparent 48%);
+  box-shadow:0 12px 28px rgba(20,184,166,.18), inset 0 1px 0 rgba(255,255,255,.38);
+}
+#soApp .dot{height:14px;}
+#soApp h1{
+  font-size:20px;
+  line-height:1.1;
+  color:#ffffff;
+  font-weight:800;
+}
+#soApp .sub{
+  color:var(--muted);
+}
+#soApp .hdrRight{
+  min-width:min(420px,45vw);
+  padding:8px 10px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:rgba(15,23,42,.62);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+#soApp .hdrTitle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+#soApp .hdrSub{
+  color:#c8d5e4;
+}
+#soApp .quickBtn,
+#soApp .soInstallBtn{
+  min-height:34px;
+  border-radius:8px;
+  border:1px solid rgba(56,189,248,.32);
+  background:linear-gradient(180deg, rgba(56,189,248,.20), rgba(20,184,166,.13));
+  color:#f8fbff;
+  box-shadow:0 10px 24px rgba(8,47,73,.18);
+}
+#soApp .soInstallBtn[hidden]{display:none !important;}
+#soApp .wrap{
+  grid-template-columns:minmax(330px,430px) minmax(0,1fr);
+  gap:12px;
+  padding:12px;
+  height:calc(100svh - 78px);
+}
+#soApp .card{
+  border-radius:8px;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(15,23,42,.88), rgba(7,16,24,.84));
+  box-shadow:var(--shadow);
+}
+#soApp .panel{
+  max-height:calc(100svh - 118px);
+  overflow:auto;
+  scrollbar-width:thin;
+}
+#soApp .rightView{
+  display:flex;
+  min-width:0;
+  min-height:0;
+  flex-direction:column;
+}
+#soApp .rightTabs{
+  flex:0 0 auto;
+  border-bottom:1px solid var(--line);
+  background:rgba(15,23,42,.82);
+}
+#soApp .rtTab{
+  border-radius:8px;
+}
+#soApp #mapView{
+  flex:1 1 auto;
+  min-height:0;
+  position:relative;
+}
+#soApp #map{
+  height:100%;
+  min-height:520px;
+  background:#09111d;
+}
+#soApp input,
+#soApp textarea,
+#soApp select{
+  border-radius:8px;
+  border-color:rgba(226,232,240,.15);
+  background:rgba(2,8,23,.52);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+}
+#soApp textarea{
+  min-height:104px;
+}
+#soApp button,
+#soApp .btnLike{
+  border-radius:8px;
+}
+#soApp .btns{
+  gap:8px;
+}
+#soApp .hr{
+  height:1px;
+}
+#soApp .accSec{
+  border-radius:8px;
+  border-color:var(--line);
+  background:rgba(15,23,42,.48);
+}
+#soApp .accSec summary{
+  min-height:48px;
+  align-items:center;
+}
+#soApp .searchBar,
+#soApp .filterWrap,
+#soApp .activeFiltersBar,
+#soApp .dash,
+#soApp .alphaBar,
+#soApp .footer-tools{
+  border-color:var(--line);
+  background:rgba(7,16,24,.38);
+}
+#soApp .item{
+  background:rgba(15,23,42,.42);
+}
+#soApp .item:hover,
+#soApp .item.selected,
+#soApp .item.isSelected{
+  background:rgba(20,184,166,.10);
+}
+#soApp .nameMain{
+  color:#6ee7b7 !important;
+}
+#soApp .profileHead,
+#soApp #profileView .profileHead{
+  border-bottom:1px solid var(--line);
+  background:rgba(7,16,24,.90) !important;
+}
+#soApp .profileCard{
+  border-radius:8px !important;
+}
+#soApp .leaflet-control-container .leaflet-bar,
+#soApp .leaflet-popup-content-wrapper,
+#soApp .leaflet-popup-tip{
+  border-radius:8px;
+}
+#soApp .mobileQuickBar{
+  border-top:1px solid var(--line);
+  background:rgba(6,13,22,.90);
+  -webkit-backdrop-filter:blur(16px) saturate(145%);
+  backdrop-filter:blur(16px) saturate(145%);
+}
+#soApp .mobileQuickBar button.active,
+#soApp .mobileQuickBar button.isActive,
+#soApp .mobileQuickBar button.isPressed{
+  color:#ffffff;
+  background:rgba(20,184,166,.18);
+  border-color:rgba(52,211,153,.34);
+}
+
+@media (max-width:980px){
+  html.so-app-page-shell #siteHeader .container{
+    padding-top:10px;
+    padding-bottom:10px;
+  }
+  #soApp{
+    min-height:calc(100svh - 65px);
+    overflow:visible;
+  }
+  #soApp header{
+    position:sticky;
+    top:0;
+    flex-direction:column;
+    align-items:stretch;
+    gap:10px;
+  }
+  #soApp .hdrRight{
+    min-width:0;
+    width:100%;
+  }
+  #soApp .wrap{
+    grid-template-columns:1fr;
+    height:auto;
+    padding:10px;
+    padding-bottom:86px;
+  }
+  #soApp .panel{
+    max-height:none;
+  }
+  #soApp .row{
+    flex-direction:column;
+  }
+  #soApp #map{
+    min-height:360px;
+    height:58svh;
+  }
+  #soApp .rightView{
+    min-height:58svh;
+  }
+  #soApp .searchBar{
+    position:sticky;
+    top:0;
+    z-index:8;
+    -webkit-backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);
+  }
+}
+
+@media (max-width:620px){
+  #soApp h1{font-size:18px;}
+  #soApp .brand::before{width:32px;height:32px;flex-basis:32px;}
+  #soApp .btns button,
+  #soApp .btnLike{
+    flex:1 1 auto;
+    min-width:0;
+  }
+  #soApp .mobileQuickBar button span{
+    font-size:11px;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  #soApp *,
+  #soApp *::before,
+  #soApp *::after{
+    scroll-behavior:auto !important;
+    transition-duration:.01ms !important;
+    animation-duration:.01ms !important;
+  }
+}
+</style>
+
+<script>
+(function(){
+  const root = document.getElementById('soApp');
+  if(!root) return;
+
+  const lang = (document.documentElement.getAttribute('lang') || navigator.language || 'en').toLowerCase();
+  const isDe = lang.startsWith('de');
+  const appName = 'Social Organizer';
+
+  function upsertMeta(name, content){
+    let el = document.head.querySelector('meta[name="' + name + '"]');
+    if(!el){
+      el = document.createElement('meta');
+      el.setAttribute('name', name);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+  }
+  function upsertLink(rel, href, attrs){
+    let el = document.head.querySelector('link[rel="' + rel + '"][data-so-app="1"]');
+    if(!el){
+      el = document.createElement('link');
+      el.rel = rel;
+      el.dataset.soApp = '1';
+      document.head.appendChild(el);
+    }
+    el.href = href;
+    Object.entries(attrs || {}).forEach(([k,v])=>el.setAttribute(k,v));
+  }
+
+  upsertMeta('theme-color', '#071018');
+  upsertMeta('application-name', appName);
+  upsertMeta('mobile-web-app-capable', 'yes');
+  upsertMeta('apple-mobile-web-app-capable', 'yes');
+  upsertMeta('apple-mobile-web-app-title', appName);
+  upsertMeta('apple-mobile-web-app-status-bar-style', 'black-translucent');
+  upsertLink('manifest', '/assets/friendsmap/manifest.webmanifest');
+  upsertLink('apple-touch-icon', '/assets/friendsmap/icon.svg', { sizes:'512x512' });
+
+  let deferredPrompt = null;
+  const installBtn = document.createElement('button');
+  installBtn.id = 'soInstallBtn';
+  installBtn.className = 'soInstallBtn';
+  installBtn.type = 'button';
+  installBtn.hidden = true;
+  installBtn.textContent = isDe ? 'Installieren' : 'Install';
+  installBtn.title = isDe ? 'Als App installieren' : 'Install as app';
+
+  const headerSlot = root.querySelector('.hdrTitle') || root.querySelector('header');
+  if(headerSlot && !document.getElementById('soInstallBtn')) headerSlot.appendChild(installBtn);
+
+  window.addEventListener('beforeinstallprompt', (event)=>{
+    event.preventDefault();
+    deferredPrompt = event;
+    installBtn.hidden = false;
+  });
+  window.addEventListener('appinstalled', ()=>{
+    deferredPrompt = null;
+    installBtn.hidden = true;
+  });
+  installBtn.addEventListener('click', async ()=>{
+    if(!deferredPrompt) return;
+    installBtn.disabled = true;
+    try{
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+    }catch{}
+    deferredPrompt = null;
+    installBtn.hidden = true;
+    installBtn.disabled = false;
+  });
+
+  if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')){
+    window.addEventListener('load', ()=>{
+      navigator.serviceWorker.register('/friendsmap-sw.js', { scope:'/' }).catch(()=>{});
+    });
+  }
+
+  function invalidateMapSoon(){
+    window.setTimeout(()=>{
+      try{
+        if(window.map && typeof window.map.invalidateSize === 'function') window.map.invalidateSize();
+      }catch{}
+    }, 80);
+  }
+  window.addEventListener('resize', invalidateMapSoon);
+  window.addEventListener('orientationchange', invalidateMapSoon);
+  document.addEventListener('click', (event)=>{
+    if(event.target.closest('#tabMap, #tabCard, #tabCal, .rtTab, #profilePin, #calBackToMapBtn, #mobileQuickBar button')){
+      invalidateMapSoon();
+    }
+  }, true);
+  invalidateMapSoon();
+})();
+</script>
