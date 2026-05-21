@@ -1,0 +1,433 @@
+<style>
+#soApp .carePanel{
+  margin:0 14px 12px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  background:linear-gradient(180deg, rgba(16,185,129,.08), rgba(122,167,255,.055));
+  box-shadow:0 18px 38px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.06);
+  overflow:hidden;
+}
+#soApp .careSummary{
+  list-style:none;
+  cursor:pointer;
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  user-select:none;
+}
+#soApp .careSummary::-webkit-details-marker{display:none;}
+#soApp .careTitle{display:flex; flex-direction:column; gap:2px; min-width:0;}
+#soApp .careTitle b{font-size:14px; color:var(--text);}
+#soApp .careTitle span{font-size:12px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+#soApp .careScore{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 10px;
+  border-radius:999px;
+  border:1px solid rgba(16,185,129,.24);
+  background:rgba(16,185,129,.10);
+  color:var(--text);
+  font-size:12px;
+  font-weight:800;
+}
+#soApp .careBody{padding:0 14px 14px; display:flex; flex-direction:column; gap:12px;}
+#soApp .careStats{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px;}
+#soApp .careStat{
+  min-width:0;
+  padding:10px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+}
+#soApp .careStat .k{font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+#soApp .careStat .v{font-size:15px; font-weight:900; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+#soApp .careActions{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+#soApp .careActions button{padding:8px 11px; font-size:12px;}
+#soApp .careIssues{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px;}
+#soApp .careIssue{
+  text-align:left;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.045);
+  padding:10px;
+  cursor:pointer;
+  color:var(--text);
+}
+#soApp .careIssue:hover{transform:translateY(-1px); border-color:rgba(16,185,129,.32); background:rgba(16,185,129,.07);}
+#soApp .careIssue .n{font-weight:900; font-size:14px;}
+#soApp .careIssue .t{font-size:12px; color:var(--muted); margin-top:2px;}
+#soApp .careNames{display:flex; gap:6px; flex-wrap:wrap;}
+#soApp .careNameBtn{
+  max-width:100%;
+  padding:6px 9px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  color:var(--text);
+  font-size:12px;
+  cursor:pointer;
+}
+#soApp .careNameBtn:hover{border-color:rgba(122,167,255,.30); background:rgba(122,167,255,.10);}
+#soApp .careSuggestBox{
+  display:none;
+  padding:10px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.13);
+}
+#soApp .careSuggestBox.show{display:block;}
+#soApp .careSuggestLine{font-size:12px; color:var(--muted); line-height:1.45; margin-bottom:8px;}
+#soApp .careTagPreview{display:flex; gap:6px; flex-wrap:wrap;}
+#soApp .careTag{font-size:12px; padding:5px 8px; border-radius:999px; border:1px solid rgba(16,185,129,.18); background:rgba(16,185,129,.09); color:var(--text);}
+@media (max-width:780px){
+  #soApp .careStats{grid-template-columns:repeat(2,minmax(0,1fr));}
+  #soApp .careIssues{grid-template-columns:1fr;}
+  #soApp .careSummary{align-items:flex-start;}
+}
+</style>
+
+<script>
+(function(){
+  const root = document.getElementById('soApp');
+  if(!root) return;
+
+  const lang = (document.documentElement.getAttribute('lang') || document.body?.getAttribute('lang') || '').toLowerCase();
+  const isDe = !lang || lang.startsWith('de') || !location.pathname.startsWith('/en/');
+  const txt = isDe ? {
+    title:'Datenpflege',
+    sub:'JSON-Stand, Lücken und schnelle Pflegegriffe',
+    ready:'bereit',
+    entries:'Personen',
+    favorites:'Favoriten',
+    images:'Bilder',
+    storage:'Speicher',
+    backup:'Export / Sicherung',
+    import:'Neuen JSON-Stand laden',
+    check:'Neu prüfen',
+    suggest:'Tag-Vorschläge ansehen',
+    applyTags:'Vorgeschlagene Tags übernehmen',
+    missingTags:'ohne Tags',
+    missingSocials:'ohne Socials',
+    noContact:'ohne Kontaktpflege',
+    missingDates:'ohne wichtige Daten',
+    latest:'zuletzt bearbeitet',
+    openLatest:'Neueste Änderung öffnen',
+    noIssues:'Sieht ordentlich aus.',
+    clickNames:'Klicke Namen, um die Person direkt zu öffnen.',
+    suggestionsIntro:'Vorschläge bleiben lokal und werden erst übernommen, wenn du den Button klickst.',
+    applied:'Tags übernommen',
+    nothing:'Keine Vorschläge offen',
+    refreshed:'Datenpflege aktualisiert'
+  } : {
+    title:'Data care',
+    sub:'JSON state, gaps and quick maintenance tools',
+    ready:'ready',
+    entries:'People',
+    favorites:'Favorites',
+    images:'Images',
+    storage:'Storage',
+    backup:'Export / backup',
+    import:'Load new JSON state',
+    check:'Re-check',
+    suggest:'Preview tag suggestions',
+    applyTags:'Apply suggested tags',
+    missingTags:'without tags',
+    missingSocials:'without socials',
+    noContact:'without check-ins',
+    missingDates:'without key dates',
+    latest:'last edited',
+    openLatest:'Open latest edit',
+    noIssues:'Looks tidy.',
+    clickNames:'Click names to open a person directly.',
+    suggestionsIntro:'Suggestions stay local and are only saved when you apply them.',
+    applied:'Tags applied',
+    nothing:'No open suggestions',
+    refreshed:'Data care refreshed'
+  };
+
+  const byId = (id)=>document.getElementById(id);
+  const esc = (s)=>String(s ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  function people(){
+    try{ return Array.isArray(entries) ? entries : []; }catch{ return []; }
+  }
+
+  function nameOf(entry){
+    try{
+      if(typeof displayNames === 'function') return displayNames(entry).main || entry.nickname || entry.realName || '—';
+    }catch{}
+    return entry?.nickname || entry?.realName || '—';
+  }
+
+  function hasNotes(entry){
+    if(!entry) return false;
+    if(String(entry.medicalNotes || '').trim()) return true;
+    const n = entry.notes;
+    if(typeof n === 'string') return !!n.trim();
+    if(n && typeof n === 'object') return Object.values(n).some(v=>String(v || '').trim());
+    return false;
+  }
+
+  function hasSocial(entry){
+    const s = entry?.socials;
+    if(!s || typeof s !== 'object') return false;
+    return ['tiktok','instagram','discord','telegram','whatsapp','youtube','website','email'].some(k=>String(s[k] || '').trim());
+  }
+
+  function hasKeyDate(entry){
+    return !!(String(entry?.birthdate || '').trim() && String(entry?.metOn || '').trim());
+  }
+
+  function bytesOfData(){
+    try{ return new Blob([JSON.stringify({entries:people()})]).size; }
+    catch{ return 0; }
+  }
+
+  function fmtBytes(n){
+    if(!Number.isFinite(n) || n <= 0) return '—';
+    if(n < 1024) return n + ' B';
+    if(n < 1024*1024) return (n/1024).toFixed(1) + ' KB';
+    return (n/1024/1024).toFixed(1) + ' MB';
+  }
+
+  function latestEntry(list){
+    return [...list].filter(e=>String(e.updatedAt || '').trim()).sort((a,b)=>String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')))[0] || list[0] || null;
+  }
+
+  function dateShort(iso){
+    if(!iso) return '—';
+    try{ return new Date(iso).toLocaleString(isDe ? 'de-DE' : 'en-US', { dateStyle:'short', timeStyle:'short' }); }
+    catch{ return String(iso).slice(0,16); }
+  }
+
+  function cleanTag(raw){
+    return String(raw || '')
+      .normalize('NFKC')
+      .replace(/^#+/, '')
+      .replace(/[^\p{L}\p{N}_ -]/gu, '')
+      .trim()
+      .slice(0,24);
+  }
+
+  function placeTag(entry){
+    const addr = String(entry?.currentAddress || '').trim();
+    if(!addr) return '';
+    const parts = addr.split(',').map(x=>x.trim()).filter(Boolean);
+    return cleanTag(parts[parts.length - 1] || addr);
+  }
+
+  function langTag(entry){
+    const raw = String(entry?.nativeLang || '').split(/[;,/]/)[0] || '';
+    const v = cleanTag(raw);
+    return v ? ('Lang-' + v).slice(0,24) : '';
+  }
+
+  function tzTag(entry){
+    const tz = String(entry?.tz || '').trim();
+    if(!tz.includes('/')) return '';
+    return cleanTag(tz.split('/')[0]);
+  }
+
+  function suggestedTagsFor(entry){
+    const existing = new Set((Array.isArray(entry?.tags) ? entry.tags : []).map(t=>String(t).toLowerCase()));
+    const raw = [entry?.fav ? 'Favorit' : '', placeTag(entry), tzTag(entry), langTag(entry), hasNotes(entry) ? 'Notizen' : ''];
+    const out = [];
+    const seen = new Set();
+    for(const t of raw.map(cleanTag).filter(Boolean)){
+      const key = t.toLowerCase();
+      if(existing.has(key) || seen.has(key)) continue;
+      seen.add(key);
+      out.push(t);
+      if(out.length >= 4) break;
+    }
+    return out;
+  }
+
+  function analyze(){
+    const list = people();
+    const missingTags = list.filter(e=>!(Array.isArray(e.tags) && e.tags.length));
+    const missingSocials = list.filter(e=>!hasSocial(e));
+    const noContact = list.filter(e=>!String(e.lastContact || '').trim() && !Number(e.remindEveryDays || 0));
+    const missingDates = list.filter(e=>!hasKeyDate(e));
+    const suggestions = list.map(e=>({e, tags:suggestedTagsFor(e)})).filter(x=>x.tags.length);
+    return {
+      list,
+      favorites:list.filter(e=>!!e.fav),
+      images:list.filter(e=>!!e.imageData),
+      notes:list.filter(hasNotes),
+      missingTags,
+      missingSocials,
+      noContact,
+      missingDates,
+      latest:latestEntry(list),
+      suggestions,
+      bytes:bytesOfData()
+    };
+  }
+
+  function ensurePanel(){
+    if(byId('carePanel')) return byId('carePanel');
+    const panel = document.createElement('details');
+    panel.id = 'carePanel';
+    panel.className = 'carePanel';
+    panel.open = true;
+    panel.innerHTML = `
+      <summary class="careSummary">
+        <div class="careTitle"><b>${esc(txt.title)}</b><span id="careSubtitle">${esc(txt.sub)}</span></div>
+        <span class="careScore" id="careScore">—</span>
+      </summary>
+      <div class="careBody">
+        <div class="careStats" id="careStats"></div>
+        <div class="careActions">
+          <button type="button" class="secondary" data-care-act="export">${esc(txt.backup)}</button>
+          <button type="button" class="secondary" data-care-act="import">${esc(txt.import)}</button>
+          <button type="button" class="secondary" data-care-act="refresh">${esc(txt.check)}</button>
+          <button type="button" class="secondary" data-care-act="suggest">${esc(txt.suggest)}</button>
+          <button type="button" data-care-act="apply-tags">${esc(txt.applyTags)}</button>
+        </div>
+        <div class="careIssues" id="careIssues"></div>
+        <div class="careSuggestBox" id="careSuggestBox"></div>
+        <div class="careNames" id="careNames"></div>
+      </div>`;
+
+    const anchor = byId('dash') || byId('alpha') || byId('list');
+    if(anchor && anchor.parentNode) anchor.parentNode.insertBefore(panel, anchor);
+    else root.appendChild(panel);
+    bindPanel(panel);
+    return panel;
+  }
+
+  function stat(k, v){ return `<div class="careStat"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`; }
+
+  function issue(label, arr, key){
+    return `<button type="button" class="careIssue" data-care-issue="${esc(key)}"><div class="n">${arr.length}</div><div class="t">${esc(label)}</div></button>`;
+  }
+
+  function renderNames(arr){
+    const box = byId('careNames');
+    if(!box) return;
+    const shown = arr.slice(0, 10);
+    if(!shown.length){
+      box.innerHTML = `<span class="hint">${esc(txt.noIssues)}</span>`;
+      return;
+    }
+    box.innerHTML = shown.map(e=>`<button type="button" class="careNameBtn" data-care-open="${esc(e.id)}">${esc(nameOf(e))}</button>`).join('') + (arr.length > shown.length ? `<span class="hint">+${arr.length - shown.length}</span>` : '');
+  }
+
+  function renderSuggestions(data){
+    const box = byId('careSuggestBox');
+    if(!box) return;
+    if(!data.suggestions.length){
+      box.classList.add('show');
+      box.innerHTML = `<div class="careSuggestLine">${esc(txt.nothing)}</div>`;
+      return;
+    }
+    const preview = data.suggestions.slice(0, 8).map(x=>{
+      const tags = x.tags.map(t=>`<span class="careTag">#${esc(t)}</span>`).join('');
+      return `<div class="careSuggestLine"><b>${esc(nameOf(x.e))}</b></div><div class="careTagPreview">${tags}</div>`;
+    }).join('');
+    box.classList.add('show');
+    box.innerHTML = `<div class="careSuggestLine">${esc(txt.suggestionsIntro)}</div>${preview}${data.suggestions.length > 8 ? `<div class="hint">+${data.suggestions.length - 8}</div>` : ''}`;
+  }
+
+  function refresh(){
+    const panel = ensurePanel();
+    const data = analyze();
+    const careNeeds = data.missingTags.length + data.missingSocials.length + data.noContact.length + data.missingDates.length;
+    byId('careScore').textContent = careNeeds ? `${careNeeds} Checks` : txt.ready;
+    byId('careSubtitle').textContent = data.latest ? `${txt.latest}: ${nameOf(data.latest)} · ${dateShort(data.latest.updatedAt)}` : txt.sub;
+    byId('careStats').innerHTML = [
+      stat(txt.entries, data.list.length),
+      stat(txt.favorites, data.favorites.length),
+      stat(txt.images, `${data.images.length}/${data.list.length}`),
+      stat(txt.storage, fmtBytes(data.bytes))
+    ].join('');
+    byId('careIssues').innerHTML = [
+      issue(txt.missingTags, data.missingTags, 'tags'),
+      issue(txt.missingSocials, data.missingSocials, 'socials'),
+      issue(txt.noContact, data.noContact, 'contact'),
+      issue(txt.missingDates, data.missingDates, 'dates')
+    ].join('');
+    renderNames(data.latest ? [data.latest] : []);
+    panel.__careData = data;
+  }
+
+  async function openEntry(id){
+    if(!id) return;
+    try{
+      if(typeof guardedSelectEntry === 'function'){
+        const ok = await guardedSelectEntry(id, { panMap:false, toast:false });
+        if(!ok) return;
+      }else if(typeof selectEntry === 'function') selectEntry(id, { panMap:false, toast:false });
+      if(typeof openProfileAndScrollTop === 'function') openProfileAndScrollTop(id);
+    }catch{}
+  }
+
+  function applySuggestedTags(){
+    const data = analyze();
+    if(!data.suggestions.length){ try{ toast(txt.nothing); }catch{} return; }
+    for(const item of data.suggestions){
+      const cur = Array.isArray(item.e.tags) ? item.e.tags.slice() : [];
+      const keys = new Set(cur.map(t=>String(t).toLowerCase()));
+      for(const t of item.tags){
+        if(cur.length >= 12) break;
+        if(keys.has(String(t).toLowerCase())) continue;
+        cur.push(t);
+        keys.add(String(t).toLowerCase());
+      }
+      item.e.tags = cur;
+      item.e.updatedAt = new Date().toISOString();
+    }
+    try{ if(typeof save === 'function') save(); }catch{}
+    try{ if(typeof renderList === 'function') renderList(); }catch{}
+    try{ if(typeof renderMarkers === 'function') renderMarkers(); }catch{}
+    refresh();
+    renderSuggestions(analyze());
+    try{ toast(`${txt.applied} ✓`); }catch{}
+  }
+
+  function bindPanel(panel){
+    if(panel.__careBound) return;
+    panel.__careBound = true;
+    panel.addEventListener('click', (ev)=>{
+      const act = ev.target.closest('[data-care-act]')?.getAttribute('data-care-act') || '';
+      if(act === 'export'){
+        try{ if(typeof exportJSON === 'function') exportJSON(); else byId('exportBtn')?.click(); }catch{ byId('exportBtn')?.click(); }
+      }else if(act === 'import'){
+        try{ if(typeof openImportPicker === 'function') openImportPicker(); else byId('importBtn')?.click(); }catch{ byId('importBtn')?.click(); }
+      }else if(act === 'refresh'){
+        refresh();
+        try{ toast(txt.refreshed); }catch{}
+      }else if(act === 'suggest'){
+        renderSuggestions(analyze());
+      }else if(act === 'apply-tags'){
+        applySuggestedTags();
+      }
+
+      const issue = ev.target.closest('[data-care-issue]')?.getAttribute('data-care-issue') || '';
+      if(issue){
+        const data = analyze();
+        const map = { tags:data.missingTags, socials:data.missingSocials, contact:data.noContact, dates:data.missingDates };
+        renderNames(map[issue] || []);
+      }
+
+      const id = ev.target.closest('[data-care-open]')?.getAttribute('data-care-open') || '';
+      if(id) openEntry(id);
+    });
+  }
+
+  function delayedRefresh(){ window.setTimeout(refresh, 120); window.setTimeout(refresh, 900); }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', delayedRefresh);
+  else delayedRefresh();
+
+  document.addEventListener('click', (ev)=>{
+    if(ev.target.closest('#saveBtn,#deleteBtn,#clearAllBtn,#importPreviewMerge,#importPreviewReplace,#restoreImportBackupBtn,.js-star,.js-special')) delayedRefresh();
+  }, true);
+  window.setInterval(()=>{ if(document.getElementById('carePanel')?.open) refresh(); }, 15000);
+})();
+</script>
