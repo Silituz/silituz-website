@@ -46,7 +46,7 @@
 </section>
 {% endcomment %}
 
-<!-- TikTok: Neueste/Latest Clips (Auto-Update für Silituz & Coco) -->
+<!-- TikTok: Neueste/Latest Clips (Silituz mittig) -->
 <section class="py-12">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     
@@ -55,11 +55,11 @@
       {{ page.tiktok_heading | default: "TikTok • Neueste Clips" }}
     </h2>
 
-    <!-- Zwei Spalten: Silituz & Coco -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Silituz als einzelne, mittige Spalte -->
+    <div class="flex justify-center">
       
       <!-- Silituz -->
-      <div class="flex flex-col items-center">
+      <div class="w-full max-w-[720px] flex flex-col items-center">
         <h3 class="text-lg md:text-xl font-semibold text-emerald-400 mb-4 text-center">
           {{ page.tiktok_heading_silituz | default: "Silituz • Clips" }}
         </h3>
