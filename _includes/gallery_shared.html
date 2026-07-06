@@ -69,6 +69,27 @@
 
 <script async src="https://www.tiktok.com/embed.js"></script>
 
+<!-- YouTube -->
+<section class="pb-14">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-500">
+      {{ page.youtube_heading }}
+    </h2>
+    <p class="mt-3 text-slate-300">{{ page.youtube_text }}</p>
+
+    <a href="{{ page.youtube_url }}" target="_blank" rel="noopener noreferrer"
+       class="group mt-8 mx-auto flex max-w-2xl flex-col items-center justify-center rounded-2xl border border-red-500/25 bg-slate-800/90 px-6 py-8 shadow-md transition hover:-translate-y-1 hover:border-red-500/60 hover:shadow-xl">
+      <span class="flex h-16 w-16 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition group-hover:scale-105">
+        <i class="fa-brands fa-youtube text-3xl" aria-hidden="true"></i>
+      </span>
+      <span class="mt-4 text-xl font-bold text-white">Silituz</span>
+      <span class="mt-4 inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 font-semibold text-white transition group-hover:bg-red-500">
+        {{ page.youtube_cta }} <span aria-hidden="true">↗</span>
+      </span>
+    </a>
+  </div>
+</section>
+
 <!-- Galerie -->
 <section class="pt-2 pb-16">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
