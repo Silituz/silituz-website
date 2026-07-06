@@ -323,7 +323,10 @@
 
     <a href="{{ page.soundon_url }}" target="_blank" rel="noopener noreferrer"
        class="group mt-8 mx-auto flex max-w-2xl flex-col items-center rounded-2xl border border-emerald-500/25 bg-slate-800/90 px-6 py-8 shadow-md transition hover:-translate-y-1 hover:border-emerald-500/60 hover:shadow-xl">
-      <span class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500 text-2xl font-black text-slate-950 shadow-lg transition group-hover:scale-105" aria-hidden="true">S</span>
+      <img src="{{ '/assets/images/soundon-silituz.webp' | relative_url }}"
+           alt="Silituz"
+           class="aspect-square w-full max-w-[256px] rounded-2xl object-cover shadow-lg transition group-hover:scale-[1.02]"
+           loading="lazy" />
       <span class="mt-4 text-xl font-bold text-white">SoundOn</span>
       <span class="mt-4 inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-slate-950 transition group-hover:bg-emerald-400">
         {{ page.soundon_cta }} <span aria-hidden="true">↗</span>
