@@ -46,98 +46,67 @@
 </section>
 {% endcomment %}
 
-<!-- TikTok: Neueste/Latest Clips (Silituz mittig) -->
-<section class="py-12">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    
-    <!-- Überschrift -->
-    <h2 class="text-xl md:text-2xl font-bold text-emerald-500 mb-8 text-center">
-      {{ page.tiktok_heading | default: "TikTok • Neueste Clips" }}
+<!-- TikTok -->
+<section class="pt-12 pb-14">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-500">
+      {{ page.tiktok_heading }}
     </h2>
 
-    <!-- Silituz als einzelne, mittige Spalte -->
-    <div class="flex justify-center">
-      
-      <!-- Silituz -->
-      <div class="w-full max-w-[720px] flex flex-col items-center">
-        <h3 class="text-lg md:text-xl font-semibold text-emerald-400 mb-4 text-center">
-          {{ page.tiktok_heading_silituz | default: "Silituz • Clips" }}
-        </h3>
-        <blockquote class="tiktok-embed"
-                    cite="https://www.tiktok.com/@silituz"
-                    data-unique-id="silituz"
-                    data-embed-type="creator"
-                    style="max-width: 720px; min-width: 288px; margin: 0 auto;">
-          <section>
-            <a target="_blank" href="https://www.tiktok.com/@silituz?refer=creator_embed">@silituz</a>
-          </section>
-        </blockquote>
-      </div>
-
-      {% comment %}
-      <!-- Coco (ausgeblendet, Inhalt bleibt erhalten) -->
-      <div class="flex flex-col items-center">
-        <h3 class="text-lg md:text-xl font-semibold text-purple-500 mb-4 text-center">
-          {{ page.tiktok_heading_coco | default: "Coco • Clips" }}
-        </h3>
-        <blockquote class="tiktok-embed"
-                    cite="https://www.tiktok.com/@coco_x0x0_"
-                    data-unique-id="coco_x0x0_"
-                    data-embed-type="creator"
-                    style="max-width: 720px; min-width: 288px; margin: 0 auto;">
-          <section>
-            <a target="_blank" href="https://www.tiktok.com/@coco_x0x0_?refer=creator_embed">@coco_x0x0_</a>
-          </section>
-        </blockquote>
-      </div>
-      {% endcomment %}
-
+    <div class="mt-8 flex justify-center">
+      <blockquote class="tiktok-embed"
+                  cite="https://www.tiktok.com/@silituz"
+                  data-unique-id="silituz"
+                  data-embed-type="creator"
+                  style="width: 100%; max-width: 720px; min-width: 288px; margin: 0 auto;">
+        <section>
+          <a target="_blank" href="https://www.tiktok.com/@silituz?refer=creator_embed">@silituz</a>
+        </section>
+      </blockquote>
     </div>
   </div>
 </section>
 
-<!-- TikTok Script (nur einmal einbinden!) -->
 <script async src="https://www.tiktok.com/embed.js"></script>
 
-
-    <!-- Silituz -->
-    <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-500 mb-2">
-      {{ page.silituz_title }}
-    </h2>
-    <p class="text-slate-500 dark:text-slate-400 text-base italic mb-8">
-      {{ page.silituz_note }}
-    </p>
-
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16" data-gallery="silituz">
-      <img src="/assets/images/silituz1.webp" alt="Silituz Artwork 1" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
-      <img src="/assets/images/silituz2.webp" alt="Silituz Artwork 2" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
-      <img src="/assets/images/silituz3.3.webp" alt="Silituz Artwork 3" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
-      <img src="/assets/images/silituz4.webp" alt="Silituz Artwork 4" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
-      <img src="/assets/images/silituz5.webp" alt="Silituz Artwork 5" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
-      <img src="/assets/images/silituz6.webp" alt="Silituz Artwork 6" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
+<!-- Galerie -->
+<section class="pt-2 pb-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-10 text-center">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-500">
+        {{ page.gallery_title }}
+      </h2>
+      <p class="mt-3 text-base italic text-slate-500 dark:text-slate-400">
+        {{ page.gallery_note }}
+      </p>
     </div>
 
-    {% if page.coco_enabled %}
-    <!-- Coco -->
-   <!-- <h2 class="text-2xl md:text-3xl font-extrabold text-purple-500 mb-2">
-      {{ page.coco_title }}
-    </h2>
-    <p class="text-slate-500 dark:text-slate-400 text-base italic mb-8">
-      {{ page.coco_note }}
-    </p>
-
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-gallery="coco">
-      <img src="/assets/images/coco1.webp" alt="Coco Artwork 1" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
-      <img src="/assets/images/coco2.webp" alt="Coco Artwork 2" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
-      <img src="/assets/images/coco3.webp" alt="Coco Artwork 3" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
-      <img src="/assets/images/coco4.webp" alt="Coco Artwork 4" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
-      <img src="/assets/images/coco5.webp" alt="Coco Artwork 5" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
-      <img src="/assets/images/coco6.webp" alt="Coco Artwork 6" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-gallery="silituz">
+      <img src="/assets/images/silituz1.webp" alt="{{ page.img1_alt | default: 'Silituz Artwork 1' }}" class="mx-auto rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
+      <img src="/assets/images/silituz2.webp" alt="{{ page.img2_alt | default: 'Silituz Artwork 2' }}" class="mx-auto rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
+      <img src="/assets/images/silituz3.3.webp" alt="{{ page.img3_alt | default: 'Silituz Artwork 3' }}" class="mx-auto rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
+      <img src="/assets/images/silituz4.webp" alt="{{ page.img4_alt | default: 'Silituz Artwork 4' }}" class="mx-auto rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
+      <img src="/assets/images/silituz5.webp" alt="{{ page.img5_alt | default: 'Silituz Artwork 5' }}" class="mx-auto rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
+      <img src="/assets/images/silituz6.webp" alt="{{ page.img6_alt | default: 'Silituz Artwork 6' }}" class="mx-auto rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
     </div>
-    {% endif %}
 
+    {% comment %}
+    <!-- Coco bleibt im Quelltext erhalten und ist nur ausgeblendet. -->
+    <div class="mt-16 text-center">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-purple-500">{{ page.coco_title }}</h2>
+      <p class="mt-3 mb-8 text-base italic text-slate-500 dark:text-slate-400">{{ page.coco_note }}</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-gallery="coco">
+        <img src="/assets/images/coco1.webp" alt="Coco Artwork 1" class="rounded-xl shadow object-cover w-full h-72" />
+        <img src="/assets/images/coco2.webp" alt="Coco Artwork 2" class="rounded-xl shadow object-cover w-full h-72" />
+        <img src="/assets/images/coco3.webp" alt="Coco Artwork 3" class="rounded-xl shadow object-cover w-full h-72" />
+        <img src="/assets/images/coco4.webp" alt="Coco Artwork 4" class="rounded-xl shadow object-cover w-full h-72" />
+        <img src="/assets/images/coco5.webp" alt="Coco Artwork 5" class="rounded-xl shadow object-cover w-full h-72" />
+        <img src="/assets/images/coco6.webp" alt="Coco Artwork 6" class="rounded-xl shadow object-cover w-full h-72" />
+      </div>
+    </div>
+    {% endcomment %}
   </div>
-</section> -->
+</section>
 
 <!-- Lightbox Overlay -->
 <div id="lightbox"
