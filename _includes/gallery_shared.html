@@ -115,6 +115,7 @@
       <img src="/assets/images/silituz6.webp" alt="Silituz Artwork 6" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
     </div>
 
+    {% if page.coco_enabled %}
     <!-- Coco -->
     <h2 class="text-2xl md:text-3xl font-extrabold text-purple-500 mb-2">
       {{ page.coco_title }}
@@ -131,6 +132,7 @@
       <img src="/assets/images/coco5.webp" alt="Coco Artwork 5" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
       <img src="/assets/images/coco6.webp" alt="Coco Artwork 6" class="rounded-xl shadow object-cover w-full h-72 cursor-zoom-in transition-transform duration-200 hover:scale-[1.02]" />
     </div>
+    {% endif %}
 
   </div>
 </section>
