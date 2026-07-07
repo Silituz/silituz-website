@@ -16,4 +16,20 @@
   #sideMenu a[href$="/en/organizer/"] {
     display: none !important;
   }
+
+  /*
+    Red Bonita Hauptmenü-Vorbereitung:
+    Später in der Silituz-Navigation "Red Bonita:/red-bonita/," ergänzen.
+    Der Link bekommt dann bewusst einen roten/rosé Glow statt Silituz-Türkis.
+  */
+  #sideMenu a[href$="/red-bonita/"] {
+    color: #fecdd3 !important;
+  }
+
+  #sideMenu a[href$="/red-bonita/"]:hover,
+  #sideMenu a[href$="/red-bonita/"]:focus-visible {
+    background: linear-gradient(90deg, rgba(143, 29, 44, 0.92), rgba(214, 168, 88, 0.58)) !important;
+    color: #fff7ed !important;
+    box-shadow: 0 0 18px rgba(244, 114, 182, 0.42), 0 0 30px rgba(185, 28, 28, 0.25);
+  }
 </style>
