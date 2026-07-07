@@ -9,3 +9,11 @@
   <link rel="alternate" hreflang="en" href="{{ site.url }}/en{{ page.url }}" />
   <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ page.url }}" />
 {% endif %}
+
+<!-- Social Organizer ist jetzt über "Generatoren & mehr" erreichbar. -->
+<style>
+  #sideMenu a[href$="/organizer/"],
+  #sideMenu a[href$="/en/organizer/"] {
+    display: none !important;
+  }
+</style>
