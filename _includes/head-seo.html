@@ -1,19 +1,30 @@
 {% assign is_en = page.url contains '/en/' %}
+{% assign is_es = page.url contains '/es/' or page.lang == 'es' or page.lang == 'es-MX' %}
+{% assign base_lang_path = page.url | replace_first: '/en', '' | replace_first: '/es', '' %}
+{% if base_lang_path == '' %}{% assign base_lang_path = '/' %}{% endif %}
 <link rel="canonical" href="{{ site.url }}{{ page.url }}" />
 {% if is_en %}
   <link rel="alternate" hreflang="en" href="{{ site.url }}{{ page.url }}" />
-  <link rel="alternate" hreflang="de" href="{{ site.url }}{{ page.url | replace_first: '/en', '' }}" />
-  <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ page.url | replace_first: '/en', '' }}" />
+  <link rel="alternate" hreflang="de" href="{{ site.url }}{{ base_lang_path }}" />
+  <link rel="alternate" hreflang="es-MX" href="{{ site.url }}/es{{ base_lang_path }}" />
+  <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ base_lang_path }}" />
+{% elsif is_es %}
+  <link rel="alternate" hreflang="es-MX" href="{{ site.url }}{{ page.url }}" />
+  <link rel="alternate" hreflang="de" href="{{ site.url }}{{ base_lang_path }}" />
+  <link rel="alternate" hreflang="en" href="{{ site.url }}/en{{ base_lang_path }}" />
+  <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ base_lang_path }}" />
 {% else %}
   <link rel="alternate" hreflang="de" href="{{ site.url }}{{ page.url }}" />
   <link rel="alternate" hreflang="en" href="{{ site.url }}/en{{ page.url }}" />
+  <link rel="alternate" hreflang="es-MX" href="{{ site.url }}/es{{ page.url }}" />
   <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ page.url }}" />
 {% endif %}
 
 <!-- Social Organizer ist jetzt über "Generatoren & mehr" erreichbar. -->
 <style>
   #sideMenu a[href$="/organizer/"],
-  #sideMenu a[href$="/en/organizer/"] {
+  #sideMenu a[href$="/en/organizer/"],
+  #sideMenu a[href$="/es/organizer/"] {
     display: none !important;
   }
 
@@ -33,3 +44,58 @@
     box-shadow: 0 0 18px rgba(244, 114, 182, 0.42), 0 0 30px rgba(185, 28, 28, 0.25);
   }
 </style>
+
+<script>
+(function(){
+  function stripLang(path){ return path.replace(/^\/(?:en|de|es)(?:\/|$)/i, '/'); }
+  function buildPath(lang, path){
+    var clean = stripLang(path || '/').replace(/^\/index\.html$/i, '/');
+    if(lang === 'en') return '/en' + (clean === '/' ? '/' : clean);
+    if(lang === 'es') return '/es' + (clean === '/' ? '/' : clean);
+    return clean || '/';
+  }
+  function flagEs(){
+    return '<svg viewBox="0 0 3 2" width="18" height="12" aria-hidden="true"><rect width="1" height="2" x="0" fill="#006847"></rect><rect width="1" height="2" x="1" fill="#fff"></rect><rect width="1" height="2" x="2" fill="#ce1126"></rect><circle cx="1.5" cy="1" r="0.16" fill="#c99700"></circle></svg><span class="sr-only">Latino Español</span><span aria-hidden="true">ES</span>';
+  }
+  function ensureSwitcher(){
+    var en = document.querySelector('[data-lang="en"]');
+    var de = document.querySelector('[data-lang="de"]');
+    if(!en || !de) return;
+    var group = en.parentElement;
+    if(!document.querySelector('[data-lang="es"]')){
+      var es = en.cloneNode(false);
+      es.setAttribute('data-lang','es');
+      es.setAttribute('title','Latino Español');
+      es.innerHTML = flagEs();
+      group.insertBefore(es, en.nextSibling);
+    }
+    ['de','en','es'].forEach(function(lang){
+      var el = document.querySelector('[data-lang="'+lang+'"]');
+      if(el) el.setAttribute('href', buildPath(lang, location.pathname));
+    });
+  }
+  function reflect(){
+    var active = /^\/en(?:\/|$)/i.test(location.pathname) ? 'en' : (/^\/es(?:\/|$)/i.test(location.pathname) ? 'es' : 'de');
+    document.documentElement.setAttribute('data-active-lang', active);
+    document.querySelectorAll('[data-lang]').forEach(function(el){
+      var on = (el.getAttribute('data-lang') || '').toLowerCase() === active;
+      el.toggleAttribute('data-active', on);
+      el.classList.toggle('lang-active', on);
+    });
+  }
+  document.addEventListener('click', function(e){
+    var el = e.target && e.target.closest ? e.target.closest('[data-lang]') : null;
+    if(!el) return;
+    var lang = (el.getAttribute('data-lang') || '').toLowerCase();
+    if(lang !== 'de' && lang !== 'en' && lang !== 'es') return;
+    e.preventDefault();
+    e.stopPropagation();
+    location.href = buildPath(lang, location.pathname);
+  }, true);
+  document.addEventListener('DOMContentLoaded', function(){
+    ensureSwitcher();
+    reflect();
+    setTimeout(function(){ ensureSwitcher(); reflect(); }, 0);
+  });
+})();
+</script>
