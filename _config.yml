@@ -16,3 +16,8 @@ defaults:
       path: "en"
     values:
       lang: en
+  # vorbereitet für späteres Latino-Spanisch auf der Silituz-Seite
+  - scope:
+      path: "es"
+    values:
+      lang: es-MX
