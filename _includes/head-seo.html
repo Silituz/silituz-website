@@ -74,6 +74,41 @@
       if(el) el.setAttribute('href', buildPath(lang, location.pathname));
     });
   }
+  function setFirstSpanText(link, label){
+    var span = link.querySelector('span:first-child');
+    if(span) span.textContent = label;
+    else link.textContent = label;
+  }
+  function polishSpanishChrome(active){
+    if(active !== 'es') return;
+    var labels = {
+      '/':'Inicio',
+      '/about/':'Sobre mí',
+      '/gallery/':'Galería',
+      '/generators/':'Generadores y más',
+      '/music/':'Mi música',
+      '/socials/':'Socials',
+      '/support/':'Apoyo',
+      '/shoutout/':'Shoutout',
+      '/contact/':'Contacto',
+      '/impressum/':'Aviso legal'
+    };
+    document.querySelectorAll('#sideMenu nav a').forEach(function(a){
+      var path = stripLang(new URL(a.getAttribute('href'), location.origin).pathname);
+      if(labels[path]){
+        setFirstSpanText(a, labels[path]);
+        a.setAttribute('href', buildPath('es', path));
+      }
+    });
+    var menuText = document.querySelector('#snakeBtn span');
+    if(menuText) menuText.textContent = 'Menú';
+    var sideMenu = document.getElementById('sideMenu');
+    if(sideMenu) sideMenu.setAttribute('aria-label','Menú principal');
+    var close = document.getElementById('sideClose');
+    if(close) close.setAttribute('aria-label','Cerrar menú');
+    var more = document.querySelector('.footer-more');
+    if(more){ more.textContent = 'Más'; more.setAttribute('href','/es/socials/'); more.setAttribute('aria-label','Más'); }
+  }
   function reflect(){
     var active = /^\/en(?:\/|$)/i.test(location.pathname) ? 'en' : (/^\/es(?:\/|$)/i.test(location.pathname) ? 'es' : 'de');
     document.documentElement.setAttribute('data-active-lang', active);
@@ -82,6 +117,7 @@
       el.toggleAttribute('data-active', on);
       el.classList.toggle('lang-active', on);
     });
+    polishSpanishChrome(active);
   }
   document.addEventListener('click', function(e){
     var el = e.target && e.target.closest ? e.target.closest('[data-lang]') : null;
@@ -96,6 +132,7 @@
     ensureSwitcher();
     reflect();
     setTimeout(function(){ ensureSwitcher(); reflect(); }, 0);
+    setTimeout(function(){ ensureSwitcher(); reflect(); }, 250);
   });
 })();
 </script>
