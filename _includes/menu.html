@@ -2,6 +2,13 @@
 {% assign here = page.url | replace:'index.html','' | replace:'.html','/' | replace:'//','/' %}
 {% assign is_en = page.lang == "en" or page.url contains "/en/" %}
 
+{%- comment -%}
+  Red Bonita ist vorbereitet, bleibt aber versteckt.
+  Später zum Aktivieren in beide nav_list-Blöcke einfügen:
+  Red Bonita:/red-bonita/,
+  Der rote/rosé Hover-Stil ist in _includes/head-seo.html vorbereitet.
+{%- endcomment -%}
+
 {% if is_en %}
   {% assign nav_list = "
     Home:/,
