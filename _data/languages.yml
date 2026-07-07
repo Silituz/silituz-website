@@ -1,0 +1,15 @@
+# Gemeinsame Sprachbasis für Silituz und spätere Schwesterbereiche.
+# Red Bonita nutzt EN/DE/Latino-Spanisch bereits clientseitig.
+# Die sichtbare Silituz-Navigation bleibt bis zur Übersetzung unverändert.
+- code: en
+  locale: en
+  label: English
+  short: EN
+- code: de
+  locale: de
+  label: Deutsch
+  short: DE
+- code: es
+  locale: es-MX
+  label: Latino Español
+  short: ES
