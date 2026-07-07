@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 300" role="img" aria-labelledby="title desc">
+  <title id="title">Written moments</title>
+  <desc id="desc">Decorative Red Bonita gallery placeholder for future photographed images.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff2d8"/><stop offset=".52" stop-color="#b92b45"/><stop offset="1" stop-color="#3c0715"/></linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="10"/></filter>
+  </defs>
+  <rect width="420" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="322" cy="73" r="54" fill="#ffe4bd" opacity=".25" filter="url(#soft)"/>
+  <path d="M95 215c56-43 118-62 186-57 26 2 50 8 72 18" fill="none" stroke="#ffe1aa" stroke-width="10" stroke-linecap="round" opacity=".55"/>
+  <path d="M119 88h88c19 0 34 15 34 34v94H139c-18 0-32-14-32-32V100c0-7 5-12 12-12Z" fill="#fff0ca" opacity=".55"/><path d="M241 122c0-19 15-34 34-34h31c7 0 12 5 12 12v84c0 18-14 32-32 32h-45Z" fill="#fff0ca" opacity=".38"/><path d="M139 132h61M139 158h70M264 132h36M264 158h28" stroke="#6b1728" stroke-width="6" stroke-linecap="round" opacity=".55"/>
+  <rect x="18" y="18" width="384" height="264" rx="24" fill="none" stroke="#fff5e6" stroke-opacity=".28"/>
+</svg>
