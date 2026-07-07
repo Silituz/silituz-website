@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang='en' data-red-bonita-page>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>{{ page.title | default: 'Red Bonita' }}</title>
+  <meta name='description' content='Red Bonita - an elegant rose-inspired sister space by Silituz.'>
+  <meta name='robots' content='{{ page.robots | default: 'noindex,nofollow' }}'>
+  <meta name='theme-color' content='#8f1d2c'>
+  <meta name='color-scheme' content='light'>
+  <!-- Red Bonita bleibt bewusst vom normalen Silituz-Layout getrennt. -->
+  <link rel='icon' href='{{ '/assets/images/favicon.svg' | relative_url }}' type='image/svg+xml'>
+  <link rel='stylesheet' href='{{ '/assets/css/red-bonita.css' | relative_url }}'>
+  <script defer src='{{ '/assets/js/site-language.js' | relative_url }}'></script>
+</head>
+<body class='rb-page'>
+  <a class='rb-skip-link' href='#red-bonita-main' data-i18n='skipLink'>Skip to content</a>
+  {{ content }}
+</body>
+</html>
