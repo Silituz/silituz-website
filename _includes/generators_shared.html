@@ -113,6 +113,31 @@
   </div>
 </section>
 
+<!-- SOCIAL ORGANIZER -->
+<section class="py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-500 text-center">{{ page.organizer_head }}</h2>
+    <p class="mt-2 text-lg text-slate-100 text-center">{{ page.organizer_sub }}</p>
+
+    <div class="mt-10 flex justify-center">
+      <a href="{{ page.organizer_url | default: '/organizer/' | relative_url }}"
+         class="group block w-full max-w-md rounded-2xl overflow-hidden shadow-md transition hover:shadow-lg">
+        <div class="aspect-square w-full bg-gray-800">
+          <img src="/assets/images/ki-sili.svg" alt="{{ page.organizer_alt }}"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="relative bg-slate-800/90 text-slate-100 rounded-b-2xl overflow-hidden">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5">
+            <h3 class="text-lg font-semibold text-slate-100">{{ page.organizer_title }}</h3>
+            <p class="mt-2 text-sm text-slate-100/85">{{ page.organizer_text }}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- EXTRAS -->
 <section class="py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
