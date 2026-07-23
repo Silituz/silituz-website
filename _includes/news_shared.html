@@ -1,0 +1,46 @@
+<main class="anime-pulse-page">
+  <section class="anime-pulse-hero">
+    <img src="https://anime-pulse-news.silituz.chatgpt.site/assets/brand/silituz-signal-squad.png" alt="{{ page.anime_alt }}" />
+    <div class="anime-pulse-hero-shade"></div>
+    <div class="anime-pulse-hero-copy">
+      <p>SILITUZ NEWS <span>· by Silituz</span></p>
+      <h1>{{ page.hero_title }}</h1>
+      <div class="anime-pulse-lead">{{ page.hero_text }}</div>
+      <a href="https://anime-pulse-news.silituz.chatgpt.site"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="anime-pulse-cta">
+        {{ page.cta }} <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="anime-pulse-features" aria-label="{{ page.features_label }}">
+    <article>
+      <span>蛇</span>
+      <h2>{{ page.feature1_title }}</h2>
+      <p>{{ page.feature1_text }}</p>
+    </article>
+    <article>
+      <span>日</span>
+      <h2>{{ page.feature2_title }}</h2>
+      <p>{{ page.feature2_text }}</p>
+    </article>
+    <article>
+      <span>竜</span>
+      <h2>{{ page.feature3_title }}</h2>
+      <p>{{ page.feature3_text }}</p>
+    </article>
+  </section>
+
+  <section class="anime-pulse-note">
+    <div>
+      <small>{{ page.note_eyebrow }}</small>
+      <h2>{{ page.note_title }}</h2>
+      <p>{{ page.note_text }}</p>
+    </div>
+    <a href="https://anime-pulse-news.silituz.chatgpt.site"
+       target="_blank"
+       rel="noopener noreferrer">{{ page.cta_short }} →</a>
+  </section>
+</main>

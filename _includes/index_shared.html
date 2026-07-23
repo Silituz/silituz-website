@@ -58,6 +58,25 @@
   </div>
 </section>
 
+<!-- SILITUZ NEWS -->
+<section class="container mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+  <a href="{{ page.anime_link }}"
+     class="anime-pulse-home group relative block min-h-[310px] overflow-hidden rounded-2xl border border-cyan-400/20 shadow-2xl">
+    <img src="https://anime-pulse-news.silituz.chatgpt.site/assets/brand/silituz-signal-squad.png"
+         alt="{{ page.anime_alt }}"
+         class="absolute inset-0 h-full w-full object-cover object-center transition duration-700 group-hover:scale-[1.025]" />
+    <span class="anime-pulse-home-shade absolute inset-0"></span>
+    <span class="relative z-10 flex min-h-[310px] max-w-2xl flex-col justify-center p-7 sm:p-10">
+      <small class="mb-3 font-mono text-xs font-bold uppercase tracking-[.18em] text-cyan-300">Anime • Manga • Games</small>
+      <strong class="text-3xl font-black leading-tight text-white sm:text-5xl">{{ page.anime_title }}</strong>
+      <span class="mt-4 max-w-xl text-sm leading-7 text-slate-300 sm:text-base">{{ page.anime_text }}</span>
+      <span class="mt-6 inline-flex w-fit items-center gap-3 rounded-xl border border-cyan-300/30 bg-cyan-300/10 px-5 py-3 font-bold text-cyan-200 transition group-hover:bg-cyan-300 group-hover:text-slate-950">
+        {{ page.anime_cta }} <span aria-hidden="true">→</span>
+      </span>
+    </span>
+  </a>
+</section>
+
 {% if page.ki_enabled %}
 <!-- KI Shoutout Sektion -->
 <section class="relative py-14">

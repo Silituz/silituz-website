@@ -29,6 +29,162 @@
 }
 
 /* =============================
+   ANIME PULSE NEWS
+   ============================= */
+.anime-pulse-home{
+  background:#07101e;
+  text-decoration:none !important;
+}
+.anime-pulse-home-shade{
+  background:linear-gradient(90deg,#07101e 0%,rgba(7,16,30,.96) 38%,rgba(7,16,30,.38) 67%,rgba(7,16,30,.08));
+}
+.anime-pulse-page{
+  background:
+    radial-gradient(circle at 80% 12%,rgba(34,211,238,.1),transparent 27rem),
+    #020617;
+  color:#e2e8f0;
+}
+.anime-pulse-hero{
+  min-height:650px;
+  position:relative;
+  overflow:hidden;
+  border-bottom:1px solid rgba(34,211,238,.2);
+}
+.anime-pulse-hero > img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+}
+.anime-pulse-hero-shade{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,#020817 0%,rgba(2,8,23,.96) 34%,rgba(2,8,23,.34) 66%,rgba(2,8,23,.05));
+}
+.anime-pulse-hero-copy{
+  position:relative;
+  z-index:1;
+  max-width:760px;
+  padding:110px clamp(24px,9vw,145px) 90px;
+}
+.anime-pulse-hero-copy > p{
+  color:#22d3ee;
+  font:800 .75rem/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.17em;
+}
+.anime-pulse-hero-copy > p span{ color:#94a3b8; }
+.anime-pulse-hero-copy h1{
+  max-width:690px;
+  margin:18px 0 22px;
+  color:#f8fafc;
+  font-size:clamp(3.3rem,7vw,6.6rem);
+  line-height:.91;
+  letter-spacing:-.045em;
+  font-weight:950;
+}
+.anime-pulse-lead{
+  max-width:620px;
+  color:#bac8da;
+  font-size:clamp(1rem,1.5vw,1.18rem);
+  line-height:1.75;
+}
+.anime-pulse-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:2.2rem;
+  margin-top:30px;
+  padding:14px 20px;
+  border:1px solid rgba(34,211,238,.42);
+  border-radius:.8rem;
+  background:rgba(34,211,238,.12);
+  color:#a5f3fc !important;
+  font-weight:800;
+  text-decoration:none !important;
+  transition:background .25s,color .25s,transform .25s;
+}
+.anime-pulse-cta:hover{
+  background:#22d3ee;
+  color:#020617 !important;
+  transform:translateY(-2px);
+}
+.anime-pulse-features{
+  max-width:1200px;
+  margin:0 auto;
+  padding:74px 24px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+.anime-pulse-features article{
+  padding:26px;
+  border:1px solid #1e3347;
+  border-radius:1rem;
+  background:rgba(15,23,42,.68);
+}
+.anime-pulse-features article > span{
+  display:grid;
+  place-items:center;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#0e7490;
+  color:#fff;
+  font-weight:900;
+}
+.anime-pulse-features article:nth-child(2) > span{ background:#b7791f; }
+.anime-pulse-features article:nth-child(3) > span{ background:#7e22ce; }
+.anime-pulse-features h2{
+  margin:18px 0 9px;
+  color:#67e8f9;
+  font-size:1.25rem;
+}
+.anime-pulse-features p{
+  margin:0;
+  color:#a9b8ca;
+  line-height:1.65;
+}
+.anime-pulse-note{
+  max-width:1152px;
+  margin:0 auto 76px;
+  padding:32px;
+  border:1px solid #1e3347;
+  border-radius:1rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:28px;
+  background:linear-gradient(120deg,rgba(14,116,144,.18),rgba(126,34,206,.12));
+}
+.anime-pulse-note small{
+  color:#22d3ee;
+  font:bold .68rem ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.15em;
+}
+.anime-pulse-note h2{ margin:8px 0; color:#f8fafc; font-size:1.8rem; }
+.anime-pulse-note p{ margin:0; max-width:720px; color:#a9b8ca; line-height:1.65; }
+.anime-pulse-note > a{
+  flex:0 0 auto;
+  padding:12px 16px;
+  border-radius:.75rem;
+  background:#10b981;
+  color:#fff !important;
+  font-weight:800;
+  text-decoration:none !important;
+}
+@media (max-width:800px){
+  .anime-pulse-home-shade{ background:linear-gradient(180deg,rgba(7,16,30,.3),#07101e 72%); }
+  .anime-pulse-hero{ min-height:720px; }
+  .anime-pulse-hero > img{ object-position:64% top; opacity:.82; }
+  .anime-pulse-hero-shade{ background:linear-gradient(180deg,rgba(2,8,23,.12),#020817 64%); }
+  .anime-pulse-hero-copy{ padding:380px 22px 58px; }
+  .anime-pulse-hero-copy h1{ font-size:3.35rem; }
+  .anime-pulse-features{ grid-template-columns:1fr; padding-top:48px; }
+  .anime-pulse-note{ margin:0 20px 54px; flex-direction:column; align-items:flex-start; }
+}
+
+/* =============================
    1) BASE TYPOGRAPHY
    ============================= */
 html, body{ background:var(--bg); color:var(--text); }
@@ -450,5 +606,4 @@ header video, header img, header svg{ background:transparent !important; }
   color: var(--text) !important;
   border-top: 1px solid #1e293b !important;
 }
-
 
