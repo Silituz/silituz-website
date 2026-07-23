@@ -143,6 +143,32 @@
   font-size:.9rem;
   line-height:1.55;
 }
+.lil-sili.is-choosing-language .lil-sili__intro{
+  margin-bottom:16px;
+  color:#f0fdfa;
+  font-size:1rem;
+  font-weight:800;
+}
+.lil-sili.is-choosing-language .lil-sili__languages{
+  gap:9px;
+  margin-bottom:2px;
+}
+.lil-sili.is-choosing-language .lil-sili__languages button{
+  min-height:46px;
+  flex:1;
+  border-color:rgba(50,230,186,.34);
+  border-radius:14px;
+  background:rgba(50,230,186,.08);
+  color:#d9fff5;
+  font-size:.78rem;
+}
+.lil-sili.is-choosing-language .lil-sili__languages button:hover,
+.lil-sili.is-choosing-language .lil-sili__languages button:focus-visible{
+  border-color:#5eead4;
+  background:rgba(50,230,186,.18);
+  color:#fff;
+  outline:none;
+}
 .lil-sili__routes{
   display:grid;
   grid-template-columns:1fr 1fr;

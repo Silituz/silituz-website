@@ -47,12 +47,40 @@
 
 <script>
 (function(){
+  var STORAGE_KEY = 'silituz-language';
+  var NEWS_ORIGIN = 'https://anime-pulse-news.silituz.chatgpt.site';
+  var languageRoutes = ['/', '/about/', '/gallery/', '/generators/', '/music/', '/socials/', '/support/', '/shoutout/', '/contact/', '/impressum/'];
+
   function stripLang(path){ return path.replace(/^\/(?:en|de|es)(?:\/|$)/i, '/'); }
   function buildPath(lang, path){
     var clean = stripLang(path || '/').replace(/^\/index\.html$/i, '/');
     if(lang === 'en') return '/en' + (clean === '/' ? '/' : clean);
     if(lang === 'es') return '/es' + (clean === '/' ? '/' : clean);
     return clean || '/';
+  }
+  function activeLanguage(){
+    return /^\/en(?:\/|$)/i.test(location.pathname) ? 'en' : (/^\/es(?:\/|$)/i.test(location.pathname) ? 'es' : 'de');
+  }
+  function savedLanguage(){
+    try {
+      var saved = localStorage.getItem(STORAGE_KEY);
+      return saved === 'de' || saved === 'en' || saved === 'es' ? saved : null;
+    } catch(e) {
+      return null;
+    }
+  }
+  function rememberLanguage(lang){
+    try { localStorage.setItem(STORAGE_KEY, lang); } catch(e) {}
+  }
+  function newsUrl(lang){
+    var url = new URL(NEWS_ORIGIN);
+    url.searchParams.set('lang', lang);
+    return url.toString();
+  }
+  function syncNewsLinks(lang){
+    document.querySelectorAll('a[data-news-link], a[href^="' + NEWS_ORIGIN + '"]').forEach(function(link){
+      link.setAttribute('href', newsUrl(lang));
+    });
   }
   function flagEs(){
     return '<svg viewBox="0 0 3 2" width="18" height="12" aria-hidden="true"><rect width="1" height="2" x="0" fill="#006847"></rect><rect width="1" height="2" x="1" fill="#fff"></rect><rect width="1" height="2" x="2" fill="#ce1126"></rect><circle cx="1.5" cy="1" r="0.16" fill="#c99700"></circle></svg><span class="sr-only">Latino Español</span><span aria-hidden="true">ES</span>';
@@ -115,7 +143,7 @@
     if(more){ more.textContent = 'Más'; more.setAttribute('href','/es/socials/'); more.setAttribute('aria-label','Más'); }
   }
   function reflect(){
-    var active = /^\/en(?:\/|$)/i.test(location.pathname) ? 'en' : (/^\/es(?:\/|$)/i.test(location.pathname) ? 'es' : 'de');
+    var active = activeLanguage();
     document.documentElement.setAttribute('data-active-lang', active);
     document.querySelectorAll('[data-lang]').forEach(function(el){
       var on = (el.getAttribute('data-lang') || '').toLowerCase() === active;
@@ -131,13 +159,24 @@
     if(lang !== 'de' && lang !== 'en' && lang !== 'es') return;
     e.preventDefault();
     e.stopPropagation();
+    rememberLanguage(lang);
     location.href = buildPath(lang, location.pathname);
   }, true);
   document.addEventListener('DOMContentLoaded', function(){
+    var active = activeLanguage();
+    var saved = savedLanguage();
+    var cleanPath = stripLang(location.pathname || '/').replace(/^\/index\.html$/i, '/');
+
+    if(saved && saved !== active && languageRoutes.indexOf(cleanPath) !== -1){
+      location.replace(buildPath(saved, location.pathname));
+      return;
+    }
+
     ensureSwitcher();
     reflect();
-    setTimeout(function(){ ensureSwitcher(); reflect(); }, 0);
-    setTimeout(function(){ ensureSwitcher(); reflect(); }, 250);
+    syncNewsLinks(active);
+    setTimeout(function(){ ensureSwitcher(); reflect(); syncNewsLinks(activeLanguage()); }, 0);
+    setTimeout(function(){ ensureSwitcher(); reflect(); syncNewsLinks(activeLanguage()); }, 250);
   });
 })();
 </script>
