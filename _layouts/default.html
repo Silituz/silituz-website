@@ -98,6 +98,7 @@
        - Tipp: custom.css MUSS NACH Tailwind geladen werden.
        ========================= -->
   <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/lil-silituz-helper.css' | relative_url }}">
 
   <!-- =========================
        ZUSATZSTYLES (Inline)
@@ -444,6 +445,9 @@
 <main id="content">
   {{ content }}
 </main>
+
+<!-- ===== LIL SILITUZ: globaler Seitenhelfer ===== -->
+{% include lil-silituz-helper.html %}
 
 <!-- ===== FOOTER ===== -->
 <footer class="site-footer bg-white text-slate-800 border-t border-slate-200 dark:bg-slate-900 dark:text-slate-100 dark:border-slate-700">
