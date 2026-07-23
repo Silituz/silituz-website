@@ -1,6 +1,7 @@
 <!-- Menü-Liste (pretty URLs + EN für About/Contact) -->
 {% assign here = page.url | replace:'index.html','' | replace:'.html','/' | replace:'//','/' %}
 {% assign is_en = page.lang == "en" or page.url contains "/en/" %}
+{% assign is_es = page.lang == "es" or page.lang == "es-MX" or page.url contains "/es/" %}
 
 {%- comment -%}
   Red Bonita ist vorbereitet, bleibt aber versteckt.
@@ -14,7 +15,7 @@
     Home:/,
     About:/en/about/,
     Gallery:/gallery/,
-    Anime Feed:/en/news/,
+    News:https://anime-pulse-news.silituz.chatgpt.site,
     Generators & more:/generators/,
     My Music:/music/,
     Socials:/socials/,
@@ -22,12 +23,25 @@
     Contact:/en/contact/,
     Imprint:/impressum/
   " | split: ',' %}
+{% elsif is_es %}
+  {% assign nav_list = "
+    Inicio:/es/,
+    Sobre mí:/es/about/,
+    Galería:/gallery/,
+    News:https://anime-pulse-news.silituz.chatgpt.site,
+    Generadores y más:/generators/,
+    Mi música:/music/,
+    Socials:/socials/,
+    Apoyo:/support/,
+    Contacto:/es/contact/,
+    Aviso legal:/impressum/
+  " | split: ',' %}
 {% else %}
   {% assign nav_list = "
     Home:/,
     Über mich:/about/,
     Galerie:/gallery/,
-    Anime Feed:/news/,
+    News:https://anime-pulse-news.silituz.chatgpt.site,
     Generatoren & mehr:/generators/,
     Meine Musik:/music/,
     Socials:/socials/,
@@ -43,7 +57,7 @@
     {% assign title = p[0] | strip %}
     {% assign href  = p[1] | strip %}
     {% assign clean_href = href | replace:'.html','/' %}
-    <a href="{{ clean_href | relative_url }}"
+    <a href="{% if clean_href contains '://' %}{{ clean_href }}{% else %}{{ clean_href | relative_url }}{% endif %}"
        class="block px-3 py-2 rounded-lg {% if here == clean_href %}active{% endif %}">
        {{ title }}
     </a>
