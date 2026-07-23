@@ -1,0 +1,53 @@
+<div class="lil-sili" data-lil-sili>
+  <section
+    class="lil-sili__panel"
+    id="lilSiliPanel"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="lilSiliTitle"
+    hidden>
+    <header class="lil-sili__header">
+      <div>
+        <span class="lil-sili__eyebrow">SILITUZ GUIDE</span>
+        <h2 id="lilSiliTitle">Lil Silituz</h2>
+      </div>
+      <button class="lil-sili__close" type="button" data-lil-sili-close aria-label="Helfer schließen">×</button>
+    </header>
+
+    <div class="lil-sili__body">
+      <div class="lil-sili__languages" role="group" aria-label="Sprache wählen">
+        <button type="button" data-helper-lang="de" aria-pressed="true">DE</button>
+        <button type="button" data-helper-lang="en" aria-pressed="false">EN</button>
+        <button type="button" data-helper-lang="es" aria-pressed="false">ES</button>
+      </div>
+
+      <p class="lil-sili__intro" data-helper-copy></p>
+      <nav class="lil-sili__routes" data-helper-routes aria-label="Schnellziele"></nav>
+
+      <form class="lil-sili__search" data-helper-form>
+        <label class="sr-only" for="lilSiliQuery" data-helper-label>Was suchst du?</label>
+        <input id="lilSiliQuery" type="search" autocomplete="off" data-helper-input>
+        <button type="submit" data-helper-submit aria-label="Ziel suchen">→</button>
+      </form>
+      <p class="lil-sili__answer" data-helper-answer aria-live="polite"></p>
+    </div>
+  </section>
+
+  <button
+    class="lil-sili__trigger"
+    type="button"
+    data-lil-sili-trigger
+    aria-controls="lilSiliPanel"
+    aria-expanded="false">
+    <span class="lil-sili__status" aria-hidden="true"></span>
+    <img
+      src="{{ '/assets/images/lil-sili-baby-dragon.svg' | relative_url }}"
+      alt=""
+      width="260"
+      height="260">
+    <span class="lil-sili__hint" data-helper-hint>Bereit zu helfen</span>
+    <span class="sr-only">Lil Silituz öffnen</span>
+  </button>
+</div>
+
+<script src="{{ '/assets/js/lil-silituz-helper.js' | relative_url }}" defer></script>
