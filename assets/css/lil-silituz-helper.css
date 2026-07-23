@@ -1,0 +1,246 @@
+.lil-sili{
+  --lil-accent:#32e6ba;
+  --lil-ink:#eafcf8;
+  --lil-panel:rgba(3,12,24,.96);
+  position:fixed;
+  right:clamp(12px,2.4vw,34px);
+  bottom:max(12px,env(safe-area-inset-bottom));
+  z-index:46;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.lil-sili__trigger{
+  position:relative;
+  display:grid;
+  width:112px;
+  height:112px;
+  place-items:center;
+  padding:0;
+  border:0;
+  border-radius:34px;
+  background:radial-gradient(circle at 50% 38%,rgba(50,230,186,.2),rgba(3,12,24,.9) 68%);
+  box-shadow:0 18px 42px rgba(1,7,19,.42),0 0 0 1px rgba(50,230,186,.26),0 0 30px rgba(50,230,186,.12);
+  cursor:pointer;
+  isolation:isolate;
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.lil-sili__trigger:hover{
+  transform:translateY(-4px) scale(1.025);
+  box-shadow:0 24px 52px rgba(1,7,19,.48),0 0 0 1px rgba(50,230,186,.48),0 0 40px rgba(50,230,186,.22);
+}
+.lil-sili__trigger:focus-visible{
+  outline:3px solid #67e8f9;
+  outline-offset:4px;
+}
+.lil-sili__trigger img{
+  width:106px;
+  height:106px;
+  object-fit:contain;
+  filter:drop-shadow(0 10px 14px rgba(0,0,0,.3));
+  transform:translateY(-2px);
+  pointer-events:none;
+}
+.lil-sili__status{
+  position:absolute;
+  z-index:2;
+  top:8px;
+  right:8px;
+  width:13px;
+  height:13px;
+  border:2px solid #07111e;
+  border-radius:50%;
+  background:#34d399;
+  box-shadow:0 0 12px #34d399;
+}
+.lil-sili__hint{
+  position:absolute;
+  z-index:2;
+  right:86px;
+  bottom:12px;
+  width:max-content;
+  max-width:170px;
+  padding:.48rem .72rem;
+  border:1px solid rgba(50,230,186,.28);
+  border-radius:999px 999px 8px 999px;
+  background:rgba(3,12,24,.94);
+  color:#d9fff5;
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.02em;
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+  pointer-events:none;
+}
+.lil-sili__panel{
+  position:absolute;
+  right:0;
+  bottom:126px;
+  width:min(370px,calc(100vw - 24px));
+  overflow:hidden;
+  border:1px solid rgba(50,230,186,.28);
+  border-radius:24px;
+  background:var(--lil-panel);
+  color:var(--lil-ink);
+  box-shadow:0 28px 80px rgba(0,0,0,.5),inset 0 1px rgba(255,255,255,.04);
+  backdrop-filter:blur(20px) saturate(140%);
+  opacity:0;
+  transform:translateY(10px) scale(.97);
+  transform-origin:bottom right;
+  transition:opacity .18s ease,transform .18s ease;
+}
+.lil-sili__panel.is-open{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+.lil-sili__header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 18px 14px;
+  border-bottom:1px solid rgba(148,163,184,.16);
+}
+.lil-sili__header h2{
+  margin:.18rem 0 0;
+  color:#fff;
+  font-size:1.25rem;
+  line-height:1.15;
+  font-weight:900;
+}
+.lil-sili__eyebrow{
+  color:#5eead4;
+  font:800 .62rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.15em;
+}
+.lil-sili__close{
+  width:36px;
+  height:36px;
+  border:1px solid rgba(148,163,184,.22);
+  border-radius:12px;
+  background:rgba(15,23,42,.62);
+  color:#cbd5e1;
+  font-size:1.35rem;
+  line-height:1;
+  cursor:pointer;
+}
+.lil-sili__body{padding:16px 18px 18px;}
+.lil-sili__languages{display:flex;gap:6px;margin-bottom:14px;}
+.lil-sili__languages button{
+  padding:.34rem .58rem;
+  border:1px solid rgba(148,163,184,.22);
+  border-radius:999px;
+  background:rgba(15,23,42,.72);
+  color:#94a3b8;
+  font-size:.68rem;
+  font-weight:900;
+  cursor:pointer;
+}
+.lil-sili__languages button[aria-pressed="true"]{
+  border-color:rgba(50,230,186,.58);
+  background:rgba(50,230,186,.14);
+  color:#99f6e4;
+}
+.lil-sili__intro{
+  margin:0 0 14px;
+  color:#d5e4ee;
+  font-size:.9rem;
+  line-height:1.55;
+}
+.lil-sili.is-choosing-language .lil-sili__intro{
+  margin-bottom:16px;
+  color:#f0fdfa;
+  font-size:1rem;
+  font-weight:800;
+}
+.lil-sili.is-choosing-language .lil-sili__languages{
+  gap:9px;
+  margin-bottom:2px;
+}
+.lil-sili.is-choosing-language .lil-sili__languages button{
+  min-height:46px;
+  flex:1;
+  border-color:rgba(50,230,186,.34);
+  border-radius:14px;
+  background:rgba(50,230,186,.08);
+  color:#d9fff5;
+  font-size:.78rem;
+}
+.lil-sili.is-choosing-language .lil-sili__languages button:hover,
+.lil-sili.is-choosing-language .lil-sili__languages button:focus-visible{
+  border-color:#5eead4;
+  background:rgba(50,230,186,.18);
+  color:#fff;
+  outline:none;
+}
+.lil-sili__routes{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.lil-sili__routes a{
+  display:flex;
+  min-height:48px;
+  align-items:center;
+  padding:.65rem .7rem;
+  border:1px solid rgba(148,163,184,.16);
+  border-radius:13px;
+  background:rgba(15,23,42,.68);
+  color:#d8e6ef !important;
+  text-decoration:none !important;
+  font-size:.75rem;
+  font-weight:800;
+  line-height:1.25;
+  transition:border-color .18s ease,background .18s ease,transform .18s ease;
+}
+.lil-sili__routes a:hover{
+  transform:translateY(-1px);
+  border-color:rgba(50,230,186,.46);
+  background:rgba(50,230,186,.11);
+}
+.lil-sili__routes a[data-route="support"]{
+  grid-column:1/-1;
+  border-color:rgba(52,211,153,.44);
+  background:linear-gradient(90deg,rgba(16,185,129,.2),rgba(34,211,238,.09));
+  color:#b7ffe9 !important;
+}
+.lil-sili__search{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+.lil-sili__search input{
+  min-width:0;
+  flex:1;
+  border:1px solid rgba(148,163,184,.22);
+  border-radius:12px;
+  background:rgba(2,6,23,.76);
+  color:#f8fafc;
+  padding:.72rem .78rem;
+  font-size:.78rem;
+  outline:none;
+}
+.lil-sili__search input:focus{border-color:rgba(50,230,186,.72);box-shadow:0 0 0 3px rgba(50,230,186,.1);}
+.lil-sili__search button{
+  width:42px;
+  border:0;
+  border-radius:12px;
+  background:var(--lil-accent);
+  color:#02110e;
+  font-size:1rem;
+  font-weight:950;
+  cursor:pointer;
+}
+.lil-sili__answer{
+  min-height:1.15rem;
+  margin:.6rem 0 0;
+  color:#99f6e4;
+  font-size:.72rem;
+  line-height:1.45;
+}
+@media (max-width:640px){
+  .lil-sili{right:10px;bottom:max(10px,env(safe-area-inset-bottom));}
+  .lil-sili__trigger{width:84px;height:84px;border-radius:27px;}
+  .lil-sili__trigger img{width:80px;height:80px;}
+  .lil-sili__hint{display:none;}
+  .lil-sili__panel{bottom:96px;}
+}
+@media (prefers-reduced-motion:reduce){
+  .lil-sili__trigger,.lil-sili__panel,.lil-sili__routes a{transition:none;}
+}

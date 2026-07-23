@@ -9,8 +9,17 @@ permalink: /news/
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>SILITUZ NEWS</title>
   <link rel="canonical" href="https://anime-pulse-news.silituz.chatgpt.site">
-  <meta http-equiv="refresh" content="0;url=https://anime-pulse-news.silituz.chatgpt.site">
-  <script>window.location.replace("https://anime-pulse-news.silituz.chatgpt.site");</script>
+  <meta http-equiv="refresh" content="0;url=https://anime-pulse-news.silituz.chatgpt.site/?lang=de">
+  <script>
+    (function () {
+      var language = "de";
+      try {
+        var saved = localStorage.getItem("silituz-language");
+        if (saved === "de" || saved === "en" || saved === "es") language = saved;
+      } catch (_) {}
+      window.location.replace("https://anime-pulse-news.silituz.chatgpt.site/?lang=" + language);
+    })();
+  </script>
 </head>
-<body><p><a href="https://anime-pulse-news.silituz.chatgpt.site">SILITUZ NEWS direkt öffnen</a></p></body>
+<body><p><a href="https://anime-pulse-news.silituz.chatgpt.site/?lang=de">SILITUZ NEWS direkt öffnen</a></p></body>
 </html>
