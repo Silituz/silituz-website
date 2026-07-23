@@ -376,9 +376,9 @@
   {%- if page.lang == 'en' or page.url contains '/en/' -%}{%- assign is_en_menu = true -%}{%- endif -%}
 
   {%- if is_en_menu -%}
-    {%- assign nav_list = "Home:/,About Me:/about/,Gallery:/gallery/,Social Organizer:/organizer/,Generators & more:/generators/,My Music:/music/,Socials:/socials/,Support:/support/,Shoutout:/shoutout/,Contact:/contact/,Imprint:/impressum/" | split: ',' -%}
+    {%- assign nav_list = "Home:/,About Me:/about/,Gallery:/gallery/,News:__NEWS__,Social Organizer:/organizer/,Generators & more:/generators/,My Music:/music/,Socials:/socials/,Support:/support/,Shoutout:/shoutout/,Contact:/contact/,Imprint:/impressum/" | split: ',' -%}
   {%- else -%}
-    {%- assign nav_list = "Home:/,Über mich:/about/,Galerie:/gallery/,Social Organizer:/organizer/,Generatoren & mehr:/generators/,Meine Musik:/music/,Socials:/socials/,Unterstützung:/support/,Shoutout:/shoutout/,Kontakt:/contact/,Impressum:/impressum/" | split: ',' -%}
+    {%- assign nav_list = "Home:/,Über mich:/about/,Galerie:/gallery/,News:__NEWS__,Social Organizer:/organizer/,Generatoren & mehr:/generators/,Meine Musik:/music/,Socials:/socials/,Unterstützung:/support/,Shoutout:/shoutout/,Kontakt:/contact/,Impressum:/impressum/" | split: ',' -%}
   {%- endif -%}
 
   {%- assign cur = page.url | replace:'index.html','' | replace:'//','/' -%}
@@ -387,10 +387,14 @@
       {%- assign p = i | split: ':' -%}
       {%- assign title = p[0] -%}
       {%- assign href  = p[1] -%}
+      {%- assign is_news_link = false -%}
+      {%- if href == '__NEWS__' -%}{%- assign is_news_link = true -%}{%- endif -%}
 
       {%- comment -%} In EN: zuerst /en/<href> versuchen, sonst DE-Fallback {%- endcomment -%}
       {%- assign full = href -%}
-      {%- if is_en_menu -%}
+      {%- if is_news_link -%}
+        {%- assign full = 'https://anime-pulse-news.silituz.chatgpt.site' -%}
+      {%- elsif is_en_menu -%}
         {%- assign en_candidate = '/en' | append: href -%}
         {%- assign en_exists = false -%}
         {%- for pg in site.pages -%}
@@ -402,10 +406,11 @@
       {%- endif -%}
 
       {%- assign full_norm = full | replace:'index.html','' | replace:'//','/' -%}
-<a href="{{ full | relative_url }}"
-   {% if cur == full_norm %} aria-current="page" {% endif %}
+<a href="{% if is_news_link %}{{ full }}{% else %}{{ full | relative_url }}{% endif %}"
+   {% if is_news_link %}data-news-link{% endif %}
+   {% if cur == full_norm and is_news_link == false %} aria-current="page" {% endif %}
    class="flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition
-          {% if cur == full_norm %}
+          {% if cur == full_norm and is_news_link == false %}
             bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200 font-semibold
           {% else %}
             text-slate-300 hover:text-emerald-500

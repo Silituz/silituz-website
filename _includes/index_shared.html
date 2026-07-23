@@ -59,21 +59,25 @@
 </section>
 
 <!-- SILITUZ NEWS -->
-<section class="container mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-  <a href="{{ page.anime_link }}"
-     class="anime-pulse-home group relative block min-h-[310px] overflow-hidden rounded-2xl border border-cyan-400/20 shadow-2xl">
-    <img src="https://anime-pulse-news.silituz.chatgpt.site/assets/brand/silituz-signal-squad.png"
+<section class="silituz-news-entry container mx-auto px-4 sm:px-6 lg:px-8 pb-14">
+  <a href="{{ page.anime_link }}" class="silituz-news-home group">
+    <img src="/assets/images/silituz-news-squad.webp"
          alt="{{ page.anime_alt }}"
-         class="absolute inset-0 h-full w-full object-cover object-center transition duration-700 group-hover:scale-[1.025]" />
-    <span class="anime-pulse-home-shade absolute inset-0"></span>
-    <span class="relative z-10 flex min-h-[310px] max-w-2xl flex-col justify-center p-7 sm:p-10">
-      <small class="mb-3 font-mono text-xs font-bold uppercase tracking-[.18em] text-cyan-300">Anime • Manga • Games</small>
-      <strong class="text-3xl font-black leading-tight text-white sm:text-5xl">{{ page.anime_title }}</strong>
-      <span class="mt-4 max-w-xl text-sm leading-7 text-slate-300 sm:text-base">{{ page.anime_text }}</span>
-      <span class="mt-6 inline-flex w-fit items-center gap-3 rounded-xl border border-cyan-300/30 bg-cyan-300/10 px-5 py-3 font-bold text-cyan-200 transition group-hover:bg-cyan-300 group-hover:text-slate-950">
+         loading="lazy" />
+    <span class="silituz-news-home-shade"></span>
+    <span class="silituz-news-home-glow" aria-hidden="true"></span>
+    <span class="silituz-news-home-copy">
+      <small><i aria-hidden="true"></i>{{ page.anime_kicker }}</small>
+      <strong>{{ page.anime_title }}</strong>
+      <span class="silituz-news-home-text">{{ page.anime_text }}</span>
+      <span class="silituz-news-home-badges" aria-label="{{ page.anime_features_label }}">
+        <b>Anime</b><b>Manga</b><b>{{ page.anime_games }}</b><b>{{ page.anime_calendar }}</b>
+      </span>
+      <span class="silituz-news-home-cta">
         {{ page.anime_cta }} <span aria-hidden="true">→</span>
       </span>
     </span>
+    <span class="silituz-news-home-mark" aria-hidden="true">速報</span>
   </a>
 </section>
 

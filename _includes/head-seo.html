@@ -95,6 +95,10 @@
       '/impressum/':'Aviso legal'
     };
     document.querySelectorAll('#sideMenu nav a').forEach(function(a){
+      if(a.hasAttribute('data-news-link')){
+        setFirstSpanText(a, 'News');
+        return;
+      }
       var path = stripLang(new URL(a.getAttribute('href'), location.origin).pathname);
       if(labels[path]){
         setFirstSpanText(a, labels[path]);
