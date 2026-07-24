@@ -1769,3 +1769,227 @@ a.sili-feature-card { display: block; text-decoration: none; }
     animation: none !important;
   }
 }
+
+
+/* =========================================================
+   TRINITY FOREGROUND & PORTRAIT LUXE
+   Nameplate depth fix, compact featured families and holo sweep
+   ========================================================= */
+.sili-legends-overdrive .sili-legends-stage {
+  isolation: isolate;
+  overflow: visible;
+}
+.sili-legends-overdrive .sili-legends-stage::before {
+  z-index: 0;
+  transform: rotateX(67deg) translateZ(-190px);
+}
+.sili-legends-overdrive .legend-orbit {
+  z-index: 1;
+  transform-style: preserve-3d;
+}
+.sili-legends-overdrive .sili-legend-pedestal {
+  z-index: 2;
+  bottom: -5%;
+  height: 25%;
+  transform: translateX(-50%) rotateX(68deg) translateZ(-190px);
+  opacity: .76;
+  pointer-events: none;
+}
+.sili-legends-overdrive .sili-legend-sigil {
+  z-index: 3;
+  transform: translate(-50%,-50%) translateZ(-80px) rotate(45deg);
+}
+.sili-legends-overdrive .sili-trinity-links {
+  z-index: 4;
+  transform: translateZ(-25px);
+}
+.sili-legends-overdrive .legend-avatar {
+  z-index: 30 !important;
+  overflow: visible !important;
+  isolation: isolate;
+}
+.sili-legends-overdrive .legend-avatar img {
+  z-index: 31;
+}
+.sili-legends-overdrive .legend-avatar span.legend-avatar__halo {
+  z-index: 29;
+}
+.sili-legends-overdrive .legend-avatar strong {
+  z-index: 100 !important;
+  transform: translateX(-50%) translateZ(240px);
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter: none !important;
+  isolation: isolate;
+  mix-blend-mode: normal;
+  color: #ffffff;
+  background:
+    linear-gradient(115deg, rgba(2,7,16,.99), rgba(5,18,28,.99));
+  border-color: rgba(255,220,137,.86);
+  box-shadow:
+    0 16px 38px rgba(0,0,0,.78),
+    0 0 0 1px rgba(255,255,255,.045) inset,
+    0 0 26px rgba(255,190,52,.25);
+  text-shadow:
+    0 2px 5px #000,
+    0 0 12px rgba(255,255,255,.24);
+}
+.sili-legends-overdrive .legend-avatar:hover strong {
+  transform: translateX(-50%) translateZ(240px);
+  background:
+    linear-gradient(115deg, rgba(2,9,18,.99), rgba(6,25,32,.99));
+}
+
+/* Compact presentation for the four family / creator cards. */
+.page-shoutout .sili-community-legends {
+  padding-block: 3rem;
+}
+.page-shoutout .sili-community-legends > div > h2 {
+  font-size: clamp(1.8rem, 3.2vw, 2.7rem);
+}
+.page-shoutout .sili-community-legends > div > p {
+  max-width: 42rem;
+  margin-inline: auto;
+  font-size: .98rem;
+}
+.page-shoutout .sili-community-legends > div > .grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.15rem;
+  margin-top: 1.9rem;
+  align-items: start;
+}
+.page-shoutout .sili-community-legends .sili-legend-profile {
+  width: 100%;
+  min-width: 0;
+  border-radius: 1.2rem;
+}
+.page-shoutout .sili-community-legends .sili-legend-profile > div:first-child {
+  max-width: 16rem !important;
+}
+.page-shoutout .sili-community-legends .sili-legend-profile > div:last-child {
+  max-width: 16rem !important;
+  border-radius: 1rem;
+}
+.page-shoutout .sili-community-legends .sili-legend-profile > div:last-child > div {
+  padding: 1rem .8rem;
+  gap: .28rem;
+}
+.page-shoutout .sili-community-legends .sili-legend-profile h3 {
+  font-size: .94rem;
+}
+.page-shoutout .sili-community-legends .sili-legend-profile p {
+  font-size: .72rem;
+  line-height: 1.42;
+}
+
+/* High-end holographic sweep now passes over the portrait itself. */
+.page-shoutout .sili-legend-profile::after {
+  z-index: 20;
+  inset: -12%;
+  width: 44%;
+  height: 124%;
+  border: 0;
+  border-radius: 0;
+  opacity: 0;
+  transform: translateX(-180%) skewX(-16deg);
+  background:
+    linear-gradient(
+      105deg,
+      transparent 0 18%,
+      rgba(84,244,226,.06) 28%,
+      rgba(255,255,255,.46) 44%,
+      rgba(255,218,123,.3) 53%,
+      rgba(156,124,255,.14) 64%,
+      transparent 80%
+    );
+  background-size: 100% 100%;
+  filter: blur(.5px);
+  mix-blend-mode: screen;
+  box-shadow: 0 0 28px rgba(84,244,226,.1);
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+.page-shoutout .sili-legend-profile:hover::after {
+  opacity: 1;
+  animation: siliPortraitLuxeSweep 1.45s cubic-bezier(.18,.72,.16,1) forwards;
+}
+.page-shoutout .sili-legend-profile img {
+  position: relative;
+  z-index: 2;
+}
+.page-shoutout .sili-legend-profile:hover img {
+  filter: saturate(1.11) contrast(1.04) brightness(1.055);
+  box-shadow:
+    0 0 0 5px rgba(84,244,226,.07),
+    0 24px 62px rgba(0,0,0,.38),
+    0 0 45px rgba(84,244,226,.2) !important;
+}
+
+/* A second quiet ring makes the portraits feel like premium emblems. */
+.page-shoutout .sili-legend-profile > div:first-child {
+  position: relative;
+}
+.page-shoutout .sili-legend-profile > div:first-child::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 2px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 28px rgba(84,244,226,.08),
+    0 0 22px rgba(255,211,107,.06);
+  opacity: .55;
+  pointer-events: none;
+  transition: opacity .45s ease, box-shadow .45s ease;
+}
+.page-shoutout .sili-legend-profile:hover > div:first-child::after {
+  opacity: 1;
+  box-shadow:
+    inset 0 0 34px rgba(84,244,226,.15),
+    0 0 32px rgba(255,211,107,.14);
+}
+
+@keyframes siliPortraitLuxeSweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-180%) skewX(-16deg);
+  }
+  16% { opacity: .95; }
+  82% { opacity: .82; }
+  100% {
+    opacity: 0;
+    transform: translateX(390%) skewX(-16deg);
+  }
+}
+
+@media (max-width: 1100px) {
+  .page-shoutout .sili-community-legends > div > .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.35rem;
+  }
+}
+@media (max-width: 620px) {
+  .page-shoutout .sili-community-legends {
+    padding-block: 2.2rem;
+  }
+  .page-shoutout .sili-community-legends > div > .grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+  .page-shoutout .sili-community-legends .sili-legend-profile {
+    max-width: 20rem;
+    margin-inline: auto;
+  }
+  .page-shoutout .sili-community-legends .sili-legend-profile > div:first-child,
+  .page-shoutout .sili-community-legends .sili-legend-profile > div:last-child {
+    max-width: 18rem !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-shoutout .sili-legend-profile:hover::after {
+    animation: none !important;
+    opacity: .18;
+    transform: translateX(145%) skewX(-16deg);
+  }
+}
