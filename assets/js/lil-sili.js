@@ -125,13 +125,16 @@
     closeButton.setAttribute("aria-label", copy.close);
   }
 
+  let isOpen = false;
+
   function setOpen(open) {
-    root.classList.toggle("is-open", open);
-    root.open = open;
-    trigger.setAttribute("aria-expanded", String(open));
-    trigger.setAttribute("aria-label", open ? copy.close : copy.open);
-    trigger.querySelector("[data-lil-sili-trigger-badge]").textContent = open ? "×" : "?";
-    if (open) {
+    isOpen = Boolean(open);
+    root.classList.toggle("is-open", isOpen);
+    panel.hidden = !isOpen;
+    trigger.setAttribute("aria-expanded", String(isOpen));
+    trigger.setAttribute("aria-label", isOpen ? copy.close : copy.open);
+    trigger.querySelector("[data-lil-sili-trigger-badge]").textContent = isOpen ? "×" : "?";
+    if (isOpen) {
       window.requestAnimationFrame(() => search.focus());
     } else {
       message.textContent = "";
@@ -140,7 +143,7 @@
 
   trigger.addEventListener("click", (event) => {
     event.preventDefault();
-    setOpen(!root.open);
+    setOpen(!isOpen);
   });
 
   closeButton.addEventListener("click", () => {
@@ -163,16 +166,16 @@
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && root.open) {
+    if (event.key === "Escape" && isOpen) {
       setOpen(false);
       trigger.focus();
     }
   });
 
   document.addEventListener("pointerdown", (event) => {
-    if (root.open && !root.contains(event.target)) setOpen(false);
+    if (isOpen && !root.contains(event.target)) setOpen(false);
   });
 
   applyCopy();
-  setOpen(Boolean(root.open));
+  setOpen(false);
 }());
