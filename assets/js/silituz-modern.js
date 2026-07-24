@@ -182,4 +182,38 @@
     if (gallerySection) gallerySection.id = "gallery-artworks";
   }
   enhanceGallery();
+
+  if (page === "music" && !document.querySelector(".sili-release-focus")) {
+    const firstSection = document.querySelector("main section");
+    if (firstSection) {
+      const section = document.createElement("section");
+      section.className = "sili-release-focus";
+      section.id = "release-focus";
+      const title = language === "es" ? "Tu centro de música Silituz" : language === "en" ? "Your Silituz music center" : "Deine Silituz Musik-Zentrale";
+      const description = language === "es" ? "Lanzamientos, avances y todas las plataformas en un solo lugar." : language === "en" ? "Releases, previews and every platform in one place." : "Releases, Hörproben und alle Plattformen an einem Ort.";
+      const platform = language === "es" ? "Todas las plataformas" : language === "en" ? "All platforms" : "Alle Plattformen";
+      section.innerHTML = '<div class="sili-release-focus__card sili-glass"><div class="sili-release-focus__art" role="img" aria-label="Silituz Music"></div><div class="sili-release-focus__copy"><span class="sili-kicker">RELEASE CENTER</span><h2 class="sili-gradient-text">' + title + '</h2><p>' + description + '</p><div class="sili-release-focus__actions"><a class="sili-btn sili-btn--primary" href="https://open.spotify.com/intl-de/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank" rel="noopener">Spotify</a><a class="sili-btn" href="#music-platforms">' + platform + ' ↓</a></div></div></div>';
+      firstSection.insertAdjacentElement("afterend", section);
+    }
+  }
+
+  document.querySelectorAll("[data-sili-release-notify]").forEach(function (button) {
+    button.addEventListener("click", async function () {
+      const messages = {
+        de: ["Release gemerkt", "Ich habe den Release auf diesem Gerät gespeichert."],
+        en: ["Release saved", "I saved this release on this device."],
+        es: ["Lanzamiento guardado", "He guardado este lanzamiento en este dispositivo."]
+      }[language];
+      try {
+        localStorage.setItem("silituz-release-reminder", JSON.stringify({ title: button.dataset.title, date: button.dataset.date }));
+      } catch (error) {}
+      button.textContent = "✓ " + messages[0];
+      if ("Notification" in window && Notification.permission === "default") {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") new Notification(messages[0], { body: messages[1], icon: "/assets/images/favicon-192.png" });
+      } else if ("Notification" in window && Notification.permission === "granted") {
+        new Notification(messages[0], { body: messages[1], icon: "/assets/images/favicon-192.png" });
+      }
+    });
+  });
 }());
