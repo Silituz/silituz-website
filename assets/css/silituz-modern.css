@@ -80,15 +80,6 @@ input, textarea { cursor: text !important; }
 .silituz-now__countdown b { display:block; color:#fff; font-size:1.45rem; }
 .silituz-now__countdown small { color:var(--sili-muted); font-size:.62rem; text-transform:uppercase; letter-spacing:.12em; }
 
-.sili-install {
-  position: fixed; z-index: 80; left: 1rem; bottom: 1rem; display: none; align-items: center; gap: .65rem;
-  border: 1px solid rgba(53,201,255,.35); border-radius: 999px; padding: .75rem 1rem;
-  background: rgba(3,15,27,.92); color: #eaffff; box-shadow: 0 16px 44px rgba(0,0,0,.4);
-}
-.sili-install.is-ready { display: inline-flex; }
-.sili-install strong { font-size: .82rem; }
-.sili-install span { color: var(--sili-cyan); }
-
 .page-music #upcoming-releases, .page-gallery [data-gallery="silituz"] {
   position: relative;
 }
