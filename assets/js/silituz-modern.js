@@ -215,6 +215,195 @@
     }
   }
 
+
+  function addModernSection() {
+    const main = document.querySelector("main");
+    const hero = main && main.querySelector("section");
+    if (!main || !hero || document.querySelector("[data-sili-page-feature]")) return;
+
+    const copies = {
+      de: {
+        about: {
+          kicker: "DER MENSCH HINTER SILITUZ", title: "Ideen werden Welten.",
+          text: "Anime-Ästhetik, KI-Art, Musik und Community treffen sich in einem kreativen Universum – neugierig, verspielt und immer lösungsorientiert.",
+          one: ["✦", "Vision", "Aus einer kleinen Idee wird ein Erlebnis mit eigener Stimmung."],
+          two: ["音", "Sound", "Musik erzählt, was Bilder allein nicht ausdrücken können."],
+          three: ["∞", "Community", "Die besten Projekte wachsen gemeinsam mit anderen."]
+        },
+        generators: {
+          kicker: "SILITUZ CREATIVE LAB", title: "Ausprobieren. Erschaffen. Staunen.",
+          text: "Ein direkter Einstieg in Spiele, Generatoren und kreative Werkzeuge.",
+          one: ["PLAY", "Minispiele", "Reaktion, Timing und kleine Herausforderungen.", "#sili-play"],
+          two: ["CREATE", "Generatoren", "Charaktere, Passwörter und neue Ideen.", "#sili-create"],
+          three: ["ORGANIZE", "Organizer", "Kreative Projekte übersichtlich zusammenbringen.", "#sili-organize"]
+        },
+        socials: {
+          kicker: "SILITUZ SIGNAL HUB", title: "Finde mich überall.",
+          text: "Streams, Musik, kurze Videos und Community – wähle einfach dein Signal.",
+          live: "LIVE & SHORTS", music: "MUSIC", community: "COMMUNITY"
+        },
+        support: {
+          kicker: "POWER THE NEXT IDEA", title: "Dein Support wird zu Kreativität.",
+          text: "Unterstützung muss nicht immer Geld bedeuten. Anschauen, teilen und weiterempfehlen hilft genauso.",
+          one: ["01", "Anschauen", "Videos, Musik und Projekte entdecken."],
+          two: ["02", "Teilen", "Silituz an Menschen weitergeben, denen es gefallen könnte."],
+          three: ["03", "Direkt unterstützen", "Wenn du mehr tun möchtest, findest du darunter sichere Möglichkeiten."]
+        },
+        contact: {
+          kicker: "OPEN CHANNEL", title: "Worum geht es?",
+          text: "Wähle den passenden Weg und schreibe anschließend direkt deine Nachricht.",
+          one: ["PROJEKT", "Kreative Zusammenarbeit", "Ideen, Musik, Visuals oder gemeinsame Projekte."],
+          two: ["COMMUNITY", "Fragen & Austausch", "Allgemeine Fragen zu Silituz und den Inhalten."],
+          three: ["FEEDBACK", "Ideen für die Website", "Fehler, Wünsche oder neue Funktionsideen."]
+        },
+        shoutout: {
+          kicker: "SILITUZ HALL OF LEGENDS", title: "Die Menschen hinter der Reise.",
+          text: "Keine anonyme Liste, sondern eine Bühne für Menschen, die inspiriert, geholfen, gelacht und diesen Weg besonders gemacht haben.",
+          enter: "Die Hall of Legends betreten", honor: "CREATIVITY · LOYALTY · COMMUNITY"
+        }
+      },
+      en: {
+        about: {
+          kicker: "THE PERSON BEHIND SILITUZ", title: "Ideas become worlds.",
+          text: "Anime aesthetics, AI art, music and community meet in one creative universe – curious, playful and always solution-minded.",
+          one: ["✦", "Vision", "A small idea grows into an experience with its own atmosphere."],
+          two: ["音", "Sound", "Music expresses what images alone cannot say."],
+          three: ["∞", "Community", "The best projects grow together with others."]
+        },
+        generators: {
+          kicker: "SILITUZ CREATIVE LAB", title: "Try. Create. Be surprised.",
+          text: "A direct entrance to games, generators and creative tools.",
+          one: ["PLAY", "Mini games", "Reaction, timing and quick challenges.", "#sili-play"],
+          two: ["CREATE", "Generators", "Characters, passwords and fresh ideas.", "#sili-create"],
+          three: ["ORGANIZE", "Organizer", "Bring creative projects together clearly.", "#sili-organize"]
+        },
+        socials: {
+          kicker: "SILITUZ SIGNAL HUB", title: "Find me everywhere.",
+          text: "Streams, music, short videos and community – simply choose your signal.",
+          live: "LIVE & SHORTS", music: "MUSIC", community: "COMMUNITY"
+        },
+        support: {
+          kicker: "POWER THE NEXT IDEA", title: "Your support becomes creativity.",
+          text: "Support does not always mean money. Watching, sharing and recommending helps just as much.",
+          one: ["01", "Watch", "Discover videos, music and projects."],
+          two: ["02", "Share", "Show Silituz to people who may enjoy it."],
+          three: ["03", "Direct support", "If you want to do more, safe options are waiting below."]
+        },
+        contact: {
+          kicker: "OPEN CHANNEL", title: "What is it about?",
+          text: "Choose the right route and then write your message directly.",
+          one: ["PROJECT", "Creative collaboration", "Ideas, music, visuals or shared projects."],
+          two: ["COMMUNITY", "Questions & exchange", "General questions about Silituz and the content."],
+          three: ["FEEDBACK", "Website ideas", "Bugs, wishes or new feature ideas."]
+        },
+        shoutout: {
+          kicker: "SILITUZ HALL OF LEGENDS", title: "The people behind the journey.",
+          text: "Not an anonymous list, but a stage for the people who inspired, helped, laughed and made this journey special.",
+          enter: "Enter the Hall of Legends", honor: "CREATIVITY · LOYALTY · COMMUNITY"
+        }
+      },
+      es: {
+        about: {
+          kicker: "LA PERSONA DETRÁS DE SILITUZ", title: "Las ideas se convierten en mundos.",
+          text: "La estética anime, el arte con IA, la música y la comunidad se unen en un universo creativo, curioso y lleno de soluciones.",
+          one: ["✦", "Visión", "Una pequeña idea se convierte en una experiencia con ambiente propio."],
+          two: ["音", "Sonido", "La música expresa lo que las imágenes no pueden decir solas."],
+          three: ["∞", "Comunidad", "Los mejores proyectos crecen junto a otras personas."]
+        },
+        generators: {
+          kicker: "SILITUZ CREATIVE LAB", title: "Prueba. Crea. Sorpréndete.",
+          text: "Una entrada directa a juegos, generadores y herramientas creativas.",
+          one: ["PLAY", "Minijuegos", "Reacción, ritmo y pequeños retos.", "#sili-play"],
+          two: ["CREATE", "Generadores", "Personajes, contraseñas e ideas nuevas.", "#sili-create"],
+          three: ["ORGANIZE", "Organizer", "Organiza tus proyectos creativos fácilmente.", "#sili-organize"]
+        },
+        socials: {
+          kicker: "SILITUZ SIGNAL HUB", title: "Encuéntrame en todas partes.",
+          text: "Directos, música, vídeos cortos y comunidad: elige tu señal.",
+          live: "DIRECTOS Y CORTOS", music: "MÚSICA", community: "COMUNIDAD"
+        },
+        support: {
+          kicker: "POWER THE NEXT IDEA", title: "Tu apoyo se convierte en creatividad.",
+          text: "Apoyar no siempre significa dinero. Ver, compartir y recomendar ayuda muchísimo.",
+          one: ["01", "Ver", "Descubre vídeos, música y proyectos."],
+          two: ["02", "Compartir", "Muestra Silituz a personas que podrían disfrutarlo."],
+          three: ["03", "Apoyo directo", "Si quieres hacer más, encontrarás opciones seguras abajo."]
+        },
+        contact: {
+          kicker: "OPEN CHANNEL", title: "¿De qué se trata?",
+          text: "Elige la ruta adecuada y después escribe directamente tu mensaje.",
+          one: ["PROYECTO", "Colaboración creativa", "Ideas, música, imágenes o proyectos conjuntos."],
+          two: ["COMUNIDAD", "Preguntas e intercambio", "Preguntas generales sobre Silituz y su contenido."],
+          three: ["FEEDBACK", "Ideas para la web", "Errores, deseos o nuevas funciones."]
+        },
+        shoutout: {
+          kicker: "SILITUZ HALL OF LEGENDS", title: "Las personas detrás del viaje.",
+          text: "No es una lista anónima, sino un escenario para quienes inspiraron, ayudaron, rieron e hicieron especial este camino.",
+          enter: "Entrar en la Hall of Legends", honor: "CREATIVIDAD · LEALTAD · COMUNIDAD"
+        }
+      }
+    };
+    const data = (copies[language] || copies.de)[page];
+    if (!data) return;
+
+    const section = document.createElement("section");
+    section.dataset.siliPageFeature = page;
+    section.className = "sili-page-feature sili-glass";
+
+    function featureCard(item, href) {
+      const tag = href ? "a" : "article";
+      const link = href ? ' href="' + href + '"' : "";
+      return "<" + tag + link + ' class="sili-feature-card"><i>' + item[0] + "</i><h3>" + item[1] + "</h3><p>" + item[2] + "</p></" + tag + ">";
+    }
+
+    if (page === "about") {
+      section.classList.add("sili-about-feature");
+      section.innerHTML = '<div class="sili-feature-copy"><span class="sili-kicker">' + data.kicker + '</span><h2 class="sili-gradient-text">' + data.title + '</h2><p>' + data.text + '</p></div><div class="sili-feature-grid">' + featureCard(data.one) + featureCard(data.two) + featureCard(data.three) + "</div>";
+    }
+
+    if (page === "generators") {
+      const sections = Array.from(main.children).filter(function (element) { return element.tagName === "SECTION"; });
+      if (sections[1]) sections[1].id = "sili-play";
+      if (sections[2]) sections[2].id = "sili-create";
+      if (sections[3]) sections[3].id = "sili-organize";
+      section.classList.add("sili-lab-feature");
+      section.innerHTML = '<div class="sili-feature-copy"><span class="sili-kicker">' + data.kicker + '</span><h2 class="sili-gradient-text">' + data.title + '</h2><p>' + data.text + '</p></div><div class="sili-feature-grid">' + featureCard(data.one, data.one[3]) + featureCard(data.two, data.two[3]) + featureCard(data.three, data.three[3]) + "</div>";
+    }
+
+    if (page === "socials") {
+      section.classList.add("sili-signal-feature");
+      section.innerHTML = '<div class="sili-feature-copy"><span class="sili-kicker">' + data.kicker + '</span><h2 class="sili-gradient-text">' + data.title + '</h2><p>' + data.text + '</p></div><div class="sili-signal-orbit" aria-label="Silituz social links"><span class="sili-signal-core">S</span><a class="signal-tiktok" href="https://www.tiktok.com/@silituz" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i><b>TikTok</b><small>' + data.live + '</small></a><a class="signal-spotify" href="https://open.spotify.com/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank" rel="noopener"><i class="fa-brands fa-spotify"></i><b>Spotify</b><small>' + data.music + '</small></a><a class="signal-youtube" href="https://www.youtube.com/@silituz" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i><b>YouTube</b><small>' + data.live + '</small></a><a class="signal-instagram" href="https://www.instagram.com/silituz" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i><b>Instagram</b><small>' + data.community + '</small></a><a class="signal-discord" href="https://discord.gg/ypzW8RmGfT" target="_blank" rel="noopener"><i class="fa-brands fa-discord"></i><b>Discord</b><small>' + data.community + "</small></a></div>";
+    }
+
+    if (page === "support") {
+      section.classList.add("sili-support-feature");
+      section.innerHTML = '<div class="sili-feature-copy"><span class="sili-kicker">' + data.kicker + '</span><h2 class="sili-gradient-text">' + data.title + '</h2><p>' + data.text + '</p></div><div class="sili-feature-grid">' + featureCard(data.one, "/music/") + featureCard(data.two, "/socials/") + featureCard(data.three, "#tipeeeButton") + "</div>";
+    }
+
+    if (page === "contact") {
+      const form = document.getElementById("contactForm");
+      if (form) form.closest("section").id = "sili-contact-form";
+      section.classList.add("sili-contact-feature");
+      section.innerHTML = '<div class="sili-feature-copy"><span class="sili-kicker">' + data.kicker + '</span><h2 class="sili-gradient-text">' + data.title + '</h2><p>' + data.text + '</p></div><div class="sili-feature-grid">' + featureCard(data.one, "#sili-contact-form") + featureCard(data.two, "#sili-contact-form") + featureCard(data.three, "#sili-contact-form") + "</div>";
+    }
+
+    if (page === "shoutout") {
+      const profiles = Array.from(main.querySelectorAll("a")).filter(function (link) { return link.querySelector("img[alt]"); });
+      profiles.forEach(function (profile, index) {
+        profile.classList.add("sili-legend-profile");
+        profile.style.setProperty("--legend-delay", String(index % 8));
+      });
+      const originalSections = Array.from(main.children).filter(function (element) { return element.tagName === "SECTION"; });
+      if (originalSections[1]) originalSections[1].id = "community-legends";
+      section.classList.add("sili-legends-feature");
+      section.innerHTML = '<div class="sili-legends-stars" aria-hidden="true"></div><div class="sili-feature-copy"><span class="sili-kicker">' + data.kicker + '</span><h2 class="sili-gradient-text">' + data.title + '</h2><p>' + data.text + '</p><strong class="sili-legends-honor">' + data.honor + '</strong><a class="sili-btn sili-btn--primary" href="#community-legends">' + data.enter + ' ↓</a></div><div class="sili-legends-stage" aria-hidden="true"><span class="legend-orbit legend-orbit-one"></span><span class="legend-orbit legend-orbit-two"></span><div class="legend-avatar legend-avatar-coco"><img src="/assets/images/shoutout/coco6.svg" alt=""></div><div class="legend-avatar legend-avatar-main"><img src="/assets/images/shoutout/soju.svg" alt=""></div><div class="legend-avatar legend-avatar-village"><img src="/assets/images/shoutout/creatorvillage.svg" alt=""></div><b>SILITUZ</b></div>';
+    }
+
+    hero.insertAdjacentElement("afterend", section);
+  }
+
+  addModernSection();
+
   document.querySelectorAll("[data-sili-release-notify]").forEach(function (button) {
     button.addEventListener("click", async function () {
       const messages = {
