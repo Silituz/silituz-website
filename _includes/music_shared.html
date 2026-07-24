@@ -22,6 +22,45 @@
   </div>
 </section>
 
+{% assign focus_now = site.time | date: "%s" | plus: 0 %}
+{% assign focus_items = site.data.releases | sort: "date" %}
+{% assign focus_release = nil %}
+{% for release in focus_items %}
+  {% assign focus_time = release.date | date: "%s" | plus: 0 %}
+  {% if focus_time >= focus_now %}
+    {% assign focus_release = release %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+<section class="sili-release-focus" id="release-focus">
+  <div class="sili-release-focus__card sili-glass">
+    <div class="sili-release-focus__art" {% if focus_release.cover %}style="background-image:linear-gradient(140deg,rgba(25,214,162,.08),rgba(53,201,255,.18)),url('{{ focus_release.cover }}')"{% endif %} role="img" aria-label="{% if is_en %}Current Silituz release{% else %}Aktueller Silituz Release{% endif %}"></div>
+    <div class="sili-release-focus__copy">
+      <span class="sili-kicker">{% if is_en %}RELEASE CENTER{% else %}RELEASE-ZENTRALE{% endif %}</span>
+      <h2 class="sili-gradient-text">{% if focus_release %}{% if is_en %}{{ focus_release.title_en | default: focus_release.title_de }}{% else %}{{ focus_release.title_de | default: focus_release.title_en }}{% endif %}{% else %}Silituz Music{% endif %}</h2>
+      <p>{% if is_en %}Listen, discover the story and choose your favorite platform. Release times automatically follow your selected timezone below.{% else %}Anhören, die Geschichte entdecken und direkt die Lieblingsplattform wählen. Die Release-Zeit passt sich unten automatisch deiner Zeitzone an.{% endif %}</p>
+      {% if focus_release %}
+      <div class="silituz-now__countdown" data-sili-countdown="{{ focus_release.date | date_to_xmlschema }}">
+        <span><b>00</b><small>{% if is_en %}Days{% else %}Tage{% endif %}</small></span>
+        <span><b>00</b><small>{% if is_en %}Hours{% else %}Stunden{% endif %}</small></span>
+        <span><b>00</b><small>{% if is_en %}Minutes{% else %}Minuten{% endif %}</small></span>
+      </div>
+      {% endif %}
+      <div class="sili-release-focus__actions">
+        <a class="sili-btn sili-btn--primary" href="https://open.spotify.com/intl-de/artist/0l3OqhrDQ7No2fPCIP0i5h" target="_blank" rel="noopener"><i class="fa-brands fa-spotify" aria-hidden="true"></i> Spotify</a>
+        <a class="sili-btn" href="#music-platforms">{% if is_en %}All platforms{% else %}Alle Plattformen{% endif %} ↓</a>
+        {% if focus_release %}<button type="button" class="sili-btn" data-sili-release-notify data-title="{% if is_en %}{{ focus_release.title_en | default: focus_release.title_de }}{% else %}{{ focus_release.title_de | default: focus_release.title_en }}{% endif %}" data-date="{{ focus_release.date | date_to_xmlschema }}">♡ {% if is_en %}Remember it{% else %}Merken{% endif %}</button>{% endif %}
+      </div>
+      <div class="sili-release-timeline" aria-label="{% if is_en %}Release journey{% else %}Release-Reise{% endif %}">
+        <span>{% if is_en %}Idea{% else %}Idee{% endif %}</span>
+        <span>{% if is_en %}Production{% else %}Produktion{% endif %}</span>
+        <span class="is-current">{% if is_en %}Release{% else %}Veröffentlichung{% endif %}</span>
+        <span>{% if is_en %}Behind the song{% else %}Hinter dem Song{% endif %}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- =========================
      UPCOMING RELEASES (+ TZ Select)
      ========================= -->
