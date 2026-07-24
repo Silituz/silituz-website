@@ -84,7 +84,7 @@
     music: localPath("/music/"),
     support: localPath("/support/"),
     socials: localPath("/socials/"),
-    about: localPath("/about.html")
+    about: localPath("/about/")
   };
 
   const routes = [
