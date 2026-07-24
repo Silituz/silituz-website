@@ -1,0 +1,296 @@
+/* Lil Sili – floating guide on the localized home pages */
+.site-lil-sili {
+  --lil-bg: #07121d;
+  --lil-panel: rgba(8, 24, 35, 0.96);
+  --lil-line: rgba(34, 211, 238, 0.33);
+  --lil-text: #e5edf6;
+  --lil-muted: #9fb2c7;
+  --lil-accent: #10b981;
+  --lil-cyan: #22d3ee;
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  font-family: inherit;
+}
+
+.site-lil-sili__trigger {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  padding: 0;
+  overflow: visible;
+  cursor: pointer;
+  border: 1px solid rgba(34, 211, 238, 0.52);
+  border-radius: 30px;
+  background: linear-gradient(145deg, #0f2630, var(--lil-bg));
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.32), 0 0 30px rgba(34, 211, 238, 0.16);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.site-lil-sili__trigger::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 6px;
+  border-radius: 23px;
+  background: radial-gradient(circle at 50% 42%, rgba(118, 255, 201, 0.19), transparent 65%);
+}
+
+.site-lil-sili__trigger:hover,
+.site-lil-sili__trigger:focus-visible {
+  border-color: #7affc9;
+  transform: translateY(-4px) rotate(-2deg);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.38), 0 0 38px rgba(34, 211, 238, 0.28);
+}
+
+.site-lil-sili__trigger:focus-visible,
+.site-lil-sili__close:focus-visible,
+.site-lil-sili__form :focus-visible,
+.site-lil-sili__actions a:focus-visible {
+  outline: 3px solid rgba(34, 211, 238, 0.58);
+  outline-offset: 3px;
+}
+
+.site-lil-sili__trigger img {
+  position: relative;
+  z-index: 1;
+  width: 104px;
+  height: 104px;
+  max-width: none;
+  margin: -13px -6px 0;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 11px rgba(0, 0, 0, 0.34));
+}
+
+.site-lil-sili__trigger > span {
+  position: absolute;
+  z-index: 2;
+  top: -6px;
+  right: -5px;
+  display: grid;
+  width: 27px;
+  height: 27px;
+  place-items: center;
+  border: 3px solid var(--lil-bg);
+  border-radius: 50%;
+  background: var(--lil-accent);
+  color: #fff;
+  font: 900 14px/1 Arial, sans-serif;
+}
+
+.site-lil-sili__hint {
+  margin-right: 4px;
+  padding: 8px 11px;
+  border: 1px solid var(--lil-line);
+  background: var(--lil-panel);
+  color: var(--lil-text);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.25);
+  letter-spacing: 0.08em;
+  font: 900 9px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  animation: lil-sili-bob 2.6s ease-in-out infinite;
+}
+
+.site-lil-sili.is-open .site-lil-sili__hint {
+  display: none;
+}
+
+.site-lil-sili__panel {
+  position: relative;
+  width: min(366px, calc(100vw - 32px));
+  max-height: min(680px, calc(100vh - 148px));
+  overflow: auto;
+  border: 1px solid var(--lil-line);
+  background: var(--lil-panel);
+  color: var(--lil-text);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(20px);
+}
+
+.site-lil-sili__panel[hidden] {
+  display: none;
+}
+
+.site-lil-sili__panel::before {
+  content: "";
+  display: block;
+  height: 4px;
+  background: linear-gradient(90deg, var(--lil-cyan), #79f7c1 47%, var(--lil-accent));
+}
+
+.site-lil-sili__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px 22px 10px;
+}
+
+.site-lil-sili__head span {
+  color: var(--lil-cyan);
+  letter-spacing: 0.1em;
+  font: 900 10px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.site-lil-sili__head h2 {
+  margin: 7px 0 0;
+  color: var(--lil-text) !important;
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.site-lil-sili__close {
+  display: grid;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  cursor: pointer;
+  place-items: center;
+  border: 1px solid var(--lil-line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--lil-muted);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.site-lil-sili__close:hover {
+  border-color: var(--lil-cyan);
+  color: #fff;
+}
+
+.site-lil-sili__intro {
+  margin: 0;
+  padding: 0 22px 16px;
+  color: var(--lil-muted) !important;
+  line-height: 1.55;
+}
+
+.site-lil-sili__form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  padding: 0 22px 8px;
+}
+
+.site-lil-sili__form input {
+  min-width: 0;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 10px;
+  background: rgba(2, 6, 23, 0.55);
+  color: #fff;
+  padding: 11px 12px;
+}
+
+.site-lil-sili__form input::placeholder {
+  color: #7f93aa;
+}
+
+.site-lil-sili__form button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--lil-accent), #059669);
+  color: #fff;
+  cursor: pointer;
+  padding: 10px 13px;
+  font-weight: 800;
+}
+
+.site-lil-sili__message {
+  min-height: 1.35em;
+  margin: 0;
+  padding: 0 22px 8px;
+  color: #fbbf24 !important;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.site-lil-sili__actions {
+  display: grid;
+  padding: 6px 14px 16px;
+}
+
+.site-lil-sili__actions a {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 9px;
+  border-top: 1px solid rgba(148, 163, 184, 0.13);
+  color: var(--lil-text) !important;
+  text-decoration: none;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.site-lil-sili__actions a:hover {
+  background: rgba(34, 211, 238, 0.08);
+  color: #fff !important;
+  transform: translateX(2px);
+}
+
+.site-lil-sili__actions i {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid var(--lil-line);
+  border-radius: 8px;
+  color: var(--lil-cyan);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.site-lil-sili__actions b {
+  color: var(--lil-accent);
+  font-size: 1.25rem;
+}
+
+.site-lil-sili__actions .site-lil-sili__support i {
+  color: #79f7c1;
+}
+
+@keyframes lil-sili-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@media (max-width: 640px) {
+  .site-lil-sili {
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .site-lil-sili__trigger {
+    width: 76px;
+    height: 76px;
+    border-radius: 25px;
+  }
+
+  .site-lil-sili__trigger img {
+    width: 88px;
+    height: 88px;
+  }
+
+  .site-lil-sili__panel {
+    max-height: calc(100vh - 112px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-lil-sili__hint {
+    animation: none;
+  }
+
+  .site-lil-sili__trigger,
+  .site-lil-sili__actions a {
+    transition: none;
+  }
+}
