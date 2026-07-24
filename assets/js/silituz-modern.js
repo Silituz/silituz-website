@@ -389,39 +389,25 @@
 
     if (page === "shoutout") {
       const legendCopy = language === "es" ? {
-        presents: "SILITUZ PRESENTA", chosen: "LEYENDAS DESTACADAS", energy: "ENERGÍA INFINITA",
-        oath: "UNA COMUNIDAD · UNA HISTORIA · INFINITOS RECUERDOS",
-        constellation: "La constelación continúa.", constellationText: "Cada persona aquí añadió una chispa a este viaje. Pasa el cursor por las estrellas y descubre la comunidad detrás de Silituz.",
-        enter: "Entrar en la constelación"
+        presents: "SILITUZ PRESENTA",
+        oath: "UNA COMUNIDAD · UNA HISTORIA · INFINITOS RECUERDOS"
       } : language === "en" ? {
-        presents: "SILITUZ PRESENTS", chosen: "FEATURED LEGENDS", energy: "INFINITE ENERGY",
-        oath: "ONE COMMUNITY · ONE STORY · ENDLESS MEMORIES",
-        constellation: "The constellation continues.", constellationText: "Every person here added a spark to this journey. Move through the stars and discover the community behind Silituz.",
-        enter: "Enter the constellation"
+        presents: "SILITUZ PRESENTS",
+        oath: "ONE COMMUNITY · ONE STORY · ENDLESS MEMORIES"
       } : {
-        presents: "SILITUZ PRÄSENTIERT", chosen: "EHRENPLÄTZE", energy: "UNENDLICHE ENERGIE",
-        oath: "EINE COMMUNITY · EINE GESCHICHTE · UNENDLICH VIELE MOMENTE",
-        constellation: "Die Konstellation wächst weiter.", constellationText: "Jeder Mensch hier hat diesem Weg einen eigenen Funken gegeben. Reise durch die Sterne und entdecke die Community hinter Silituz.",
-        enter: "In die Konstellation"
+        presents: "SILITUZ PRÄSENTIERT",
+        oath: "EINE COMMUNITY · EINE GESCHICHTE · UNENDLICH VIELE MOMENTE"
       };
 
       const profiles = Array.from(main.querySelectorAll("a")).filter(function (link) {
         return link.querySelector("img[alt]") && !link.closest(".sili-legends-stage");
       });
-      profiles.forEach(function (profile, index) {
+      profiles.forEach(function (profile) {
         const image = profile.querySelector("img[alt]");
         const heading = profile.querySelector("h3");
         const profileName = heading && heading.textContent.trim() ? heading.textContent.trim() : image.alt.trim();
         profile.classList.add("sili-legend-profile");
         profile.dataset.legendName = profileName;
-        profile.style.setProperty("--legend-delay", String(index % 8));
-        profile.style.setProperty("--legend-index", String(index + 1));
-        if (!profile.querySelector(".sili-profile-number")) {
-          const badge = document.createElement("span");
-          badge.className = "sili-profile-number";
-          badge.textContent = "LEGEND " + String(index + 1).padStart(2, "0");
-          profile.appendChild(badge);
-        }
       });
 
       const originalSections = Array.from(main.children).filter(function (element) {
@@ -431,12 +417,6 @@
       if (communitySection) {
         communitySection.id = "community-legends";
         communitySection.classList.add("sili-community-legends");
-        if (!document.querySelector(".sili-constellation-intro")) {
-          const intro = document.createElement("section");
-          intro.className = "sili-constellation-intro";
-          intro.innerHTML = '<span class="sili-constellation-index">CHAPTER II · COMMUNITY CONSTELLATION</span><h2>' + legendCopy.constellation + '</h2><p>' + legendCopy.constellationText + '</p><a href="#community-legends">' + legendCopy.enter + ' ↓</a>';
-          main.insertBefore(intro, communitySection);
-        }
       }
 
       section.classList.add("sili-legends-feature", "sili-legends-overdrive");
@@ -444,13 +424,12 @@
         '<div class="sili-legends-stars" aria-hidden="true"></div>' +
         '<div class="sili-cinematic-beams" aria-hidden="true"><i></i><i></i><i></i></div>' +
         '<div class="sili-legends-frame" aria-hidden="true"><span></span><span></span><span></span><span></span></div>' +
-        '<div class="sili-legends-chapters"><span><b>01</b> HALL OF LEGENDS</span><i></i><span><b>02</b> COMMUNITY CONSTELLATION</span></div>' +
+        '<div class="sili-legends-chapters"><span>THE LEGENDARY TRINITY</span><i></i><span>ONE COMMUNITY</span></div>' +
         '<div class="sili-feature-copy">' +
           '<span class="sili-legend-presents"><i></i>' + legendCopy.presents + '<i></i></span>' +
           '<span class="sili-kicker">' + data.kicker + '</span>' +
           '<h2 class="sili-gradient-text">' + data.title + '</h2>' +
           '<p>' + data.text + '</p>' +
-          '<div class="sili-legend-metrics"><span><b>03</b><small>' + legendCopy.chosen + '</small></span><span><b>∞</b><small>' + legendCopy.energy + '</small></span></div>' +
           '<strong class="sili-legends-honor">' + legendCopy.oath + '</strong>' +
           '<a class="sili-btn sili-btn--primary sili-legend-enter" href="#community-legends">' + data.enter + ' <span>↓</span></a>' +
         '</div>' +
@@ -460,14 +439,15 @@
           '<span class="legend-orbit legend-orbit-two" aria-hidden="true"></span>' +
           '<span class="legend-orbit legend-orbit-three" aria-hidden="true"></span>' +
           '<div class="sili-legend-sigil" aria-hidden="true"><i></i><b>S</b><i></i></div>' +
+          '<div class="sili-trinity-links" aria-hidden="true"><i></i><i></i><i></i></div>' +
           '<a class="legend-avatar legend-avatar-red" href="https://www.tiktok.com/@_.eunice16._" target="_blank" rel="noopener" aria-label="Red Bonita auf TikTok">' +
-            '<span class="legend-avatar__halo" aria-hidden="true"></span><img src="/assets/images/shoutout/eunice2.svg" alt="Red Bonita"><strong>Red Bonita</strong><small>CRIMSON HEART</small>' +
+            '<span class="legend-avatar__halo" aria-hidden="true"></span><img src="/assets/images/shoutout/eunice2.svg" alt="Red Bonita"><strong>Red Bonita</strong>' +
           '</a>' +
           '<a class="legend-avatar legend-avatar-ice" href="https://www.tiktok.com/@grozdanic.lule" target="_blank" rel="noopener" aria-label="IceQueen auf TikTok">' +
-            '<span class="legend-avatar__halo" aria-hidden="true"></span><img src="/assets/images/shoutout/icequeen2.svg" alt="IceQueen"><strong>IceQueen</strong><small>FROZEN SOUL</small>' +
+            '<span class="legend-avatar__halo" aria-hidden="true"></span><img src="/assets/images/shoutout/icequeen2.svg" alt="IceQueen"><strong>IceQueen</strong>' +
           '</a>' +
           '<a class="legend-avatar legend-avatar-wolf" href="https://www.tiktok.com/@wolf_05555" target="_blank" rel="noopener" aria-label="Wolf auf TikTok">' +
-            '<span class="legend-avatar__halo" aria-hidden="true"></span><img src="/assets/images/shoutout/wolfpo3.svg" alt="Wolf"><strong>Wolf</strong><small>LOYAL SPIRIT</small>' +
+            '<span class="legend-avatar__halo" aria-hidden="true"></span><img src="/assets/images/shoutout/wolfpo3.svg" alt="Wolf"><strong>Wolf</strong>' +
           '</a>' +
           '<div class="sili-legend-pedestal" aria-hidden="true"><span></span><span></span><span></span></div>' +
         '</div>' +
@@ -475,18 +455,56 @@
 
       const canTilt = matchMedia("(pointer:fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (canTilt) {
+        let targetTiltX = 0;
+        let targetTiltY = 0;
+        let currentTiltX = 0;
+        let currentTiltY = 0;
+        let targetSpotX = 76;
+        let targetSpotY = 42;
+        let currentSpotX = 76;
+        let currentSpotY = 42;
+        let tiltFrame = 0;
+
+        function animateTilt() {
+          currentTiltX += (targetTiltX - currentTiltX) * .09;
+          currentTiltY += (targetTiltY - currentTiltY) * .09;
+          currentSpotX += (targetSpotX - currentSpotX) * .075;
+          currentSpotY += (targetSpotY - currentSpotY) * .075;
+
+          section.style.setProperty("--spot-x", currentSpotX.toFixed(2) + "%");
+          section.style.setProperty("--spot-y", currentSpotY.toFixed(2) + "%");
+          section.style.setProperty("--tilt-x", currentTiltX.toFixed(3) + "deg");
+          section.style.setProperty("--tilt-y", currentTiltY.toFixed(3) + "deg");
+
+          const moving = Math.abs(targetTiltX - currentTiltX) > .01 ||
+            Math.abs(targetTiltY - currentTiltY) > .01 ||
+            Math.abs(targetSpotX - currentSpotX) > .05 ||
+            Math.abs(targetSpotY - currentSpotY) > .05;
+
+          tiltFrame = moving ? requestAnimationFrame(animateTilt) : 0;
+        }
+
+        function requestTiltFrame() {
+          if (!tiltFrame) tiltFrame = requestAnimationFrame(animateTilt);
+        }
+
         section.addEventListener("pointermove", function (event) {
           const rect = section.getBoundingClientRect();
-          const x = (event.clientX - rect.left) / rect.width;
-          const y = (event.clientY - rect.top) / rect.height;
-          section.style.setProperty("--spot-x", (x * 100).toFixed(1) + "%");
-          section.style.setProperty("--spot-y", (y * 100).toFixed(1) + "%");
-          section.style.setProperty("--tilt-x", ((.5 - y) * 8).toFixed(2) + "deg");
-          section.style.setProperty("--tilt-y", ((x - .5) * 10).toFixed(2) + "deg");
+          const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+          const y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+          targetSpotX = x * 100;
+          targetSpotY = y * 100;
+          targetTiltX = (.5 - y) * 5;
+          targetTiltY = (x - .5) * 6;
+          requestTiltFrame();
         });
+
         section.addEventListener("pointerleave", function () {
-          section.style.setProperty("--tilt-x", "0deg");
-          section.style.setProperty("--tilt-y", "0deg");
+          targetTiltX = 0;
+          targetTiltY = 0;
+          targetSpotX = 76;
+          targetSpotY = 42;
+          requestTiltFrame();
         });
       }
     }
