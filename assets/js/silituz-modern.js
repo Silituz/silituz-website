@@ -533,4 +533,215 @@
       }
     });
   });
+
+  /* =========================================================
+     GLASS PORTAL TRANSITION
+     Cinematic click-through for Shoutout profiles
+     ========================================================= */
+  function initGlassPortal() {
+    if (page !== "shoutout") return;
+
+    const portalLinks = Array.from(document.querySelectorAll(".legend-avatar, .sili-legend-profile"));
+    if (!portalLinks.length) return;
+
+    const portalDemo = new URLSearchParams(window.location.search).get("portal-demo") === "1";
+    const portalSlow = portalDemo && new URLSearchParams(window.location.search).get("portal-slow") === "1";
+    const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const isCompactScreen = matchMedia("(max-width: 620px)");
+    let portalActive = false;
+
+    const demoCopy = language === "es"
+      ? "DEMO DEL PORTAL · TOCA UN PERFIL"
+      : language === "en"
+        ? "PORTAL DEMO · CLICK A PROFILE"
+        : "PORTAL-DEMO · PROFIL ANKLICKEN";
+    const enteringCopy = language === "es"
+      ? "ABRIENDO PERFIL"
+      : language === "en"
+        ? "OPENING PROFILE"
+        : "PROFIL WIRD GEÖFFNET";
+
+    if (portalDemo && !document.querySelector(".sili-portal-demo-pill")) {
+      const demoPill = document.createElement("div");
+      demoPill.className = "sili-portal-demo-pill";
+      demoPill.innerHTML = '<span></span>' + demoCopy;
+      document.body.appendChild(demoPill);
+    }
+
+    function makeCracks() {
+      return [
+        "M100 100 L95 64 L76 35 L72 8",
+        "M100 100 L119 69 L148 42 L179 22",
+        "M100 100 L139 96 L171 76 L198 77",
+        "M100 100 L132 124 L168 139 L195 169",
+        "M100 100 L108 142 L98 177 L111 200",
+        "M100 100 L76 134 L52 166 L29 192",
+        "M100 100 L61 107 L30 97 L0 113",
+        "M100 100 L70 80 L39 66 L9 41",
+        "M95 64 L116 50 L124 28",
+        "M76 35 L52 35 L38 20",
+        "M119 69 L121 43 L140 18",
+        "M148 42 L169 52 L191 45",
+        "M139 96 L159 113 L188 116",
+        "M132 124 L133 151 L154 177",
+        "M108 142 L128 162 L128 190",
+        "M76 134 L78 160 L63 187",
+        "M61 107 L38 127 L10 132",
+        "M70 80 L43 81 L19 69"
+      ].map(function (path, index) {
+        return '<path d="' + path + '" style="--crack-delay:' + (index * 8) + 'ms"></path>';
+      }).join("");
+    }
+
+    function addShards(overlay, targetRect, centerX, centerY) {
+      const shardCount = isCompactScreen.matches ? 16 : 24;
+      const columns = isCompactScreen.matches ? 4 : 6;
+      const rows = Math.ceil(shardCount / columns);
+      const targetCenterX = targetRect.left + targetRect.width / 2;
+      const targetCenterY = targetRect.top + targetRect.height / 2;
+      const cellWidth = targetRect.width / columns;
+      const cellHeight = targetRect.height / rows;
+      const shardBase = Math.max(12, Math.min(27, Math.min(cellWidth, cellHeight) * .7));
+      const polygons = [
+        "polygon(8% 4%, 96% 20%, 66% 96%, 0 66%)",
+        "polygon(18% 0, 100% 44%, 72% 100%, 0 76%)",
+        "polygon(0 14%, 78% 0, 100% 82%, 24% 100%)",
+        "polygon(12% 0, 100% 12%, 82% 92%, 0 100%)"
+      ];
+
+      for (let index = 0; index < shardCount; index += 1) {
+        const column = index % columns;
+        const row = Math.floor(index / columns);
+        const jitterX = ((index * 37) % 11 - 5) / 12;
+        const jitterY = ((index * 53) % 13 - 6) / 14;
+        const startX = targetRect.left + (column + .5 + jitterX) * cellWidth;
+        const startY = targetRect.top + (row + .5 + jitterY) * cellHeight;
+        const angle = Math.atan2(startY - targetCenterY, startX - targetCenterX);
+        const distance = 28 + (index % 5) * 11;
+        const burstX = Math.cos(angle) * distance;
+        const burstY = Math.sin(angle) * distance;
+        const suckX = centerX - startX + Math.cos(angle) * 10;
+        const suckY = centerY - startY + Math.sin(angle) * 10;
+        const rotation = ((index % 2 ? 1 : -1) * (48 + index * 17));
+        const shard = document.createElement("i");
+
+        shard.className = "sili-glass-shard";
+        shard.style.setProperty("--shard-start-x", startX.toFixed(1) + "px");
+        shard.style.setProperty("--shard-start-y", startY.toFixed(1) + "px");
+        shard.style.setProperty("--burst-x", burstX.toFixed(1) + "px");
+        shard.style.setProperty("--burst-y", burstY.toFixed(1) + "px");
+        shard.style.setProperty("--suck-x", suckX.toFixed(1) + "px");
+        shard.style.setProperty("--suck-y", suckY.toFixed(1) + "px");
+        shard.style.setProperty("--shard-rot", rotation + "deg");
+        shard.style.setProperty("--shard-rot-end", (rotation * 2.2) + "deg");
+        shard.style.setProperty("--shard-delay", ((index % 6) * 9) + "ms");
+        shard.style.setProperty("--shard-width", (shardBase * (.72 + (index % 4) * .16)).toFixed(1) + "px");
+        shard.style.setProperty("--shard-height", (shardBase * (1.05 + (index % 3) * .24)).toFixed(1) + "px");
+        shard.style.clipPath = polygons[index % polygons.length];
+        overlay.appendChild(shard);
+      }
+    }
+
+    function removePortal(overlay, originLink) {
+      overlay.classList.add("is-closing");
+      window.setTimeout(function () {
+        overlay.remove();
+        if (originLink) originLink.classList.remove("sili-portal-origin-hidden");
+        document.body.classList.remove("sili-portal-active");
+        portalActive = false;
+      }, 240);
+    }
+
+    function launchPortal(link, event) {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+      event.preventDefault();
+      if (portalActive) return;
+
+      const destination = link.href;
+      if (!destination) return;
+
+      if (prefersReducedMotion.matches) {
+        if (!portalDemo) window.location.assign(destination);
+        return;
+      }
+
+      portalActive = true;
+      document.body.classList.add("sili-portal-active");
+
+      const portrait = link.querySelector("img");
+      const targetRect = link.getBoundingClientRect();
+      const targetCenterX = targetRect.left + targetRect.width / 2;
+      const targetCenterY = targetRect.top + targetRect.height / 2;
+      const eventHasPoint = Number.isFinite(event.clientX) && Number.isFinite(event.clientY) && (event.clientX || event.clientY);
+      const impactX = eventHasPoint ? event.clientX : targetCenterX;
+      const impactY = eventHasPoint ? event.clientY : targetCenterY;
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const duration = portalSlow ? 1900 : (isCompactScreen.matches ? 1320 : 1520);
+      const profileName = (link.querySelector("strong, h3") || portrait);
+      const name = profileName ? (profileName.textContent || profileName.alt || "").trim() : "";
+      const overlay = document.createElement("div");
+
+      overlay.className = "sili-glass-portal";
+      overlay.setAttribute("aria-hidden", "true");
+      overlay.style.setProperty("--portal-duration", duration + "ms");
+      overlay.style.setProperty("--portal-flash-duration", Math.round(duration * .28) + "ms");
+      overlay.style.setProperty("--portal-crack-duration", Math.round(duration * .25) + "ms");
+      overlay.style.setProperty("--portal-crack-fade-duration", Math.round(duration * .22) + "ms");
+      overlay.style.setProperty("--portal-crack-fade-delay", Math.round(duration * .31) + "ms");
+      overlay.style.setProperty("--impact-x", impactX + "px");
+      overlay.style.setProperty("--impact-y", impactY + "px");
+      overlay.style.setProperty("--target-left", targetRect.left + "px");
+      overlay.style.setProperty("--target-top", targetRect.top + "px");
+      overlay.style.setProperty("--target-width", Math.max(48, targetRect.width) + "px");
+      overlay.style.setProperty("--target-height", Math.max(48, targetRect.height) + "px");
+      overlay.style.setProperty("--target-center-x", targetCenterX + "px");
+      overlay.style.setProperty("--target-center-y", targetCenterY + "px");
+      overlay.style.setProperty("--portal-shift-x", (centerX - targetCenterX) + "px");
+      overlay.style.setProperty("--portal-shift-y", (centerY - targetCenterY) + "px");
+
+      overlay.innerHTML =
+        '<div class="sili-portal-void"></div>' +
+        '<div class="sili-portal-speedlines"></div>' +
+        '<div class="sili-portal-ring sili-portal-ring-a"></div>' +
+        '<div class="sili-portal-ring sili-portal-ring-b"></div>' +
+        '<div class="sili-portal-core"></div>' +
+        '<div class="sili-portal-prism"></div>' +
+        '<div class="sili-portal-flash"></div>' +
+        '<svg class="sili-glass-cracks" viewBox="0 0 200 200" preserveAspectRatio="none" focusable="false">' + makeCracks() + '</svg>' +
+        '<div class="sili-portal-name"><span>' + enteringCopy + '</span><strong></strong><em></em></div>';
+
+      const nameElement = overlay.querySelector(".sili-portal-name strong");
+      if (nameElement) nameElement.textContent = name;
+
+      const frameClone = link.cloneNode(true);
+      frameClone.classList.remove("sili-portal-link", "sili-portal-origin-hidden");
+      frameClone.classList.add("sili-portal-frame-clone");
+      frameClone.removeAttribute("href");
+      frameClone.removeAttribute("target");
+      frameClone.setAttribute("aria-hidden", "true");
+      frameClone.querySelectorAll("[id]").forEach(function (element) { element.removeAttribute("id"); });
+      overlay.appendChild(frameClone);
+      link.classList.add("sili-portal-origin-hidden");
+
+      addShards(overlay, targetRect, centerX, centerY);
+      document.body.appendChild(overlay);
+      requestAnimationFrame(function () { overlay.classList.add("is-running"); });
+
+      if (portalDemo) {
+        window.setTimeout(function () { removePortal(overlay, link); }, duration + 180);
+      } else {
+        window.setTimeout(function () { window.location.assign(destination); }, duration - 25);
+      }
+    }
+
+    portalLinks.forEach(function (link) {
+      link.classList.add("sili-portal-link");
+      link.addEventListener("click", function (event) { launchPortal(link, event); });
+    });
+  }
+
+  initGlassPortal();
+
 }());
