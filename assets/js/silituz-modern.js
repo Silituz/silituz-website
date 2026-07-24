@@ -122,7 +122,14 @@
     };
     const box = document.createElement("div");
     box.className = "site-lil-sili__context";
-    box.innerHTML = "<strong>" + copy[language][page][0] + "</strong><span>" + copy[language][page][1] + "</span>";
+    function renderContext(contextLanguage) {
+      const activeLanguage = copy[contextLanguage] ? contextLanguage : "en";
+      box.innerHTML = "<strong>" + copy[activeLanguage][page][0] + "</strong><span>" + copy[activeLanguage][page][1] + "</span>";
+    }
+    renderContext(root.classList.contains("is-choosing-language") ? "en" : language);
+    document.addEventListener("silituz:languagechange", function (event) {
+      renderContext(event.detail && event.detail.language ? event.detail.language : language);
+    });
     intro.insertAdjacentElement("afterend", box);
     const preferred = actions.querySelector('[data-lil-sili-route="' + (page === "gallery" ? "gallery" : page === "music" ? "music" : page === "support" ? "support" : "news") + '"]');
     if (preferred) actions.prepend(preferred);
