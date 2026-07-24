@@ -6,6 +6,16 @@
   const page = path.includes("/music") ? "music" : path.includes("/gallery") ? "gallery" : path.includes("/support") ? "support" : path.includes("/generators") ? "generators" : (path === "/" || /^\/(en|es)\/?$/.test(path)) ? "home" : "inner";
   document.body.classList.add("page-" + page);
 
+  // Cleanup only: remove the service worker from the earlier PWA preview.
+  if ("serviceWorker" in navigator && navigator.serviceWorker.getRegistrations) {
+    navigator.serviceWorker.getRegistrations().then(function (registrations) {
+      registrations.forEach(function (registration) {
+        const script = registration.active && registration.active.scriptURL ? registration.active.scriptURL : "";
+        if (script.includes("/service-worker.js")) registration.unregister();
+      });
+    }).catch(function () {});
+  }
+
   const progress = document.createElement("div");
   progress.className = "sili-scroll-progress";
   progress.setAttribute("aria-hidden", "true");
