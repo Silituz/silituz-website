@@ -2,6 +2,10 @@
   command = "bundle exec jekyll build"
   publish = "_site"
 
+# Jekyll-Permalinks wie /about/ und /contact/ unverändert ausliefern
+[build.processing.html]
+  pretty_urls = false
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
