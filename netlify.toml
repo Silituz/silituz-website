@@ -17,7 +17,58 @@
   status = 200
   force = true
 
-# 2) Dein SPA/Jekyll-Fallback (catch-all) NACH den Functions
+# 2) Jekyll-Unterseiten vor dem allgemeinen Fallback auflösen
+[[redirects]]
+  from = "/about"
+  to = "/about/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/contact"
+  to = "/contact/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/en/about"
+  to = "/en/about/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/en/contact"
+  to = "/en/contact/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/es/about"
+  to = "/es/about/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/es/contact"
+  to = "/es/contact/index.html"
+  status = 200
+  force = true
+
+# Stabile Adressen nur zum Prüfen dieses Entwurfs
+[[redirects]]
+  from = "/vorschau-ueber-mich"
+  to = "/about/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/vorschau-kontakt"
+  to = "/contact/index.html"
+  status = 200
+  force = true
+
+# 3) Allgemeiner Homepage-Fallback
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
