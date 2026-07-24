@@ -642,15 +642,30 @@
       }
     }
 
+    function cleanupPortalState(overlay, originLink) {
+      if (overlay) overlay.remove();
+      if (originLink) originLink.classList.remove("sili-portal-origin-hidden");
+      document.querySelectorAll(".sili-glass-portal").forEach(function (portal) { portal.remove(); });
+      document.querySelectorAll(".sili-portal-origin-hidden").forEach(function (link) {
+        link.classList.remove("sili-portal-origin-hidden");
+      });
+      document.body.classList.remove("sili-portal-active");
+      portalActive = false;
+    }
+
     function removePortal(overlay, originLink) {
       overlay.classList.add("is-closing");
       window.setTimeout(function () {
-        overlay.remove();
-        if (originLink) originLink.classList.remove("sili-portal-origin-hidden");
-        document.body.classList.remove("sili-portal-active");
-        portalActive = false;
+        cleanupPortalState(overlay, originLink);
       }, 240);
     }
+
+    function resetPortalAfterHistoryRestore() {
+      cleanupPortalState(null, null);
+    }
+
+    window.addEventListener("pagehide", resetPortalAfterHistoryRestore);
+    window.addEventListener("pageshow", resetPortalAfterHistoryRestore);
 
     function launchPortal(link, event) {
       if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -732,7 +747,10 @@
       if (portalDemo) {
         window.setTimeout(function () { removePortal(overlay, link); }, duration + 180);
       } else {
-        window.setTimeout(function () { window.location.assign(destination); }, duration - 25);
+        window.setTimeout(function () {
+          cleanupPortalState(overlay, link);
+          window.location.assign(destination);
+        }, duration - 25);
       }
     }
 
