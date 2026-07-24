@@ -15,7 +15,7 @@
   font-family: inherit;
 }
 
-.site-lil-sili[open] {
+.site-lil-sili.is-open {
   display: flex;
   flex-direction: column-reverse;
   align-items: flex-end;
@@ -27,7 +27,12 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
+  padding: 0;
   cursor: pointer;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
   list-style: none;
 }
 
@@ -125,7 +130,7 @@
   animation: lil-sili-bob 2.6s ease-in-out infinite;
 }
 
-.site-lil-sili[open] .site-lil-sili__hint {
+.site-lil-sili.is-open .site-lil-sili__hint {
   display: none;
 }
 
@@ -281,6 +286,57 @@
 
 .site-lil-sili__actions .site-lil-sili__support i {
   color: #79f7c1;
+}
+
+.site-lil-sili__language-choice {
+  display: none;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 0 22px 22px;
+}
+
+.site-lil-sili__language-choice button {
+  min-height: 48px;
+  padding: 9px 7px;
+  cursor: pointer;
+  border: 1px solid var(--lil-line);
+  border-radius: 10px;
+  background: rgba(2, 6, 23, 0.46);
+  color: var(--lil-text);
+  font-weight: 800;
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+}
+
+.site-lil-sili__language-choice button:hover,
+.site-lil-sili__language-choice button:focus-visible,
+.site-lil-sili__language-choice button.is-selected {
+  border-color: var(--lil-cyan);
+  background: rgba(34, 211, 238, 0.11);
+  transform: translateY(-1px);
+}
+
+.site-lil-sili__language-choice button span {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--lil-cyan);
+  letter-spacing: 0.08em;
+  font: 900 9px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.site-lil-sili.is-choosing-language .site-lil-sili__language-choice {
+  display: grid;
+}
+
+.site-lil-sili.is-choosing-language .site-lil-sili__intro {
+  color: var(--lil-text) !important;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.site-lil-sili.is-choosing-language .site-lil-sili__form,
+.site-lil-sili.is-choosing-language .site-lil-sili__message,
+.site-lil-sili.is-choosing-language .site-lil-sili__actions {
+  display: none;
 }
 
 @keyframes lil-sili-bob {

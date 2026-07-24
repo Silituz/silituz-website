@@ -1,5 +1,6 @@
-<details class="site-lil-sili" data-lil-sili data-lang="{{ page.lang | default: 'de' }}">
-  <summary
+<div class="site-lil-sili" data-lil-sili data-lil-sili-lang="{{ page.lang | default: 'de' }}">
+  <button
+    type="button"
     class="site-lil-sili__summary"
     data-lil-sili-trigger
     aria-controls="site-lil-sili-panel"
@@ -10,7 +11,7 @@
       <img src="/assets/images/lil-sili-cute-v2.svg?v=2" alt="" width="104" height="104" />
       <span data-lil-sili-trigger-badge aria-hidden="true">?</span>
     </span>
-  </summary>
+  </button>
 
   <section
     class="site-lil-sili__panel"
@@ -18,6 +19,7 @@
     role="dialog"
     aria-modal="false"
     aria-labelledby="site-lil-sili-title"
+    hidden
   >
     <header class="site-lil-sili__head">
       <div>
@@ -35,6 +37,12 @@
     <p class="site-lil-sili__intro" data-lil-sili-copy="intro">
       Was möchtest du entdecken? Ich bringe dich direkt dorthin.
     </p>
+
+    <div class="site-lil-sili__language-choice" data-lil-sili-language-choice role="group" aria-label="Choose your language">
+      <button type="button" data-lil-sili-language="de"><span aria-hidden="true">DE</span> Deutsch</button>
+      <button type="button" data-lil-sili-language="en"><span aria-hidden="true">EN</span> English</button>
+      <button type="button" data-lil-sili-language="es"><span aria-hidden="true">ES</span> Español</button>
+    </div>
 
     <form class="site-lil-sili__form" data-lil-sili-form>
       <label class="sr-only" for="site-lil-sili-search" data-lil-sili-copy="searchLabel">
@@ -77,4 +85,4 @@
       </a>
     </nav>
   </section>
-</details>
+</div>

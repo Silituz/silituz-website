@@ -98,9 +98,7 @@
        - Tipp: custom.css MUSS NACH Tailwind geladen werden.
        ========================= -->
   <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
-  {% if page.url == '/' or page.url == '/en/' or page.url == '/es/' %}
-    <link rel="stylesheet" href="{{ '/assets/css/lil-sili.css' | relative_url }}?v=2">
-  {% endif %}
+  <link rel="stylesheet" href="{{ '/assets/css/lil-sili.css' | relative_url }}?v=6">
 
   <!-- =========================
        ZUSATZSTYLES (Inline)
@@ -209,9 +207,7 @@
   })();
 </script>
 
-{% unless page.disable_snake_cursor %}
-  {% include snake-cursor.html %}
-{% endunless %}
+<!-- Der normale System-Mauszeiger bleibt auf der Hauptseite aktiv. -->
 
   
 <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
@@ -580,9 +576,7 @@
     applyThumbPosition();
   })();
 </script>
-  {% if page.url == '/' or page.url == '/en/' or page.url == '/es/' %}
-    {% include lil_sili.html %}
-    <script src="{{ '/assets/js/lil-sili.js' | relative_url }}?v=2" defer></script>
-  {% endif %}
+  {% include lil_sili.html %}
+  <script src="{{ '/assets/js/lil-sili.js' | relative_url }}?v=6" defer></script>
 </body>
 </html>
