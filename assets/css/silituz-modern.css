@@ -425,7 +425,7 @@ a.sili-feature-card { display: block; text-decoration: none; }
   box-shadow: 0 0 0 8px rgba(255,210,113,.04), 0 25px 55px rgba(0,0,0,.45), 0 0 35px rgba(255,194,77,.15);
 }
 .legend-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.legend-avatar-main { left: 50%; top: 14%; width: 12rem; height: 12rem; transform: translateX(-50%); animation: siliLegendFloat 4.5s ease-in-out infinite; }
+.legend-avatar-main { left: 50%; top: 14%; width: 12rem; height: 12rem; transform: translateX(-50%); animation: siliLegendFloatMain 4.5s ease-in-out infinite; }
 .legend-avatar-coco { left: 3%; top: 43%; animation: siliLegendFloat 5.2s ease-in-out .5s infinite; }
 .legend-avatar-village { right: 3%; top: 43%; animation: siliLegendFloat 5.6s ease-in-out 1s infinite; }
 .legend-orbit {
@@ -469,7 +469,7 @@ a.sili-feature-card { display: block; text-decoration: none; }
 }
 
 @keyframes siliOrbitSpin { to { transform: rotate(360deg); } }
-@keyframes siliLegendFloat { 50% { transform: translateY(-8px); } }
+@keyframes siliLegendFloat { 50% { transform: translateY(-8px); } }\n@keyframes siliLegendFloatMain { 0%, 100% { transform: translateX(-50%); } 50% { transform: translate(-50%, -8px); } }
 @keyframes siliStars { to { opacity: .85; transform: translateY(-6px); } }
 
 @media (max-width: 880px) {
