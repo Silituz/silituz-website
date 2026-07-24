@@ -130,3 +130,12 @@ input, textarea { cursor: text !important; }
   *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
   .sili-reveal { opacity:1; transform:none; }
 }
+
+.sili-lightbox-info {
+  position:absolute; left:50%; bottom:1.1rem; transform:translateX(-50%);
+  width:min(90vw,38rem); padding:.8rem 1rem; border:1px solid rgba(53,201,255,.25);
+  border-radius:1rem; background:rgba(2,8,23,.82); backdrop-filter:blur(14px);
+  display:flex; align-items:center; justify-content:space-between; gap:1rem; color:#dcecf5;
+}
+.sili-lightbox-info strong { color:#fff; }
+.sili-lightbox-info span { color:var(--sili-cyan); font-size:.75rem; letter-spacing:.1em; }
