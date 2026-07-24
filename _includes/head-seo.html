@@ -47,16 +47,72 @@
 
 <script>
 (function(){
-  function stripLang(path){ return path.replace(/^\/(?:en|de|es)(?:\/|$)/i, '/'); }
-  function buildPath(lang, path){
-    var clean = stripLang(path || '/').replace(/^\/index\.html$/i, '/');
-    if(lang === 'en') return '/en' + (clean === '/' ? '/' : clean);
-    if(lang === 'es') return '/es' + (clean === '/' ? '/' : clean);
-    return clean || '/';
+  var STORAGE_KEY = "silituz-language";
+  var NEWS_URL = "https://anime-pulse-news.silituz.chatgpt.site";
+  var SUPPORTED = ["de", "en", "es"];
+  var existingPaths = new Set([
+    {% for pg in site.pages %}
+      {{ pg.url | jsonify }}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]);
+
+  function validLanguage(value){
+    return SUPPORTED.indexOf(String(value || "").toLowerCase()) !== -1;
   }
+
+  function normalizePath(path){
+    var normalized = String(path || "/").replace(/\/index\.html$/i, "/");
+    if(normalized.charAt(0) !== "/") normalized = "/" + normalized;
+    return normalized || "/";
+  }
+
+  function stripLang(path){
+    return normalizePath(path).replace(/^\/(?:en|de|es)(?:\/|$)/i, "/");
+  }
+
+  function activeLanguage(){
+    return /^\/en(?:\/|$)/i.test(location.pathname)
+      ? "en"
+      : (/^\/es(?:\/|$)/i.test(location.pathname) ? "es" : "de");
+  }
+
+  function storedLanguage(){
+    try {
+      var stored = localStorage.getItem(STORAGE_KEY);
+      return validLanguage(stored) ? stored.toLowerCase() : null;
+    } catch(error) {
+      return null;
+    }
+  }
+
+  function rememberLanguage(language){
+    if(!validLanguage(language)) return;
+    try { localStorage.setItem(STORAGE_KEY, language); } catch(error) {}
+  }
+
+  function candidatePath(language, path){
+    var clean = stripLang(path);
+    if(language === "en") return "/en" + (clean === "/" ? "/" : clean);
+    if(language === "es") return "/es" + (clean === "/" ? "/" : clean);
+    return clean || "/";
+  }
+
+  function buildPath(language, path){
+    var clean = stripLang(path);
+    var candidate = candidatePath(language, path);
+    if(existingPaths.has(candidate)) return candidate;
+    if(existingPaths.has(clean)) return clean;
+    return candidate;
+  }
+
+  function newsHref(language, hash){
+    return NEWS_URL + "?lang=" + encodeURIComponent(language) + (hash || "");
+  }
+
   function flagEs(){
     return '<svg viewBox="0 0 3 2" width="18" height="12" aria-hidden="true"><rect width="1" height="2" x="0" fill="#006847"></rect><rect width="1" height="2" x="1" fill="#fff"></rect><rect width="1" height="2" x="2" fill="#ce1126"></rect><circle cx="1.5" cy="1" r="0.16" fill="#c99700"></circle></svg><span class="sr-only">Latino Español</span><span aria-hidden="true">ES</span>';
   }
+
   function ensureSwitcher(){
     var en = document.querySelector('[data-lang="en"]');
     var de = document.querySelector('[data-lang="de"]');
@@ -64,80 +120,138 @@
     var group = en.parentElement;
     if(!document.querySelector('[data-lang="es"]')){
       var es = en.cloneNode(false);
-      es.setAttribute('data-lang','es');
-      es.setAttribute('title','Latino Español');
+      es.setAttribute("data-lang", "es");
+      es.setAttribute("title", "Latino Español");
       es.innerHTML = flagEs();
       group.insertBefore(es, en.nextSibling);
     }
-    ['de','en','es'].forEach(function(lang){
-      var el = document.querySelector('[data-lang="'+lang+'"]');
-      if(el) el.setAttribute('href', buildPath(lang, location.pathname));
+    SUPPORTED.forEach(function(language){
+      var element = document.querySelector('[data-lang="' + language + '"]');
+      if(element) element.setAttribute("href", buildPath(language, location.pathname));
     });
   }
+
   function setFirstSpanText(link, label){
-    var span = link.querySelector('span:first-child');
+    var span = link.querySelector("span:first-child");
     if(span) span.textContent = label;
     else link.textContent = label;
   }
-  function polishSpanishChrome(active){
-    if(active !== 'es') return;
+
+  function polishSpanishChrome(preferred){
+    if(preferred !== "es") return;
     var labels = {
-      '/':'Inicio',
-      '/about/':'Sobre mí',
-      '/gallery/':'Galería',
-      '/news/':'Feed de Anime',
-      '/generators/':'Generadores y más',
-      '/music/':'Mi música',
-      '/socials/':'Socials',
-      '/support/':'Apoyo',
-      '/shoutout/':'Shoutout',
-      '/contact/':'Contacto',
-      '/impressum/':'Aviso legal'
+      "/":"Inicio",
+      "/about/":"Sobre mí",
+      "/gallery/":"Galería",
+      "/news/":"News",
+      "/generators/":"Generadores y más",
+      "/music/":"Mi música",
+      "/socials/":"Socials",
+      "/support/":"Apoyo",
+      "/shoutout/":"Shoutout",
+      "/contact/":"Contacto",
+      "/impressum/":"Aviso legal"
     };
-    document.querySelectorAll('#sideMenu nav a').forEach(function(a){
-      if(a.hasAttribute('data-news-link')){
-        setFirstSpanText(a, 'News');
+    document.querySelectorAll("#sideMenu nav a").forEach(function(link){
+      if(link.hasAttribute("data-news-link")){
+        setFirstSpanText(link, "News");
         return;
       }
-      var path = stripLang(new URL(a.getAttribute('href'), location.origin).pathname);
+      var path = stripLang(new URL(link.getAttribute("href"), location.origin).pathname);
       if(labels[path]){
-        setFirstSpanText(a, labels[path]);
-        a.setAttribute('href', buildPath('es', path));
+        setFirstSpanText(link, labels[path]);
+        link.setAttribute("href", buildPath("es", path));
       }
     });
-    var menuText = document.querySelector('#snakeBtn span');
-    if(menuText) menuText.textContent = 'Menú';
-    var sideMenu = document.getElementById('sideMenu');
-    if(sideMenu) sideMenu.setAttribute('aria-label','Menú principal');
-    var close = document.getElementById('sideClose');
-    if(close) close.setAttribute('aria-label','Cerrar menú');
-    var more = document.querySelector('.footer-more');
-    if(more){ more.textContent = 'Más'; more.setAttribute('href','/es/socials/'); more.setAttribute('aria-label','Más'); }
+    var menuText = document.querySelector("#snakeBtn span");
+    if(menuText) menuText.textContent = "Menú";
+    var sideMenu = document.getElementById("sideMenu");
+    if(sideMenu) sideMenu.setAttribute("aria-label", "Menú principal");
+    var close = document.getElementById("sideClose");
+    if(close) close.setAttribute("aria-label", "Cerrar menú");
+    var more = document.querySelector(".footer-more");
+    if(more){
+      more.textContent = "Más";
+      more.setAttribute("href", buildPath("es", "/socials/"));
+      more.setAttribute("aria-label", "Más");
+    }
   }
-  function reflect(){
-    var active = /^\/en(?:\/|$)/i.test(location.pathname) ? 'en' : (/^\/es(?:\/|$)/i.test(location.pathname) ? 'es' : 'de');
-    document.documentElement.setAttribute('data-active-lang', active);
-    document.querySelectorAll('[data-lang]').forEach(function(el){
-      var on = (el.getAttribute('data-lang') || '').toLowerCase() === active;
-      el.toggleAttribute('data-active', on);
-      el.classList.toggle('lang-active', on);
+
+  function updateNewsLinks(language){
+    document.querySelectorAll('a[data-news-link], a[href^="' + NEWS_URL + '"]').forEach(function(link){
+      var hash = "";
+      try { hash = new URL(link.href, location.href).hash; } catch(error) {}
+      link.href = newsHref(language, hash);
     });
-    polishSpanishChrome(active);
   }
-  document.addEventListener('click', function(e){
-    var el = e.target && e.target.closest ? e.target.closest('[data-lang]') : null;
-    if(!el) return;
-    var lang = (el.getAttribute('data-lang') || '').toLowerCase();
-    if(lang !== 'de' && lang !== 'en' && lang !== 'es') return;
-    e.preventDefault();
-    e.stopPropagation();
-    location.href = buildPath(lang, location.pathname);
+
+  function reflect(language){
+    var preferred = validLanguage(language) ? language : activeLanguage();
+    document.documentElement.setAttribute("data-active-lang", preferred);
+    document.documentElement.setAttribute("lang", preferred === "es" ? "es-MX" : preferred);
+    document.querySelectorAll("[data-lang]").forEach(function(element){
+      var on = (element.getAttribute("data-lang") || "").toLowerCase() === preferred;
+      element.toggleAttribute("data-active", on);
+      element.classList.toggle("lang-active", on);
+    });
+    polishSpanishChrome(preferred);
+    updateNewsLinks(preferred);
+  }
+
+  function selectLanguage(language, replace){
+    if(!validLanguage(language)) return;
+    language = language.toLowerCase();
+    rememberLanguage(language);
+    var nextPath = buildPath(language, location.pathname);
+    if(nextPath !== normalizePath(location.pathname)){
+      var url = new URL(location.href);
+      url.pathname = nextPath;
+      if(replace) location.replace(url.toString());
+      else location.assign(url.toString());
+      return;
+    }
+    reflect(language);
+    document.dispatchEvent(new CustomEvent("silituz:languagechange", { detail: { language: language } }));
+  }
+
+  function syncStoredLanguage(){
+    var stored = storedLanguage();
+    if(!stored || stored === activeLanguage()) return false;
+    var nextPath = buildPath(stored, location.pathname);
+    if(nextPath === normalizePath(location.pathname)) return false;
+    var url = new URL(location.href);
+    url.pathname = nextPath;
+    location.replace(url.toString());
+    return true;
+  }
+
+  window.SilituzLanguage = {
+    key: STORAGE_KEY,
+    active: activeLanguage,
+    preferred: function(){ return storedLanguage() || activeLanguage(); },
+    stored: storedLanguage,
+    buildPath: buildPath,
+    newsHref: newsHref,
+    select: selectLanguage
+  };
+
+  document.addEventListener("click", function(event){
+    var element = event.target && event.target.closest ? event.target.closest("[data-lang]") : null;
+    if(!element) return;
+    var language = (element.getAttribute("data-lang") || "").toLowerCase();
+    if(!validLanguage(language)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    selectLanguage(language, false);
   }, true);
-  document.addEventListener('DOMContentLoaded', function(){
+
+  document.addEventListener("DOMContentLoaded", function(){
     ensureSwitcher();
-    reflect();
-    setTimeout(function(){ ensureSwitcher(); reflect(); }, 0);
-    setTimeout(function(){ ensureSwitcher(); reflect(); }, 250);
+    if(syncStoredLanguage()) return;
+    var preferred = storedLanguage() || activeLanguage();
+    reflect(preferred);
+    setTimeout(function(){ ensureSwitcher(); reflect(preferred); }, 0);
+    setTimeout(function(){ ensureSwitcher(); reflect(preferred); }, 250);
   });
 })();
 </script>
