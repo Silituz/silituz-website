@@ -180,6 +180,35 @@
       if (surprise && images.length) images[Math.floor(Math.random() * images.length)].click();
     });
     if (gallerySection) gallerySection.id = "gallery-artworks";
+    const lightbox = document.getElementById("lightbox");
+    if (lightbox) {
+      const info = document.createElement("div");
+      info.className = "sili-lightbox-info";
+      info.innerHTML = "<strong></strong><span></span>";
+      lightbox.appendChild(info);
+      function updateInfo(index) {
+        const image = images[index];
+        if (!image) return;
+        info.querySelector("strong").textContent = image.alt || (language === "de" ? "Silituz Artwork" : "Silituz artwork");
+        info.querySelector("span").textContent = String(index + 1).padStart(2, "0") + " / " + String(images.length).padStart(2, "0");
+      }
+      images.forEach(function (image, index) {
+        image.addEventListener("click", function () { updateInfo(index); });
+        image.addEventListener("keydown", function (event) {
+          if (event.key === "Enter" || event.key === " ") updateInfo(index);
+        });
+      });
+      const previous = document.getElementById("lightboxPrev");
+      const next = document.getElementById("lightboxNext");
+      if (previous) previous.addEventListener("click", function () {
+        const current = images.findIndex(function (image) { return image.src === document.getElementById("lightboxImg").src; });
+        updateInfo((current - 1 + images.length) % images.length);
+      });
+      if (next) next.addEventListener("click", function () {
+        const current = images.findIndex(function (image) { return image.src === document.getElementById("lightboxImg").src; });
+        updateInfo((current + 1) % images.length);
+      });
+    }
   }
   enhanceGallery();
 
