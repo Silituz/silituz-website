@@ -68,7 +68,7 @@
     }
   };
 
-  const rawLanguage = (root.dataset.lang || document.documentElement.lang || "de").toLowerCase();
+  const rawLanguage = (root.dataset.lilSiliLang || document.documentElement.lang || "de").toLowerCase();
   const language = rawLanguage.startsWith("en") ? "en" : rawLanguage.startsWith("es") ? "es" : "de";
   const copy = copies[language];
   const prefix = language === "de" ? "" : "/" + language;
