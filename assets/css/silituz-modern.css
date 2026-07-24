@@ -2382,3 +2382,259 @@ body.sili-portal-active {
     display: none !important;
   }
 }
+
+
+/* =========================================================
+   GLASS PORTAL — REFINED PACING & PRISMATIC NAMEPLATE
+   Balanced 1.5s transition with a clearer cinematic focus
+   ========================================================= */
+.sili-glass-portal::before {
+  background:
+    radial-gradient(circle at var(--impact-x) var(--impact-y), rgba(255,255,255,.24), transparent 10rem),
+    radial-gradient(circle at 50% 50%, rgba(84,244,226,.24), rgba(4,12,25,.92) 42%, rgba(1,3,10,.99) 80%);
+  backdrop-filter: blur(3px) saturate(1.32) contrast(1.05);
+}
+.sili-portal-void {
+  background:
+    radial-gradient(circle at 50% 50%, #000 0 7%, rgba(1,7,17,.99) 15%, rgba(13,61,78,.9) 29%, rgba(255,190,56,.5) 42%, rgba(84,244,226,.22) 56%, transparent 73%);
+  box-shadow:
+    0 0 90px rgba(84,244,226,.42),
+    0 0 210px rgba(255,181,44,.27),
+    inset 0 0 130px rgba(0,0,0,.98);
+}
+.sili-portal-ring-a {
+  border-color: rgba(255,221,139,.72);
+  box-shadow:
+    0 0 44px rgba(255,187,48,.32),
+    0 0 90px rgba(84,244,226,.12),
+    inset 0 0 40px rgba(84,244,226,.18);
+}
+.sili-portal-ring-b {
+  border-color: rgba(101,255,236,.78);
+  box-shadow:
+    0 0 36px rgba(84,244,226,.34),
+    inset 0 0 22px rgba(255,210,101,.1);
+}
+.sili-portal-core {
+  position: absolute;
+  z-index: 9;
+  left: 50%;
+  top: 50%;
+  width: min(18vmin, 9rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%,-50%) scale(.04);
+  background:
+    radial-gradient(circle, #fff 0 5%, #fff1b5 10%, #52f5df 25%, rgba(39,112,138,.72) 42%, rgba(2,5,13,.94) 68%);
+  box-shadow:
+    0 0 24px rgba(255,255,255,.9),
+    0 0 72px rgba(84,244,226,.72),
+    0 0 140px rgba(255,193,73,.48);
+  mix-blend-mode: screen;
+  animation: siliPortalCore var(--portal-duration) cubic-bezier(.18,.76,.08,1) forwards;
+}
+.sili-portal-prism {
+  position: absolute;
+  z-index: 8;
+  left: 50%;
+  top: 50%;
+  width: min(32vmin, 17rem);
+  aspect-ratio: 1;
+  opacity: 0;
+  transform: translate(-50%,-50%) rotate(45deg) scale(.06);
+  border: 1px solid rgba(255,224,150,.72);
+  box-shadow:
+    inset 0 0 24px rgba(84,244,226,.16),
+    0 0 34px rgba(255,197,74,.22);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.11), transparent 32% 68%, rgba(84,244,226,.11));
+  animation: siliPortalPrism var(--portal-duration) cubic-bezier(.18,.78,.1,1) forwards;
+}
+.sili-portal-prism::before,
+.sili-portal-prism::after {
+  content: "";
+  position: absolute;
+  inset: 17%;
+  border: 1px solid rgba(84,244,226,.4);
+}
+.sili-portal-prism::after {
+  inset: 34%;
+  border-color: rgba(255,220,133,.48);
+}
+.sili-portal-portrait {
+  border-color: rgba(255,236,190,.98);
+  box-shadow:
+    0 0 0 7px rgba(255,211,107,.07),
+    0 0 0 12px rgba(84,244,226,.035),
+    0 0 68px rgba(84,244,226,.42),
+    0 24px 80px rgba(0,0,0,.68);
+}
+.sili-portal-name {
+  z-index: 70;
+  bottom: clamp(2.5rem, 7.5vh, 5.8rem);
+  width: min(88vw, 32rem);
+  min-width: 0;
+  padding: .78rem 2rem 1rem;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(255,220,139,.7);
+  border-radius: .9rem;
+  background:
+    linear-gradient(110deg, rgba(84,244,226,.12), transparent 34%, rgba(255,198,76,.14)),
+    rgba(2,8,18,.82);
+  box-shadow:
+    0 18px 55px rgba(0,0,0,.58),
+    0 0 34px rgba(84,244,226,.18),
+    inset 0 0 26px rgba(255,211,107,.08);
+  backdrop-filter: blur(18px) saturate(1.35);
+  text-shadow: none;
+  animation: siliPortalNameRefined var(--portal-duration) cubic-bezier(.2,.75,.12,1) forwards;
+}
+.sili-portal-name::before,
+.sili-portal-name::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  width: clamp(1.2rem, 7vw, 4rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(84,244,226,.9));
+  box-shadow: 0 0 12px rgba(84,244,226,.65);
+}
+.sili-portal-name::before {
+  left: .75rem;
+}
+.sili-portal-name::after {
+  right: .75rem;
+  transform: scaleX(-1);
+}
+.sili-portal-name span,
+.sili-portal-name strong {
+  position: relative;
+  z-index: 3;
+}
+.sili-portal-name span {
+  color: #91fff0;
+  font-size: .58rem;
+  letter-spacing: .3em;
+  text-shadow: 0 0 16px rgba(84,244,226,.55);
+}
+.sili-portal-name strong {
+  margin-top: .45rem;
+  color: #fff8e8;
+  font-size: clamp(1.65rem, 4.4vw, 3.7rem);
+  letter-spacing: -.018em;
+  text-shadow:
+    0 3px 18px rgba(0,0,0,.95),
+    0 0 18px rgba(255,205,92,.38),
+    0 0 34px rgba(84,244,226,.2);
+}
+.sili-portal-name em {
+  position: absolute;
+  z-index: 1;
+  inset: -80% -35%;
+  transform: translateX(-70%) skewX(-20deg);
+  opacity: 0;
+  background: linear-gradient(90deg, transparent 42%, rgba(255,255,255,.34) 50%, transparent 58%);
+  animation: siliPortalNameSheen var(--portal-duration) ease-out forwards;
+  pointer-events: none;
+}
+.sili-glass-shard {
+  border-color: rgba(235,255,255,.76);
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.5), rgba(84,244,226,.17) 44%, rgba(161,126,255,.1) 70%, rgba(255,211,107,.26));
+  box-shadow:
+    inset 0 0 14px rgba(255,255,255,.26),
+    0 0 16px rgba(84,244,226,.2);
+}
+@keyframes siliPortalCore {
+  0%, 28% {
+    opacity: 0;
+    transform: translate(-50%,-50%) scale(.04);
+    filter: blur(0);
+  }
+  44% {
+    opacity: .98;
+    transform: translate(-50%,-50%) scale(.55);
+  }
+  68% {
+    opacity: .92;
+    transform: translate(-50%,-50%) scale(1.25);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%,-50%) scale(9);
+    filter: blur(3px);
+  }
+}
+@keyframes siliPortalPrism {
+  0%, 25% {
+    opacity: 0;
+    transform: translate(-50%,-50%) rotate(30deg) scale(.06);
+  }
+  48% {
+    opacity: .88;
+    transform: translate(-50%,-50%) rotate(78deg) scale(.62);
+  }
+  76% {
+    opacity: .72;
+    transform: translate(-50%,-50%) rotate(132deg) scale(1.15);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%,-50%) rotate(230deg) scale(3.8);
+  }
+}
+@keyframes siliPortalNameRefined {
+  0%, 29% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(1.4rem) scale(.95);
+    filter: blur(4px);
+  }
+  43% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+    filter: blur(0);
+  }
+  84% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-.55rem) scale(1.035);
+    filter: blur(1px);
+  }
+}
+@keyframes siliPortalNameSheen {
+  0%, 43% { opacity: 0; transform: translateX(-70%) skewX(-20deg); }
+  50% { opacity: .9; }
+  68% { opacity: .2; transform: translateX(70%) skewX(-20deg); }
+  100% { opacity: 0; transform: translateX(70%) skewX(-20deg); }
+}
+@media (max-width: 620px) {
+  .sili-portal-name {
+    bottom: 1.6rem;
+    width: min(91vw, 27rem);
+    padding: .68rem 1.25rem .82rem;
+  }
+  .sili-portal-name::before,
+  .sili-portal-name::after {
+    width: 1.2rem;
+  }
+  .sili-portal-core {
+    width: 22vmin;
+  }
+  .sili-portal-prism {
+    width: 40vmin;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sili-portal-core,
+  .sili-portal-prism,
+  .sili-portal-name em {
+    animation: none !important;
+  }
+}
