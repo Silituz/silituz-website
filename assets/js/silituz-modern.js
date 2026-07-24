@@ -59,35 +59,6 @@
     return raw.startsWith("en") ? "en" : raw.startsWith("es") ? "es" : "de";
   }());
 
-  const installCopy = {
-    de: ["SILITUZ installieren", "Wie eine App öffnen"],
-    en: ["Install SILITUZ", "Open like an app"],
-    es: ["Instalar SILITUZ", "Abrir como app"]
-  };
-  let installPrompt;
-  const installButton = document.createElement("button");
-  installButton.type = "button";
-  installButton.className = "sili-install";
-  installButton.innerHTML = "<span aria-hidden=\"true\">＋</span><strong>" + installCopy[language][0] + "</strong>";
-  installButton.title = installCopy[language][1];
-  document.body.appendChild(installButton);
-  addEventListener("beforeinstallprompt", function (event) {
-    event.preventDefault();
-    installPrompt = event;
-    installButton.classList.add("is-ready");
-  });
-  installButton.addEventListener("click", async function () {
-    if (!installPrompt) return;
-    installPrompt.prompt();
-    await installPrompt.userChoice;
-    installPrompt = null;
-    installButton.classList.remove("is-ready");
-  });
-  addEventListener("appinstalled", function () { installButton.classList.remove("is-ready"); });
-  if ("serviceWorker" in navigator) addEventListener("load", function () {
-    navigator.serviceWorker.register("/service-worker.js").catch(function () {});
-  });
-
   function enhanceLilSili() {
     const root = document.querySelector("[data-lil-sili]");
     if (!root) return;
