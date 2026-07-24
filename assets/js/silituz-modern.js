@@ -545,6 +545,7 @@
     if (!portalLinks.length) return;
 
     const portalDemo = new URLSearchParams(window.location.search).get("portal-demo") === "1";
+    const portalSlow = portalDemo && new URLSearchParams(window.location.search).get("portal-slow") === "1";
     const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
     const isCompactScreen = matchMedia("(max-width: 620px)");
     let portalActive = false;
@@ -656,7 +657,7 @@
       const impactY = eventHasPoint ? event.clientY : portraitRect.top + portraitRect.height / 2;
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
-      const duration = isCompactScreen.matches ? 760 : 940;
+      const duration = portalSlow ? 2600 : (isCompactScreen.matches ? 760 : 940);
       const profileName = (link.querySelector("strong, h3") || portrait);
       const name = profileName ? (profileName.textContent || profileName.alt || "").trim() : "";
       const overlay = document.createElement("div");
