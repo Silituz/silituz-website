@@ -138,7 +138,11 @@
     }
   }
 
-  root.addEventListener("toggle", () => setOpen(Boolean(root.open)));
+  trigger.addEventListener("click", (event) => {
+    event.preventDefault();
+    setOpen(!root.open);
+  });
+
   closeButton.addEventListener("click", () => {
     setOpen(false);
     trigger.focus();
