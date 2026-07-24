@@ -99,7 +99,7 @@
        ========================= -->
   <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
   {% if page.url == '/' or page.url == '/en/' or page.url == '/es/' %}
-    <link rel="stylesheet" href="{{ '/assets/css/lil-sili.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/lil-sili.css' | relative_url }}?v=2">
   {% endif %}
 
   <!-- =========================
@@ -582,7 +582,7 @@
 </script>
   {% if page.url == '/' or page.url == '/en/' or page.url == '/es/' %}
     {% include lil_sili.html %}
-    <script src="{{ '/assets/js/lil-sili.js' | relative_url }}" defer></script>
+    <script src="{{ '/assets/js/lil-sili.js' | relative_url }}?v=2" defer></script>
   {% endif %}
 </body>
 </html>
