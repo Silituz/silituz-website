@@ -11,11 +11,32 @@
   right: 24px;
   bottom: 24px;
   z-index: 80;
+  display: block;
+  font-family: inherit;
+}
+
+.site-lil-sili[open] {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.site-lil-sili__summary {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
-  font-family: inherit;
+  cursor: pointer;
+  list-style: none;
+}
+
+.site-lil-sili__summary::-webkit-details-marker {
+  display: none;
+}
+
+.site-lil-sili__summary::marker {
+  content: "";
 }
 
 .site-lil-sili__trigger {
@@ -52,6 +73,15 @@
 .site-lil-sili__close:focus-visible,
 .site-lil-sili__form :focus-visible,
 .site-lil-sili__actions a:focus-visible {
+  outline: 3px solid rgba(34, 211, 238, 0.58);
+  outline-offset: 3px;
+}
+
+.site-lil-sili__summary:focus-visible {
+  outline: none;
+}
+
+.site-lil-sili__summary:focus-visible .site-lil-sili__trigger {
   outline: 3px solid rgba(34, 211, 238, 0.58);
   outline-offset: 3px;
 }
@@ -95,7 +125,7 @@
   animation: lil-sili-bob 2.6s ease-in-out infinite;
 }
 
-.site-lil-sili.is-open .site-lil-sili__hint {
+.site-lil-sili[open] .site-lil-sili__hint {
   display: none;
 }
 
@@ -109,10 +139,6 @@
   color: var(--lil-text);
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.32);
   backdrop-filter: blur(20px);
-}
-
-.site-lil-sili__panel[hidden] {
-  display: none;
 }
 
 .site-lil-sili__panel::before {
