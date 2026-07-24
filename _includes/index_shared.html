@@ -58,6 +58,78 @@
   </div>
 </section>
 
+
+{% assign modern_is_en = false %}
+{% assign modern_is_es = false %}
+{% if page.lang == 'en' or page.url contains '/en/' %}{% assign modern_is_en = true %}{% endif %}
+{% if page.lang contains 'es' or page.url contains '/es/' %}{% assign modern_is_es = true %}{% endif %}
+{% assign modern_prefix = '' %}
+{% if modern_is_en %}{% assign modern_prefix = '/en' %}{% elsif modern_is_es %}{% assign modern_prefix = '/es' %}{% endif %}
+{% assign modern_now = site.time | date: "%s" | plus: 0 %}
+{% assign modern_releases = site.data.releases | sort: "date" %}
+{% assign modern_next = nil %}
+{% for release in modern_releases %}
+  {% assign modern_release_time = release.date | date: "%s" | plus: 0 %}
+  {% if modern_release_time >= modern_now %}
+    {% assign modern_next = release %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+<section class="silituz-now" id="aktuell">
+  <div class="silituz-now__inner">
+    <header class="silituz-now__head">
+      <div>
+        <span class="sili-kicker">{% if modern_is_en %}YOUR SILITUZ START{% elsif modern_is_es %}TU INICIO SILITUZ{% else %}DEIN SILITUZ START{% endif %}</span>
+        <h2 class="sili-gradient-text">{% if modern_is_en %}Happening now.{% elsif modern_is_es %}Ahora mismo.{% else %}Gerade aktuell.{% endif %}</h2>
+      </div>
+      <span class="silituz-now__live"><i aria-hidden="true"></i>{% if modern_is_en %}Fresh routes, no detours{% elsif modern_is_es %}Rutas directas, sin desvíos{% else %}Frische Wege, ohne Umwege{% endif %}</span>
+    </header>
+
+    <div class="silituz-now__grid">
+      <a class="silituz-now__card silituz-now__card--feature sili-glass" href="{{ modern_prefix }}/music/">
+        <span class="sili-kicker">{% if modern_is_en %}NEXT RELEASE{% elsif modern_is_es %}PRÓXIMO LANZAMIENTO{% else %}NÄCHSTER RELEASE{% endif %}</span>
+        <div>
+          <h3>{% if modern_next %}{% if modern_is_en %}{{ modern_next.title_en | default: modern_next.title_de }}{% else %}{{ modern_next.title_de | default: modern_next.title_en }}{% endif %}{% else %}Silituz Music{% endif %}</h3>
+          <p>{% if modern_is_en %}Music, previews and every platform in one place.{% elsif modern_is_es %}Música, avances y todas las plataformas en un solo lugar.{% else %}Musik, Hörproben und alle Plattformen an einem Ort.{% endif %}</p>
+          {% if modern_next %}
+          <div class="silituz-now__countdown" data-sili-countdown="{{ modern_next.date | date_to_xmlschema }}">
+            <span><b>00</b><small>{% if modern_is_en %}Days{% elsif modern_is_es %}Días{% else %}Tage{% endif %}</small></span>
+            <span><b>00</b><small>{% if modern_is_en %}Hours{% elsif modern_is_es %}Horas{% else %}Stunden{% endif %}</small></span>
+            <span><b>00</b><small>{% if modern_is_en %}Minutes{% elsif modern_is_es %}Minutos{% else %}Minuten{% endif %}</small></span>
+          </div>
+          {% endif %}
+          <span class="silituz-now__cta">{% if modern_is_en %}Open music{% elsif modern_is_es %}Abrir música{% else %}Musik öffnen{% endif %} →</span>
+        </div>
+      </a>
+
+      <a class="silituz-now__card silituz-now__card--news sili-glass" href="{{ page.anime_link }}">
+        <span class="sili-kicker">SILITUZ NEWS</span>
+        <div><h3>{% if modern_is_en %}News without the noise.{% elsif modern_is_es %}Noticias sin ruido.{% else %}News ohne Rauschen.{% endif %}</h3>
+        <p>{% if modern_is_en %}Anime, manga, games, Asian music and concerts.{% elsif modern_is_es %}Anime, manga, juegos, música asiática y conciertos.{% else %}Anime, Manga, Games, asiatische Musik und Konzerte.{% endif %}</p></div>
+      </a>
+
+      <a class="silituz-now__card silituz-now__card--gallery sili-glass" href="{{ modern_prefix }}/gallery/#gallery-artworks">
+        <span class="sili-kicker">{% if modern_is_en %}VISUAL PICK{% elsif modern_is_es %}SELECCIÓN VISUAL{% else %}VISUAL PICK{% endif %}</span>
+        <div><h3>{% if modern_is_en %}Enter the gallery.{% elsif modern_is_es %}Entra en la galería.{% else %}Ab in die Galerie.{% endif %}</h3>
+        <p>{% if modern_is_en %}Fullscreen art, favorites and a surprise button.{% elsif modern_is_es %}Arte a pantalla completa, favoritos y sorpresas.{% else %}Vollbild-Art, Favoriten und ein Überraschungsbutton.{% endif %}</p></div>
+      </a>
+
+      <a class="silituz-now__card sili-glass" href="{{ modern_prefix }}/socials/">
+        <span class="sili-kicker">{% if modern_is_en %}LIVE & COMMUNITY{% elsif modern_is_es %}DIRECTO Y COMUNIDAD{% else %}LIVE & COMMUNITY{% endif %}</span>
+        <div><h3>{% if modern_is_en %}Meet Silituz.{% elsif modern_is_es %}Conoce a Silituz.{% else %}Silituz live erleben.{% endif %}</h3>
+        <p>{% if modern_is_en %}New videos, streams and community updates.{% elsif modern_is_es %}Nuevos vídeos, directos y novedades de la comunidad.{% else %}Neue Videos, Streams und Community-Updates.{% endif %}</p></div>
+      </a>
+
+      <a class="silituz-now__card sili-glass" href="{{ modern_prefix }}/generators/">
+        <span class="sili-kicker">{% if modern_is_en %}CURRENT PROJECT{% elsif modern_is_es %}PROYECTO ACTUAL{% else %}AKTUELLES PROJEKT{% endif %}</span>
+        <div><h3>{% if modern_is_en %}Create something.{% elsif modern_is_es %}Crea algo.{% else %}Mach etwas Eigenes.{% endif %}</h3>
+        <p>{% if modern_is_en %}Generators and creative tools, ready to try.{% elsif modern_is_es %}Generadores y herramientas creativas para probar.{% else %}Generatoren und kreative Tools zum Ausprobieren.{% endif %}</p></div>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- SILITUZ NEWS -->
 <section class="silituz-news-entry container mx-auto px-4 sm:px-6 lg:px-8 pb-14">
   <a href="{{ page.anime_link }}" class="silituz-news-home group">
