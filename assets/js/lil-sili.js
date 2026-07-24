@@ -127,20 +127,22 @@
 
   function setOpen(open) {
     root.classList.toggle("is-open", open);
-    panel.hidden = !open;
+    root.open = open;
     trigger.setAttribute("aria-expanded", String(open));
     trigger.setAttribute("aria-label", open ? copy.close : copy.open);
-    trigger.querySelector("span").textContent = open ? "×" : "?";
+    trigger.querySelector("[data-lil-sili-trigger-badge]").textContent = open ? "×" : "?";
     if (open) {
       window.requestAnimationFrame(() => search.focus());
     } else {
       message.textContent = "";
-      trigger.focus();
     }
   }
 
-  trigger.addEventListener("click", () => setOpen(panel.hidden));
-  closeButton.addEventListener("click", () => setOpen(false));
+  root.addEventListener("toggle", () => setOpen(Boolean(root.open)));
+  closeButton.addEventListener("click", () => {
+    setOpen(false);
+    trigger.focus();
+  });
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -157,12 +159,16 @@
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !panel.hidden) setOpen(false);
+    if (event.key === "Escape" && root.open) {
+      setOpen(false);
+      trigger.focus();
+    }
   });
 
   document.addEventListener("pointerdown", (event) => {
-    if (!panel.hidden && !root.contains(event.target)) setOpen(false);
+    if (root.open && !root.contains(event.target)) setOpen(false);
   });
 
   applyCopy();
+  setOpen(Boolean(root.open));
 }());
