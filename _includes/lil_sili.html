@@ -1,11 +1,23 @@
-<aside class="site-lil-sili" data-lil-sili data-lang="{{ page.lang | default: 'de' }}">
+<details class="site-lil-sili" data-lil-sili data-lang="{{ page.lang | default: 'de' }}">
+  <summary
+    class="site-lil-sili__summary"
+    data-lil-sili-trigger
+    aria-controls="site-lil-sili-panel"
+    aria-label="Lil Sili öffnen"
+  >
+    <span class="site-lil-sili__hint" data-lil-sili-copy="badge">BEREIT ZU HELFEN</span>
+    <span class="site-lil-sili__trigger">
+      <img src="/assets/images/lil-sili-cute-v2.svg?v=2" alt="" width="104" height="104" />
+      <span data-lil-sili-trigger-badge aria-hidden="true">?</span>
+    </span>
+  </summary>
+
   <section
     class="site-lil-sili__panel"
     id="site-lil-sili-panel"
     role="dialog"
     aria-modal="false"
     aria-labelledby="site-lil-sili-title"
-    hidden
   >
     <header class="site-lil-sili__head">
       <div>
@@ -65,17 +77,4 @@
       </a>
     </nav>
   </section>
-
-  <span class="site-lil-sili__hint" data-lil-sili-copy="badge">BEREIT ZU HELFEN</span>
-  <button
-    class="site-lil-sili__trigger"
-    type="button"
-    data-lil-sili-trigger
-    aria-controls="site-lil-sili-panel"
-    aria-expanded="false"
-    aria-label="Lil Sili öffnen"
-  >
-    <img src="/assets/images/lil-sili-cute-v2.svg" alt="" width="104" height="104" />
-    <span aria-hidden="true">?</span>
-  </button>
-</aside>
+</details>
