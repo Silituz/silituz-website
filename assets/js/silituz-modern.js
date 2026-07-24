@@ -593,8 +593,15 @@
       }).join("");
     }
 
-    function addShards(overlay, impactX, impactY, centerX, centerY) {
+    function addShards(overlay, targetRect, centerX, centerY) {
       const shardCount = isCompactScreen.matches ? 16 : 24;
+      const columns = isCompactScreen.matches ? 4 : 6;
+      const rows = Math.ceil(shardCount / columns);
+      const targetCenterX = targetRect.left + targetRect.width / 2;
+      const targetCenterY = targetRect.top + targetRect.height / 2;
+      const cellWidth = targetRect.width / columns;
+      const cellHeight = targetRect.height / rows;
+      const shardBase = Math.max(12, Math.min(27, Math.min(cellWidth, cellHeight) * .7));
       const polygons = [
         "polygon(8% 4%, 96% 20%, 66% 96%, 0 66%)",
         "polygon(18% 0, 100% 44%, 72% 100%, 0 76%)",
@@ -603,36 +610,43 @@
       ];
 
       for (let index = 0; index < shardCount; index += 1) {
-        const angle = (Math.PI * 2 * index / shardCount) + ((index % 3) - 1) * .08;
-        const distance = 78 + (index % 6) * 20;
+        const column = index % columns;
+        const row = Math.floor(index / columns);
+        const jitterX = ((index * 37) % 11 - 5) / 12;
+        const jitterY = ((index * 53) % 13 - 6) / 14;
+        const startX = targetRect.left + (column + .5 + jitterX) * cellWidth;
+        const startY = targetRect.top + (row + .5 + jitterY) * cellHeight;
+        const angle = Math.atan2(startY - targetCenterY, startX - targetCenterX);
+        const distance = 28 + (index % 5) * 11;
         const burstX = Math.cos(angle) * distance;
         const burstY = Math.sin(angle) * distance;
-        const suckX = centerX - impactX + Math.cos(angle) * 15;
-        const suckY = centerY - impactY + Math.sin(angle) * 15;
-        const rotation = ((index % 2 ? 1 : -1) * (55 + index * 19));
+        const suckX = centerX - startX + Math.cos(angle) * 10;
+        const suckY = centerY - startY + Math.sin(angle) * 10;
+        const rotation = ((index % 2 ? 1 : -1) * (48 + index * 17));
         const shard = document.createElement("i");
 
         shard.className = "sili-glass-shard";
-        shard.style.setProperty("--impact-x", impactX + "px");
-        shard.style.setProperty("--impact-y", impactY + "px");
+        shard.style.setProperty("--shard-start-x", startX.toFixed(1) + "px");
+        shard.style.setProperty("--shard-start-y", startY.toFixed(1) + "px");
         shard.style.setProperty("--burst-x", burstX.toFixed(1) + "px");
         shard.style.setProperty("--burst-y", burstY.toFixed(1) + "px");
         shard.style.setProperty("--suck-x", suckX.toFixed(1) + "px");
         shard.style.setProperty("--suck-y", suckY.toFixed(1) + "px");
         shard.style.setProperty("--shard-rot", rotation + "deg");
-        shard.style.setProperty("--shard-rot-end", (rotation * 2.4) + "deg");
-        shard.style.setProperty("--shard-delay", ((index % 7) * 11) + "ms");
-        shard.style.setProperty("--shard-width", (16 + (index % 5) * 8) + "px");
-        shard.style.setProperty("--shard-height", (24 + (index % 4) * 11) + "px");
+        shard.style.setProperty("--shard-rot-end", (rotation * 2.2) + "deg");
+        shard.style.setProperty("--shard-delay", ((index % 6) * 9) + "ms");
+        shard.style.setProperty("--shard-width", (shardBase * (.72 + (index % 4) * .16)).toFixed(1) + "px");
+        shard.style.setProperty("--shard-height", (shardBase * (1.05 + (index % 3) * .24)).toFixed(1) + "px");
         shard.style.clipPath = polygons[index % polygons.length];
         overlay.appendChild(shard);
       }
     }
 
-    function removePortal(overlay) {
+    function removePortal(overlay, originLink) {
       overlay.classList.add("is-closing");
       window.setTimeout(function () {
         overlay.remove();
+        if (originLink) originLink.classList.remove("sili-portal-origin-hidden");
         document.body.classList.remove("sili-portal-active");
         portalActive = false;
       }, 240);
@@ -656,10 +670,12 @@
       document.body.classList.add("sili-portal-active");
 
       const portrait = link.querySelector("img");
-      const portraitRect = (portrait || link).getBoundingClientRect();
+      const targetRect = link.getBoundingClientRect();
+      const targetCenterX = targetRect.left + targetRect.width / 2;
+      const targetCenterY = targetRect.top + targetRect.height / 2;
       const eventHasPoint = Number.isFinite(event.clientX) && Number.isFinite(event.clientY) && (event.clientX || event.clientY);
-      const impactX = eventHasPoint ? event.clientX : portraitRect.left + portraitRect.width / 2;
-      const impactY = eventHasPoint ? event.clientY : portraitRect.top + portraitRect.height / 2;
+      const impactX = eventHasPoint ? event.clientX : targetCenterX;
+      const impactY = eventHasPoint ? event.clientY : targetCenterY;
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
       const duration = portalSlow ? 1900 : (isCompactScreen.matches ? 1320 : 1520);
@@ -670,18 +686,20 @@
       overlay.className = "sili-glass-portal";
       overlay.setAttribute("aria-hidden", "true");
       overlay.style.setProperty("--portal-duration", duration + "ms");
-      overlay.style.setProperty("--portal-flash-duration", Math.round(duration * .42) + "ms");
-      overlay.style.setProperty("--portal-crack-duration", Math.round(duration * .36) + "ms");
-      overlay.style.setProperty("--portal-crack-fade-duration", Math.round(duration * .38) + "ms");
-      overlay.style.setProperty("--portal-crack-fade-delay", Math.round(duration * .52) + "ms");
+      overlay.style.setProperty("--portal-flash-duration", Math.round(duration * .28) + "ms");
+      overlay.style.setProperty("--portal-crack-duration", Math.round(duration * .25) + "ms");
+      overlay.style.setProperty("--portal-crack-fade-duration", Math.round(duration * .22) + "ms");
+      overlay.style.setProperty("--portal-crack-fade-delay", Math.round(duration * .31) + "ms");
       overlay.style.setProperty("--impact-x", impactX + "px");
       overlay.style.setProperty("--impact-y", impactY + "px");
-      overlay.style.setProperty("--portrait-left", portraitRect.left + "px");
-      overlay.style.setProperty("--portrait-top", portraitRect.top + "px");
-      overlay.style.setProperty("--portrait-width", portraitRect.width + "px");
-      overlay.style.setProperty("--portrait-height", portraitRect.height + "px");
-      overlay.style.setProperty("--portal-move-x", (centerX - (portraitRect.left + portraitRect.width / 2)) + "px");
-      overlay.style.setProperty("--portal-move-y", (centerY - (portraitRect.top + portraitRect.height / 2)) + "px");
+      overlay.style.setProperty("--target-left", targetRect.left + "px");
+      overlay.style.setProperty("--target-top", targetRect.top + "px");
+      overlay.style.setProperty("--target-width", Math.max(48, targetRect.width) + "px");
+      overlay.style.setProperty("--target-height", Math.max(48, targetRect.height) + "px");
+      overlay.style.setProperty("--target-center-x", targetCenterX + "px");
+      overlay.style.setProperty("--target-center-y", targetCenterY + "px");
+      overlay.style.setProperty("--portal-shift-x", (centerX - targetCenterX) + "px");
+      overlay.style.setProperty("--portal-shift-y", (centerY - targetCenterY) + "px");
 
       overlay.innerHTML =
         '<div class="sili-portal-void"></div>' +
@@ -691,24 +709,28 @@
         '<div class="sili-portal-core"></div>' +
         '<div class="sili-portal-prism"></div>' +
         '<div class="sili-portal-flash"></div>' +
-        '<svg class="sili-glass-cracks" viewBox="0 0 200 200" focusable="false">' + makeCracks() + '</svg>' +
-        '<div class="sili-portal-portrait"><img alt=""></div>' +
+        '<svg class="sili-glass-cracks" viewBox="0 0 200 200" preserveAspectRatio="none" focusable="false">' + makeCracks() + '</svg>' +
         '<div class="sili-portal-name"><span>' + enteringCopy + '</span><strong></strong><em></em></div>';
 
-      const portalImage = overlay.querySelector(".sili-portal-portrait img");
       const nameElement = overlay.querySelector(".sili-portal-name strong");
-      if (portrait && portalImage) {
-        portalImage.src = portrait.currentSrc || portrait.src;
-        portalImage.alt = portrait.alt || "";
-      }
       if (nameElement) nameElement.textContent = name;
 
-      addShards(overlay, impactX, impactY, centerX, centerY);
+      const frameClone = link.cloneNode(true);
+      frameClone.classList.remove("sili-portal-link", "sili-portal-origin-hidden");
+      frameClone.classList.add("sili-portal-frame-clone");
+      frameClone.removeAttribute("href");
+      frameClone.removeAttribute("target");
+      frameClone.setAttribute("aria-hidden", "true");
+      frameClone.querySelectorAll("[id]").forEach(function (element) { element.removeAttribute("id"); });
+      overlay.appendChild(frameClone);
+      link.classList.add("sili-portal-origin-hidden");
+
+      addShards(overlay, targetRect, centerX, centerY);
       document.body.appendChild(overlay);
       requestAnimationFrame(function () { overlay.classList.add("is-running"); });
 
       if (portalDemo) {
-        window.setTimeout(function () { removePortal(overlay); }, duration + 180);
+        window.setTimeout(function () { removePortal(overlay, link); }, duration + 180);
       } else {
         window.setTimeout(function () { window.location.assign(destination); }, duration - 25);
       }
