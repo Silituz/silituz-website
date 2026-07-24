@@ -440,7 +440,7 @@
           '<span class="legend-orbit legend-orbit-three" aria-hidden="true"></span>' +
           '<div class="sili-legend-sigil" aria-hidden="true"><i></i><b>S</b><i></i></div>' +
           '<div class="sili-trinity-links" aria-hidden="true"><i></i><i></i><i></i></div>' +
-          '<a class="legend-avatar legend-avatar-red" href="https://www.tiktok.com/@_.eunice16._" target="_blank" rel="noopener" aria-label="Red Bonita auf TikTok">' +
+          '<a class="legend-avatar legend-avatar-red" href="https://www.tiktok.com/@red_bonita03?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener" aria-label="Red Bonita auf TikTok">' +
             '<span class="legend-avatar__halo" aria-hidden="true"></span><img src="/assets/images/shoutout/eunice2.svg" alt="Red Bonita"><strong>Red Bonita</strong>' +
           '</a>' +
           '<a class="legend-avatar legend-avatar-ice" href="https://www.tiktok.com/@grozdanic.lule" target="_blank" rel="noopener" aria-label="IceQueen auf TikTok">' +
