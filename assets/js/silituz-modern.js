@@ -3,7 +3,7 @@
 
   const path = location.pathname.toLowerCase();
   const html = document.documentElement;
-  const page = path.includes("/music") ? "music" : path.includes("/gallery") ? "gallery" : path.includes("/support") ? "support" : path.includes("/generators") ? "generators" : (path === "/" || /^\/(en|es)\/?$/.test(path)) ? "home" : "inner";
+  const page = path.includes("/music") ? "music" : path.includes("/gallery") ? "gallery" : path.includes("/shoutout") ? "shoutout" : path.includes("/support") ? "support" : path.includes("/generators") ? "generators" : path.includes("/socials") ? "socials" : path.includes("/about") ? "about" : path.includes("/contact") ? "contact" : (path === "/" || /^\\/(en|es)\\/?$/.test(path)) ? "home" : "inner";
   document.body.classList.add("page-" + page);
 
   // Cleanup only: remove the service worker from the earlier PWA preview.
@@ -105,7 +105,8 @@
     box.className = "site-lil-sili__context";
     function renderContext(contextLanguage) {
       const activeLanguage = copy[contextLanguage] ? contextLanguage : "en";
-      box.innerHTML = "<strong>" + copy[activeLanguage][page][0] + "</strong><span>" + copy[activeLanguage][page][1] + "</span>";
+      const context = copy[activeLanguage][page] || copy[activeLanguage].inner;
+      box.innerHTML = "<strong>" + context[0] + "</strong><span>" + context[1] + "</span>";
     }
     renderContext(root.classList.contains("is-choosing-language") ? "en" : language);
     document.addEventListener("silituz:languagechange", function (event) {
