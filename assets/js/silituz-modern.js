@@ -3,7 +3,7 @@
 
   const path = location.pathname.toLowerCase();
   const html = document.documentElement;
-  const page = path.includes("/music") ? "music" : path.includes("/gallery") ? "gallery" : path.includes("/shoutout") ? "shoutout" : path.includes("/support") ? "support" : path.includes("/generators") ? "generators" : path.includes("/socials") ? "socials" : (path.includes("/about") || path.includes("vorschau-ueber-mich")) ? "about" : (path.includes("/contact") || path.includes("vorschau-kontakt")) ? "contact" : (path === "/" || path === "/en/" || path === "/es/" || path === "/en" || path === "/es") ? "home" : "inner";
+  const page = path.includes("/music") ? "music" : path.includes("/gallery") ? "gallery" : path.includes("/shoutout") ? "shoutout" : path.includes("/support") ? "support" : path.includes("/generators") ? "generators" : path.includes("/socials") ? "socials" : path.includes("/about") ? "about" : path.includes("/contact") ? "contact" : (path === "/" || path === "/en/" || path === "/es/" || path === "/en" || path === "/es") ? "home" : "inner";
   document.body.classList.add("page-" + page);
 
   // Cleanup only: remove the service worker from the earlier PWA preview.
