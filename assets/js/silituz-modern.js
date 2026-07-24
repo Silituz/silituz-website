@@ -388,15 +388,125 @@
     }
 
     if (page === "shoutout") {
-      const profiles = Array.from(main.querySelectorAll("a")).filter(function (link) { return link.querySelector("img[alt]"); });
-      profiles.forEach(function (profile, index) {
-        profile.classList.add("sili-legend-profile");
-        profile.style.setProperty("--legend-delay", String(index % 8));
+      const legendCopy = language === "es" ? {
+        presents: "SILITUZ PRESENTA",
+        oath: "UNA COMUNIDAD · UNA HISTORIA · INFINITOS RECUERDOS"
+      } : language === "en" ? {
+        presents: "SILITUZ PRESENTS",
+        oath: "ONE COMMUNITY · ONE STORY · ENDLESS MEMORIES"
+      } : {
+        presents: "SILITUZ PRÄSENTIERT",
+        oath: "EINE COMMUNITY · EINE GESCHICHTE · UNENDLICH VIELE MOMENTE"
+      };
+
+      const profiles = Array.from(main.querySelectorAll("a")).filter(function (link) {
+        return link.querySelector("img[alt]") && !link.closest(".sili-legends-stage");
       });
-      const originalSections = Array.from(main.children).filter(function (element) { return element.tagName === "SECTION"; });
-      if (originalSections[1]) originalSections[1].id = "community-legends";
-      section.classList.add("sili-legends-feature");
-      section.innerHTML = '<div class="sili-legends-stars" aria-hidden="true"></div><div class="sili-feature-copy"><span class="sili-kicker">' + data.kicker + '</span><h2 class="sili-gradient-text">' + data.title + '</h2><p>' + data.text + '</p><strong class="sili-legends-honor">' + data.honor + '</strong><a class="sili-btn sili-btn--primary" href="#community-legends">' + data.enter + ' ↓</a></div><div class="sili-legends-stage" aria-label="Red Bonita, IceQueen und Wolf"><span class="legend-orbit legend-orbit-one" aria-hidden="true"></span><span class="legend-orbit legend-orbit-two" aria-hidden="true"></span><div class="legend-avatar legend-avatar-red"><img src="/assets/images/shoutout/eunice2.svg" alt="Red Bonita"><span>Red Bonita</span></div><div class="legend-avatar legend-avatar-ice"><img src="/assets/images/shoutout/icequeen2.svg" alt="IceQueen"><span>IceQueen</span></div><div class="legend-avatar legend-avatar-wolf"><img src="/assets/images/shoutout/wolfpo3.svg" alt="Wolf"><span>Wolf</span></div></div>';
+      profiles.forEach(function (profile) {
+        const image = profile.querySelector("img[alt]");
+        const heading = profile.querySelector("h3");
+        const profileName = heading && heading.textContent.trim() ? heading.textContent.trim() : image.alt.trim();
+        profile.classList.add("sili-legend-profile");
+        profile.dataset.legendName = profileName;
+      });
+
+      const originalSections = Array.from(main.children).filter(function (element) {
+        return element.tagName === "SECTION";
+      });
+      const communitySection = originalSections[1];
+      if (communitySection) {
+        communitySection.id = "community-legends";
+        communitySection.classList.add("sili-community-legends");
+      }
+
+      section.classList.add("sili-legends-feature", "sili-legends-overdrive");
+      section.innerHTML =
+        '<div class="sili-legends-stars" aria-hidden="true"></div>' +
+        '<div class="sili-cinematic-beams" aria-hidden="true"><i></i><i></i><i></i></div>' +
+        '<div class="sili-legends-frame" aria-hidden="true"><span></span><span></span><span></span><span></span></div>' +
+        '<div class="sili-legends-chapters"><span>THE LEGENDARY TRINITY</span><i></i><span>ONE COMMUNITY</span></div>' +
+        '<div class="sili-feature-copy">' +
+          '<span class="sili-legend-presents"><i></i>' + legendCopy.presents + '<i></i></span>' +
+          '<span class="sili-kicker">' + data.kicker + '</span>' +
+          '<h2 class="sili-gradient-text">' + data.title + '</h2>' +
+          '<p>' + data.text + '</p>' +
+          '<strong class="sili-legends-honor">' + legendCopy.oath + '</strong>' +
+          '<a class="sili-btn sili-btn--primary sili-legend-enter" href="#community-legends">' + data.enter + ' <span>↓</span></a>' +
+        '</div>' +
+        '<div class="sili-legends-stage" aria-label="Red Bonita, IceQueen und Wolf">' +
+          '<div class="sili-legend-crown" aria-hidden="true"><i></i><i></i><i></i><b>THE LEGENDARY TRINITY</b></div>' +
+          '<span class="legend-orbit legend-orbit-one" aria-hidden="true"></span>' +
+          '<span class="legend-orbit legend-orbit-two" aria-hidden="true"></span>' +
+          '<span class="legend-orbit legend-orbit-three" aria-hidden="true"></span>' +
+          '<div class="sili-legend-sigil" aria-hidden="true"><i></i><b>S</b><i></i></div>' +
+          '<div class="sili-trinity-links" aria-hidden="true"><i></i><i></i><i></i></div>' +
+          '<a class="legend-avatar legend-avatar-red" href="https://www.tiktok.com/@_.eunice16._" target="_blank" rel="noopener" aria-label="Red Bonita auf TikTok">' +
+            '<span class="legend-avatar__halo" aria-hidden="true"></span><img src="/assets/images/shoutout/eunice2.svg" alt="Red Bonita"><strong>Red Bonita</strong>' +
+          '</a>' +
+          '<a class="legend-avatar legend-avatar-ice" href="https://www.tiktok.com/@grozdanic.lule" target="_blank" rel="noopener" aria-label="IceQueen auf TikTok">' +
+            '<span class="legend-avatar__halo" aria-hidden="true"></span><img src="/assets/images/shoutout/icequeen2.svg" alt="IceQueen"><strong>IceQueen</strong>' +
+          '</a>' +
+          '<a class="legend-avatar legend-avatar-wolf" href="https://www.tiktok.com/@wolf_05555" target="_blank" rel="noopener" aria-label="Wolf auf TikTok">' +
+            '<span class="legend-avatar__halo" aria-hidden="true"></span><img src="/assets/images/shoutout/wolfpo3.svg" alt="Wolf"><strong>Wolf</strong>' +
+          '</a>' +
+          '<div class="sili-legend-pedestal" aria-hidden="true"><span></span><span></span><span></span></div>' +
+        '</div>' +
+        '<div class="sili-legends-marquee" aria-hidden="true"><span>' + legendCopy.oath + ' · ' + legendCopy.oath + ' · </span></div>';
+
+      const canTilt = matchMedia("(pointer:fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (canTilt) {
+        let targetTiltX = 0;
+        let targetTiltY = 0;
+        let currentTiltX = 0;
+        let currentTiltY = 0;
+        let targetSpotX = 76;
+        let targetSpotY = 42;
+        let currentSpotX = 76;
+        let currentSpotY = 42;
+        let tiltFrame = 0;
+
+        function animateTilt() {
+          currentTiltX += (targetTiltX - currentTiltX) * .09;
+          currentTiltY += (targetTiltY - currentTiltY) * .09;
+          currentSpotX += (targetSpotX - currentSpotX) * .075;
+          currentSpotY += (targetSpotY - currentSpotY) * .075;
+
+          section.style.setProperty("--spot-x", currentSpotX.toFixed(2) + "%");
+          section.style.setProperty("--spot-y", currentSpotY.toFixed(2) + "%");
+          section.style.setProperty("--tilt-x", currentTiltX.toFixed(3) + "deg");
+          section.style.setProperty("--tilt-y", currentTiltY.toFixed(3) + "deg");
+
+          const moving = Math.abs(targetTiltX - currentTiltX) > .01 ||
+            Math.abs(targetTiltY - currentTiltY) > .01 ||
+            Math.abs(targetSpotX - currentSpotX) > .05 ||
+            Math.abs(targetSpotY - currentSpotY) > .05;
+
+          tiltFrame = moving ? requestAnimationFrame(animateTilt) : 0;
+        }
+
+        function requestTiltFrame() {
+          if (!tiltFrame) tiltFrame = requestAnimationFrame(animateTilt);
+        }
+
+        section.addEventListener("pointermove", function (event) {
+          const rect = section.getBoundingClientRect();
+          const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+          const y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+          targetSpotX = x * 100;
+          targetSpotY = y * 100;
+          targetTiltX = (.5 - y) * 5;
+          targetTiltY = (x - .5) * 6;
+          requestTiltFrame();
+        });
+
+        section.addEventListener("pointerleave", function () {
+          targetTiltX = 0;
+          targetTiltY = 0;
+          targetSpotX = 76;
+          targetSpotY = 42;
+          requestTiltFrame();
+        });
+      }
     }
 
     hero.insertAdjacentElement("afterend", section);
