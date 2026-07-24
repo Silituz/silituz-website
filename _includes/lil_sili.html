@@ -1,0 +1,81 @@
+<aside class="site-lil-sili" data-lil-sili data-lang="{{ page.lang | default: 'de' }}">
+  <section
+    class="site-lil-sili__panel"
+    id="site-lil-sili-panel"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="site-lil-sili-title"
+    hidden
+  >
+    <header class="site-lil-sili__head">
+      <div>
+        <span data-lil-sili-copy="panelBadge">SILITUZ GUIDE</span>
+        <h2 id="site-lil-sili-title" data-lil-sili-copy="title">Hey, ich bin Lil Sili!</h2>
+      </div>
+      <button
+        class="site-lil-sili__close"
+        type="button"
+        data-lil-sili-close
+        aria-label="Lil Sili schließen"
+      >×</button>
+    </header>
+
+    <p class="site-lil-sili__intro" data-lil-sili-copy="intro">
+      Was möchtest du entdecken? Ich bringe dich direkt dorthin.
+    </p>
+
+    <form class="site-lil-sili__form" data-lil-sili-form>
+      <label class="sr-only" for="site-lil-sili-search" data-lil-sili-copy="searchLabel">
+        Frage oder Suchbegriff
+      </label>
+      <input
+        id="site-lil-sili-search"
+        name="lil-sili-search"
+        type="search"
+        autocomplete="off"
+        data-lil-sili-search
+        placeholder="z. B. News, Bilder, Musik, Hilfe …"
+      />
+      <button type="submit">
+        <span data-lil-sili-copy="search">Los</span>
+        <span aria-hidden="true">→</span>
+      </button>
+    </form>
+
+    <p class="site-lil-sili__message" data-lil-sili-message aria-live="polite"></p>
+
+    <nav class="site-lil-sili__actions" aria-label="Lil Sili Schnellzugriffe">
+      <a href="https://anime-pulse-news.silituz.chatgpt.site" data-lil-sili-route="news">
+        <i aria-hidden="true">速</i><span data-lil-sili-label="news">SILITUZ NEWS</span><b aria-hidden="true">›</b>
+      </a>
+      <a href="/gallery/" data-lil-sili-route="gallery">
+        <i aria-hidden="true">画</i><span data-lil-sili-label="gallery">Bilder & Videos</span><b aria-hidden="true">›</b>
+      </a>
+      <a href="/generators/" data-lil-sili-route="generators">
+        <i aria-hidden="true">創</i><span data-lil-sili-label="generators">Generatoren & mehr</span><b aria-hidden="true">›</b>
+      </a>
+      <a href="/music/" data-lil-sili-route="music">
+        <i aria-hidden="true">音</i><span data-lil-sili-label="music">Musik</span><b aria-hidden="true">›</b>
+      </a>
+      <a href="/support/" class="site-lil-sili__support" data-lil-sili-route="support">
+        <i aria-hidden="true">💚</i><span data-lil-sili-label="support">Silituz unterstützen</span><b aria-hidden="true">›</b>
+      </a>
+      <a href="/socials/" data-lil-sili-route="socials">
+        <i aria-hidden="true">＠</i><span data-lil-sili-label="socials">Socials</span><b aria-hidden="true">›</b>
+      </a>
+    </nav>
+  </section>
+
+  <span class="site-lil-sili__hint" data-lil-sili-copy="badge">BEREIT ZU HELFEN</span>
+  <button
+    class="site-lil-sili__trigger"
+    type="button"
+    data-lil-sili-trigger
+    aria-controls="site-lil-sili-panel"
+    aria-expanded="false"
+    aria-label="Lil Sili öffnen"
+  >
+    <img src="/assets/images/lil-sili-cute-v2.svg" alt="" width="104" height="104" />
+    <span aria-hidden="true">?</span>
+  </button>
+</aside>
