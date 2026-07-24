@@ -54,19 +54,6 @@
   status = 200
   force = true
 
-# Stabile Adressen nur zum Prüfen dieses Entwurfs
-[[redirects]]
-  from = "/vorschau-ueber-mich"
-  to = "/about/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/vorschau-kontakt"
-  to = "/contact/index.html"
-  status = 200
-  force = true
-
 # 3) Allgemeiner Homepage-Fallback
 
 [[redirects]]
