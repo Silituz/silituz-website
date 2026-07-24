@@ -738,3 +738,729 @@ a.sili-feature-card { display: block; text-decoration: none; }
   .sili-about-ring, .sili-about-portrait::before,
   .sili-contact-beacon::before, .sili-contact-beacon::after { animation: none !important; }
 }
+
+
+/* =========================================================
+   HALL OF LEGENDS — OVERDRIVE PREVIEW
+   Cinematic entrance, legendary trinity and constellation wall
+   ========================================================= */
+.page-shoutout {
+  --legend-gold: #ffd36b;
+  --legend-gold-hot: #ffad32;
+  --legend-cyan: #54f4e2;
+  --legend-violet: #9c7cff;
+  background:
+    radial-gradient(circle at 50% 10%, rgba(255,183,50,.12), transparent 34rem),
+    radial-gradient(circle at 8% 42%, rgba(84,244,226,.07), transparent 34rem),
+    radial-gradient(circle at 90% 72%, rgba(156,124,255,.08), transparent 38rem),
+    #020713;
+}
+.page-shoutout main > section:first-child {
+  min-height: clamp(30rem, 76vh, 52rem);
+  height: auto !important;
+  isolation: isolate;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255,211,107,.18);
+}
+.page-shoutout main > section:first-child::before,
+.page-shoutout main > section:first-child::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+.page-shoutout main > section:first-child::before {
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(2,7,19,.12), rgba(2,7,19,.72)),
+    radial-gradient(circle at 50% 50%, transparent 20%, rgba(2,7,19,.48) 82%);
+}
+.page-shoutout main > section:first-child::after {
+  left: 50%;
+  bottom: -11rem;
+  width: min(94vw, 75rem);
+  height: 19rem;
+  border: 1px solid rgba(255,211,107,.2);
+  border-radius: 50%;
+  transform: translateX(-50%) rotateX(70deg);
+  background: radial-gradient(ellipse, rgba(255,177,45,.18), transparent 64%);
+  box-shadow: 0 0 90px rgba(255,173,50,.13);
+}
+.page-shoutout main > section:first-child > img {
+  transform: scale(1.08);
+  animation: siliHeroBreath 13s ease-in-out infinite alternate;
+}
+.page-shoutout main > section:first-child > div {
+  z-index: 3;
+}
+.page-shoutout main > section:first-child h1 {
+  text-shadow: 0 0 36px rgba(25,214,162,.3), 0 8px 30px rgba(0,0,0,.7);
+}
+
+.sili-legends-overdrive {
+  --spot-x: 76%;
+  --spot-y: 42%;
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  width: min(calc(100% - 2rem), 92rem);
+  max-width: 92rem;
+  min-height: 54rem;
+  margin: 2.2rem auto 4rem;
+  padding: clamp(2rem, 5vw, 5rem);
+  grid-template-columns: minmax(20rem, .82fr) minmax(31rem, 1.18fr);
+  gap: clamp(2rem, 5vw, 6rem);
+  border: 1px solid rgba(255,211,107,.3);
+  border-radius: 2.4rem;
+  background:
+    radial-gradient(circle at var(--spot-x) var(--spot-y), rgba(255,191,66,.22), transparent 25rem),
+    linear-gradient(128deg, rgba(2,7,18,.98), rgba(4,18,31,.93) 55%, rgba(2,9,20,.98));
+  box-shadow:
+    0 45px 120px rgba(0,0,0,.58),
+    0 0 0 1px rgba(255,243,210,.035) inset,
+    0 0 100px rgba(255,173,50,.065) inset;
+  perspective: 1200px;
+}
+.sili-legends-overdrive::before {
+  width: 48rem;
+  height: 48rem;
+  right: -18rem;
+  top: -18rem;
+  background: radial-gradient(circle, rgba(255,192,70,.18), transparent 67%);
+}
+.sili-legends-overdrive::after {
+  opacity: .38;
+  background-image:
+    linear-gradient(112deg, transparent 35%, rgba(255,232,174,.11) 49%, transparent 63%),
+    repeating-linear-gradient(90deg, transparent 0 71px, rgba(255,255,255,.018) 72px),
+    repeating-linear-gradient(0deg, transparent 0 71px, rgba(255,255,255,.012) 72px);
+  mask-image: linear-gradient(to bottom, #000, transparent 94%);
+}
+.sili-legends-overdrive .sili-feature-copy {
+  z-index: 7;
+  max-width: 38rem;
+}
+.sili-legends-overdrive .sili-feature-copy h2 {
+  margin-top: .7rem;
+  font-size: clamp(3.4rem, 7vw, 7.4rem);
+  line-height: .82;
+  text-transform: uppercase;
+  text-shadow: 0 0 55px rgba(255,202,93,.12);
+}
+.sili-legends-overdrive .sili-feature-copy > p {
+  max-width: 35rem;
+  color: #c8d6df;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+}
+.sili-legend-presents {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  margin-bottom: .75rem;
+  color: rgba(255,220,144,.82);
+  font-size: .62rem;
+  font-weight: 900;
+  letter-spacing: .26em;
+}
+.sili-legend-presents i {
+  width: 2.2rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--legend-gold));
+  box-shadow: 0 0 12px var(--legend-gold);
+}
+.sili-legend-presents i:last-child { transform: scaleX(-1); }
+.sili-legends-overdrive .sili-kicker {
+  display: inline-flex;
+  padding: .4rem .65rem;
+  border: 1px solid rgba(255,211,107,.25);
+  border-radius: 999px;
+  background: rgba(255,183,50,.06);
+  letter-spacing: .18em;
+}
+.sili-legend-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .75rem;
+  max-width: 30rem;
+  margin: 1.7rem 0 1rem;
+}
+.sili-legend-metrics > span {
+  position: relative;
+  padding: 1rem 1.1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255,211,107,.16);
+  border-radius: 1rem;
+  background: linear-gradient(135deg, rgba(255,194,72,.09), rgba(4,17,29,.7));
+}
+.sili-legend-metrics > span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-110%);
+  background: linear-gradient(110deg, transparent, rgba(255,255,255,.1), transparent);
+  animation: siliMetricShine 5s ease-in-out infinite;
+}
+.sili-legend-metrics b {
+  display: block;
+  color: #fff5d9;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+.sili-legend-metrics small {
+  display: block;
+  margin-top: .45rem;
+  color: #b7cbd5;
+  font-size: .55rem;
+  font-weight: 850;
+  letter-spacing: .14em;
+}
+.sili-legends-overdrive .sili-legends-honor {
+  max-width: 32rem;
+  margin: 1.35rem 0 1.6rem;
+  color: var(--legend-gold);
+  line-height: 1.6;
+}
+.sili-legend-enter {
+  position: relative;
+  min-width: 16rem;
+  justify-content: space-between;
+  border-color: rgba(255,211,107,.46) !important;
+  color: #160d02 !important;
+  background: linear-gradient(115deg, #fff0bd, #ffc452 52%, #54ead8) !important;
+  box-shadow: 0 18px 45px rgba(255,174,42,.22), 0 0 36px rgba(84,234,216,.1);
+}
+.sili-legend-enter span { animation: siliArrowDrop 1.7s ease-in-out infinite; }
+
+.sili-legends-chapters {
+  position: absolute;
+  z-index: 8;
+  top: 1.35rem;
+  left: 50%;
+  width: min(calc(100% - 4rem), 46rem);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: rgba(214,228,235,.58);
+  font-size: .52rem;
+  font-weight: 850;
+  letter-spacing: .16em;
+}
+.sili-legends-chapters b { margin-right: .3rem; color: var(--legend-gold); }
+.sili-legends-chapters i {
+  flex: 1;
+  max-width: 9rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,211,107,.4), transparent);
+}
+.sili-legends-frame { position: absolute; z-index: 5; inset: 1rem; pointer-events: none; }
+.sili-legends-frame span {
+  position: absolute;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-color: rgba(255,211,107,.45);
+}
+.sili-legends-frame span:nth-child(1) { left: 0; top: 0; border-left: 1px solid; border-top: 1px solid; border-radius: 1.1rem 0 0; }
+.sili-legends-frame span:nth-child(2) { right: 0; top: 0; border-right: 1px solid; border-top: 1px solid; border-radius: 0 1.1rem 0 0; }
+.sili-legends-frame span:nth-child(3) { right: 0; bottom: 0; border-right: 1px solid; border-bottom: 1px solid; border-radius: 0 0 1.1rem; }
+.sili-legends-frame span:nth-child(4) { left: 0; bottom: 0; border-left: 1px solid; border-bottom: 1px solid; border-radius: 0 0 0 1.1rem; }
+
+.sili-cinematic-beams {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sili-cinematic-beams i {
+  position: absolute;
+  top: -25%;
+  width: 15rem;
+  height: 120%;
+  transform-origin: 50% 0;
+  background: linear-gradient(180deg, rgba(255,230,166,.14), rgba(255,189,55,.015) 62%, transparent);
+  clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%);
+  filter: blur(5px);
+  animation: siliBeamSweep 9s ease-in-out infinite alternate;
+}
+.sili-cinematic-beams i:nth-child(1) { left: 48%; transform: rotate(13deg); }
+.sili-cinematic-beams i:nth-child(2) { right: 3%; transform: rotate(-18deg); animation-delay: -3s; }
+.sili-cinematic-beams i:nth-child(3) { left: 10%; transform: rotate(26deg); animation-delay: -6s; opacity: .55; }
+
+.sili-legends-overdrive .sili-legends-stage {
+  z-index: 6;
+  width: min(100%, 42rem);
+  aspect-ratio: 1;
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transform-style: preserve-3d;
+  transition: transform .2s ease-out;
+}
+.sili-legends-overdrive .sili-legends-stage::before {
+  inset: 49% 2% 2%;
+  border-color: rgba(255,211,107,.42);
+  background:
+    repeating-radial-gradient(ellipse, rgba(255,211,107,.13) 0 1px, transparent 2px 18px),
+    radial-gradient(ellipse, rgba(255,184,50,.3), rgba(2,10,20,.86) 63%, transparent 72%);
+  box-shadow: 0 0 95px rgba(255,172,39,.26), inset 0 0 65px rgba(255,211,107,.09);
+}
+.sili-legends-overdrive .legend-orbit {
+  z-index: 1;
+  inset: 6%;
+  border-color: rgba(255,211,107,.22);
+  box-shadow: 0 0 35px rgba(255,183,50,.05);
+}
+.sili-legends-overdrive .legend-orbit-two { inset: 21%; border-color: rgba(84,244,226,.19); }
+.sili-legends-overdrive .legend-orbit-three {
+  inset: 36%;
+  border-style: dotted;
+  border-color: rgba(156,124,255,.3);
+  animation-direction: reverse;
+  animation-duration: 11s;
+}
+.sili-legend-crown {
+  position: absolute;
+  z-index: 8;
+  left: 50%;
+  top: -1%;
+  width: 18rem;
+  height: 6.5rem;
+  transform: translateX(-50%) translateZ(45px);
+  display: flex;
+  justify-content: center;
+  filter: drop-shadow(0 0 18px rgba(255,194,65,.35));
+}
+.sili-legend-crown i {
+  position: absolute;
+  bottom: 1.8rem;
+  width: 3.4rem;
+  height: 3.8rem;
+  border: 1px solid rgba(255,216,123,.75);
+  transform: rotate(45deg);
+  background: linear-gradient(135deg, rgba(255,242,202,.18), rgba(255,174,34,.04));
+}
+.sili-legend-crown i:nth-child(1) { left: 4rem; height: 2.7rem; }
+.sili-legend-crown i:nth-child(2) { left: 7.3rem; bottom: 2.4rem; height: 4.6rem; }
+.sili-legend-crown i:nth-child(3) { right: 4rem; height: 2.7rem; }
+.sili-legend-crown b {
+  position: absolute;
+  bottom: 0;
+  padding: .38rem .8rem;
+  border: 1px solid rgba(255,211,107,.3);
+  border-radius: 999px;
+  color: #ffe6ad;
+  background: rgba(3,10,21,.92);
+  font-size: .58rem;
+  letter-spacing: .2em;
+  white-space: nowrap;
+}
+.sili-legend-sigil {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 49%;
+  width: 7.5rem;
+  aspect-ratio: 1;
+  transform: translate(-50%,-50%) translateZ(-20px) rotate(45deg);
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,211,107,.3);
+  background: rgba(255,188,54,.035);
+  box-shadow: 0 0 45px rgba(255,182,43,.14), inset 0 0 25px rgba(84,244,226,.08);
+  animation: siliSigilPulse 4s ease-in-out infinite;
+}
+.sili-legend-sigil b {
+  transform: rotate(-45deg);
+  color: rgba(255,226,159,.52);
+  font-size: 2.5rem;
+  font-weight: 1000;
+}
+.sili-legend-sigil i {
+  position: absolute;
+  inset: 15%;
+  border: 1px dashed rgba(84,244,226,.22);
+}
+.sili-legend-sigil i:last-child { inset: 30%; transform: rotate(45deg); }
+
+.sili-legends-overdrive .legend-avatar {
+  z-index: 9;
+  width: 10.5rem;
+  height: 10.5rem;
+  display: block;
+  border: 0;
+  color: #fff;
+  text-decoration: none;
+  transform-style: preserve-3d;
+  background: none;
+  box-shadow: none;
+  transition: filter .3s ease, transform .3s ease;
+}
+.sili-legends-overdrive .legend-avatar img {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(255,224,154,.9);
+  border-radius: 50%;
+  object-fit: cover;
+  background: #07121d;
+  box-shadow:
+    0 0 0 7px rgba(255,211,107,.055),
+    0 28px 65px rgba(0,0,0,.58),
+    0 0 42px rgba(255,184,46,.24);
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+.sili-legends-overdrive .legend-avatar:hover img {
+  transform: scale(1.055);
+  box-shadow:
+    0 0 0 9px rgba(255,211,107,.09),
+    0 34px 75px rgba(0,0,0,.65),
+    0 0 70px rgba(255,184,46,.43);
+}
+.sili-legends-overdrive .legend-avatar span.legend-avatar__halo {
+  position: absolute;
+  z-index: 1;
+  inset: -10%;
+  width: auto;
+  height: auto;
+  padding: 0;
+  transform: none;
+  border: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, rgba(255,211,107,.65), transparent 28%, rgba(84,244,226,.5), transparent 62%, rgba(156,124,255,.5), transparent);
+  filter: blur(1px);
+  animation: siliHaloSpin 7s linear infinite;
+}
+.sili-legends-overdrive .legend-avatar strong {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: calc(100% + .85rem);
+  transform: translateX(-50%);
+  min-width: max-content;
+  padding: .4rem .8rem;
+  border: 1px solid rgba(255,211,107,.4);
+  border-radius: .55rem;
+  color: #fff0c5;
+  background: linear-gradient(115deg, rgba(18,12,6,.95), rgba(3,14,25,.96));
+  box-shadow: 0 12px 28px rgba(0,0,0,.45), 0 0 20px rgba(255,181,40,.12);
+  font-size: .72rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+.sili-legends-overdrive .legend-avatar small {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: calc(100% + 3.15rem);
+  transform: translateX(-50%);
+  color: rgba(190,212,221,.72);
+  font-size: .48rem;
+  font-weight: 850;
+  letter-spacing: .18em;
+  white-space: nowrap;
+}
+.sili-legends-overdrive .legend-avatar-ice {
+  left: 50%;
+  top: 14%;
+  width: 13rem;
+  height: 13rem;
+  transform: translateX(-50%) translateZ(70px);
+  animation: siliLegendFloatMain 4.5s ease-in-out infinite;
+}
+.sili-legends-overdrive .legend-avatar-red {
+  left: 0;
+  top: 51%;
+  transform: translateZ(42px);
+  animation: siliLegendFloat 5.2s ease-in-out .5s infinite;
+}
+.sili-legends-overdrive .legend-avatar-wolf {
+  right: 0;
+  top: 51%;
+  transform: translateZ(42px);
+  animation: siliLegendFloat 5.6s ease-in-out 1s infinite;
+}
+.sili-legend-pedestal {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  bottom: 2%;
+  width: 86%;
+  height: 31%;
+  transform: translateX(-50%) rotateX(66deg) translateZ(-30px);
+  border: 1px solid rgba(255,211,107,.3);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255,183,47,.19), rgba(2,8,18,.7) 58%, transparent 72%);
+}
+.sili-legend-pedestal span {
+  position: absolute;
+  inset: 14%;
+  border: 1px solid rgba(84,244,226,.12);
+  border-radius: 50%;
+}
+.sili-legend-pedestal span:nth-child(2) { inset: 30%; border-color: rgba(255,211,107,.15); }
+.sili-legend-pedestal span:nth-child(3) { inset: 45%; border-color: rgba(156,124,255,.18); }
+
+.sili-legends-marquee {
+  position: absolute;
+  z-index: 7;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(255,211,107,.14);
+  color: rgba(255,224,153,.28);
+  font-size: .55rem;
+  font-weight: 900;
+  letter-spacing: .28em;
+  white-space: nowrap;
+}
+.sili-legends-marquee span {
+  display: block;
+  width: max-content;
+  padding: .72rem 0;
+  animation: siliMarquee 24s linear infinite;
+}
+
+.sili-constellation-intro {
+  position: relative;
+  width: min(calc(100% - 2rem), 78rem);
+  margin: 5rem auto 2rem;
+  padding: clamp(2rem, 5vw, 4rem);
+  overflow: hidden;
+  border: 1px solid rgba(84,244,226,.18);
+  border-radius: 2rem;
+  background:
+    radial-gradient(circle at 85% 25%, rgba(84,244,226,.11), transparent 20rem),
+    radial-gradient(circle at 10% 82%, rgba(156,124,255,.1), transparent 24rem),
+    linear-gradient(135deg, rgba(3,15,29,.92), rgba(2,8,19,.96));
+  box-shadow: 0 28px 80px rgba(0,0,0,.34);
+  text-align: center;
+}
+.sili-constellation-intro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .45;
+  background-image:
+    radial-gradient(circle at 10% 20%, #54f4e2 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 22%, #ffd36b 0 1px, transparent 2px),
+    radial-gradient(circle at 33% 78%, #fff 0 1px, transparent 2px),
+    radial-gradient(circle at 91% 65%, #9c7cff 0 1.5px, transparent 2.5px);
+  background-size: 170px 150px, 230px 210px, 190px 170px, 260px 220px;
+}
+.sili-constellation-intro > * { position: relative; z-index: 2; }
+.sili-constellation-index {
+  color: var(--legend-cyan);
+  font-size: .6rem;
+  font-weight: 900;
+  letter-spacing: .22em;
+}
+.sili-constellation-intro h2 {
+  margin: .7rem 0;
+  color: #f5fbff;
+  font-size: clamp(2.4rem, 6vw, 5rem);
+  font-weight: 950;
+  letter-spacing: -.045em;
+}
+.sili-constellation-intro p {
+  max-width: 48rem;
+  margin: 0 auto;
+  color: #b8ccd7;
+  line-height: 1.72;
+}
+.sili-constellation-intro a {
+  display: inline-flex;
+  margin-top: 1.5rem;
+  padding: .7rem 1rem;
+  border: 1px solid rgba(84,244,226,.32);
+  border-radius: 999px;
+  color: #cffff8;
+  background: rgba(84,244,226,.055);
+  font-size: .72rem;
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.page-shoutout .sili-community-legends {
+  position: relative;
+  isolation: isolate;
+}
+.page-shoutout .sili-community-legends::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -3rem 0 0;
+  background:
+    radial-gradient(circle at 50% 0, rgba(84,244,226,.055), transparent 32rem),
+    repeating-linear-gradient(90deg, transparent 0 109px, rgba(255,255,255,.012) 110px);
+  pointer-events: none;
+}
+.page-shoutout .sili-legend-profile {
+  position: relative;
+  isolation: isolate;
+  overflow: visible !important;
+  transform: translateZ(0);
+  transition: transform .4s cubic-bezier(.2,.8,.2,1), filter .4s ease;
+}
+.page-shoutout .sili-legend-profile::before,
+.page-shoutout .sili-legend-profile::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -6px;
+  border-radius: 1.55rem;
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+.page-shoutout .sili-legend-profile::before {
+  background: conic-gradient(from calc(var(--legend-index) * 27deg), transparent, rgba(84,244,226,.34), transparent 26%, rgba(255,211,107,.3), transparent 62%);
+  filter: blur(9px);
+}
+.page-shoutout .sili-legend-profile::after {
+  inset: 0;
+  border: 1px solid rgba(84,244,226,.22);
+  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.08) 49%, transparent 68%);
+  background-size: 250% 100%;
+}
+.page-shoutout .sili-legend-profile:hover {
+  z-index: 10;
+  transform: translateY(-12px) scale(1.025);
+  filter: drop-shadow(0 25px 45px rgba(0,0,0,.4));
+}
+.page-shoutout .sili-legend-profile:hover::before,
+.page-shoutout .sili-legend-profile:hover::after { opacity: 1; }
+.page-shoutout .sili-legend-profile:hover::after { animation: siliCardSweep 1.2s ease forwards; }
+.page-shoutout .sili-legend-profile img {
+  border: 2px solid rgba(255,211,107,.45) !important;
+  filter: saturate(.96) contrast(1.02);
+  transition: filter .4s ease, transform .4s ease, box-shadow .4s ease;
+}
+.page-shoutout .sili-legend-profile:hover img {
+  filter: saturate(1.17) contrast(1.04);
+  transform: scale(1.025);
+  box-shadow: 0 0 0 6px rgba(84,244,226,.045), 0 25px 65px rgba(0,0,0,.4), 0 0 42px rgba(84,244,226,.16) !important;
+}
+.sili-profile-number {
+  position: absolute;
+  z-index: 12;
+  top: 1rem;
+  left: 1rem;
+  padding: .35rem .55rem;
+  border: 1px solid rgba(255,211,107,.35);
+  border-radius: .5rem;
+  color: #ffe5a7;
+  background: rgba(2,8,18,.78);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(0,0,0,.35);
+  font-size: .52rem;
+  font-weight: 950;
+  letter-spacing: .13em;
+  pointer-events: none;
+}
+.page-shoutout .sili-legend-profile[data-legend-name*="Red Bonita"],
+.page-shoutout .sili-legend-profile[data-legend-name*="IceQueen"],
+.page-shoutout .sili-legend-profile[data-legend-name*="Wolf"] {
+  filter: drop-shadow(0 0 25px rgba(255,194,64,.1));
+}
+
+@keyframes siliHeroBreath {
+  to { transform: scale(1.14); filter: saturate(1.08) contrast(1.04); }
+}
+@keyframes siliMetricShine {
+  0%, 55% { transform: translateX(-110%); }
+  80%, 100% { transform: translateX(130%); }
+}
+@keyframes siliArrowDrop {
+  50% { transform: translateY(5px); }
+}
+@keyframes siliBeamSweep {
+  to { transform: rotate(-9deg) translateX(5rem); opacity: .45; }
+}
+@keyframes siliHaloSpin { to { transform: rotate(360deg); } }
+@keyframes siliSigilPulse {
+  50% { opacity: .7; box-shadow: 0 0 70px rgba(255,182,43,.22), inset 0 0 35px rgba(84,244,226,.13); }
+}
+@keyframes siliMarquee { to { transform: translateX(-50%); } }
+@keyframes siliCardSweep {
+  from { background-position: 150% 0; }
+  to { background-position: -80% 0; }
+}
+
+@media (max-width: 1040px) {
+  .sili-legends-overdrive {
+    grid-template-columns: 1fr;
+    padding-top: 4.5rem;
+  }
+  .sili-legends-overdrive .sili-feature-copy {
+    max-width: 55rem;
+    text-align: center;
+    margin-inline: auto;
+  }
+  .sili-legend-presents,
+  .sili-legends-overdrive .sili-kicker,
+  .sili-legend-metrics,
+  .sili-legends-overdrive .sili-legends-honor { margin-inline: auto; }
+  .sili-legend-presents { justify-content: center; }
+  .sili-legend-enter { margin-inline: auto; }
+  .sili-legends-overdrive .sili-legends-stage { width: min(100%, 39rem); }
+}
+@media (max-width: 620px) {
+  .sili-legends-overdrive {
+    width: calc(100% - 1rem);
+    min-height: auto;
+    margin: 1rem auto 2.5rem;
+    padding: 4.5rem 1rem 3.2rem;
+    border-radius: 1.35rem;
+  }
+  .sili-legends-overdrive .sili-feature-copy h2 {
+    font-size: clamp(3rem, 17vw, 4.8rem);
+  }
+  .sili-legends-chapters {
+    width: calc(100% - 2rem);
+    gap: .45rem;
+    font-size: .42rem;
+    letter-spacing: .08em;
+  }
+  .sili-legends-chapters i { max-width: 2rem; }
+  .sili-legend-metrics { grid-template-columns: 1fr 1fr; }
+  .sili-legends-overdrive .sili-legends-stage {
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+  .sili-legends-overdrive .legend-avatar-ice {
+    width: 9.5rem;
+    height: 9.5rem;
+    top: 15%;
+  }
+  .sili-legends-overdrive .legend-avatar-red,
+  .sili-legends-overdrive .legend-avatar-wolf {
+    width: 7.2rem;
+    height: 7.2rem;
+    top: 53%;
+  }
+  .sili-legends-overdrive .legend-avatar strong {
+    top: calc(100% + .55rem);
+    padding: .32rem .55rem;
+    font-size: .6rem;
+  }
+  .sili-legends-overdrive .legend-avatar small { display: none; }
+  .sili-legend-crown { width: 13rem; transform: translateX(-50%) scale(.78); }
+  .sili-constellation-intro {
+    width: calc(100% - 1rem);
+    margin-top: 2.5rem;
+    border-radius: 1.35rem;
+  }
+  .sili-profile-number { top: .6rem; left: .6rem; font-size: .45rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-shoutout main > section:first-child > img,
+  .sili-cinematic-beams i,
+  .sili-legend-metrics > span::after,
+  .sili-legends-overdrive .legend-avatar,
+  .sili-legends-overdrive .legend-avatar span.legend-avatar__halo,
+  .sili-legend-sigil,
+  .sili-legends-marquee span,
+  .sili-legend-enter span { animation: none !important; }
+  .sili-legends-overdrive .sili-legends-stage { transform: none !important; }
+}
