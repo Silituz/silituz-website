@@ -272,18 +272,24 @@ a.sili-feature-card { display: block; text-decoration: none; }
   position: absolute;
   inset: 50% auto auto 50%;
   z-index: 3;
-  width: 5.4rem;
-  height: 5.4rem;
+  width: 7rem;
+  height: 7rem;
   transform: translate(-50%, -50%);
   display: grid;
   place-items: center;
-  border: 1px solid rgba(53,201,255,.5);
+  padding: .28rem;
+  border: 1px solid rgba(53,201,255,.62);
   border-radius: 50%;
-  color: #02111a;
-  background: linear-gradient(135deg, var(--sili-emerald), var(--sili-cyan));
-  box-shadow: 0 0 0 12px rgba(53,201,255,.04), 0 0 45px rgba(53,201,255,.35);
-  font-size: 2rem;
-  font-weight: 1000;
+  background: linear-gradient(135deg, rgba(25,214,162,.2), rgba(53,201,255,.18));
+  box-shadow: 0 0 0 12px rgba(53,201,255,.04), 0 0 55px rgba(53,201,255,.38);
+  animation: siliCorePulse 3.6s ease-in-out infinite;
+}
+.sili-signal-core img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
 }
 .sili-signal-orbit a {
   position: absolute;
@@ -404,30 +410,36 @@ a.sili-feature-card { display: block; text-decoration: none; }
   transform: rotateX(67deg);
   box-shadow: 0 0 60px rgba(255,189,60,.16);
 }
-.sili-legends-stage > b {
-  position: absolute;
-  left: 50%;
-  bottom: 8%;
-  transform: translateX(-50%);
-  color: rgba(255,218,139,.72);
-  letter-spacing: .42em;
-  font-size: .72rem;
-}
 .legend-avatar {
   position: absolute;
   z-index: 4;
   width: 9rem;
   height: 9rem;
-  overflow: hidden;
   border: 2px solid rgba(255,214,125,.8);
   border-radius: 50%;
   background: #07121d;
   box-shadow: 0 0 0 8px rgba(255,210,113,.04), 0 25px 55px rgba(0,0,0,.45), 0 0 35px rgba(255,194,77,.15);
 }
-.legend-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.legend-avatar-main { left: 50%; top: 14%; width: 12rem; height: 12rem; transform: translateX(-50%); animation: siliLegendFloatMain 4.5s ease-in-out infinite; }
-.legend-avatar-coco { left: 3%; top: 43%; animation: siliLegendFloat 5.2s ease-in-out .5s infinite; }
-.legend-avatar-village { right: 3%; top: 43%; animation: siliLegendFloat 5.6s ease-in-out 1s infinite; }
+.legend-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.legend-avatar span {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + .7rem);
+  transform: translateX(-50%);
+  padding: .3rem .65rem;
+  border: 1px solid rgba(255,214,125,.3);
+  border-radius: 999px;
+  color: #ffe2a3;
+  background: rgba(4,12,22,.86);
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  font-size: .66rem;
+  font-weight: 850;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+.legend-avatar-ice { left: 50%; top: 11%; width: 12rem; height: 12rem; transform: translateX(-50%); animation: siliLegendFloatMain 4.5s ease-in-out infinite; }
+.legend-avatar-red { left: 3%; top: 46%; animation: siliLegendFloat 5.2s ease-in-out .5s infinite; }
+.legend-avatar-wolf { right: 3%; top: 46%; animation: siliLegendFloat 5.6s ease-in-out 1s infinite; }
 .legend-orbit {
   position: absolute;
   inset: 8%;
@@ -469,7 +481,9 @@ a.sili-feature-card { display: block; text-decoration: none; }
 }
 
 @keyframes siliOrbitSpin { to { transform: rotate(360deg); } }
-@keyframes siliLegendFloat { 50% { transform: translateY(-8px); } }\n@keyframes siliLegendFloatMain { 0%, 100% { transform: translateX(-50%); } 50% { transform: translate(-50%, -8px); } }
+@keyframes siliCorePulse { 50% { box-shadow: 0 0 0 18px rgba(53,201,255,.025), 0 0 72px rgba(53,201,255,.48); } }
+@keyframes siliLegendFloat { 50% { transform: translateY(-8px); } }
+@keyframes siliLegendFloatMain { 0%, 100% { transform: translateX(-50%); } 50% { transform: translate(-50%, -8px); } }
 @keyframes siliStars { to { opacity: .85; transform: translateY(-6px); } }
 
 @media (max-width: 880px) {
@@ -486,10 +500,241 @@ a.sili-feature-card { display: block; text-decoration: none; }
   .sili-signal-orbit { transform: scale(.92); margin-block: -1rem; }
   .sili-signal-orbit a { min-width: 7.3rem; padding: .6rem; }
   .sili-signal-orbit a small { display: none; }
-  .legend-avatar-main { width: 9.5rem; height: 9.5rem; }
-  .legend-avatar-coco, .legend-avatar-village { width: 7rem; height: 7rem; }
+  .legend-avatar-ice { width: 9.5rem; height: 9.5rem; }
+  .legend-avatar-red, .legend-avatar-wolf { width: 7rem; height: 7rem; }
+  .legend-avatar span { font-size: .58rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sili-signal-orbit::before, .sili-signal-orbit::after,
+  .sili-signal-orbit::before, .sili-signal-orbit::after, .sili-signal-core,
   .legend-orbit, .legend-avatar, .sili-legends-stars { animation: none !important; }
+}
+
+
+/* Stronger About chapter */
+.page-about {
+  background:
+    radial-gradient(circle at 84% 18%, rgba(53,201,255,.08), transparent 28rem),
+    radial-gradient(circle at 12% 62%, rgba(139,124,255,.07), transparent 30rem),
+    var(--sili-night);
+}
+.page-about .sili-about-feature {
+  min-height: 39rem;
+  border-color: rgba(25,214,162,.25);
+}
+.sili-about-intro {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, .75fr);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 4rem);
+}
+.sili-about-signature {
+  display: inline-flex;
+  margin-top: 1.35rem;
+  padding: .48rem .75rem;
+  border: 1px solid rgba(25,214,162,.28);
+  border-radius: 999px;
+  color: #78ead1;
+  background: rgba(2,16,25,.52);
+  font-size: .64rem;
+  font-weight: 850;
+  letter-spacing: .16em;
+}
+.sili-about-portrait {
+  position: relative;
+  width: min(100%, 23rem);
+  aspect-ratio: 1;
+  margin: auto;
+  display: grid;
+  place-items: center;
+}
+.sili-about-portrait::before {
+  content: "";
+  position: absolute;
+  inset: 4%;
+  border: 1px solid rgba(53,201,255,.2);
+  border-radius: 38% 62% 62% 38% / 46% 42% 58% 54%;
+  background: radial-gradient(circle at 50% 45%, rgba(25,214,162,.2), rgba(3,15,27,.72) 62%);
+  animation: siliPortraitMorph 9s ease-in-out infinite alternate;
+}
+.sili-about-portrait img {
+  position: relative;
+  z-index: 2;
+  width: 76%;
+  height: 76%;
+  object-fit: cover;
+  border: 1px solid rgba(129,238,218,.35);
+  border-radius: 50%;
+  box-shadow: 0 24px 70px rgba(0,0,0,.42), 0 0 42px rgba(25,214,162,.14);
+}
+.sili-about-portrait b {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 12%;
+  padding: .45rem .7rem;
+  border-radius: .6rem;
+  color: #03131b;
+  background: linear-gradient(110deg, #4fe0c1, #56cfff);
+  font-size: .58rem;
+  letter-spacing: .13em;
+  transform: rotate(-4deg);
+}
+.sili-about-ring {
+  position: absolute;
+  z-index: 1;
+  inset: 12%;
+  border: 1px dashed rgba(83,214,255,.3);
+  border-radius: 50%;
+  animation: siliOrbitSpin 24s linear infinite;
+}
+.page-about .sili-about-story {
+  padding-inline: clamp(.75rem, 4vw, 2rem);
+}
+.page-about .sili-about-story > div {
+  padding: clamp(1.3rem, 3vw, 2.4rem);
+  border: 1px solid rgba(53,201,255,.12);
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, rgba(7,24,38,.74), rgba(3,13,24,.62));
+  box-shadow: 0 24px 60px rgba(0,0,0,.2);
+}
+.page-about .sili-about-story img {
+  transition: transform .55s ease, filter .55s ease;
+}
+.page-about .sili-about-story:hover img {
+  transform: scale(1.025);
+  filter: saturate(1.08);
+}
+.page-about .sili-about-story .relative.block {
+  border-color: rgba(53,201,255,.14) !important;
+  background: rgba(4,18,30,.72) !important;
+}
+
+/* Stronger Contact chapter and form */
+.page-contact {
+  background:
+    radial-gradient(circle at 78% 20%, rgba(53,201,255,.08), transparent 28rem),
+    radial-gradient(circle at 8% 72%, rgba(25,214,162,.07), transparent 30rem),
+    var(--sili-night);
+}
+.page-contact .sili-contact-feature {
+  min-height: 34rem;
+  border-color: rgba(53,201,255,.24);
+  box-shadow: 0 28px 80px rgba(0,0,0,.32);
+}
+.sili-contact-head {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2rem;
+}
+.sili-contact-beacon {
+  position: relative;
+  width: 9rem;
+  aspect-ratio: 1;
+  display: grid;
+  place-content: center;
+  border: 1px solid rgba(53,201,255,.24);
+  border-radius: 50%;
+  color: #dffbff;
+  background: radial-gradient(circle, rgba(25,214,162,.16), rgba(3,14,24,.74) 64%);
+  box-shadow: 0 0 45px rgba(53,201,255,.12);
+  text-align: center;
+}
+.sili-contact-beacon::before,
+.sili-contact-beacon::after {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  border: 1px solid rgba(53,201,255,.15);
+  border-radius: 50%;
+  animation: siliBeacon 2.8s ease-out infinite;
+}
+.sili-contact-beacon::after { animation-delay: 1.4s; }
+.sili-contact-beacon span {
+  width: .65rem;
+  height: .65rem;
+  margin: 0 auto .45rem;
+  border-radius: 50%;
+  background: #38efbd;
+  box-shadow: 0 0 18px #38efbd;
+}
+.sili-contact-beacon b { font-size: .74rem; letter-spacing: .16em; }
+.sili-contact-beacon small { margin-top: .25rem; color: #79cfe0; font-size: .52rem; letter-spacing: .1em; }
+.page-contact .sili-contact-panel {
+  position: relative;
+  margin: 0 !important;
+  padding: clamp(1.4rem, 4vw, 2.6rem);
+  border: 1px solid rgba(53,201,255,.18);
+  border-radius: 1.6rem;
+  background: linear-gradient(145deg, rgba(7,25,39,.9), rgba(3,13,24,.86));
+  box-shadow: 0 30px 80px rgba(0,0,0,.34);
+  overflow: hidden;
+}
+.page-contact .sili-contact-panel::before {
+  content: "";
+  position: absolute;
+  width: 18rem;
+  height: 18rem;
+  right: -9rem;
+  top: -10rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(25,214,162,.14), transparent 70%);
+  pointer-events: none;
+}
+.page-contact .sili-contact-panel h2 {
+  position: relative;
+  color: #fff;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+}
+.page-contact .sili-contact-form-modern {
+  position: relative;
+}
+.page-contact .sili-contact-form-modern label { color: #bcd1dc !important; font-weight: 700; }
+.page-contact .sili-contact-form-modern input:not([type="checkbox"]),
+.page-contact .sili-contact-form-modern textarea {
+  color: #eefaff;
+  border-color: rgba(83,201,255,.2);
+  background: rgba(1,10,20,.72);
+  box-shadow: inset 0 1px rgba(255,255,255,.025);
+  transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+.page-contact .sili-contact-form-modern input:not([type="checkbox"]):focus,
+.page-contact .sili-contact-form-modern textarea:focus {
+  border-color: #35c9ff;
+  box-shadow: 0 0 0 3px rgba(53,201,255,.11), 0 10px 30px rgba(0,0,0,.2);
+  transform: translateY(-1px);
+}
+.page-contact .sili-contact-form-modern button[type="submit"] {
+  min-width: 10rem;
+  justify-content: center;
+  border-radius: .85rem;
+  color: #03141b;
+  background: linear-gradient(110deg, #38efbd, #35c9ff);
+  box-shadow: 0 12px 35px rgba(53,201,255,.18);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.page-contact .sili-contact-form-modern button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 42px rgba(53,201,255,.28);
+}
+@keyframes siliPortraitMorph {
+  to { border-radius: 60% 40% 38% 62% / 42% 58% 42% 58%; transform: rotate(7deg); }
+}
+@keyframes siliBeacon {
+  0% { opacity: .7; transform: scale(.72); }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+@media (max-width: 760px) {
+  .sili-about-intro { grid-template-columns: 1fr; }
+  .sili-about-portrait { width: min(82vw, 20rem); }
+  .sili-contact-head { grid-template-columns: 1fr; }
+  .sili-contact-beacon { width: 7.5rem; margin: 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sili-about-ring, .sili-about-portrait::before,
+  .sili-contact-beacon::before, .sili-contact-beacon::after { animation: none !important; }
 }
