@@ -1,5 +1,6 @@
-<details class="site-lil-sili" data-lil-sili data-lang="{{ page.lang | default: 'de' }}">
-  <summary
+<div class="site-lil-sili" data-lil-sili data-lang="{{ page.lang | default: 'de' }}">
+  <button
+    type="button"
     class="site-lil-sili__summary"
     data-lil-sili-trigger
     aria-controls="site-lil-sili-panel"
@@ -10,7 +11,7 @@
       <img src="/assets/images/lil-sili-cute-v2.svg?v=2" alt="" width="104" height="104" />
       <span data-lil-sili-trigger-badge aria-hidden="true">?</span>
     </span>
-  </summary>
+  </button>
 
   <section
     class="site-lil-sili__panel"
@@ -18,6 +19,7 @@
     role="dialog"
     aria-modal="false"
     aria-labelledby="site-lil-sili-title"
+    hidden
   >
     <header class="site-lil-sili__head">
       <div>
@@ -77,4 +79,4 @@
       </a>
     </nav>
   </section>
-</details>
+</div>
