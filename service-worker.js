@@ -1,4 +1,4 @@
-const CACHE = "silituz-preview-v1";
+const CACHE = "silituz-preview-v2";
 const APP_SHELL = [
   "/",
   "/offline.html",
