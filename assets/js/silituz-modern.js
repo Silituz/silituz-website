@@ -555,6 +555,11 @@
       : language === "en"
         ? "PORTAL DEMO · CLICK A PROFILE"
         : "PORTAL-DEMO · PROFIL ANKLICKEN";
+    const enteringCopy = language === "es"
+      ? "ABRIENDO PERFIL"
+      : language === "en"
+        ? "OPENING PROFILE"
+        : "PROFIL WIRD GEÖFFNET";
 
     if (portalDemo && !document.querySelector(".sili-portal-demo-pill")) {
       const demoPill = document.createElement("div");
@@ -657,7 +662,7 @@
       const impactY = eventHasPoint ? event.clientY : portraitRect.top + portraitRect.height / 2;
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
-      const duration = portalSlow ? 2600 : (isCompactScreen.matches ? 760 : 940);
+      const duration = portalSlow ? 1900 : (isCompactScreen.matches ? 1320 : 1520);
       const profileName = (link.querySelector("strong, h3") || portrait);
       const name = profileName ? (profileName.textContent || profileName.alt || "").trim() : "";
       const overlay = document.createElement("div");
@@ -665,10 +670,10 @@
       overlay.className = "sili-glass-portal";
       overlay.setAttribute("aria-hidden", "true");
       overlay.style.setProperty("--portal-duration", duration + "ms");
-      overlay.style.setProperty("--portal-flash-duration", Math.round(duration * .58) + "ms");
-      overlay.style.setProperty("--portal-crack-duration", Math.round(duration * .43) + "ms");
-      overlay.style.setProperty("--portal-crack-fade-duration", Math.round(duration * .42) + "ms");
-      overlay.style.setProperty("--portal-crack-fade-delay", Math.round(duration * .48) + "ms");
+      overlay.style.setProperty("--portal-flash-duration", Math.round(duration * .42) + "ms");
+      overlay.style.setProperty("--portal-crack-duration", Math.round(duration * .36) + "ms");
+      overlay.style.setProperty("--portal-crack-fade-duration", Math.round(duration * .38) + "ms");
+      overlay.style.setProperty("--portal-crack-fade-delay", Math.round(duration * .52) + "ms");
       overlay.style.setProperty("--impact-x", impactX + "px");
       overlay.style.setProperty("--impact-y", impactY + "px");
       overlay.style.setProperty("--portrait-left", portraitRect.left + "px");
@@ -683,10 +688,12 @@
         '<div class="sili-portal-speedlines"></div>' +
         '<div class="sili-portal-ring sili-portal-ring-a"></div>' +
         '<div class="sili-portal-ring sili-portal-ring-b"></div>' +
+        '<div class="sili-portal-core"></div>' +
+        '<div class="sili-portal-prism"></div>' +
         '<div class="sili-portal-flash"></div>' +
         '<svg class="sili-glass-cracks" viewBox="0 0 200 200" focusable="false">' + makeCracks() + '</svg>' +
         '<div class="sili-portal-portrait"><img alt=""></div>' +
-        '<div class="sili-portal-name"><span>ENTERING</span><strong></strong></div>';
+        '<div class="sili-portal-name"><span>' + enteringCopy + '</span><strong></strong><em></em></div>';
 
       const portalImage = overlay.querySelector(".sili-portal-portrait img");
       const nameElement = overlay.querySelector(".sili-portal-name strong");
