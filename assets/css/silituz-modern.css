@@ -2638,3 +2638,263 @@ body.sili-portal-active {
     animation: none !important;
   }
 }
+
+
+/* =========================================================
+   GLASS PORTAL — LOCAL FRAME SHATTER
+   The selected profile frame breaks before the portal expands
+   ========================================================= */
+.sili-portal-origin-hidden {
+  opacity: 0 !important;
+  transition: none !important;
+}
+.sili-portal-frame-clone {
+  position: fixed !important;
+  z-index: 42 !important;
+  left: var(--target-left) !important;
+  top: var(--target-top) !important;
+  width: var(--target-width) !important;
+  height: var(--target-height) !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  pointer-events: none !important;
+  transform-origin: 50% 50% !important;
+  will-change: transform, opacity, filter, clip-path;
+  animation: siliPortalFrameShatter var(--portal-duration) cubic-bezier(.2,.74,.1,1) forwards !important;
+}
+.sili-glass-cracks {
+  z-index: 55;
+  left: calc(var(--target-left) - 5px);
+  top: calc(var(--target-top) - 5px);
+  width: calc(var(--target-width) + 10px);
+  height: calc(var(--target-height) + 10px);
+  aspect-ratio: auto;
+  transform: none;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+.sili-glass-cracks path {
+  stroke-width: 1.05;
+}
+.sili-glass-shard {
+  left: var(--shard-start-x);
+  top: var(--shard-start-y);
+  animation: siliGlassShardFromFrame var(--portal-duration) cubic-bezier(.16,.7,.1,1) var(--shard-delay) forwards;
+}
+.sili-glass-portal::before {
+  opacity: 0;
+  background:
+    radial-gradient(circle at var(--target-center-x) var(--target-center-y), rgba(84,244,226,.24), transparent 15rem),
+    radial-gradient(circle at 50% 50%, rgba(84,244,226,.2), rgba(4,12,25,.93) 43%, rgba(1,3,10,.99) 81%);
+  animation: siliPortalBackdropFromFrame var(--portal-duration) cubic-bezier(.2,.75,.12,1) forwards;
+}
+.sili-glass-portal::after {
+  transform-origin: var(--target-center-x) var(--target-center-y);
+  animation: siliPortalShockwaveFromFrame var(--portal-duration) ease-out forwards;
+}
+.sili-portal-void,
+.sili-portal-speedlines,
+.sili-portal-ring,
+.sili-portal-core,
+.sili-portal-prism {
+  left: var(--target-center-x);
+  top: var(--target-center-y);
+}
+.sili-portal-void {
+  animation: siliPortalVoidFromFrame var(--portal-duration) cubic-bezier(.18,.8,.1,1) forwards;
+}
+.sili-portal-speedlines {
+  animation: siliPortalSpeedlinesFromFrame var(--portal-duration) cubic-bezier(.2,.72,.12,1) forwards;
+}
+.sili-portal-ring-a {
+  animation: siliPortalRingAFromFrame var(--portal-duration) cubic-bezier(.18,.76,.12,1) forwards;
+}
+.sili-portal-ring-b {
+  animation: siliPortalRingBFromFrame var(--portal-duration) cubic-bezier(.18,.76,.12,1) forwards;
+}
+.sili-portal-core {
+  animation: siliPortalCoreFromFrame var(--portal-duration) cubic-bezier(.18,.76,.08,1) forwards;
+}
+.sili-portal-prism {
+  animation: siliPortalPrismFromFrame var(--portal-duration) cubic-bezier(.18,.78,.1,1) forwards;
+}
+.sili-portal-name {
+  animation: siliPortalNameAfterShatter var(--portal-duration) cubic-bezier(.2,.75,.12,1) forwards;
+}
+@keyframes siliPortalFrameShatter {
+  0%, 9% {
+    opacity: 1;
+    transform: translate3d(0,0,0) scale(1);
+    filter: brightness(1) saturate(1);
+    clip-path: inset(0 0 0 0);
+  }
+  14% { transform: translate3d(-2px,1px,0) rotate(-.2deg) scale(1.002); }
+  18% { transform: translate3d(3px,-2px,0) rotate(.25deg) scale(1.006); }
+  22% { transform: translate3d(-3px,2px,0) rotate(-.28deg) scale(1.01); }
+  28% {
+    opacity: 1;
+    transform: translate3d(1px,-1px,35px) scale(1.025);
+    filter: brightness(1.24) saturate(1.18);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  43% {
+    opacity: .82;
+    transform: translate3d(0,0,80px) scale(1.055);
+    filter: brightness(1.38) saturate(1.3);
+    clip-path: polygon(0 0, 48% 0, 52% 10%, 100% 0, 100% 46%, 90% 52%, 100% 100%, 53% 100%, 48% 91%, 0 100%, 0 54%, 10% 48%);
+  }
+  57%, 100% {
+    opacity: 0;
+    transform: translate3d(0,0,150px) scale(.9);
+    filter: brightness(1.7) saturate(1.45) blur(2px);
+    clip-path: polygon(7% 8%, 42% 3%, 47% 31%, 89% 5%, 96% 42%, 67% 48%, 94% 91%, 55% 96%, 48% 66%, 9% 94%, 4% 58%, 34% 49%);
+  }
+}
+@keyframes siliPortalBackdropFromFrame {
+  0%, 34% { opacity: 0; }
+  52% { opacity: .76; }
+  100% { opacity: 1; }
+}
+@keyframes siliPortalShockwaveFromFrame {
+  0%, 42% { opacity: 0; transform: scale(.16); }
+  61% { opacity: .72; }
+  100% { opacity: 0; transform: scale(2.2); }
+}
+@keyframes siliPortalVoidFromFrame {
+  0%, 34% {
+    opacity: 0;
+    transform: translate3d(-50%,-50%,0) scale(.035) rotate(0);
+  }
+  48% {
+    opacity: 1;
+    transform: translate3d(-50%,-50%,0) scale(.35) rotate(12deg);
+  }
+  68% {
+    opacity: 1;
+    transform: translate3d(calc(-50% + var(--portal-shift-x)),calc(-50% + var(--portal-shift-y)),0) scale(1.05) rotate(38deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(calc(-50% + var(--portal-shift-x)),calc(-50% + var(--portal-shift-y)),0) scale(4.8) rotate(108deg);
+  }
+}
+@keyframes siliPortalSpeedlinesFromFrame {
+  0%, 43% {
+    opacity: 0;
+    transform: translate3d(-50%,-50%,0) scale(.1) rotate(0);
+  }
+  65% {
+    opacity: .4;
+    transform: translate3d(calc(-50% + var(--portal-shift-x)),calc(-50% + var(--portal-shift-y)),0) scale(.55) rotate(28deg);
+  }
+  100% {
+    opacity: .76;
+    transform: translate3d(calc(-50% + var(--portal-shift-x)),calc(-50% + var(--portal-shift-y)),0) scale(1.55) rotate(78deg);
+  }
+}
+@keyframes siliPortalRingAFromFrame {
+  0%, 39% {
+    opacity: 0;
+    transform: translate3d(-50%,-50%,0) scale(.08) rotate(0);
+  }
+  56% { opacity: .94; }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(-50% + var(--portal-shift-x)),calc(-50% + var(--portal-shift-y)),0) scale(3.5) rotate(105deg);
+  }
+}
+@keyframes siliPortalRingBFromFrame {
+  0%, 42% {
+    opacity: 0;
+    transform: translate3d(-50%,-50%,0) scale(.05) rotate(0);
+  }
+  60% { opacity: .9; }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(-50% + var(--portal-shift-x)),calc(-50% + var(--portal-shift-y)),0) scale(4.2) rotate(-145deg);
+  }
+}
+@keyframes siliPortalCoreFromFrame {
+  0%, 39% {
+    opacity: 0;
+    transform: translate3d(-50%,-50%,0) scale(.03);
+    filter: blur(0);
+  }
+  53% {
+    opacity: .98;
+    transform: translate3d(-50%,-50%,0) scale(.42);
+  }
+  72% {
+    opacity: .9;
+    transform: translate3d(calc(-50% + var(--portal-shift-x)),calc(-50% + var(--portal-shift-y)),0) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(-50% + var(--portal-shift-x)),calc(-50% + var(--portal-shift-y)),0) scale(9);
+    filter: blur(3px);
+  }
+}
+@keyframes siliPortalPrismFromFrame {
+  0%, 40% {
+    opacity: 0;
+    transform: translate3d(-50%,-50%,0) rotate(25deg) scale(.04);
+  }
+  57% {
+    opacity: .88;
+    transform: translate3d(-50%,-50%,0) rotate(76deg) scale(.52);
+  }
+  76% {
+    opacity: .7;
+    transform: translate3d(calc(-50% + var(--portal-shift-x)),calc(-50% + var(--portal-shift-y)),0) rotate(140deg) scale(1.18);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(-50% + var(--portal-shift-x)),calc(-50% + var(--portal-shift-y)),0) rotate(240deg) scale(3.9);
+  }
+}
+@keyframes siliPortalNameAfterShatter {
+  0%, 48% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(1.2rem) scale(.96);
+    filter: blur(4px);
+  }
+  61% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+    filter: blur(0);
+  }
+  87% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-.45rem) scale(1.035);
+    filter: blur(1px);
+  }
+}
+@keyframes siliGlassShardFromFrame {
+  0%, 14% {
+    opacity: 0;
+    transform: translate3d(-50%,-50%,0) rotate(0) scale(.25);
+  }
+  24% { opacity: .96; }
+  44% {
+    opacity: .92;
+    transform: translate3d(calc(-50% + var(--burst-x)),calc(-50% + var(--burst-y)),105px) rotate(var(--shard-rot)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(-50% + var(--suck-x)),calc(-50% + var(--suck-y)),320px) rotate(var(--shard-rot-end)) scale(.025);
+  }
+}
+@media (max-width: 620px) {
+  .sili-glass-cracks {
+    width: calc(var(--target-width) + 8px);
+    height: calc(var(--target-height) + 8px);
+    left: calc(var(--target-left) - 4px);
+    top: calc(var(--target-top) - 4px);
+  }
+}
