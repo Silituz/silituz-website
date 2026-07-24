@@ -5,6 +5,35 @@
   if (!root) return;
 
   const NEWS_URL = "https://anime-pulse-news.silituz.chatgpt.site";
+  const languageApi = window.SilituzLanguage || {
+    stored: function () {
+      try {
+        const value = localStorage.getItem("silituz-language");
+        return /^(de|en|es)$/.test(value || "") ? value : null;
+      } catch (error) {
+        return null;
+      }
+    },
+    preferred: function () {
+      const stored = this.stored();
+      if (stored) return stored;
+      const raw = (root.dataset.lilSiliLang || document.documentElement.lang || "de").toLowerCase();
+      return raw.startsWith("en") ? "en" : raw.startsWith("es") ? "es" : "de";
+    },
+    buildPath: function (language, path) {
+      const clean = path.replace(/^\/(?:en|de|es)(?:\/|$)/i, "/");
+      if (language === "en") return "/en" + (clean === "/" ? "/" : clean);
+      if (language === "es") return "/es" + (clean === "/" ? "/" : clean);
+      return clean;
+    },
+    newsHref: function (language, hash) {
+      return NEWS_URL + "?lang=" + encodeURIComponent(language) + (hash || "");
+    },
+    select: function (language) {
+      try { localStorage.setItem("silituz-language", language); } catch (error) {}
+    }
+  };
+
   const copies = {
     de: {
       open: "Lil Sili öffnen",
@@ -68,24 +97,10 @@
     }
   };
 
-  const rawLanguage = (root.dataset.lilSiliLang || document.documentElement.lang || "de").toLowerCase();
-  const language = rawLanguage.startsWith("en") ? "en" : rawLanguage.startsWith("es") ? "es" : "de";
-  const copy = copies[language];
-  const prefix = language === "de" ? "" : "/" + language;
-  const localPath = (path) => prefix + path;
-
-  const destinations = {
-    news: NEWS_URL,
-    anime: NEWS_URL + "#anime-manga",
-    games: NEWS_URL + "#games",
-    calendar: NEWS_URL + "#calendar",
-    gallery: localPath("/gallery/"),
-    generators: localPath("/generators/"),
-    music: localPath("/music/"),
-    support: localPath("/support/"),
-    socials: localPath("/socials/"),
-    about: localPath("/about/")
-  };
+  let language = languageApi.preferred();
+  let copy = copies[language] || copies.de;
+  let needsLanguageChoice = !languageApi.stored();
+  let destinations = {};
 
   const routes = [
     { key: "support", pattern: /unterstüt|hilfe|help|support|donat|spend|apoy|ayud/ },
@@ -97,7 +112,7 @@
     { key: "music", pattern: /musik|music|música|song|lied|spotify|apple music|k-?pop|j-?pop|rock|metal|konzert|concert|tour/ },
     { key: "socials", pattern: /social|instagram|tiktok|youtube|discord|twitch/ },
     { key: "news", pattern: /news|nachricht|noticia|aktuell|latest/ },
-    { key: "about", pattern: /über dich|über sili|about|quién|silituz|wer bist|who are/ },
+    { key: "about", pattern: /über dich|über sili|about|quién|silituz|wer bist|who are/ }
   ];
 
   const panel = root.querySelector("#site-lil-sili-panel");
@@ -106,8 +121,28 @@
   const form = root.querySelector("[data-lil-sili-form]");
   const search = root.querySelector("[data-lil-sili-search]");
   const message = root.querySelector("[data-lil-sili-message]");
+  const languageButtons = root.querySelectorAll("[data-lil-sili-language]");
+
+  function buildDestinations() {
+    const localPath = function (path) {
+      return languageApi.buildPath(language, path);
+    };
+    destinations = {
+      news: languageApi.newsHref(language, ""),
+      anime: languageApi.newsHref(language, "#anime-manga"),
+      games: languageApi.newsHref(language, "#games"),
+      calendar: languageApi.newsHref(language, "#calendar"),
+      gallery: localPath("/gallery/"),
+      generators: localPath("/generators/"),
+      music: localPath("/music/"),
+      support: localPath("/support/"),
+      socials: localPath("/socials/"),
+      about: localPath("/about/")
+    };
+  }
 
   function applyCopy() {
+    root.classList.toggle("is-choosing-language", needsLanguageChoice);
     root.querySelectorAll("[data-lil-sili-copy]").forEach((element) => {
       const key = element.dataset.lilSiliCopy;
       if (copy[key]) element.textContent = copy[key];
@@ -120,9 +155,32 @@
       const key = link.dataset.lilSiliRoute;
       if (destinations[key]) link.href = destinations[key];
     });
+
+    if (needsLanguageChoice) {
+      root.querySelector('[data-lil-sili-copy="badge"]').textContent = "CHOOSE YOUR LANGUAGE";
+      root.querySelector('[data-lil-sili-copy="panelBadge"]').textContent = "WELCOME";
+      root.querySelector('[data-lil-sili-copy="title"]').textContent = "Hi, I’m Lil Sili!";
+      root.querySelector('[data-lil-sili-copy="intro"]').textContent = "Which language should I speak with you?";
+    }
+
+    languageButtons.forEach((button) => {
+      const selected = !needsLanguageChoice && button.dataset.lilSiliLanguage === language;
+      button.classList.toggle("is-selected", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    });
+
     search.placeholder = copy.placeholder;
-    trigger.setAttribute("aria-label", copy.open);
-    closeButton.setAttribute("aria-label", copy.close);
+    trigger.setAttribute("aria-label", needsLanguageChoice ? "Open Lil Sili language selection" : copy.open);
+    closeButton.setAttribute("aria-label", needsLanguageChoice ? "Close language selection" : copy.close);
+  }
+
+  function updateLanguage(nextLanguage) {
+    if (!copies[nextLanguage]) return;
+    language = nextLanguage;
+    copy = copies[language];
+    needsLanguageChoice = false;
+    buildDestinations();
+    applyCopy();
   }
 
   let isOpen = false;
@@ -132,14 +190,34 @@
     root.classList.toggle("is-open", isOpen);
     panel.hidden = !isOpen;
     trigger.setAttribute("aria-expanded", String(isOpen));
-    trigger.setAttribute("aria-label", isOpen ? copy.close : copy.open);
+    trigger.setAttribute(
+      "aria-label",
+      needsLanguageChoice
+        ? (isOpen ? "Close Lil Sili language selection" : "Open Lil Sili language selection")
+        : (isOpen ? copy.close : copy.open)
+    );
     trigger.querySelector("[data-lil-sili-trigger-badge]").textContent = isOpen ? "×" : "?";
-    if (isOpen) {
+    if (isOpen && !needsLanguageChoice) {
       window.requestAnimationFrame(() => search.focus());
-    } else {
+    } else if (!isOpen) {
       message.textContent = "";
     }
   }
+
+  languageButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const nextLanguage = button.dataset.lilSiliLanguage;
+      if (!copies[nextLanguage]) return;
+      updateLanguage(nextLanguage);
+      languageApi.select(nextLanguage, false);
+    });
+  });
+
+  document.addEventListener("silituz:languagechange", (event) => {
+    const nextLanguage = event.detail && event.detail.language;
+    if (!copies[nextLanguage]) return;
+    updateLanguage(nextLanguage);
+  });
 
   trigger.addEventListener("click", (event) => {
     event.preventDefault();
@@ -176,6 +254,7 @@
     if (isOpen && !root.contains(event.target)) setOpen(false);
   });
 
+  buildDestinations();
   applyCopy();
-  setOpen(false);
+  setOpen(needsLanguageChoice);
 }());
