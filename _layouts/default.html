@@ -193,6 +193,7 @@
        SEO-PARTIAL
        ========================= -->
   {% include head-seo.html %}
+  <link rel="stylesheet" href="{{ '/assets/css/silituz-editorial-v2.css' | relative_url }}?v=1">
 </head>
 
 <!-- Rewriter: interne Links .html -> / -->
@@ -211,7 +212,7 @@
 <!-- Der normale System-Mauszeiger bleibt auf der Hauptseite aktiv. -->
 
   
-<body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
+<body class="sili-editorial-v2 bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased">
 
 <!-- Language Switcher Logic: vermeidet /en/en/... -->
 <script>
@@ -270,10 +271,10 @@
 
 <!-- ===== HEADER ===== -->
 <header id="siteHeader" class="sticky top-0 z-50 bg-white/80 dark:bg-transparent backdrop-blur border-b border-slate-200 dark:border-slate-800">
-  <div class="container mx-auto px-4 py-6 flex items-center justify-between gap-4">
+  <div class="sili-header-inner container mx-auto px-4 py-6 flex items-center justify-between gap-4">
 
     <!-- Links: Logo -->
-    <a href="{{ '/' | relative_url }}" class="flex items-center gap-3 shrink-0">
+    <a href="{{ '/' | relative_url }}" class="sili-brand flex items-center gap-3 shrink-0">
       <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Silituz Logo" class="h-12 w-auto">
       <div class="leading-tight">
         <span class="block text-lg font-bold text-slate-900 dark:text-slate-100">SILITUZ</span>
@@ -281,8 +282,31 @@
       </div>
     </a>
 
+    {%- assign editorial_prefix = '' -%}
+    {%- if page.lang == 'en' or page.url contains '/en/' -%}
+      {%- assign editorial_prefix = '/en' -%}
+    {%- elsif page.lang contains 'es' or page.url contains '/es/' -%}
+      {%- assign editorial_prefix = '/es' -%}
+    {%- endif -%}
+    {%- assign editorial_path = page.url | replace:'index.html','' | replace:'//','/' -%}
+    <nav class="sili-primary-nav" aria-label="{% if editorial_prefix == '/en' %}Quick navigation{% elsif editorial_prefix == '/es' %}Navegación rápida{% else %}Schnellnavigation{% endif %}">
+      <a href="{{ editorial_prefix | append:'/' | relative_url }}"
+         {% if editorial_path == '/' or editorial_path == '/en/' or editorial_path == '/es/' %}aria-current="page"{% endif %}>
+        {% if editorial_prefix == '/en' %}Home{% elsif editorial_prefix == '/es' %}Inicio{% else %}Home{% endif %}
+      </a>
+      <a href="https://anime-pulse-news.silituz.chatgpt.site" data-news-link>News</a>
+      <a href="{{ editorial_prefix | append:'/gallery/' | relative_url }}"
+         {% if editorial_path contains '/gallery/' %}aria-current="page"{% endif %}>
+        {% if editorial_prefix == '/en' %}Gallery{% elsif editorial_prefix == '/es' %}Galería{% else %}Galerie{% endif %}
+      </a>
+      <a href="{{ editorial_prefix | append:'/music/' | relative_url }}"
+         {% if editorial_path contains '/music/' %}aria-current="page"{% endif %}>
+        {% if editorial_prefix == '/en' %}Music{% elsif editorial_prefix == '/es' %}Música{% else %}Musik{% endif %}
+      </a>
+    </nav>
+
     <!-- Mitte: Theme-Slider + Sprachschalter -->
-    <div class="flex-1 flex items-center justify-center gap-4 min-w-0">
+    <div class="sili-header-tools flex-1 flex items-center justify-center gap-4 min-w-0">
       <!-- Theme -->
       <button id="themeSlider" class="relative inline-flex items-center select-none" type="button" aria-label="Design umschalten" aria-live="polite">
         <span id="themeTrack" class="relative h-9 w-24 rounded-full bg-slate-200/80 dark:bg-slate-700/80 shadow-inner overflow-hidden select-none">
@@ -335,17 +359,14 @@
     </div>
 
     <!-- Rechts: Schlange + „Menü/Menu“ -->
-    <div class="flex items-center gap-3 shrink-0 ml-auto">
+    <div class="sili-menu-wrap flex items-center gap-3 shrink-0 ml-auto">
       <button id="snakeBtn"
         aria-controls="sideMenu" aria-expanded="false"
         class="group inline-flex items-center gap-2 px-3 py-2 rounded-xl text-lg font-semibold text-slate-900 dark:text-slate-100 focus:outline-none">
-        <img
-          src="{{ '/assets/images/menu-logo-transparent.svg?v=1' | relative_url }}"
-          class="menu-logo w-10 h-10 block"
-          width="58"
-          height="58"
-          alt=""
-          aria-hidden="true">
+        <video autoplay loop muted playsinline preload="auto" class="menu-logo w-10 h-10 block" aria-hidden="true">
+          <source src="{{ '/assets/videos/menu-logo.webm?v=3' | relative_url }}" type="video/webm">
+          <source src="{{ '/assets/videos/menu-logo.mp4?v=3'  | relative_url }}" type="video/mp4">
+        </video>
         <span class="inline transition-colors group-hover:text-emerald-500">
           {% if page.lang == "en" %}Menu{% else %}Menü{% endif %}
         </span>
@@ -535,7 +556,7 @@
     const themeTrack = document.getElementById('themeTrack') || themeBtn?.querySelector(':scope > span');
     const themeThumb = document.getElementById('themeThumb');
     const POS_LEFT  = 'translate(0rem, -50%)';
-    const POS_RIGHT = 'translate(3.5rem, -50%)';
+    const POS_RIGHT = 'translate(1.35rem, -50%)';
 
     function applyThumbPosition() {
       if (!themeThumb) return;
@@ -583,5 +604,6 @@
   {% include lil_sili.html %}
   <script src="{{ '/assets/js/lil-sili.js' | relative_url }}?v=13" defer></script>
   <script src="{{ '/assets/js/silituz-modern.js' | relative_url }}?v=16" defer></script>
+  <script src="{{ '/assets/js/silituz-editorial-v2.js' | relative_url }}?v=1" defer></script>
 </body>
 </html>
