@@ -28,15 +28,14 @@
         <button id="snakeBtn"
                 class="inline-flex items-center gap-2 justify-center text-slate-900 hover:text-emerald-600 text-base md:text-lg font-semibold"
                 aria-controls="sideMenu" aria-expanded="false">
-          <!-- Video-Logo -->
-          <video id="menuVideo"
-                 class="h-8 w-8 rounded-md object-cover"
-                 autoplay muted loop playsinline preload="metadata">
-            <!-- Moderne Browser: WebM -->
-            <source src="{{ '/assets/videos/menu-logo.webm' | relative_url }}" type="video/webm">
-            <!-- Fallback: Safari/Apple -->
-            <source src="{{ '/assets/videos/menu-logo.mp4'  | relative_url }}" type="video/mp4">
-          </video>
+          <!-- Animiertes Logo mit echtem transparenten Hintergrund -->
+          <img id="menuVideo"
+               src="{{ '/assets/images/menu-logo-transparent.svg?v=1' | relative_url }}"
+               class="menu-logo h-8 w-8 object-contain"
+               width="58"
+               height="58"
+               alt=""
+               aria-hidden="true">
           <!-- Schriftzug -->
           <span>Menü</span>
         </button>
@@ -93,24 +92,6 @@
     sideClose?.addEventListener("click", closeMenu);
     sideOverlay?.addEventListener("click", closeMenu);
 
-    // --- Video Autoplay Fix ---
-    (function () {
-      const v = document.getElementById('menuVideo');
-      if (!v) return;
-      v.muted = true;
-      v.defaultMuted = true;
-
-      // iOS/Safari brauchen manchmal Interaktion
-      const kick = () => { v.play().catch(()=>{}); window.removeEventListener('touchstart', kick); window.removeEventListener('click', kick); };
-      window.addEventListener('touchstart', kick, { once: true });
-      window.addEventListener('click', kick, { once: true });
-
-      // Bei Tab-Wechsel neu starten
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) v.pause();
-        else v.play().catch(()=>{});
-      });
-    })();
   </script>
 </body>
 </html>
