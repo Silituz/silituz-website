@@ -129,15 +129,18 @@
     let activeCard = cards.find(function (card) {
       return card.classList.contains("is-active");
     }) || cards[0];
+    let transitionLockUntil = 0;
 
-    function activate(card) {
+    function activate(card, force) {
       if (!card || card === activeCard) return;
+      if (!force && Date.now() < transitionLockUntil) return;
       cards.forEach(function (item) {
         const selected = item === card;
         item.classList.toggle("is-active", selected);
         item.setAttribute("aria-current", selected ? "true" : "false");
       });
       activeCard = card;
+      transitionLockUntil = Date.now() + 900;
     }
 
     cards.forEach(function (card) {
@@ -145,12 +148,12 @@
         if (event.pointerType !== "touch") activate(card);
       }, { passive: true });
       card.addEventListener("focus", function () {
-        activate(card);
+        activate(card, true);
       });
       card.addEventListener("pointerdown", function (event) {
         if (event.pointerType === "touch" && !card.classList.contains("is-active")) {
           event.preventDefault();
-          activate(card);
+          activate(card, true);
           card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
         }
       });
