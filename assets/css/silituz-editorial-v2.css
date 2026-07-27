@@ -1,0 +1,973 @@
+/* =========================================================
+   SILITUZ EDITORIAL V2
+   One cinematic visual language for the complete main site.
+   ========================================================= */
+:root {
+  --editorial-paper: #f4f2ec;
+  --editorial-paper-2: #ebe9e2;
+  --editorial-ink: #071724;
+  --editorial-night: #061521;
+  --editorial-night-2: #0a2030;
+  --editorial-panel: rgba(8, 29, 43, .84);
+  --editorial-text: #eff9ff;
+  --editorial-muted: #9db3c2;
+  --editorial-line: rgba(90, 238, 216, .18);
+  --editorial-accent: #43e6c5;
+  --editorial-accent-2: #45c8ff;
+  --editorial-warm: #ffbd68;
+  --editorial-radius: 1.45rem;
+  --editorial-shadow: 0 28px 70px rgba(2, 12, 22, .2);
+  --editorial-ease: cubic-bezier(.2, .78, .18, 1);
+}
+
+html {
+  scroll-padding-top: 6.5rem;
+}
+
+body.sili-editorial-v2 {
+  min-height: 100vh;
+  color: var(--editorial-ink);
+  background:
+    radial-gradient(circle at 9% 8%, rgba(67, 230, 197, .09), transparent 28rem),
+    radial-gradient(circle at 91% 18%, rgba(69, 200, 255, .08), transparent 34rem),
+    var(--editorial-paper);
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  overflow-x: clip;
+}
+
+.dark body.sili-editorial-v2 {
+  color: var(--editorial-text);
+  background:
+    radial-gradient(circle at 9% 8%, rgba(67, 230, 197, .1), transparent 30rem),
+    radial-gradient(circle at 91% 18%, rgba(69, 200, 255, .08), transparent 36rem),
+    var(--editorial-night);
+}
+
+body.sili-editorial-v2::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  opacity: .2;
+  background-image:
+    linear-gradient(rgba(8, 37, 53, .06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8, 37, 53, .06) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, #000, transparent 70%);
+}
+
+.dark body.sili-editorial-v2::before {
+  opacity: .3;
+  background-image:
+    linear-gradient(rgba(83, 227, 209, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(83, 227, 209, .045) 1px, transparent 1px);
+}
+
+body.sili-editorial-v2 h1,
+body.sili-editorial-v2 h2,
+body.sili-editorial-v2 h3,
+body.sili-editorial-v2 strong {
+  letter-spacing: -.035em;
+}
+
+body.sili-editorial-v2 p {
+  text-wrap: pretty;
+}
+
+/* Header -------------------------------------------------- */
+#siteHeader {
+  height: 5.65rem;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(7, 27, 40, .1) !important;
+  background: rgba(244, 242, 236, .88) !important;
+  box-shadow: 0 12px 38px rgba(9, 27, 40, .06);
+  backdrop-filter: blur(22px) saturate(1.45) !important;
+}
+
+.dark #siteHeader {
+  border-bottom-color: rgba(76, 225, 207, .13) !important;
+  background: rgba(4, 16, 29, .86) !important;
+  box-shadow: 0 16px 46px rgba(0, 0, 0, .28);
+}
+
+#siteHeader .sili-header-inner {
+  width: min(100%, 1320px);
+  height: 100%;
+  padding: .8rem 1.5rem !important;
+  gap: 1rem;
+}
+
+.sili-brand {
+  min-width: 13.5rem;
+  text-decoration: none !important;
+}
+
+.sili-brand img {
+  width: 3.1rem !important;
+  height: 3.1rem !important;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(5, 77, 76, .14));
+  transition: transform .55s var(--editorial-ease);
+}
+
+.sili-brand:hover img {
+  transform: rotate(-5deg) scale(1.06);
+}
+
+.sili-brand span:first-child {
+  color: #0a2030 !important;
+  font-size: 1rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .08em;
+}
+
+.sili-brand span:last-child {
+  color: #5f7280 !important;
+  font-size: .63rem !important;
+  letter-spacing: .04em;
+}
+
+.dark .sili-brand span:first-child {
+  color: #f1fbff !important;
+}
+
+.dark .sili-brand span:last-child {
+  color: #92a9b8 !important;
+}
+
+.sili-primary-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .22rem;
+  padding: .3rem;
+  border: 1px solid rgba(9, 47, 63, .1);
+  border-radius: 999px;
+  background:
+    linear-gradient(130deg, rgba(255,255,255,.8), rgba(231,237,234,.62));
+  box-shadow:
+    0 10px 30px rgba(10, 36, 48, .08),
+    inset 0 1px 0 rgba(255,255,255,.75);
+}
+
+.dark .sili-primary-nav {
+  border-color: rgba(74, 220, 203, .15);
+  background: linear-gradient(130deg, rgba(8,30,44,.9), rgba(5,20,34,.82));
+  box-shadow:
+    0 14px 36px rgba(0,0,0,.26),
+    inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+.sili-primary-nav a {
+  position: relative;
+  isolation: isolate;
+  padding: .66rem 1rem;
+  border-radius: 999px;
+  color: #496170 !important;
+  font-size: .76rem;
+  font-weight: 850;
+  letter-spacing: .015em;
+  line-height: 1;
+  text-decoration: none !important;
+  transition:
+    color .32s ease,
+    transform .32s var(--editorial-ease),
+    background .32s ease,
+    box-shadow .32s ease;
+}
+
+.dark .sili-primary-nav a {
+  color: #a8bac6 !important;
+}
+
+.sili-primary-nav a:hover {
+  color: #082535 !important;
+  transform: translateY(-1px);
+  background: rgba(67, 230, 197, .12);
+}
+
+.dark .sili-primary-nav a:hover {
+  color: #efffff !important;
+}
+
+.sili-primary-nav a[aria-current="page"] {
+  color: #06232f !important;
+  background: linear-gradient(120deg, #54e8ca, #59d6ff);
+  box-shadow:
+    0 8px 24px rgba(54, 211, 190, .27),
+    inset 0 1px 0 rgba(255,255,255,.58);
+}
+
+.sili-primary-nav a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -.18rem;
+  border: 1px solid rgba(67, 230, 197, .42);
+  border-radius: inherit;
+  animation: editorialNavPulse 2.6s ease-out infinite;
+}
+
+.sili-header-tools {
+  flex: 0 1 auto !important;
+  gap: .5rem !important;
+}
+
+#themeSlider {
+  order: 2;
+}
+
+#themeTrack {
+  width: 3.2rem !important;
+  height: 2rem !important;
+  border: 1px solid rgba(13, 51, 66, .12);
+  background: rgba(255,255,255,.58) !important;
+  box-shadow: inset 0 2px 5px rgba(9, 32, 44, .08);
+}
+
+.dark #themeTrack {
+  border-color: rgba(78, 224, 208, .16);
+  background: rgba(7, 28, 42, .9) !important;
+}
+
+#themeTrack > span:not(#themeThumb) {
+  display: none;
+}
+
+#themeThumb {
+  left: .18rem !important;
+  width: 1.45rem !important;
+  height: 1.45rem !important;
+  background:
+    radial-gradient(circle at 35% 35%, #eefff9 0 18%, #4adcbc 22% 52%, #13967d 100%) !important;
+  box-shadow: 0 3px 12px rgba(26, 158, 139, .28) !important;
+}
+
+.dark #themeThumb {
+  background:
+    radial-gradient(circle at 35% 35%, #f5efff 0 16%, #9788ff 22% 55%, #4e3da7 100%) !important;
+}
+
+.sili-header-tools [role="group"] {
+  gap: .15rem !important;
+  padding: .23rem;
+  border: 1px solid rgba(10, 47, 61, .1);
+  border-radius: 999px;
+  background: rgba(255,255,255,.45);
+}
+
+.dark .sili-header-tools [role="group"] {
+  border-color: rgba(74, 220, 203, .14);
+  background: rgba(7, 28, 42, .74);
+}
+
+.sili-header-tools [data-lang] {
+  min-width: 2.68rem;
+  justify-content: center;
+  padding: .48rem .52rem !important;
+  border-radius: 999px !important;
+  color: #576d79 !important;
+  filter: none !important;
+  text-shadow: none !important;
+  font-size: .67rem !important;
+  font-weight: 850 !important;
+  transition: background .28s ease, color .28s ease, transform .28s var(--editorial-ease);
+}
+
+.dark .sili-header-tools [data-lang] {
+  color: #a8bbc7 !important;
+}
+
+.sili-header-tools [data-lang] svg {
+  width: 16px;
+  height: 11px;
+  border-radius: 1px;
+}
+
+.sili-header-tools [data-lang][data-active] {
+  color: #063228 !important;
+  background: rgba(67, 230, 197, .77);
+  box-shadow: 0 6px 17px rgba(32, 181, 155, .2);
+}
+
+.sili-header-tools [data-lang]:hover {
+  color: #0c6f5f !important;
+  transform: translateY(-1px);
+}
+
+.sili-menu-wrap {
+  margin-left: 0 !important;
+}
+
+#snakeBtn {
+  min-height: 2.7rem;
+  padding: .32rem .68rem .32rem .38rem !important;
+  border: 1px solid rgba(10, 47, 61, .1);
+  border-radius: 999px !important;
+  color: #102b3a !important;
+  background: rgba(255,255,255,.52);
+  box-shadow: 0 8px 22px rgba(8, 31, 43, .07);
+}
+
+.dark #snakeBtn {
+  border-color: rgba(74, 220, 203, .14);
+  color: #ecfaff !important;
+  background: rgba(7, 28, 42, .76);
+}
+
+#snakeBtn .menu-logo {
+  width: 2.25rem !important;
+  height: 2.25rem !important;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 12px rgba(67,230,197,.28)) !important;
+}
+
+#snakeBtn span {
+  font-size: .78rem;
+  font-weight: 850;
+}
+
+/* Hero system --------------------------------------------- */
+body.sili-editorial-v2 main {
+  position: relative;
+}
+
+body.sili-editorial-v2 main > .sili-editorial-hero {
+  position: relative;
+  isolation: isolate;
+  width: min(calc(100% - 2rem), 1440px) !important;
+  height: clamp(31rem, 69vh, 47rem) !important;
+  min-height: 31rem;
+  margin: 1rem auto 0 !important;
+  overflow: hidden;
+  border: 1px solid rgba(72, 225, 207, .2);
+  border-radius: clamp(1.25rem, 2.3vw, 2.25rem);
+  background: #071824;
+  box-shadow: var(--editorial-shadow);
+}
+
+body.sili-editorial-v2 main > .sili-editorial-hero::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(3,14,23,.93) 0%, rgba(4,17,28,.72) 38%, rgba(4,17,28,.18) 68%, rgba(4,17,28,.42) 100%),
+    linear-gradient(0deg, rgba(2,12,21,.72), transparent 46%);
+}
+
+body.sili-editorial-v2 main > .sili-editorial-hero::after {
+  content: attr(data-editorial-number) "  /  " attr(data-editorial-label);
+  position: absolute;
+  z-index: 5;
+  right: 1.6rem;
+  bottom: 1.45rem;
+  color: rgba(219, 247, 250, .72);
+  font: 800 .6rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
+
+body.sili-editorial-v2 main > .sili-editorial-hero > img {
+  position: absolute !important;
+  z-index: 1;
+  inset: -2% !important;
+  width: 104% !important;
+  height: 108% !important;
+  object-fit: cover !important;
+  transform: translate3d(0, var(--editorial-hero-y, 0px), 0) scale(1.035);
+  filter: saturate(.9) contrast(1.05) brightness(.76);
+  transition: filter .5s ease;
+  will-change: transform;
+}
+
+body.sili-editorial-v2 main > .sili-editorial-hero:hover > img {
+  filter: saturate(1) contrast(1.06) brightness(.82);
+}
+
+body.sili-editorial-v2 main > .sili-editorial-hero > div {
+  position: absolute !important;
+  z-index: 4;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: flex-start !important;
+  padding: clamp(2rem, 6vw, 6rem) !important;
+  pointer-events: none;
+}
+
+body.sili-editorial-v2 main > .sili-editorial-hero > div > div {
+  width: min(100%, 46rem);
+  max-width: 46rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  text-align: left !important;
+  pointer-events: auto;
+}
+
+body.sili-editorial-v2 main > .sili-editorial-hero h1,
+body.sili-editorial-v2 main > .sili-editorial-hero h2 {
+  max-width: 12ch;
+  margin: 0 !important;
+  color: #f7fcff !important;
+  font-size: clamp(3.25rem, 7.7vw, 7.8rem) !important;
+  font-weight: 950 !important;
+  line-height: .84 !important;
+  letter-spacing: -.075em !important;
+  text-wrap: balance;
+  text-shadow: 0 14px 45px rgba(0,0,0,.45);
+}
+
+body.sili-editorial-v2 main > .sili-editorial-hero p {
+  max-width: 34rem;
+  margin-top: 1.35rem !important;
+  color: #b7cad6 !important;
+  font-size: clamp(.98rem, 1.5vw, 1.25rem) !important;
+  line-height: 1.65;
+  text-shadow: 0 5px 20px rgba(0,0,0,.6);
+}
+
+body.sili-editorial-v2 main > .sili-editorial-hero a {
+  border: 1px solid rgba(83, 229, 209, .28) !important;
+  border-radius: .4rem !important;
+  color: #eaffff !important;
+  background: rgba(5, 25, 38, .74) !important;
+  backdrop-filter: blur(12px);
+}
+
+body.sili-editorial-v2 main > .sili-editorial-hero a:hover {
+  border-color: rgba(83, 229, 209, .8) !important;
+  color: #06232f !important;
+  background: var(--editorial-accent) !important;
+}
+
+.sili-editorial-rail {
+  position: absolute;
+  z-index: 5;
+  left: clamp(2rem, 6vw, 6rem);
+  top: clamp(2rem, 7vw, 5.5rem);
+  display: inline-flex;
+  align-items: center;
+  gap: .8rem;
+  color: var(--editorial-accent);
+  font: 850 .62rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.sili-editorial-rail::before {
+  content: "";
+  width: 2.5rem;
+  height: 1px;
+  background: currentColor;
+  box-shadow: 0 0 12px currentColor;
+}
+
+/* Page rhythm and shared surfaces ------------------------- */
+body.sili-editorial-v2 main > section:not(.sili-editorial-hero) {
+  position: relative;
+}
+
+body.sili-editorial-v2 .sili-page-feature,
+body.sili-editorial-v2 .silituz-now,
+body.sili-editorial-v2 .silituz-news-entry,
+body.sili-editorial-v2 .sili-release-focus,
+body.sili-editorial-v2 .sili-social-feature,
+body.sili-editorial-v2 .sili-support-feature,
+body.sili-editorial-v2 .sili-lab-feature,
+body.sili-editorial-v2 .sili-about-feature {
+  width: min(calc(100% - 2rem), 1280px);
+  margin-inline: auto;
+}
+
+body.sili-editorial-v2 .sili-page-feature {
+  overflow: hidden;
+  border: 1px solid var(--editorial-line);
+  border-radius: var(--editorial-radius);
+  background:
+    linear-gradient(120deg, rgba(5,22,35,.96), rgba(8,38,52,.86));
+  box-shadow: var(--editorial-shadow);
+}
+
+body.sili-editorial-v2 .sili-page-feature::before {
+  opacity: .56;
+}
+
+body.sili-editorial-v2 .sili-page-feature::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(110deg, rgba(67,230,197,.09), transparent 24% 72%, rgba(139,124,255,.08));
+}
+
+body.sili-editorial-v2 .sili-page-feature h2,
+body.sili-editorial-v2 .silituz-now h2,
+body.sili-editorial-v2 main section > div > h2,
+body.sili-editorial-v2 main section header h2 {
+  color: #effaff;
+  font-weight: 950;
+  letter-spacing: -.055em;
+}
+
+.dark body.sili-editorial-v2 main section > div > h2,
+.dark body.sili-editorial-v2 main section header h2 {
+  color: #effaff;
+}
+
+body.sili-editorial-v2 .sili-gradient-text {
+  background: linear-gradient(90deg, #f4fbff 0%, #49cff7 48%, #3fe2b4 88%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+body.sili-editorial-v2 .sili-kicker {
+  color: var(--editorial-accent) !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .64rem !important;
+  font-weight: 850 !important;
+  letter-spacing: .2em !important;
+}
+
+body.sili-editorial-v2 .sili-glass,
+body.sili-editorial-v2 .card,
+body.sili-editorial-v2 main [class*="rounded-2xl"] {
+  border-color: rgba(79, 218, 203, .16) !important;
+  box-shadow: 0 20px 55px rgba(2, 16, 26, .12);
+}
+
+.dark body.sili-editorial-v2 .sili-glass,
+.dark body.sili-editorial-v2 .card,
+.dark body.sili-editorial-v2 main [class*="rounded-2xl"] {
+  box-shadow: 0 22px 58px rgba(0, 0, 0, .3);
+}
+
+body.sili-editorial-v2 main a[class*="rounded-2xl"],
+body.sili-editorial-v2 main .sili-feature-card,
+body.sili-editorial-v2 main .silituz-now__card {
+  transition:
+    transform .58s var(--editorial-ease),
+    border-color .4s ease,
+    box-shadow .58s var(--editorial-ease),
+    filter .4s ease;
+}
+
+body.sili-editorial-v2 main a[class*="rounded-2xl"]:hover,
+body.sili-editorial-v2 main .sili-feature-card:hover,
+body.sili-editorial-v2 main .silituz-now__card:hover {
+  transform: translateY(-7px) scale(1.008);
+  border-color: rgba(77, 229, 210, .55) !important;
+  box-shadow:
+    0 30px 72px rgba(2, 14, 24, .24),
+    0 0 32px rgba(67, 230, 197, .08);
+}
+
+/* Home ---------------------------------------------------- */
+.page-home .sili-editorial-hero {
+  height: clamp(35rem, 76vh, 52rem) !important;
+}
+
+.page-home .sili-editorial-hero h2 {
+  max-width: 10ch;
+}
+
+.page-home .silituz-now {
+  margin-top: 1.5rem !important;
+  padding: clamp(3.5rem, 7vw, 7rem) clamp(1rem, 5vw, 4rem) !important;
+  border: 1px solid rgba(71, 222, 205, .12);
+  border-radius: var(--editorial-radius);
+  background:
+    radial-gradient(circle at 90% 5%, rgba(69,200,255,.12), transparent 31rem),
+    linear-gradient(145deg, #071a29, #0b2232);
+  box-shadow: var(--editorial-shadow);
+}
+
+.page-home .silituz-now__grid {
+  gap: .75rem !important;
+}
+
+.page-home .silituz-now__card {
+  border-radius: 1.1rem !important;
+  background-color: #081c2a !important;
+}
+
+.page-home .silituz-news-entry {
+  padding-top: 1.5rem !important;
+}
+
+.page-home .silituz-news-home {
+  min-height: 31rem;
+  border-radius: var(--editorial-radius) !important;
+}
+
+/* Page accents -------------------------------------------- */
+.sili-editorial-v2[data-editorial-page="music"] {
+  --editorial-accent: #ff78ad;
+  --editorial-accent-2: #8f86ff;
+}
+
+.sili-editorial-v2[data-editorial-page="gallery"] {
+  --editorial-accent: #55d4ff;
+  --editorial-accent-2: #a987ff;
+}
+
+.sili-editorial-v2[data-editorial-page="generators"] {
+  --editorial-accent: #9d8cff;
+  --editorial-accent-2: #4bd1ff;
+}
+
+.sili-editorial-v2[data-editorial-page="socials"] {
+  --editorial-accent: #48ebce;
+  --editorial-accent-2: #46c7ff;
+}
+
+.sili-editorial-v2[data-editorial-page="support"] {
+  --editorial-accent: #ffd16f;
+  --editorial-accent-2: #ff8f6c;
+}
+
+.sili-editorial-v2[data-editorial-page="shoutout"] {
+  --editorial-accent: #ffd46e;
+  --editorial-accent-2: #65f4df;
+}
+
+.sili-editorial-v2[data-editorial-page="contact"] {
+  --editorial-accent: #64ead8;
+  --editorial-accent-2: #5bc7ff;
+}
+
+/* Forms --------------------------------------------------- */
+body.sili-editorial-v2 input,
+body.sili-editorial-v2 textarea,
+body.sili-editorial-v2 select {
+  border: 1px solid rgba(54, 126, 143, .23) !important;
+  border-radius: .75rem !important;
+  color: #102b39 !important;
+  background: rgba(255,255,255,.72) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.76);
+  transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
+}
+
+.dark body.sili-editorial-v2 input,
+.dark body.sili-editorial-v2 textarea,
+.dark body.sili-editorial-v2 select {
+  color: #effaff !important;
+  background: rgba(7, 29, 43, .82) !important;
+}
+
+body.sili-editorial-v2 input:focus,
+body.sili-editorial-v2 textarea:focus,
+body.sili-editorial-v2 select:focus {
+  outline: none !important;
+  border-color: var(--editorial-accent) !important;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--editorial-accent) 17%, transparent) !important;
+}
+
+/* Side menu ------------------------------------------------ */
+#sideOverlay {
+  background: rgba(1, 9, 17, .64) !important;
+  backdrop-filter: blur(8px);
+}
+
+#sideMenu {
+  width: min(92vw, 24rem) !important;
+  border-left: 1px solid rgba(74, 220, 203, .16);
+  color: #eaf8ff !important;
+  background:
+    radial-gradient(circle at 100% 0, rgba(69,200,255,.12), transparent 22rem),
+    linear-gradient(160deg, #071828, #091422 70%) !important;
+  box-shadow: -35px 0 90px rgba(0,0,0,.4) !important;
+}
+
+#sideMenu > div:first-child {
+  height: 5.5rem !important;
+  border-bottom-color: rgba(76, 224, 208, .14) !important;
+}
+
+#sideMenu nav {
+  padding: 1rem !important;
+}
+
+#sideMenu nav a {
+  position: relative;
+  padding: .78rem 1rem !important;
+  border: 1px solid transparent;
+  border-radius: .75rem !important;
+  color: #c5d4de !important;
+  font-size: .9rem;
+  overflow: hidden;
+}
+
+#sideMenu nav a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 20%;
+  width: 2px;
+  height: 60%;
+  background: var(--editorial-accent);
+  box-shadow: 0 0 12px var(--editorial-accent);
+  transform: scaleY(0);
+  transition: transform .28s var(--editorial-ease);
+}
+
+#sideMenu nav a:hover,
+#sideMenu nav a[aria-current="page"] {
+  border-color: rgba(76, 224, 208, .16);
+  color: #f2fcff !important;
+  background: linear-gradient(90deg, rgba(67,230,197,.12), rgba(69,200,255,.04)) !important;
+}
+
+#sideMenu nav a:hover::before,
+#sideMenu nav a[aria-current="page"]::before {
+  transform: scaleY(1);
+}
+
+/* Lil Sili ------------------------------------------------ */
+.site-lil-sili__panel {
+  border-color: rgba(72, 225, 207, .24) !important;
+  border-radius: 1.1rem !important;
+  background:
+    radial-gradient(circle at 100% 0, rgba(69,200,255,.12), transparent 18rem),
+    rgba(5, 23, 36, .96) !important;
+  box-shadow:
+    0 32px 90px rgba(0,0,0,.42),
+    0 0 38px rgba(67,230,197,.08) !important;
+  backdrop-filter: blur(24px) saturate(1.25);
+}
+
+.site-lil-sili__trigger {
+  border-color: rgba(72, 225, 207, .34) !important;
+  background: rgba(5, 24, 37, .86) !important;
+  box-shadow:
+    0 20px 48px rgba(0,0,0,.27),
+    0 0 24px rgba(67,230,197,.1) !important;
+}
+
+/* Footer -------------------------------------------------- */
+body.sili-editorial-v2 .site-footer {
+  margin-top: 4rem;
+  border-top: 1px solid rgba(62, 203, 191, .12) !important;
+  color: #c2d3dc !important;
+  background:
+    linear-gradient(145deg, #061622, #07121f) !important;
+}
+
+body.sili-editorial-v2 .footer-inner {
+  width: min(100%, 1280px);
+  min-height: 7rem;
+  padding-inline: 1.5rem;
+}
+
+body.sili-editorial-v2 .site-footer .brand-title {
+  color: #f0faff !important;
+}
+
+body.sili-editorial-v2 .site-footer .brand-sub,
+body.sili-editorial-v2 .site-footer a {
+  color: #9eb2bf !important;
+}
+
+body.sili-editorial-v2 .site-footer a:hover {
+  color: var(--editorial-accent) !important;
+}
+
+/* Motion -------------------------------------------------- */
+.sili-editorial-v2 .sili-reveal {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0) scale(.988);
+  filter: blur(5px);
+  transition:
+    opacity .85s var(--editorial-ease),
+    transform .95s var(--editorial-ease),
+    filter .8s ease;
+}
+
+.sili-editorial-v2 .sili-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0);
+}
+
+.sili-section-index {
+  position: absolute;
+  z-index: 2;
+  top: 1rem;
+  right: max(1rem, calc((100vw - 1280px) / 2));
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  color: color-mix(in srgb, var(--editorial-accent) 72%, #69808c);
+  font: 800 .55rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .18em;
+  pointer-events: none;
+}
+
+.sili-section-index::before {
+  content: "";
+  width: 2.2rem;
+  height: 1px;
+  background: currentColor;
+}
+
+@keyframes editorialNavPulse {
+  0% { opacity: .62; transform: scale(1); }
+  70%, 100% { opacity: 0; transform: scale(1.14); }
+}
+
+/* Responsive ---------------------------------------------- */
+@media (max-width: 1160px) {
+  .sili-primary-nav a {
+    padding-inline: .75rem;
+  }
+  .sili-brand {
+    min-width: auto;
+  }
+  .sili-brand span:last-child {
+    display: none !important;
+  }
+}
+
+@media (max-width: 980px) {
+  #siteHeader {
+    height: 4.85rem;
+  }
+  #siteHeader .sili-header-inner {
+    padding-inline: .9rem !important;
+  }
+  .sili-primary-nav {
+    display: none;
+  }
+  .sili-header-tools {
+    margin-left: auto;
+  }
+  .sili-brand img {
+    width: 2.7rem !important;
+    height: 2.7rem !important;
+  }
+  .sili-brand span:first-child {
+    font-size: .86rem !important;
+  }
+  body.sili-editorial-v2 main > .sili-editorial-hero {
+    width: calc(100% - 1rem) !important;
+    height: clamp(29rem, 68vh, 40rem) !important;
+    margin-top: .5rem !important;
+    border-radius: 1.25rem;
+  }
+  body.sili-editorial-v2 main > .sili-editorial-hero > div {
+    padding: 2rem !important;
+  }
+  body.sili-editorial-v2 main > .sili-editorial-hero h1,
+  body.sili-editorial-v2 main > .sili-editorial-hero h2 {
+    font-size: clamp(3.2rem, 12vw, 6.6rem) !important;
+  }
+  .sili-editorial-rail {
+    left: 2rem;
+    top: 2rem;
+  }
+}
+
+@media (max-width: 720px) {
+  #siteHeader .sili-header-inner {
+    gap: .45rem;
+  }
+  .sili-brand {
+    gap: .5rem !important;
+  }
+  .sili-brand > div {
+    display: none;
+  }
+  .sili-header-tools {
+    gap: .3rem !important;
+  }
+  #themeSlider {
+    display: none;
+  }
+  .sili-header-tools [role="group"] {
+    padding: .14rem;
+  }
+  .sili-header-tools [data-lang] {
+    min-width: 2.1rem;
+    padding: .4rem !important;
+  }
+  .sili-header-tools [data-lang] svg {
+    display: none;
+  }
+  #snakeBtn {
+    padding-right: .45rem !important;
+  }
+  #snakeBtn span {
+    display: none !important;
+  }
+  body.sili-editorial-v2 main > .sili-editorial-hero {
+    min-height: 32rem;
+  }
+  body.sili-editorial-v2 main > .sili-editorial-hero::before {
+    background:
+      linear-gradient(0deg, rgba(3,14,23,.95) 0%, rgba(4,17,28,.72) 50%, rgba(4,17,28,.16) 100%);
+  }
+  body.sili-editorial-v2 main > .sili-editorial-hero::after {
+    display: none;
+  }
+  body.sili-editorial-v2 main > .sili-editorial-hero > div {
+    padding: 1.35rem !important;
+  }
+  body.sili-editorial-v2 main > .sili-editorial-hero h1,
+  body.sili-editorial-v2 main > .sili-editorial-hero h2 {
+    max-width: 9ch;
+    font-size: clamp(3.2rem, 16vw, 5rem) !important;
+  }
+  body.sili-editorial-v2 main > .sili-editorial-hero p {
+    font-size: .94rem !important;
+  }
+  .sili-editorial-rail {
+    left: 1.35rem;
+    top: 1.45rem;
+  }
+  body.sili-editorial-v2 .sili-page-feature,
+  body.sili-editorial-v2 .silituz-now,
+  body.sili-editorial-v2 .silituz-news-entry,
+  body.sili-editorial-v2 .sili-release-focus,
+  body.sili-editorial-v2 .sili-social-feature,
+  body.sili-editorial-v2 .sili-support-feature,
+  body.sili-editorial-v2 .sili-lab-feature,
+  body.sili-editorial-v2 .sili-about-feature {
+    width: calc(100% - 1rem);
+  }
+  .page-home .silituz-now {
+    padding: 3rem 1rem !important;
+  }
+  .sili-section-index {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  .sili-primary-nav a[aria-current="page"]::after {
+    animation: none !important;
+  }
+  body.sili-editorial-v2 main > .sili-editorial-hero > img {
+    transform: scale(1.035) !important;
+  }
+  .sili-editorial-v2 .sili-reveal,
+  .sili-editorial-v2 .sili-reveal.is-visible {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
