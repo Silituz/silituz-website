@@ -68,7 +68,7 @@ body.sili-editorial-v2 .sili-header-inner {
   margin: 0 auto;
   padding: 12px 0 !important;
   display: grid !important;
-  grid-template-columns: minmax(190px, 1fr) auto minmax(190px, 1fr);
+  grid-template-columns: minmax(190px, 1fr) auto auto auto;
   gap: 22px !important;
 }
 
@@ -96,6 +96,7 @@ body.sili-editorial-v2 .sili-brand span:last-child {
 }
 
 body.sili-editorial-v2 .sili-primary-nav {
+  justify-self: center;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -938,6 +939,14 @@ body.sili-editorial-v2 .site-footer .brand-title {
 
   body.sili-editorial-v2 .sili-primary-nav {
     display: none;
+  }
+
+  body.sili-editorial-v2 .sili-header-tools {
+    grid-column: 2;
+  }
+
+  body.sili-editorial-v2 .sili-menu-wrap {
+    grid-column: 3;
   }
 
   .sili-world-stage {
