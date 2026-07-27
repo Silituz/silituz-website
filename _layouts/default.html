@@ -339,10 +339,13 @@
       <button id="snakeBtn"
         aria-controls="sideMenu" aria-expanded="false"
         class="group inline-flex items-center gap-2 px-3 py-2 rounded-xl text-lg font-semibold text-slate-900 dark:text-slate-100 focus:outline-none">
-        <video autoplay loop muted playsinline preload="auto" class="menu-logo w-10 h-10 block" aria-hidden="true">
-          <source src="{{ '/assets/videos/menu-logo.webm?v=3' | relative_url }}" type="video/webm">
-          <source src="{{ '/assets/videos/menu-logo.mp4?v=3'  | relative_url }}" type="video/mp4">
-        </video>
+        <img
+          src="{{ '/assets/images/menu-logo-transparent.svg?v=1' | relative_url }}"
+          class="menu-logo w-10 h-10 block"
+          width="58"
+          height="58"
+          alt=""
+          aria-hidden="true">
         <span class="inline transition-colors group-hover:text-emerald-500">
           {% if page.lang == "en" %}Menu{% else %}Menü{% endif %}
         </span>
