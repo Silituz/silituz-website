@@ -1,74 +1,61 @@
-{% assign world_is_en = false %}
-{% assign world_is_es = false %}
-{% if page.lang == 'en' or page.url contains '/en/' %}{% assign world_is_en = true %}{% endif %}
-{% if page.lang contains 'es' or page.url contains '/es/' %}{% assign world_is_es = true %}{% endif %}
-{% assign world_prefix = '' %}
-{% if world_is_en %}{% assign world_prefix = '/en' %}{% elsif world_is_es %}{% assign world_prefix = '/es' %}{% endif %}
+<!-- Hero-Bereich (verschlankt) -->
+<section class="relative w-full h-96">
+  <!-- Hintergrundbild -->
+  <img
+    src="/assets/images/welcome-head.svg"
+    alt="{{ page.hero_alt }}"
+    class="absolute inset-0 w-full h-full object-cover"
+  />
 
-<!-- Der visuelle Einstieg folgt derselben Kapitel-Logik wie SILITUZ NEWS. -->
-<section class="sili-world-stage" aria-labelledby="sili-world-title">
-  <div class="sili-world-intro">
-    <p class="sili-world-kicker">AI · MUSIC · VISUALS · COMMUNITY</p>
-    <h1 id="sili-world-title">
-      {% if world_is_en %}YOUR WORLD.<br>YOUR SILITUZ.
-      {% elsif world_is_es %}TU MUNDO.<br>TU SILITUZ.
-      {% else %}DEINE WELT.<br>DEIN SILITUZ.{% endif %}
-    </h1>
-    <p class="sili-world-lead">
-      {% if world_is_en %}Music, images, stories and ideas — choose where your journey begins.
-      {% elsif world_is_es %}Música, imágenes, historias e ideas: elige dónde comienza tu viaje.
-      {% else %}Musik, Bilder, Geschichten und Ideen – wähle, wo deine Reise beginnt.{% endif %}
-    </p>
-    <a class="sili-world-discover" href="#aktuell">
-      {% if world_is_en %}Explore everything{% elsif world_is_es %}Descubrir todo{% else %}Alles entdecken{% endif %}
-      <span aria-hidden="true">↓</span>
-    </a>
-    <span class="sili-world-hint"><i></i>{% if world_is_en %}Choose your entry{% elsif world_is_es %}Elige tu entrada{% else %}Wähle deinen Einstieg{% endif %}</span>
-  </div>
+  <!-- Text-Overlay links -->
+  <div class="absolute inset-y-0 left-[8%] flex items-center">
+    <div class="px-6 sm:px-10 md:px-14 lg:px-16">
+      <!-- Card/Glass -->
+      <div class="max-w-xl bg-white/70 dark:bg-gray-900/60 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-md text-center">
+        <h1 class="sr-only">Silituz</h1>
+<h2 class="text-3xl md:text-4xl font-extrabold leading-tight text-emerald-500">
+  {{ page.hero_title }}
+</h2>
+        <p class="mt-2 text-base md:text-lg opacity-90">
+          {{ page.hero_sub }}
+        </p>
 
-  <div class="sili-world-deck" data-world-deck>
-    <a class="sili-world-card is-active" href="#aktuell" data-world-card>
-      <img src="/assets/images/welcome-head.svg" alt="" />
-      <span class="sili-world-card-no">01</span>
-      <span class="sili-world-card-copy">
-        <strong>{% if world_is_en %}NOW{% elsif world_is_es %}AHORA{% else %}AKTUELL{% endif %}</strong>
-        <small>{% if world_is_en %}What is moving right now.{% elsif world_is_es %}Lo que está pasando ahora.{% else %}Was gerade bewegt.{% endif %}</small>
-      </span>
-    </a>
-    <a class="sili-world-card" href="{{ world_prefix }}/about/" data-world-card>
-      <img src="/assets/images/about-head.svg" alt="" />
-      <span class="sili-world-card-no">02</span>
-      <span class="sili-world-card-copy">
-        <strong>{% if world_is_en %}ABOUT{% elsif world_is_es %}SOBRE MÍ{% else %}ÜBER MICH{% endif %}</strong>
-        <small>{% if world_is_en %}The person behind the world.{% elsif world_is_es %}La persona detrás del mundo.{% else %}Der Mensch hinter der Welt.{% endif %}</small>
-      </span>
-    </a>
-    <a class="sili-world-card" href="{{ world_prefix }}/gallery/" data-world-card>
-      <img src="/assets/images/gallery-head.svg" alt="" />
-      <span class="sili-world-card-no">03</span>
-      <span class="sili-world-card-copy">
-        <strong>{% if world_is_en %}GALLERY{% elsif world_is_es %}GALERÍA{% else %}GALERIE{% endif %}</strong>
-        <small>{% if world_is_en %}Images with their own stories.{% elsif world_is_es %}Imágenes con historias propias.{% else %}Bilder mit eigenen Geschichten.{% endif %}</small>
-      </span>
-    </a>
-    <a class="sili-world-card" href="{{ world_prefix }}/generators/" data-world-card>
-      <img src="/assets/images/generator-head.svg" alt="" />
-      <span class="sili-world-card-no">04</span>
-      <span class="sili-world-card-copy">
-        <strong>{% if world_is_en %}CREATE{% elsif world_is_es %}CREAR{% else %}CREATE{% endif %}</strong>
-        <small>{% if world_is_en %}Tools, games and experiments.{% elsif world_is_es %}Herramientas, juegos y experimentos.{% else %}Tools, Spiele und Experimente.{% endif %}</small>
-      </span>
-    </a>
-    <a class="sili-world-card" href="{{ world_prefix }}/music/" data-world-card>
-      <img src="/assets/images/music-head.svg" alt="" />
-      <span class="sili-world-card-no">05</span>
-      <span class="sili-world-card-copy">
-        <strong>{% if world_is_en %}MUSIC{% elsif world_is_es %}MÚSICA{% else %}MUSIK{% endif %}</strong>
-        <small>{% if world_is_en %}Releases, previews and sound.{% elsif world_is_es %}Lanzamientos, avances y sonido.{% else %}Releases, Previews und Sound.{% endif %}</small>
-      </span>
-    </a>
+        <!-- Buttons: gleichmäßig, mit Luft zum Rand -->
+        <div class="mt-4 flex gap-4 justify-between px-4">
+          <!-- Über mich / About -->
+          <a href="{{ page.about_link }}"
+             class="welcome-btn flex-1 text-center group relative inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 font-semibold overflow-hidden transition-colors">
+            <span class="absolute inset-y-0 left-0 h-full w-0 bg-emerald-500/90 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+            <span class="relative z-10 inline-flex items-center gap-2">
+              {{ page.about_btn }}
+            </span>
+          </a>
+
+         <!-- Discord -->
+<a href="https://discord.gg/ypzW8RmGfT"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="welcome-btn flex-1 text-center group relative inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 font-semibold overflow-hidden transition-colors">
+  <span class="absolute inset-y-0 left-0 h-full w-0 bg-emerald-500/90 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+  <span class="relative z-10 inline-flex items-center gap-2">
+    Discord
+  </span>
+</a>
+          
+          <!-- Socials -->
+<a href="/socials/"
+   class="welcome-btn flex-1 text-center group relative inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 font-semibold overflow-hidden transition-colors">
+  <span class="absolute inset-y-0 left-0 h-full w-0 bg-emerald-500/90 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+  <span class="relative z-10 inline-flex items-center gap-2">
+    {{ page.socials_btn }}
+  </span>
+</a>
+        
+        </div>
+      </div>
+
+    </div>
   </div>
-  <span class="sili-world-scroll" aria-hidden="true">SCROLL</span>
 </section>
 
 
