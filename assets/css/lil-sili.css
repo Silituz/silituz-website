@@ -296,6 +296,10 @@
 }
 
 .site-lil-sili__language-choice button {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  align-items: center;
+  gap: 7px;
   min-height: 48px;
   padding: 9px 7px;
   cursor: pointer;
@@ -316,11 +320,19 @@
 }
 
 .site-lil-sili__language-choice button span {
+  color: var(--lil-text);
+  font-size: .78rem;
+  line-height: 1.1;
+  text-align: left;
+}
+
+.site-lil-sili__flag {
   display: block;
-  margin-bottom: 3px;
-  color: var(--lil-cyan);
-  letter-spacing: 0.08em;
-  font: 900 9px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  width: 26px;
+  height: 18px;
+  overflow: hidden;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.24), 0 3px 10px rgba(0,0,0,.22);
 }
 
 .site-lil-sili.is-choosing-language .site-lil-sili__language-choice {
