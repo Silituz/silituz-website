@@ -14,10 +14,25 @@
 
 <main class="py-16 space-y-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
+  {% include displate_showcase.html %}
+
   <!-- Support -->
   <section>
     <h2 class="text-2xl font-bold mb-6 text-emerald-500">{{ page.support_head }}</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <!-- Displate -->
+      <a href="https://displate.com/artist/silituz?art=6a69b0b590116" target="_blank" rel="noopener noreferrer"
+         class="group relative flex items-center gap-4 p-4 rounded-2xl bg-slate-800/90 shadow-md transition hover:shadow-lg overflow-hidden">
+        <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+        <img src="{{ '/assets/images/displate/dragon-hey.webp' | relative_url }}" alt="Displate" class="w-12 h-12 rounded-lg object-cover relative z-10" />
+        <div class="relative z-10">
+          <h3 class="text-lg font-bold text-slate-100 transition-colors duration-300">Displate</h3>
+          <p class="text-sm text-slate-100/85">
+            {% if page.lang == 'en' or page.url contains '/en/' %}Silituz artwork on metal.{% elsif page.lang == 'es' or page.lang == 'es-MX' or page.url contains '/es/' %}Arte de Silituz sobre metal.{% else %}Silituz-Artworks auf Metall.{% endif %}
+          </p>
+        </div>
+      </a>
 
       <!-- Tipeeestream -->
       <a href="https://www.tipeeestream.com/silituz/donation" target="_blank" rel="noopener"

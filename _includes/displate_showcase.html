@@ -1,0 +1,43 @@
+{% assign displate_is_en = false %}
+{% assign displate_is_es = false %}
+{% if page.lang == 'en' or page.url contains '/en/' %}{% assign displate_is_en = true %}{% endif %}
+{% if page.lang == 'es' or page.lang == 'es-MX' or page.url contains '/es/' %}{% assign displate_is_es = true %}{% endif %}
+
+<section class="sili-displate" aria-labelledby="sili-displate-title">
+  <div class="sili-displate__glow" aria-hidden="true"></div>
+  <div class="sili-displate__copy">
+    <span class="sili-kicker">
+      {% if displate_is_en %}NEW · SILITUZ ON DISPLATE{% elsif displate_is_es %}NUEVO · SILITUZ EN DISPLATE{% else %}NEU · SILITUZ AUF DISPLATE{% endif %}
+    </span>
+    <h2 id="sili-displate-title" class="sili-gradient-text">
+      {% if displate_is_en %}My worlds. Now on metal.{% elsif displate_is_es %}Mis mundos. Ahora sobre metal.{% else %}Meine Welten. Jetzt auch auf Metall.{% endif %}
+    </h2>
+    <p>
+      {% if displate_is_en %}
+        Discover selected Silituz artwork as metal posters. New designs will be added regularly over the coming days and weeks.
+      {% elsif displate_is_es %}
+        Descubre obras seleccionadas de Silituz como pósteres de metal. En los próximos días y semanas llegarán nuevos diseños.
+      {% else %}
+        Entdecke ausgewählte Silituz-Artworks als hochwertige Metallposter. In den kommenden Tagen und Wochen kommen regelmäßig neue Motive dazu.
+      {% endif %}
+    </p>
+    <a class="sili-displate__cta" href="https://displate.com/artist/silituz?art=6a69b0b590116" target="_blank" rel="noopener noreferrer">
+      {% if displate_is_en %}Explore the Displate gallery{% elsif displate_is_es %}Explorar la galería de Displate{% else %}Displate-Galerie entdecken{% endif %}
+      <span aria-hidden="true">↗</span>
+    </a>
+  </div>
+
+  <a class="sili-displate__posters" href="https://displate.com/artist/silituz?art=6a69b0b590116" target="_blank" rel="noopener noreferrer"
+     aria-label="{% if displate_is_en %}Open Silituz on Displate{% elsif displate_is_es %}Abrir Silituz en Displate{% else %}Silituz auf Displate öffnen{% endif %}">
+    <figure class="sili-displate__poster sili-displate__poster--left">
+      <img src="/assets/images/displate/dragon-gamer.webp" alt="Silituz Dragon Gamer Artwork" loading="lazy" width="999" height="1400">
+    </figure>
+    <figure class="sili-displate__poster sili-displate__poster--center">
+      <img src="/assets/images/displate/dragon-hey.webp" alt="Silituz Dragon Hey Artwork" loading="lazy" width="999" height="1400">
+    </figure>
+    <figure class="sili-displate__poster sili-displate__poster--right">
+      <img src="/assets/images/displate/huntrx.webp" alt="Silituz HUNTR/X Artwork" loading="lazy" width="999" height="1400">
+    </figure>
+    <span class="sili-displate__badge">DISPLATE</span>
+  </a>
+</section>

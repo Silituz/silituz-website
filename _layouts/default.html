@@ -98,8 +98,8 @@
        - Tipp: custom.css MUSS NACH Tailwind geladen werden.
        ========================= -->
   <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
-  <link rel="stylesheet" href="{{ '/assets/css/lil-sili.css' | relative_url }}?v=13">
-  <link rel="stylesheet" href="{{ '/assets/css/silituz-modern.css' | relative_url }}?v=15">
+  <link rel="stylesheet" href="{{ '/assets/css/lil-sili.css' | relative_url }}?v=14">
+  <link rel="stylesheet" href="{{ '/assets/css/silituz-modern.css' | relative_url }}?v=16">
 
   <!-- =========================
        ZUSATZSTYLES (Inline)
@@ -147,7 +147,52 @@
     .dark .brand-sub{color:#94a3b8;}
     .dark .footer-center small{color:#cbd5e1;}
 
-    /* Sprachschalter: kräftiges Leuchten */
+    /* Sprachschalter: kompakte Flaggenleiste wie auf SILITUZ NEWS */
+    .sili-language-switcher {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 4px;
+      border: 1px solid rgba(56, 189, 248, .28);
+      border-radius: 12px;
+      background: rgba(2, 12, 28, .78);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px rgba(2,6,23,.18);
+    }
+    .sili-language-option {
+      min-height: 30px;
+      padding: 5px 8px !important;
+      border-radius: 8px !important;
+      color: #cbd5e1 !important;
+      text-shadow: none !important;
+      filter: none !important;
+      font-size: .75rem;
+      font-weight: 700;
+      line-height: 1;
+      transition: color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease;
+    }
+    .sili-language-option svg {
+      width: 19px;
+      height: 13px;
+      overflow: hidden;
+      border-radius: 2px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.2);
+    }
+    .sili-language-option:hover {
+      color: #fff !important;
+      background: rgba(45,212,191,.12);
+      transform: translateY(-1px);
+    }
+    .sili-language-option.lang-active,
+    .sili-language-option[data-active] {
+      color: #02131a !important;
+      background: linear-gradient(135deg, #2dd4bf, #22d3ee);
+      box-shadow: 0 0 0 1px rgba(94,234,212,.68), 0 0 18px rgba(34,211,238,.38);
+    }
+    @media (max-width: 640px) {
+      .sili-language-switcher { gap: 2px; padding: 3px; }
+      .sili-language-option { min-width: 34px; padding: 5px 7px !important; justify-content: center; }
+      .sili-language-option > span[aria-hidden="true"] { display: none; }
+    }
     .lang-active,
     a[data-lang][data-active] {
       color: #10b981 !important; /* emerald-500 */
@@ -217,16 +262,15 @@
 <script>
 (function () {
   function stripLangPrefix(pathname) {
-    return pathname.replace(/^\/(?:en|de)(?:\/|$)+/i, '/');
+    return pathname.replace(/^\/(?:en|es|de)(?:\/|$)+/i, '/');
   }
   function buildLangPath(target, pathname) {
     const clean = stripLangPrefix(pathname);
     const normalized = clean.replace(/^\/index\.html$/i, '/');
-    if (target === 'en') {
-      return '/en' + (normalized === '/' ? '/' : normalized);
-    } else {
-      return normalized;
+    if (target === 'en' || target === 'es') {
+      return '/' + target + (normalized === '/' ? '/' : normalized);
     }
+    return normalized;
   }
   function switchLang(target) {
     const url = new URL(window.location.href);
@@ -239,7 +283,7 @@
   function attachHandlers() {
     document.querySelectorAll('[data-lang]').forEach(el => {
       const target = (el.getAttribute('data-lang') || '').toLowerCase();
-      if (target !== 'en' && target !== 'de') return;
+      if (target !== 'en' && target !== 'es' && target !== 'de') return;
       el.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -248,15 +292,20 @@
     });
   }
   function reflectActiveLang() {
-    const isEN = /^\/en(?:\/|$)/i.test(location.pathname);
-    document.documentElement.setAttribute('data-active-lang', isEN ? 'en' : 'de');
+    const active = /^\/en(?:\/|$)/i.test(location.pathname)
+      ? 'en'
+      : (/^\/es(?:\/|$)/i.test(location.pathname) ? 'es' : 'de');
+    document.documentElement.setAttribute('data-active-lang', active);
     document.querySelectorAll('[data-lang]').forEach(el => {
       const t = el.getAttribute('data-lang')?.toLowerCase();
-      el.toggleAttribute('data-active', (isEN && t === 'en') || (!isEN && t === 'de'));
+      el.toggleAttribute('data-active', t === active);
     });
   }
   document.addEventListener('DOMContentLoaded', function () {
-    const healed = buildLangPath(/^\/en\//i.test(location.pathname) ? 'en' : 'de', location.pathname);
+    const currentLanguage = /^\/en(?:\/|$)/i.test(location.pathname)
+      ? 'en'
+      : (/^\/es(?:\/|$)/i.test(location.pathname) ? 'es' : 'de');
+    const healed = buildLangPath(currentLanguage, location.pathname);
     if (healed !== location.pathname) {
       const u = new URL(location.href);
       u.pathname = healed;
@@ -292,13 +341,13 @@
         </span>
       </button>
 
-      <!-- Sprachschalter (transparent, nur Glow bei aktiv) -->
-      <div class="flex items-center gap-2" role="group" aria-label="Language switcher">
+      <!-- Sprachschalter -->
+      <div class="sili-language-switcher" role="group" aria-label="Language switcher">
         <!-- DE -->
         <a
           data-lang="de"
           href="{{ page.url | replace_first:'/en','' | relative_url }}"
-          class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm
+          class="sili-language-option inline-flex items-center gap-1.5
                  {% if page.lang == 'de' or page.url contains '/de/' %} lang-active {% else %} text-slate-700 dark:text-slate-300 hover:text-emerald-600 {% endif %}
                  focus:outline-none focus:ring-0">
           <svg viewBox="0 0 3 2" width="18" height="12" aria-hidden="true">
@@ -313,23 +362,37 @@
         <a
           data-lang="en"
           href="{{ '/en' | append: page.url | replace:'//en/','/en/' | relative_url }}"
-          class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-sm
+          class="sili-language-option inline-flex items-center gap-1.5
                  {% if page.lang == 'en' or page.url contains '/en/' %} lang-active {% else %} text-slate-700 dark:text-slate-300 hover:text-emerald-600 {% endif %}
                  focus:outline-none focus:ring-0">
-          <svg viewBox="0 0 7410 3900" width="18" height="12" aria-hidden="true">
-            <rect width="7410" height="3900" fill="#b22234"/>
-            <path d="M0,450H7410M0,1050H7410M0,1650H7410M0,2250H7410M0,2850H7410M0,3450H7410" stroke="#fff" stroke-width="300"/>
-            <rect width="2964" height="2100" fill="#3c3b6e"/>
+          <svg viewBox="0 0 19 13" width="19" height="13" aria-hidden="true">
+            <rect width="19" height="13" fill="#fff"/>
+            <path d="M0 1h19M0 3h19M0 5h19M0 7h19M0 9h19M0 11h19M0 13h19" stroke="#b22234" stroke-width="1"/>
+            <rect width="8.2" height="7" fill="#3c3b6e"/>
             <g fill="#fff">
-              {% for y in (0..9) %}
-                {% assign offset = y | modulo: 2 | times: 123 %}
-                {% for x in (0..5) %}
-                  <circle cx="{{ 247 | plus: offset | plus: x | times: 412 }}" cy="{{ 210 | plus: y | times: 210 }}" r="90"/>
-                {% endfor %}
-              {% endfor %}
+              <circle cx="1.2" cy="1.1" r=".32"/><circle cx="3" cy="1.1" r=".32"/><circle cx="4.8" cy="1.1" r=".32"/><circle cx="6.6" cy="1.1" r=".32"/>
+              <circle cx="2.1" cy="2.5" r=".32"/><circle cx="3.9" cy="2.5" r=".32"/><circle cx="5.7" cy="2.5" r=".32"/>
+              <circle cx="1.2" cy="3.9" r=".32"/><circle cx="3" cy="3.9" r=".32"/><circle cx="4.8" cy="3.9" r=".32"/><circle cx="6.6" cy="3.9" r=".32"/>
+              <circle cx="2.1" cy="5.3" r=".32"/><circle cx="3.9" cy="5.3" r=".32"/><circle cx="5.7" cy="5.3" r=".32"/>
             </g>
           </svg>
           <span class="sr-only">English</span><span aria-hidden="true">EN</span>
+        </a>
+
+        <!-- ES -->
+        <a
+          data-lang="es"
+          href="{{ '/es/' | relative_url }}"
+          class="sili-language-option inline-flex items-center gap-1.5
+                 {% if page.lang == 'es' or page.lang == 'es-MX' or page.url contains '/es/' %} lang-active {% else %} text-slate-700 dark:text-slate-300 hover:text-emerald-600 {% endif %}
+                 focus:outline-none focus:ring-0">
+          <svg viewBox="0 0 3 2" width="19" height="13" aria-hidden="true">
+            <rect width="1" height="2" fill="#006847"/>
+            <rect x="1" width="1" height="2" fill="#fff"/>
+            <rect x="2" width="1" height="2" fill="#ce1126"/>
+            <circle cx="1.5" cy="1" r=".17" fill="#b38b36"/>
+          </svg>
+          <span class="sr-only">Español</span><span aria-hidden="true">ES</span>
         </a>
       </div>
     </div>
