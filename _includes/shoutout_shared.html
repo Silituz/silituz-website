@@ -55,6 +55,8 @@
 </a>
 {% endif %}
 
+
+      {% if page.coco_enabled %}
 <!-- FEATURED -->
 <section class="py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,6 +64,7 @@
     <p class="mt-2 text-lg text-slate-100 text-center">{{ page.featured_sub }}</p>
 
     <div class="mt-10 grid sm:grid-cols-2 gap-8">
+      {% endif %}
 
       {% if page.coco_enabled %}
       <!-- Soju -->
@@ -103,47 +106,7 @@
       </a>
 {% endif %}
             
-      <!-- Marketingfutzi -->
-      <a href="https://www.tiktok.com/@marketingfutzi?_t=ZN-908ugDh8gfS&_r=1" target="_blank" rel="noopener"
-         class="group block rounded-2xl overflow-visible shadow-md transition hover:shadow-lg">
-      <div class="mx-auto rounded-full overflow-hidden shadow-md bg-gray-800
-            w-full max-w-[22rem] aspect-square md:max-w-[24rem] lg:max-w-[24rem] 2xl:max-w-[26rem]">
-          <img src="{{ '/assets/images/shoutout/futzi2.svg' | relative_url }}" alt="Marketingfutzi"
-               class="w-full h-full object-cover rounded-full" />
-        </div>
-        <div class="relative mx-auto bg-slate-800/90 text-slate-100 rounded-2xl overflow-hidden mt-3 w-full max-w-[22rem] md:max-w-[24rem] lg:max-w-[24rem] 2xl:max-w-[26rem]">
-          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
-          <div class="relative z-10 p-5 text-center space-y-2">
-            <h3 class="text-lg font-semibold text-emerald-500 group-hover:text-slate-100 transition-colors duration-300">Marketingfutzi</h3>
-            <p class="text-sm text-slate-100/85">CEO @CreatorVillage TikTok LIVE-Agentur</p>
-            <p class="text-sm text-slate-100/85">👇 Agenturanfrage Link in Bio - join us 👇</p>
-            <p class="text-sm text-slate-100/85">So.-Fr. Täglich LIVE ab 22:15 Uhr</p>
-            <p class="text-sm text-slate-100/85">Queen of Gallery: @babyline</p>
-            <p class="text-sm text-slate-100/85">🔗 https://wonderl.ink/@marketingfutzi</p>
-          </div>
-        </div>
-      </a>
-
- <!-- Creator Village -->
-      <a href="https://www.tiktok.com/@creatorvillage_agentur?is_from_webapp=1&sender_device=pc" rel="noopener"
-         class="group block rounded-2xl overflow-visible shadow-md transition hover:shadow-lg">
-      <div class="mx-auto rounded-full overflow-hidden shadow-md bg-gray-800
-            w-full max-w-[22rem] aspect-square md:max-w-[24rem] lg:max-w-[24rem] 2xl:max-w-[26rem]">
-          <img src="{{ '/assets/images/shoutout/creatorvillage.svg' | relative_url }}" alt="shorty"
-               class="w-full h-full object-cover rounded-full" />
-        </div>
-        <div class="relative mx-auto bg-slate-800/90 text-slate-100 rounded-2xl overflow-hidden mt-3 w-full max-w-[22rem] md:max-w-[24rem] lg:max-w-[24rem] 2xl:max-w-[26rem]">
-          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
-          <div class="relative z-10 p-5 text-center">
-            <h3 class="text-lg font-semibold text-emerald-500 group-hover:text-slate-100 transition-colors duration-300">CreatorVillage</h3>
-            <p class="mt-2 text-sm text-slate-100/85">LIVE-Creator Agentur mit Fokus auf dein Wachstum</p>
-            <p class="mt-2 text-sm text-slate-100/85">🔗 https://wonderl.ink/@creatorvillage</p>
-          </div>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
+     
 
 <!-- FRIENDS -->
 <section class="py-16">
@@ -582,6 +545,48 @@
         </div>
       </a>
        
+    </div>
+  </div>
+</section>
+
+       <!-- Marketingfutzi -->
+      <a href="https://www.tiktok.com/@marketingfutzi?_t=ZN-908ugDh8gfS&_r=1" target="_blank" rel="noopener"
+         class="group block rounded-2xl overflow-visible shadow-md transition hover:shadow-lg">
+      <div class="mx-auto rounded-full overflow-hidden shadow-md bg-gray-800
+            w-full max-w-[22rem] aspect-square md:max-w-[24rem] lg:max-w-[24rem] 2xl:max-w-[26rem]">
+          <img src="{{ '/assets/images/shoutout/futzi2.svg' | relative_url }}" alt="Marketingfutzi"
+               class="w-full h-full object-cover rounded-full" />
+        </div>
+        <div class="relative mx-auto bg-slate-800/90 text-slate-100 rounded-2xl overflow-hidden mt-3 w-full max-w-[22rem] md:max-w-[24rem] lg:max-w-[24rem] 2xl:max-w-[26rem]">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5 text-center space-y-2">
+            <h3 class="text-lg font-semibold text-emerald-500 group-hover:text-slate-100 transition-colors duration-300">Marketingfutzi</h3>
+            <p class="text-sm text-slate-100/85">CEO @CreatorVillage TikTok LIVE-Agentur</p>
+            <p class="text-sm text-slate-100/85">👇 Agenturanfrage Link in Bio - join us 👇</p>
+            <p class="text-sm text-slate-100/85">So.-Fr. Täglich LIVE ab 22:15 Uhr</p>
+            <p class="text-sm text-slate-100/85">Queen of Gallery: @babyline</p>
+            <p class="text-sm text-slate-100/85">🔗 https://wonderl.ink/@marketingfutzi</p>
+          </div>
+        </div>
+      </a>
+
+ <!-- Creator Village -->
+      <a href="https://www.tiktok.com/@creatorvillage_agentur?is_from_webapp=1&sender_device=pc" rel="noopener"
+         class="group block rounded-2xl overflow-visible shadow-md transition hover:shadow-lg">
+      <div class="mx-auto rounded-full overflow-hidden shadow-md bg-gray-800
+            w-full max-w-[22rem] aspect-square md:max-w-[24rem] lg:max-w-[24rem] 2xl:max-w-[26rem]">
+          <img src="{{ '/assets/images/shoutout/creatorvillage.svg' | relative_url }}" alt="shorty"
+               class="w-full h-full object-cover rounded-full" />
+        </div>
+        <div class="relative mx-auto bg-slate-800/90 text-slate-100 rounded-2xl overflow-hidden mt-3 w-full max-w-[22rem] md:max-w-[24rem] lg:max-w-[24rem] 2xl:max-w-[26rem]">
+          <span class="pointer-events-none absolute inset-y-0 left-0 w-0 bg-emerald-500 transition-all duration-[1200ms] ease-out group-hover:w-full"></span>
+          <div class="relative z-10 p-5 text-center">
+            <h3 class="text-lg font-semibold text-emerald-500 group-hover:text-slate-100 transition-colors duration-300">CreatorVillage</h3>
+            <p class="mt-2 text-sm text-slate-100/85">LIVE-Creator Agentur mit Fokus auf dein Wachstum</p>
+            <p class="mt-2 text-sm text-slate-100/85">🔗 https://wonderl.ink/@creatorvillage</p>
+          </div>
+        </div>
+      </a>
     </div>
   </div>
 </section>
